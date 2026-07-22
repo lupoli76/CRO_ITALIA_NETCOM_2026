@@ -4,13 +4,24 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 50.07.13                                                             ║
+║   Versione: 50.07.20                                                             ║
 ║   Data: Luglio 2026                                                              ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG v50.07.20:                                                           ║
+║   ─────────────────────────                                                      ║
+║   • Tab "Verifica PXM" rinominato in "Analisi e Verifica PXM"                    ║
+║   • Tab "Analisi Fattibilità" spostato dalla barra principale al menu            ║
+║     "Analisi Extra", ora primo elemento del menu                                 ║
+║   • Menu "Analisi Extra" riordinato: Analisi Fattibilità, Analisi S.d.F.         ║
+║     Internalizzati, Analisi Collegamenti Critici DWDM, Analisi Rete,             ║
+║     Analisi e Verifica PXM, Analisi Swap — Correlazione RA/RC,                   ║
+║     Analisi & Confronto DB Excel, Calcolo Attenuazione                           ║
+║   ─────────────────────────                                                      ║
 ║                                                                                  ║
 ║   CHANGELOG v50.07.13:                                                           ║
 ║   ─────────────────────────                                                      ║
@@ -20415,7 +20426,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V50.07.13 | Lug 2026</div>
+<div class="version-tag">V50.07.20 | Lug 2026</div>
       </div>
     </div>
   </header>
@@ -20431,7 +20442,6 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       <button class="nav-item" onclick="switchTab('search')">Ricerca Percorso RC</button>
       <button class="nav-item" onclick="switchTab('search-unified')">Ricerca Percorso Unificato</button>
 
-      <button class="nav-item" onclick="switchTab('analisi-fattibilita')">Analisi Fattibilità</button>
       <button class="nav-item" onclick="switchTab('costi')">Analisi Costi</button>
       <button class="nav-item" onclick="switchTab('database')">Database</button>
 
@@ -20441,13 +20451,14 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
           Analisi Extra <span class="nav-dropdown-arrow">▼</span>
         </button>
         <div class="nav-dropdown-menu">
+          <button class="nav-dropdown-item" onclick="switchTab('analisi-fattibilita')">Analisi Fattibilità</button>
           <button class="nav-dropdown-item" onclick="switchTab('sdf')">Analisi S.d.F. Internalizzati</button>
           <button class="nav-dropdown-item" onclick="switchTab('occupazione-rete')">Analisi Collegamenti Critici DWDM</button>
           <button class="nav-dropdown-item" onclick="switchTab('analisi-rete')">Analisi Rete</button>
+          <button class="nav-dropdown-item" onclick="switchTab('verifica-pxm')">Analisi e Verifica PXM</button>
           <button class="nav-dropdown-item" onclick="switchTab('correlazione-ra-rc')">Analisi Swap — Correlazione RA/RC</button>
           <button class="nav-dropdown-item" onclick="switchTab('excel-db')">Analisi &amp; Confronto DB Excel</button>
           <button class="nav-dropdown-item" onclick="switchTab('loss')">Calcolo Attenuazione</button>
-          <button class="nav-dropdown-item" onclick="switchTab('verifica-pxm')">Verifica PXM</button>
         </div>
       </div>
       <button class="nav-item" onclick="switchTab('docs')">Guida</button>
@@ -20633,22 +20644,25 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                 </div>
 
-                <!-- Feature 4: Mappa -->
-                <div class="feature-card" style="border-left: 3px solid #4f46e5;">
-                    <div class="feature-icon" style="color: #4f46e5;">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                    </div>
-                    <div class="feature-header">
-                        <h3 class="feature-title" style="color: #4f46e5;">Mappa Visualizzazione Percorsi</h3>
-                        <span class="feature-badge" style="background: #eef2ff; color: #4f46e5;">Path Viewer</span>
-                    </div>
-                    <p class="feature-desc">Mappa Leaflet.js dedicata alla <strong>visualizzazione dei percorsi</strong> calcolati nella Ricerca Percorsi. Overlay colorati differenziati per percorsi primari (Std) e diversificati (Div), layer control avanzato, zoom automatico sul percorso selezionato. <strong>Contesto RA/RC</strong>: la mappa si resetta automaticamente quando passi da "Ricerca Percorso RA" a "Ricerca Percorso RC" (e viceversa), evitando refusi di ricerche precedenti. Le funzionalità complete di analisi topografica (filtri, marker, ricerca indirizzo, COLT vicine) sono disponibili nel tool <strong>NAT Italia</strong>.</p>
-                    <div class="feature-specs">
-                        <span class="spec-tag" style="background: #eef2ff; color: #4f46e5;">Leaflet.js</span>
-                        <span class="spec-tag" style="background: #eef2ff; color: #4f46e5;">Path Overlay</span>
-                        <span class="spec-tag" style="background: #eef2ff; color: #4f46e5;">→ NAT Italia</span>
-                    </div>
-                </div>
+<!-- Feature: Dark Mode -->
+<div class="feature-card" style="border-left: 3px solid #374151;">
+  <div class="feature-icon" style="color: #374151;">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+    </svg>
+  </div>
+  <div class="feature-header">
+    <h3 class="feature-title" style="color: #374151;">Dark Mode</h3>
+    <span class="feature-badge" style="background:#f3f4f6;color:#374151;">Eye Comfort</span>
+  </div>
+  <p class="feature-desc">Modalità scura completa per <strong>ridurre l'affaticamento visivo</strong> durante lunghe sessioni di lavoro. Toggle nell'header per attivazione immediata. Supporto completo per popup (Memo, Alert, Cronologia), tabelle, form, calendario e tutti gli elementi dell'interfaccia. <strong>21+ componenti ottimizzati</strong> per dark mode con colori bilanciati e leggibilità perfetta.</p>
+  <div class="feature-specs">
+    <span class="spec-tag" style="background:#f3f4f6;color:#374151;">🌙 Toggle Header</span>
+    <span class="spec-tag" style="background:#f3f4f6;color:#374151;">21+ Fix</span>
+    <span class="spec-tag" style="background:#f3f4f6;color:#374151;">Persistente</span>
+  </div>
+</div>
 
                 <!-- Feature 5: Calcolatore -->
                 <div class="feature-card" style="border-left: 3px solid #ca8a04;">
@@ -20667,22 +20681,25 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                 </div>
 
-                <!-- Feature 6: Undo -->
-                <div class="feature-card" style="border-left: 3px solid #db2777;">
-                    <div class="feature-icon" style="color: #db2777;">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    </div>
-                    <div class="feature-header">
-                        <h3 class="feature-title" style="color: #db2777;">Sistema Undo Intelligente</h3>
-                        <span class="feature-badge" style="background: #fdf2f8; color: #db2777;">Time-saver</span>
-                    </div>
-                    <p class="feature-desc"><strong>Routing Tabs (RA/RC/Unificato)</strong>: cronologia automatica ultime 20 ricerche con salvataggio completo (centrali, vincoli, filtri, coordinate, toggle stati). Ripristino istantaneo con 1 click. History stack FIFO.<br><br><strong>Analisi Fattibilità</strong>: storico analisi con pannello full-screen a 2 colonne — lista voci (badge AI/locale, anteprima note) + dettaglio completo (parametri + risposta). Elimina singola ✕ e 🗑️ reset totale con doppia conferma inline. Persistenza localStorage tra sessioni.</p>
-                    <div class="feature-specs">
-                        <span class="spec-tag" style="background: #fdf2f8; color: #db2777;">20 History</span>
-                        <span class="spec-tag" style="background: #fdf2f8; color: #db2777;">localStorage</span>
-                        <span class="spec-tag" style="background: #fdf2f8; color: #db2777;">🤖 AI + 📐 locale</span>
-                    </div>
-                </div>
+<!-- Feature: Filtri Stati -->
+<div class="feature-card" style="border-left: 3px solid #0066CC;">
+  <div class="feature-icon" style="color: #0066CC;">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+    </svg>
+  </div>
+  <div class="feature-header">
+    <h3 class="feature-title" style="color: #0066CC;">Filtri Stati Collegamenti</h3>
+    <span class="feature-badge" style="background:#dbeafe;color:#0066CC;">Smart Filter</span>
+  </div>
+  <p class="feature-desc">Pannello espandibile <strong>🔽 Filtri Stati</strong> per filtrare i percorsi in base allo stato dei collegamenti. <strong>Filtri RA</strong>: Attivo, Non Attivo [DA VERIFICARE SU NNI], In Attivazione, Da Verificare su NNI (4 stati). <strong>Filtri RC</strong>: Attivo, Non Attivo, In Attivazione, In Variazione, In Reinstradamento (5 stati). Applicazione istantanea con persistenza separata per ogni tab.</p>
+  <div class="feature-specs">
+    <span class="spec-tag" style="background:#dcfce7;color:#16a34a;">RA: 4 Stati</span>
+    <span class="spec-tag" style="background:#dbeafe;color:#0066CC;">RC: 5 Stati</span>
+    <span class="spec-tag" style="background:#fef3c7;color:#f59e0b;">Real-time</span>
+  </div>
+</div>
 
                 <!-- Feature 7: Export -->
                 <div class="feature-card" style="border-left: 3px solid #65a30d;">
@@ -20758,26 +20775,26 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                 </div>
 
-                <!-- Feature 11: Verifica Mista -->
-                <div class="feature-card" style="border-left: 3px solid #7c3aed;">
-                    <div class="feature-icon" style="color: #7c3aed;">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16M8 7v10M16 7v10"/>
-                        </svg>
-                    </div>
-                    <div class="feature-header">
-                        <h3 class="feature-title" style="color: #7c3aed;">Percorso Unificato RA+RC</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #7c3aed;">Combined Analysis</span>
-                    </div>
-                    <div style="margin-top:0.35rem;"><span style="font-size:0.65rem;background:#f5f3ff;color:#7c3aed;padding:2px 8px;border-radius:3px;font-weight:700;display:inline-block;">RETAIL &amp; WHOLESALE</span></div>
-                    <p class="feature-desc">Ricerca percorsi che attraversano <strong>entrambe le reti RA e RC</strong> con gateway automatici. Colonna <strong>Mix</strong> mostra composizione (RA:n, RC:m, salti). Toggle <strong style="color:#0891b2;">🌐 RTN</strong> per routing interregionale automatico (Nodo A1 → backbone RTN → Nodo A1 area opposta) con flusso <strong>Std → Div Zona A → Div Zona B</strong>. Toggle <strong style="color:#dc2626;">🔴 Solo RC</strong> per ricerca esclusiva su backbone. Bottoni <strong style="color: #0066CC;">🔽 Filtri Stati</strong> (RA 4 stati + RC 5 stati), <strong style="color: #0066CC;">⚖️ Confronta</strong> (Comparatore 3 Percorsi), <strong style="color: #0066CC;">🔗 Condividi</strong>, <strong style="color: #059669;">🌍 Mappa NAT</strong> per esportare percorsi unificati su mappa geografica con gateway evidenziati.</p>
-                    <div class="feature-specs">
-                        <span class="spec-tag" style="background: #f5f3ff; color: #7c3aed;">RA+RC Gateway</span>
-                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">🌐 RTN</span>
-                        <span class="spec-tag" style="background: #f5f3ff; color: #7c3aed;">⚖️ Confronta</span>
-                        <span class="spec-tag" style="background: #ecfdf5; color: #059669;">🌍 NAT</span>
-                    </div>
-                </div>
+<!-- Feature: Memo e Promemoria S.d.F. -->
+<div class="feature-card" style="border-left: 3px solid #8b5cf6;">
+  <div class="feature-icon" style="color: #8b5cf6;">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+    </svg>
+  </div>
+  <div class="feature-header">
+    <h3 class="feature-title" style="color: #8b5cf6;">Memo e Promemoria S.d.F.</h3>
+    <span class="feature-badge" style="background:#f5f3ff;color:#8b5cf6;">NEW</span>
+  </div>
+  <p class="feature-desc">Sistema completo per gestire <strong>promemoria sulle Schede di Fattibilità</strong>. Bottone 📝 nell'header per accesso rapido, possibilità di aggiungere memo manuali o importarli dalla tabella S.d.F., <strong>alert configurabili</strong> per scadenze imminenti (0-30 giorni), <strong>colonna Cliente</strong>, export CSV e <strong>Export Excel "Diario Lavoro S.d.F."</strong> con fogli separati per lavorante.</p>
+  <div class="feature-specs">
+    <span class="spec-tag" style="background:#f5f3ff;color:#8b5cf6;">Alert Scadenze</span>
+    <span class="spec-tag" style="background:#f5f3ff;color:#8b5cf6;">Import da S.d.F.</span>
+    <span class="spec-tag" style="background:#f5f3ff;color:#8b5cf6;">Export CSV</span>
+    <span class="spec-tag" style="background:#10b981;color:white;">📊 Export Excel</span>
+  </div>
+</div>
 
                 <!-- Feature 12: Fibra Nuda Diretta -->
                 <div class="feature-card" style="border-left: 3px solid #059669;">
@@ -20798,28 +20815,25 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                 </div>
 
-                <!-- Feature 13: Filtro POP NODO A1 -->
-                <div class="feature-card" style="border-left: 3px solid #dc2626;">
-                    <div class="feature-icon" style="color: #dc2626;">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
-                    </div>
-                    <div class="feature-header">
-                        <h3 class="feature-title" style="color: #dc2626;">Filtro POP (NODO A1)</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #dc2626;">36 Centrali</span>
-                    </div>
-                    <p class="feature-desc">Toggle per filtrare le <strong>37 centrali NODO A1</strong> come destinazione percorsi, disponibile nei tab <strong>RC</strong>, <strong>RA</strong> e <strong>Unificato</strong>. Attivando il filtro, il campo arrivo mostra solo le centrali POP ufficiali con una <strong>seconda riga informativa</strong> per ciascuna voce: area geografica, zona DB e regione. Il colore del badge varia per tab: <span style="color:#a94442;font-weight:600;">rosso pastello</span> in RC, <span style="color:#0066CC;font-weight:600;">blu pastello</span> in RA, <span style="color:#6d28d9;font-weight:600;">viola pastello</span> in Unificato. Le centrali RA (<strong>[T1]</strong>) mostrano la zona del DB RA (es. <em>MILO</em> per Lombardia, <em>RMLA</em> per Lazio). Le <strong>30 centrali A1 standard</strong> supportano anche l'accesso PE; le <strong>8 A1_DIV</strong> (BERGAMO CAMPAGNOLA, BRESCIA KENNEDY, COMO DANTE, LAMEZIA/A, MODENA, PIACENZA /A, RIMINI, SASSARI) sono riservate alla sola diversificazione RTN e segnalate con il tag <strong>[A1_DIV]</strong>.</p>
-                    <div class="feature-specs">
-                        <span class="spec-tag" style="background: #fef2f2; color: #dc2626;">RC</span>
-                        <span class="spec-tag" style="background: #eff6ff; color: #0066CC;">RA</span>
-                        <span class="spec-tag" style="background: #f5f3ff; color: #6d28d9;">Unificato</span>
-                        <span class="spec-tag" style="background: #fef2f2; color: #dc2626;">37 POP Nazionali</span>
-                        <span class="spec-tag" style="background: #fef2f2; color: #dc2626;">29 A1 Standard</span>
-                        <span class="spec-tag" style="background: #fff7ed; color: #b45309;">8 A1_DIV</span>
-                        <span class="spec-tag" style="background: #fef2f2; color: #dc2626;">2ª riga info geografica</span>
-                    </div>
-                </div>
+<!-- Feature: Confronto DB Excel -->
+<div class="feature-card" style="border-left: 3px solid #06b6d4;">
+  <div class="feature-icon" style="color: #06b6d4;">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+    </svg>
+  </div>
+  <div class="feature-header">
+    <h3 class="feature-title" style="color: #06b6d4;">Confronto DB Excel</h3>
+    <span class="feature-badge" style="background:#ecfeff;color:#06b6d4;">NEW</span>
+  </div>
+  <p class="feature-desc">Tool per <strong>confrontare versioni di database Excel</strong>. Analizza fogli, righe e celle per identificare differenze. Include verifica speciale <strong>GAT_A/GAT_Z</strong> per file RA/RC con report dettagliato delle anomalie.</p>
+  <div class="feature-specs">
+    <span class="spec-tag">Diff Celle</span>
+    <span class="spec-tag">Verifica GAT</span>
+    <span class="spec-tag">Export JSON</span>
+  </div>
+</div>
 
                 <!-- Feature 14: Colorazione Collegamenti RA -->
                 <div class="feature-card" style="border-left: 3px solid #0284c7;">
@@ -20860,86 +20874,83 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
 </div>
 
-<!-- Feature: Confronto DB Excel -->
-<div class="feature-card" style="border-left: 3px solid #06b6d4;">
-  <div class="feature-icon" style="color: #06b6d4;">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-    </svg>
-  </div>
-  <div class="feature-header">
-    <h3 class="feature-title" style="color: #06b6d4;">Confronto DB Excel</h3>
-    <span class="feature-badge" style="background:#ecfeff;color:#06b6d4;">NEW</span>
-  </div>
-  <p class="feature-desc">Tool per <strong>confrontare versioni di database Excel</strong>. Analizza fogli, righe e celle per identificare differenze. Include verifica speciale <strong>GAT_A/GAT_Z</strong> per file RA/RC con report dettagliato delle anomalie.</p>
-  <div class="feature-specs">
-    <span class="spec-tag">Diff Celle</span>
-    <span class="spec-tag">Verifica GAT</span>
-    <span class="spec-tag">Export JSON</span>
-  </div>
-</div>
+                <!-- Feature 13: Filtro POP NODO A1 -->
+                <div class="feature-card" style="border-left: 3px solid #dc2626;">
+                    <div class="feature-icon" style="color: #dc2626;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <div class="feature-header">
+                        <h3 class="feature-title" style="color: #dc2626;">Filtro POP (NODO A1)</h3>
+                        <span class="feature-badge" style="background: #fef2f2; color: #dc2626;">36 Centrali</span>
+                    </div>
+                    <p class="feature-desc">Toggle per filtrare le <strong>37 centrali NODO A1</strong> come destinazione percorsi, disponibile nei tab <strong>RC</strong>, <strong>RA</strong> e <strong>Unificato</strong>. Attivando il filtro, il campo arrivo mostra solo le centrali POP ufficiali con una <strong>seconda riga informativa</strong> per ciascuna voce: area geografica, zona DB e regione. Il colore del badge varia per tab: <span style="color:#a94442;font-weight:600;">rosso pastello</span> in RC, <span style="color:#0066CC;font-weight:600;">blu pastello</span> in RA, <span style="color:#6d28d9;font-weight:600;">viola pastello</span> in Unificato. Le centrali RA (<strong>[T1]</strong>) mostrano la zona del DB RA (es. <em>MILO</em> per Lombardia, <em>RMLA</em> per Lazio). Le <strong>30 centrali A1 standard</strong> supportano anche l'accesso PE; le <strong>8 A1_DIV</strong> (BERGAMO CAMPAGNOLA, BRESCIA KENNEDY, COMO DANTE, LAMEZIA/A, MODENA, PIACENZA /A, RIMINI, SASSARI) sono riservate alla sola diversificazione RTN e segnalate con il tag <strong>[A1_DIV]</strong>.</p>
+                    <div class="feature-specs">
+                        <span class="spec-tag" style="background: #fef2f2; color: #dc2626;">RC</span>
+                        <span class="spec-tag" style="background: #eff6ff; color: #0066CC;">RA</span>
+                        <span class="spec-tag" style="background: #f5f3ff; color: #6d28d9;">Unificato</span>
+                        <span class="spec-tag" style="background: #fef2f2; color: #dc2626;">37 POP Nazionali</span>
+                        <span class="spec-tag" style="background: #fef2f2; color: #dc2626;">29 A1 Standard</span>
+                        <span class="spec-tag" style="background: #fff7ed; color: #b45309;">8 A1_DIV</span>
+                        <span class="spec-tag" style="background: #fef2f2; color: #dc2626;">2ª riga info geografica</span>
+                    </div>
+                </div>
 
-<!-- Feature: Memo e Promemoria S.d.F. -->
-<div class="feature-card" style="border-left: 3px solid #8b5cf6;">
-  <div class="feature-icon" style="color: #8b5cf6;">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-    </svg>
-  </div>
-  <div class="feature-header">
-    <h3 class="feature-title" style="color: #8b5cf6;">Memo e Promemoria S.d.F.</h3>
-    <span class="feature-badge" style="background:#f5f3ff;color:#8b5cf6;">NEW</span>
-  </div>
-  <p class="feature-desc">Sistema completo per gestire <strong>promemoria sulle Schede di Fattibilità</strong>. Bottone 📝 nell'header per accesso rapido, possibilità di aggiungere memo manuali o importarli dalla tabella S.d.F., <strong>alert configurabili</strong> per scadenze imminenti (0-30 giorni), <strong>colonna Cliente</strong>, export CSV e <strong>Export Excel "Diario Lavoro S.d.F."</strong> con fogli separati per lavorante.</p>
-  <div class="feature-specs">
-    <span class="spec-tag" style="background:#f5f3ff;color:#8b5cf6;">Alert Scadenze</span>
-    <span class="spec-tag" style="background:#f5f3ff;color:#8b5cf6;">Import da S.d.F.</span>
-    <span class="spec-tag" style="background:#f5f3ff;color:#8b5cf6;">Export CSV</span>
-    <span class="spec-tag" style="background:#10b981;color:white;">📊 Export Excel</span>
-  </div>
-</div>
+                <!-- Feature 11: Verifica Mista -->
+                <div class="feature-card" style="border-left: 3px solid #7c3aed;">
+                    <div class="feature-icon" style="color: #7c3aed;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h16M4 17h16M8 7v10M16 7v10"/>
+                        </svg>
+                    </div>
+                    <div class="feature-header">
+                        <h3 class="feature-title" style="color: #7c3aed;">Percorso Unificato RA+RC</h3>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #7c3aed;">Combined Analysis</span>
+                    </div>
+                    <div style="margin-top:0.35rem;"><span style="font-size:0.65rem;background:#f5f3ff;color:#7c3aed;padding:2px 8px;border-radius:3px;font-weight:700;display:inline-block;">RETAIL &amp; WHOLESALE</span></div>
+                    <p class="feature-desc">Ricerca percorsi che attraversano <strong>entrambe le reti RA e RC</strong> con gateway automatici. Colonna <strong>Mix</strong> mostra composizione (RA:n, RC:m, salti). Toggle <strong style="color:#0891b2;">🌐 RTN</strong> per routing interregionale automatico (Nodo A1 → backbone RTN → Nodo A1 area opposta) con flusso <strong>Std → Div Zona A → Div Zona B</strong>. Toggle <strong style="color:#dc2626;">🔴 Solo RC</strong> per ricerca esclusiva su backbone. Bottoni <strong style="color: #0066CC;">🔽 Filtri Stati</strong> (RA 4 stati + RC 5 stati), <strong style="color: #0066CC;">⚖️ Confronta</strong> (Comparatore 3 Percorsi), <strong style="color: #0066CC;">🔗 Condividi</strong>, <strong style="color: #059669;">🌍 Mappa NAT</strong> per esportare percorsi unificati su mappa geografica con gateway evidenziati.</p>
+                    <div class="feature-specs">
+                        <span class="spec-tag" style="background: #f5f3ff; color: #7c3aed;">RA+RC Gateway</span>
+                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">🌐 RTN</span>
+                        <span class="spec-tag" style="background: #f5f3ff; color: #7c3aed;">⚖️ Confronta</span>
+                        <span class="spec-tag" style="background: #ecfdf5; color: #059669;">🌍 NAT</span>
+                    </div>
+                </div>
 
-<!-- Feature: Dark Mode -->
-<div class="feature-card" style="border-left: 3px solid #374151;">
-  <div class="feature-icon" style="color: #374151;">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-    </svg>
-  </div>
-  <div class="feature-header">
-    <h3 class="feature-title" style="color: #374151;">Dark Mode</h3>
-    <span class="feature-badge" style="background:#f3f4f6;color:#374151;">Eye Comfort</span>
-  </div>
-  <p class="feature-desc">Modalità scura completa per <strong>ridurre l'affaticamento visivo</strong> durante lunghe sessioni di lavoro. Toggle nell'header per attivazione immediata. Supporto completo per popup (Memo, Alert, Cronologia), tabelle, form, calendario e tutti gli elementi dell'interfaccia. <strong>21+ componenti ottimizzati</strong> per dark mode con colori bilanciati e leggibilità perfetta.</p>
-  <div class="feature-specs">
-    <span class="spec-tag" style="background:#f3f4f6;color:#374151;">🌙 Toggle Header</span>
-    <span class="spec-tag" style="background:#f3f4f6;color:#374151;">21+ Fix</span>
-    <span class="spec-tag" style="background:#f3f4f6;color:#374151;">Persistente</span>
-  </div>
-</div>
+                <!-- Feature 4: Mappa -->
+                <div class="feature-card" style="border-left: 3px solid #4f46e5;">
+                    <div class="feature-icon" style="color: #4f46e5;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                    </div>
+                    <div class="feature-header">
+                        <h3 class="feature-title" style="color: #4f46e5;">Mappa Visualizzazione Percorsi</h3>
+                        <span class="feature-badge" style="background: #eef2ff; color: #4f46e5;">Path Viewer</span>
+                    </div>
+                    <p class="feature-desc">Mappa Leaflet.js dedicata alla <strong>visualizzazione dei percorsi</strong> calcolati nella Ricerca Percorsi. Overlay colorati differenziati per percorsi primari (Std) e diversificati (Div), layer control avanzato, zoom automatico sul percorso selezionato. <strong>Contesto RA/RC</strong>: la mappa si resetta automaticamente quando passi da "Ricerca Percorso RA" a "Ricerca Percorso RC" (e viceversa), evitando refusi di ricerche precedenti. Le funzionalità complete di analisi topografica (filtri, marker, ricerca indirizzo, COLT vicine) sono disponibili nel tool <strong>NAT Italia</strong>.</p>
+                    <div class="feature-specs">
+                        <span class="spec-tag" style="background: #eef2ff; color: #4f46e5;">Leaflet.js</span>
+                        <span class="spec-tag" style="background: #eef2ff; color: #4f46e5;">Path Overlay</span>
+                        <span class="spec-tag" style="background: #eef2ff; color: #4f46e5;">→ NAT Italia</span>
+                    </div>
+                </div>
 
-<!-- Feature: Filtri Stati -->
-<div class="feature-card" style="border-left: 3px solid #0066CC;">
-  <div class="feature-icon" style="color: #0066CC;">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
-    </svg>
-  </div>
-  <div class="feature-header">
-    <h3 class="feature-title" style="color: #0066CC;">Filtri Stati Collegamenti</h3>
-    <span class="feature-badge" style="background:#dbeafe;color:#0066CC;">Smart Filter</span>
-  </div>
-  <p class="feature-desc">Pannello espandibile <strong>🔽 Filtri Stati</strong> per filtrare i percorsi in base allo stato dei collegamenti. <strong>Filtri RA</strong>: Attivo, Non Attivo [DA VERIFICARE SU NNI], In Attivazione, Da Verificare su NNI (4 stati). <strong>Filtri RC</strong>: Attivo, Non Attivo, In Attivazione, In Variazione, In Reinstradamento (5 stati). Applicazione istantanea con persistenza separata per ogni tab.</p>
-  <div class="feature-specs">
-    <span class="spec-tag" style="background:#dcfce7;color:#16a34a;">RA: 4 Stati</span>
-    <span class="spec-tag" style="background:#dbeafe;color:#0066CC;">RC: 5 Stati</span>
-    <span class="spec-tag" style="background:#fef3c7;color:#f59e0b;">Real-time</span>
-  </div>
-</div>
+                <!-- Feature 6: Undo -->
+                <div class="feature-card" style="border-left: 3px solid #db2777;">
+                    <div class="feature-icon" style="color: #db2777;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div class="feature-header">
+                        <h3 class="feature-title" style="color: #db2777;">Sistema Undo Intelligente</h3>
+                        <span class="feature-badge" style="background: #fdf2f8; color: #db2777;">Time-saver</span>
+                    </div>
+                    <p class="feature-desc"><strong>Routing Tabs (RA/RC/Unificato)</strong>: cronologia automatica ultime 20 ricerche con salvataggio completo (centrali, vincoli, filtri, coordinate, toggle stati). Ripristino istantaneo con 1 click. History stack FIFO.<br><br><strong>Analisi Fattibilità</strong>: storico analisi con pannello full-screen a 2 colonne — lista voci (badge AI/locale, anteprima note) + dettaglio completo (parametri + risposta). Elimina singola ✕ e 🗑️ reset totale con doppia conferma inline. Persistenza localStorage tra sessioni.</p>
+                    <div class="feature-specs">
+                        <span class="spec-tag" style="background: #fdf2f8; color: #db2777;">20 History</span>
+                        <span class="spec-tag" style="background: #fdf2f8; color: #db2777;">localStorage</span>
+                        <span class="spec-tag" style="background: #fdf2f8; color: #db2777;">🤖 AI + 📐 locale</span>
+                    </div>
+                </div>
 
 <!-- Feature: Comparatore 3 Percorsi -->
 <div class="feature-card" style="border-left: 3px solid #dc2626;">
@@ -21164,18 +21175,19 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     </svg>
   </div>
   <div class="feature-header">
-    <h3 class="feature-title" style="color: #d1008f;">🆕 Novità V50.07.13 — Lug 2026</h3>
+    <h3 class="feature-title" style="color: #d1008f;">🆕 Novità V50.07.20 — Lug 2026</h3>
     <span class="feature-badge" style="background:#fdf2f8;color:#d1008f;">Latest</span>
   </div>
   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
-    <li><strong>🧩 Verifica PXM — Riutilizzo DWDM Esistente</strong>: nuova ricerca per coordinate/indirizzo Sede Cliente (centrale RA/RC più vicina + 3 centrali PXM più vicine via Haversine); filtro tipo Tutti/SOLO PXM1/SOLO PXM3/PXM1+PXM3; export CSV e copia appunti (centrali vicine, tabella, singola riga); layout riallineato e info PXM1/PXM3 arricchite con nota di fattibilità SdF.</li>
+    <li><strong>🧭 Riorganizzazione menu</strong>: tab "Analisi Fattibilità" spostato dalla barra principale al menu <strong>Analisi Extra</strong> (primo elemento); menu riordinato in sequenza logica; tab "Verifica PXM" rinominato in <strong>"Analisi e Verifica PXM"</strong>.</li>
   </ul>
 
   <p style="margin:0.8rem 0 0.3rem 0; font-size:0.75rem; font-weight:700; color:#7c3aed; letter-spacing:0.02em;">
-    📋 Aggiornamenti precedenti — V50.07.10 → V41.04.08
+    📋 Aggiornamenti precedenti — V50.07.13 → V41.04.08
   </p>
   <ul style="margin:0 0 0.5rem 1rem; padding:0; font-size:0.8rem; color:var(--gray-700); line-height:1.65;">
-    <li><strong>V50.07.10 — 🧩 Verifica PXM Selezione multipla</strong>: checkbox per riga + "seleziona tutto", pannello Selezione con chip rimovibili, "Mostra solo selezionate"</li>
+    <li><strong>V50.07.13 — 🧩 Analisi e Verifica PXM</strong>: ricerca per coordinate/indirizzo Sede Cliente (centrale RA/RC più vicina + 3 centrali PXM più vicine via Haversine); filtro tipo Tutti/SOLO PXM1/SOLO PXM3/PXM1+PXM3; export CSV e copia appunti; layout riallineato e info PXM1/PXM3 arricchite con nota di fattibilità SdF.</li>
+    <li><strong>V50.07.10 — 🧩 Selezione multipla</strong>: checkbox per riga + "seleziona tutto", pannello Selezione con chip rimovibili, "Mostra solo selezionate"</li>
     <li><strong>V50.06.24-26 — 🧩 NUOVO TAB Verifica PXM</strong>: ricerca centrali PXM1/PXM3 (DWDM) per CLLI/Descrizione; 3.478 record; scheda richiesta automatica (4WCC+2FO / 4WCC+4CSM); georeferenziazione Nome Sede/Comune/Lat/Long (1.845 centrali)</li>
     <li><strong>V50.06.23 — 🏢 36 Nodi A1 RTN + Badge POP</strong>: +3 A1 standard, +1 A1_DIV; badge POP geografico su 2ª riga RC/RA/Unificato; priorità A1 standard su A1_DIV</li>
     <li><strong>V50.06.15 — 🌐 RTN Unificato</strong>: routing interregionale completo (3 segmenti Std + Div Zona A/B); 36 Nodi A1; fix rendering badge RTN; cache grafo RC-only</li>
@@ -21184,10 +21196,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </ul>
 
   <div class="feature-specs">
-    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Ricerca Coordinate</span>
-    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Filtro Tipo</span>
-    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Export/Copia</span>
-    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">3.478 Record</span>
+    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Menu Riorganizzato</span>
+    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Analisi e Verifica PXM</span>
     <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">36 Nodi A1</span>
     <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Badge POP</span>
   </div>
@@ -25108,7 +25118,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <!-- ══════════════════════════════════════════════════════════════════
        RIGA 1: RIEPILOGO ECONOMICO (full width, compact orizzontale)
   ════════════════════════════════════════════════════════════════════ -->
-  <section class="db-section">
+  <div id="costRiepilogoPlaceholder" style="display:none;"></div>
+  <section id="costRiepilogoSection" class="db-section">
     <div class="db-card cost-card-riepilogo" style="box-shadow:none; border:1px solid var(--gray-200);">
       <div class="db-header" style="padding-bottom:0.5rem;">
         <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -33145,7 +33156,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 
         <div class="section-header" style="position: relative;">
           <div>
-            <h2 class="section-title">🧩 Verifica PXM — Riutilizzo DWDM Esistente</h2>
+            <h2 class="section-title">🧩 Analisi e Verifica PXM — Riutilizzo DWDM Esistente</h2>
             <p class="section-subtitle">
               Verifica se la centrale d'accesso ha già un DWDM attivo (PXM1/PXM3) verso il cliente e per il cliente, per evitare una nuova installazione e riutilizzare l'apparato esistente.
             </p>
@@ -33208,7 +33219,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
           </div>
 
           <div class="route-help-panel">
-            <p><strong>Note su Verifica PXM:</strong></p>
+            <p><strong>Note su Analisi e Verifica PXM:</strong></p>
             <ul>
               <li><p style="margin-top: 0.4rem;">
                 <strong style="color: #004C99;">📍 Ricerca per Coordinate / Indirizzo Sede Cliente</strong>: trova le centrali di riferimento RA e RC più vicine e le 3 centrali dove è già installata tecnologia DWDM (PXM1/PXM3) per il cliente. Inserisci l'indirizzo completo oppure le coordinate (Lat/Lon). Con
@@ -34198,7 +34209,19 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               </p>
 
               <div class="docs-callout docs-callout-warning novita-box-current" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border-left: 4px solid #d1008f; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;">
-                <strong style="color: #be185d; font-size: 1.05rem;">📌 Novità V50.07.13 | Lug 2026 — Ultimo Aggiornamento</strong>
+                <strong style="color: #be185d; font-size: 1.05rem;">📌 Novità V50.07.20 | Lug 2026 — Ultimo Aggiornamento</strong>
+                <p style="margin: 0.75rem 0 0.5rem 0; color: #9d174d;">
+                  Riorganizzazione menu di navigazione: "Analisi Fattibilità" nel menu Analisi Extra, tab "Verifica PXM" rinominato
+                </p>
+                <ul class="docs-list docs-list-bullets" style="margin: 0;">
+                  <li><strong>🧭 Tab "Analisi Fattibilità" spostato</strong>: non più nella barra principale, ora primo elemento del menu <strong>Analisi Extra ▼</strong>.</li>
+                  <li><strong>📋 Menu Analisi Extra riordinato</strong>: Analisi Fattibilità → Analisi S.d.F. Internalizzati → Analisi Collegamenti Critici DWDM → Analisi Rete → Analisi e Verifica PXM → Analisi Swap — Correlazione RA/RC → Analisi &amp; Confronto DB Excel → Calcolo Attenuazione.</li>
+                  <li><strong>🧩 Tab rinominato</strong>: "Verifica PXM" è ora <strong>"Analisi e Verifica PXM"</strong>, per riflettere meglio le funzionalità di ricerca e analisi presenti nel tab.</li>
+                </ul>
+              </div>
+
+              <div class="docs-callout docs-callout-warning novita-box-previous" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border-left: 4px solid #d1008f; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;">
+                <strong style="color: #be185d; font-size: 1.05rem;">📋 Novità V50.07.13 | Lug 2026</strong>
                 <p style="margin: 0.75rem 0 0.5rem 0; color: #9d174d;">
                   Tab Verifica PXM — Riutilizzo DWDM Esistente: ricerca per coordinate, filtro tipo, export/copia, layout e contenuti rifiniti
                 </p>
@@ -34729,7 +34752,7 @@ Pannello 📊 Analisi Percorsi: 4 card classificate 🏆🥇🥈🥉 + scoring o
 
               <h4 class="docs-section-title">6) Verifica Fattibilità AI — dalla pratica alla bozza lavorante</h4>
               <ul class="docs-list">
-                <li>Apri il tab <strong>📋 Analisi Fattibilità</strong> dal menu di navigazione.</li>
+                <li>Apri il tab <strong>📋 Analisi Fattibilità</strong> dal menu <em>Analisi Extra</em> (primo elemento del menu).</li>
                 <li>Seleziona ambito <strong>🏪 RETAIL</strong> o <strong>🔗 WHOLESALE</strong> e (opzionale) inserisci la <strong>🔑 API key Anthropic</strong> per analisi AI completa — senza chiave entra in funzione il motore regole integrato (offline, zero configurazione).</li>
                 <li>Imposta i <strong>⚙️ Parametri attivi</strong> dal portale NNI/IRP (velocità, ridondanza, MPLS, ecc.) e incolla le <strong>📩 Note Generante</strong>. Aggiungi eventuali dettagli nel campo <strong>🔍 Contesto aggiuntivo opzionale</strong> (sedi, CLLI, SF correlati, vincoli KMZ/ASPI). Usa il <strong>🗺️ Generatore Info KMZ</strong> per produrre il .docx di info routing da allegare alla richiesta KMZ.</li>
                 <li>Clicca <strong>🤖 Analizza Fattibilità</strong> — durante l'elaborazione appare un popup di avanzamento. La risposta viene salvata automaticamente nello storico.</li>
@@ -34738,9 +34761,9 @@ Pannello 📊 Analisi Percorsi: 4 card classificate 🏆🥇🥈🥉 + scoring o
                 <li><strong>⚠️ Regola DC / Nodo A1</strong>: se la sede è un Data Center (Equinix, Aruba, Namex, Stack…) o un Nodo A1/POP TIM → il motore applica automaticamente la regola NESSUNA VALORIZZAZIONE accesso/cliente, indipendentemente dai parametri impostati.</li>
               </ul>
 
-              <h4 class="docs-section-title">7) Verifica PXM — Scheda DWDM richiesta</h4>
+              <h4 class="docs-section-title">7) Analisi e Verifica PXM — Scheda DWDM richiesta</h4>
               <ul class="docs-list">
-                <li>Apri il tab <strong>🧩 Verifica PXM</strong> dal menu <em>Analisi Extra</em>.</li>
+                <li>Apri il tab <strong>🧩 Analisi e Verifica PXM</strong> dal menu <em>Analisi Extra</em>.</li>
                 <li>Cerca la centrale per <em>CLLI</em> o <em>Descrizione sito</em>; il risultato indica se ha scheda PXM1 (richiede 4WCC + 2 FO) o PXM3 (richiede 4WCC + 4CSM).</li>
                 <li>Seleziona le centrali di interesse con le checkbox e usa <strong>👁️ Mostra solo selezionate</strong> per isolarle in tabella.</li>
               </ul>
@@ -36477,7 +36500,7 @@ PERCORSI ALTERNATIVI (Div):
                 <dd>Percorso diversificato con overlap <30% vs 1.1. Per ridondanza e disaster recovery</dd>
 
                 <dt><strong>PXM1 / PXM3</strong></dt>
-                <dd>Processor Switch Module: schede di controllo/gestione del nodo ottico DWDM (supervisione chassis, provisioning circuiti, allarmi, sync/timing). PXM1 = prima generazione (CPU/memoria limitate); PXM3 = versione evoluta (CPU più potente, più cross-connect, supporto 10G/40G/100G). Per l'accesso in coda cliente richiedono rispettivamente scheda <strong>4WCC + 2 FO</strong> (PXM1) e <strong>4WCC + 4CSM</strong> (PXM3). Verificabili nel tab <em>Verifica PXM</em></dd>
+                <dd>Processor Switch Module: schede di controllo/gestione del nodo ottico DWDM (supervisione chassis, provisioning circuiti, allarmi, sync/timing). PXM1 = prima generazione (CPU/memoria limitate); PXM3 = versione evoluta (CPU più potente, più cross-connect, supporto 10G/40G/100G). Per l'accesso in coda cliente richiedono rispettivamente scheda <strong>4WCC + 2 FO</strong> (PXM1) e <strong>4WCC + 4CSM</strong> (PXM3). Verificabili nel tab <em>Analisi e Verifica PXM</em></dd>
 
                 <dt><strong>RA Italia (Rete Aggregation Italia)</strong></dt>
                 <dd>Rete di aggregazione TIM che raccoglie traffico dalle centrali periferiche verso i nodi Core (NODO A1). Struttura gerarchica: Tipo 3 → Tipo 2 → Tipo 1</dd>
@@ -36763,16 +36786,16 @@ PERCORSI ALTERNATIVI (Div):
                 </div>
               </details>
 
-              <!-- Verifica PXM -->
+              <!-- Analisi e Verifica PXM -->
               <details>
                 <summary style="font-weight:700;font-size:0.95rem;cursor:pointer;color:#d1008f;padding:6px 0;">
-                  🧩 Verifica PXM — Centrali con scheda DWDM PXM1/PXM3
+                  🧩 Analisi e Verifica PXM — Centrali con scheda DWDM PXM1/PXM3
                 </summary>
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
                   <p><strong>Scopo:</strong> nelle Studi di Fattibilità (SdF), verificare se la centrale d'accesso impattata dalla coda cliente ha già un DWDM installato (<strong>PXM1</strong> o <strong>PXM3</strong>), per evitare di prevedere una nuova installazione ex-novo dell'apparato/cestello e riutilizzare quello esistente: basta aggiungere <strong>4WCC + 2 FO</strong> (2 FO da richiedere a FOL) su PXM1, oppure <strong>4WCC + 4CSM</strong> su PXM3 — riducendo, anche in valutazioni parametriche, l'acquisto di materiale già presente in centrale, previa verifica di slot liberi su NNI per l'installazione delle nuove piastre. Database di 3.478 record (1.040 PXM1 + 2.438 PXM3) da anagrafica SHELF_PXM1/PXM3.</p>
                   <p><strong>Come si usa:</strong></p>
                   <ul style="margin-left:1.2rem;line-height:1.8;">
-                    <li>Accedi da <strong>Analisi Extra → Verifica PXM</strong>.</li>
+                    <li>Accedi da <strong>Analisi Extra → Analisi e Verifica PXM</strong>.</li>
                     <li><strong>📍 Ricerca per Coordinate / Indirizzo Sede Cliente</strong>: trova le centrali di riferimento RA e RC più vicine e le 3 centrali dove è già installata tecnologia DWDM (PXM1/PXM3) per il cliente. Geocodifica l'indirizzo della Sede Cliente o inserisci Lat/Lon (algoritmo Haversine), con segnalazione se la centrale RC/RA coincide con una PXM. Esporta (CSV) o copia i risultati con gli appositi bottoni.</li>
                     <li>Cerca per <em>CLLI Sito</em> e/o <em>Descrizione sito</em> nel campo di ricerca live (case/accent-insensitive), oppure clicca sul campo vuoto per sfogliare l'elenco completo delle centrali installate.</li>
                     <li><strong>Filtro per tipo</strong>: 🔷 Tutti (default), SOLO PXM1 (esclude centrali che hanno anche PXM3), SOLO PXM3 (esclude centrali che hanno anche PXM1), PXM1+PXM3 (solo centrali con entrambe).</li>
@@ -37024,7 +37047,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V50.07.13 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V50.07.20 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -37041,6 +37064,19 @@ PERCORSI ALTERNATIVI (Div):
       </div>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+        <details open style="border:1px solid #d1008f;border-radius:12px;overflow:hidden;background:#fdf2f8;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#831843;display:flex;align-items:center;gap:0.5rem;background:#fce7f3;">
+            🧭 V50.07.20 — Riorganizzazione Menu: Analisi Fattibilità in Analisi Extra, Rinomina Verifica PXM
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:0.35rem;">
+              <li><strong>Tab "Analisi Fattibilità" spostato</strong>: rimosso dalla barra di navigazione principale, ora primo elemento del menu a tendina <strong>Analisi Extra ▼</strong>.</li>
+              <li><strong>Menu Analisi Extra riordinato</strong>, nuova sequenza: Analisi Fattibilità → Analisi S.d.F. Internalizzati → Analisi Collegamenti Critici DWDM → Analisi Rete → Analisi e Verifica PXM → Analisi Swap — Correlazione RA/RC → Analisi &amp; Confronto DB Excel → Calcolo Attenuazione.</li>
+              <li><strong>Tab "Verifica PXM" rinominato</strong> in <strong>"Analisi e Verifica PXM"</strong>: aggiornati titolo tab, pannello Note, Guida Rapida, Guida per Tab e Glossario. Le note storiche del Changelog relative alle versioni precedenti mantengono il nome "Verifica PXM" in uso a quel tempo.</li>
+            </ul>
+          </div>
+        </details>
 
         <details open style="border:1px solid #d1008f;border-radius:12px;overflow:hidden;background:#fdf2f8;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#831843;display:flex;align-items:center;gap:0.5rem;background:#fce7f3;">
@@ -303499,11 +303535,20 @@ function exportCostSelection(button) {
       return (el.textContent || '').trim().replace(/\s+/g, ' ');
     }
 
-    lines.push('Totale Listino Link – Costo:\t\t\t' + getText('cost-total-link'));
-    lines.push('Totale Coda Cliente / Servizio:\t\t\t' + getText('cost-total-coda'));
-    lines.push('Totale Apparati & Cestelli:\t\t\t' + getText('cost-total-app'));
-    lines.push('Totale Complessivo Stimato (Prezzo Cliente):\t' + getText('cost-total-global'));
-    lines.push('Totale Complessivo con eventuale Sconto**:\t' + getText('cost-total-global-discount'));
+    // Allineamento colonne: usa come riferimento la larghezza dell'etichetta più lunga
+    // ("Totale Complessivo Stimato (Prezzo Cliente):") + un margine fisso di 4 spazi.
+    function padLabel(label) {
+      var target = 'Totale Complessivo Stimato (Prezzo Cliente):'.length; // 44
+      var gap = 4;
+      var padded = label.length < target ? label + ' '.repeat(target - label.length) : label;
+      return padded + ' '.repeat(gap);
+    }
+
+    lines.push(padLabel('Totale Listino Link – Costo:') + getText('cost-total-link'));
+    lines.push(padLabel('Totale Coda Cliente / Servizio:') + getText('cost-total-coda'));
+    lines.push(padLabel('Totale Apparati & Cestelli:') + getText('cost-total-app'));
+    lines.push(padLabel('Totale Complessivo Stimato (Prezzo Cliente):') + getText('cost-total-global'));
+    lines.push(padLabel('Totale Complessivo con eventuale Sconto**:') + getText('cost-total-global-discount'));
 
     lines.push(''); // riga vuota di separazione
 
@@ -303543,7 +303588,16 @@ function exportCostSelection(button) {
         }
       }
 
-      // righe selezionate → "Etichetta:\tValore"
+      // righe selezionate → "Etichetta:  Valore" (allineate su colonna comune)
+      // Calcola la larghezza massima delle etichette di QUESTA tabella, così il
+      // valore di ogni riga si allinea sempre alla stessa colonna, indipendentemente
+      // dal rendering delle tabulazioni nel visualizzatore di testo usato.
+      var maxLabelLen = 0;
+      headerValues.forEach(function(h) {
+        maxLabelLen = Math.max(maxLabelLen, (h + ':').length);
+      });
+      var gapCols = 2;
+
       selected.forEach(function(tr) {
         var cells = tr.querySelectorAll('td');
         for (var i = 1; i < cells.length; i++) {
@@ -303551,17 +303605,12 @@ function exportCostSelection(button) {
             .trim()
             .replace(/\s+/g, ' ');
           var label = headerValues[i - 1] || ('Colonna ' + i);
-          var labelLower = label.toLowerCase();
+          var labelColon = label + ':';
+          var padded = labelColon.length < maxLabelLen
+            ? labelColon + ' '.repeat(maxLabelLen - labelColon.length)
+            : labelColon;
 
-          // per Link / Costo / Note, doppio TAB per allineare meglio
-          var needsDoubleTab =
-            labelLower.indexOf('link') === 0 ||
-            labelLower.indexOf('costo') === 0 ||
-            labelLower.indexOf('note') === 0;
-
-          var tab = needsDoubleTab ? '\t\t' : '\t';
-
-          lines.push(label + ':' + tab + v);
+          lines.push(padded + ' '.repeat(gapCols) + v);
         }
         lines.push(''); // riga vuota tra le righe
       });
@@ -319116,6 +319165,90 @@ window._areaFromZona = function(zona, fallback) {
   };
   return MAP[z] || fallback || zona || '-';
 };
+
+// ═══════════════════════════════════════════════════════════════════════
+// Blocco "riquadri" (stile Excel) per 📊 Riepilogo Economico — tab Analisi Costi
+// Sempre bloccata (position:fixed) quando il tab è visibile, fin da subito —
+// nessuna transizione "scorre poi si aggancia": resta ferma sotto la nav bar.
+// ═══════════════════════════════════════════════════════════════════════
+(function() {
+  function initCostRiepilogoFreeze() {
+    var section = document.getElementById('costRiepilogoSection');
+    var placeholder = document.getElementById('costRiepilogoPlaceholder');
+    if (!section || !placeholder) return;
+
+    var isFixed = false;
+
+    function headerOffset() {
+      var topbar = document.querySelector('.top-bar');
+      var navbar = document.querySelector('.nav-bar');
+      var h = 0;
+      if (topbar) h += topbar.offsetHeight;
+      if (navbar) h += navbar.offsetHeight;
+      return h;
+    }
+
+    function isCostiTabVisible() {
+      var tab = document.getElementById('tab-costi');
+      return tab && !tab.classList.contains('hidden');
+    }
+
+    function unfreeze() {
+      section.style.position = '';
+      section.style.top = '';
+      section.style.left = '';
+      section.style.width = '';
+      section.style.zIndex = '';
+      section.style.margin = '';
+      placeholder.style.display = 'none';
+      isFixed = false;
+    }
+
+    function applyFreeze() {
+      if (!isCostiTabVisible()) {
+        if (isFixed) unfreeze();
+        return;
+      }
+      var refRect;
+      if (isFixed) {
+        refRect = placeholder.getBoundingClientRect();
+      } else {
+        refRect = section.getBoundingClientRect();
+        placeholder.style.height = refRect.height + 'px';
+      }
+      placeholder.style.display = 'block';
+      section.style.position = 'fixed';
+      section.style.top = headerOffset() + 'px';
+      section.style.left = refRect.left + 'px';
+      section.style.width = refRect.width + 'px';
+      section.style.zIndex = '900';
+      section.style.margin = '0';
+      isFixed = true;
+    }
+
+    function refreshOnTabSwitch() {
+      unfreeze();
+      setTimeout(applyFreeze, 60);
+    }
+
+    window.addEventListener('resize', function() {
+      unfreeze();
+      setTimeout(applyFreeze, 30);
+    });
+
+    document.querySelectorAll('.nav-item, .nav-dropdown-item').forEach(function(btn) {
+      btn.addEventListener('click', refreshOnTabSwitch);
+    });
+
+    applyFreeze();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCostRiepilogoFreeze);
+  } else {
+    initCostRiepilogoFreeze();
+  }
+})();
 </script>
 </body>
 </html>
