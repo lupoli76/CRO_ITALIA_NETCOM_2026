@@ -319201,14 +319201,16 @@ window._areaFromZona = function(zona, fallback) {
     if (!section || !placeholder) return;
 
     var isFixed = false;
+    var GAP = 40; // 2.5rem — stessa distanza usata dalle altre tab (main-wrapper padding-top)
 
     function headerOffset() {
-      var topbar = document.querySelector('.top-bar');
-      var navbar = document.querySelector('.nav-bar');
-      var h = 0;
-      if (topbar) h += topbar.offsetHeight;
-      if (navbar) h += navbar.offsetHeight;
-      return h;
+      // Usa la STESSA formula di .main-wrapper (padding-top: topbar-height + 54px)
+      // invece di misurare l'altezza reale della nav bar, per combaciare esattamente
+      // con la distanza usata dalle altre tab (evita scarti di pochi pixel).
+      var topbarHeight = parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--topbar-height')
+      ) || 88;
+      return topbarHeight + 54;
     }
 
     function isCostiTabVisible() {
@@ -319223,6 +319225,9 @@ window._areaFromZona = function(zona, fallback) {
       section.style.width = '';
       section.style.zIndex = '';
       section.style.margin = '';
+      section.style.paddingTop = '';
+      section.style.background = '';
+      section.style.boxSizing = '';
       placeholder.style.display = 'none';
       isFixed = false;
     }
@@ -319237,7 +319242,7 @@ window._areaFromZona = function(zona, fallback) {
         refRect = placeholder.getBoundingClientRect();
       } else {
         refRect = section.getBoundingClientRect();
-        placeholder.style.height = refRect.height + 'px';
+        placeholder.style.height = (refRect.height + GAP) + 'px';
       }
       placeholder.style.display = 'block';
       section.style.position = 'fixed';
@@ -319246,6 +319251,9 @@ window._areaFromZona = function(zona, fallback) {
       section.style.width = refRect.width + 'px';
       section.style.zIndex = '900';
       section.style.margin = '0';
+      section.style.paddingTop = GAP + 'px';
+      section.style.background = 'var(--gray-50)';
+      section.style.boxSizing = 'border-box';
       isFixed = true;
     }
 
