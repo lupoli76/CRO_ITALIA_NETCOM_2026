@@ -20384,7 +20384,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         <div class="divider"></div>
         <div class="app-title">
           <div class="app-name">Central Routing Optimizer</div>
-          <div class="app-desc">Piattaforma di Gestione Fattibilità, Analisi e Routing per Rete Aggregation e Core</div>
+          <div class="app-desc">Piattaforma di Analisi, Fattibilità, Routing e Visualizzazione su Rete Aggregation e Core</div>
         </div>
       </div>
       <div class="top-bar-right">
@@ -20480,7 +20480,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         <div class="hero-grid">
           <div class="hero-content">
             <h1>Piattaforma di Gestione Rete Italia</h1>
-            <p>Sistema Integrato per Analisi di Fattibilità, Rilascio e Routing su Rete <span style="color: #1e5a99; font-weight: bold;">AGGREGATION (RA)</span> e <span style="color: #9b2c2c; font-weight: bold;">CORE (RC)</span> TelecomItalia. Include ottimizzazione dei percorsi su rete di trasporto nazionale (RTN) e gestione centralizzata dei database di rete.</p>            
+            <p>Sistema integrato per l'analisi di fattibilità su rete <span style="color: #1e5a99; font-weight: bold;">Aggregation (RA)</span> e <span style="color: #9b2c2c; font-weight: bold;">Core (RC)</span> di Telecom Italia. Riporta integralmente il database della rete live per consultazione, verifica e individuazione di eventuali anomalie da aggiornare. Supporta la ricerca e la verifica del routing e dei costi da inserire in piattaforma, l'identificazione dei punti di rilancio verso rete RTN, la generazione automatica delle note tecniche e la preparazione degli allegati per la creazione dei file KMZ.</p>            
             <div class="hero-actions home-actions home-actions-grid">
     <button class="btn btn-ra" onclick="switchTab('search-ra')">
       <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -25133,8 +25133,16 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             📥 Esporta Riepilogo Economico
           </button>
         </div>
-        <p class="db-subtitle" style="margin-top:0.4rem;">
-          Totali Calcolati in tempo reale sulla base di tutte le righe selezionate nei pannelli sottostanti.
+        <p class="db-subtitle" style="margin-top:0.4rem; display:flex; justify-content:space-between; align-items:center; gap:0.75rem;">
+          <span>Totali Calcolati in tempo reale sulla base di tutte le righe selezionate nei pannelli sottostanti.</span>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="clearAllCostSelections()"
+            title="Deseleziona tutte le righe selezionate in tutti i pannelli sottostanti"
+            style="font-size:0.75rem; padding:0.2rem 0.65rem; white-space:nowrap; flex-shrink:0;">
+            🔁 Azzera Selezione
+          </button>
         </p>
       </div>
       <div class="db-card-body" style="padding-top:0;">
@@ -303268,6 +303276,21 @@ function updateTotals() {
 
   window.updateCostTotals = function() {
     updateTotals();
+  };
+
+  window.clearAllCostSelections = function() {
+    if (typeof selectedLinks !== 'undefined' && selectedLinks) selectedLinks.clear();
+    if (typeof selectedCoda !== 'undefined' && selectedCoda) selectedCoda.clear();
+    if (typeof selectedApp !== 'undefined' && selectedApp) selectedApp.clear();
+
+    document.querySelectorAll('.cost-checkbox').forEach(function(cb) {
+      cb.checked = false;
+      var row = cb.closest('tr');
+      if (row) row.classList.remove('cost-row-selected');
+    });
+
+    updateTotals();
+    if (typeof _codaRefresh === 'function') _codaRefresh();
   };
 
   
