@@ -311616,7 +311616,7 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
             '<span style="font-size:0.82rem;font-weight:700;">' + distStr + '</span>' +
             (fmtSegsHtml(edges) ? '<br><span style="font-size:0.7rem;line-height:1.5;">' + fmtSegsHtml(edges) + '</span>' : '') +
           '</td>' +
-          '<td style="white-space:nowrap;"><div style="display:flex;flex-wrap:nowrap;gap:4px;">' + altAzioniHtml + '</div></td>' +
+          '<td><div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;">' + altAzioniHtml + '</div></td>' +
         '</tr>'
       );
     }).join('');
