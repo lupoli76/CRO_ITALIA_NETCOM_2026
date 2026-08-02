@@ -4,13 +4,44 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 50.08.17                                                             ║
-║   Data: Luglio 2026                                                              ║
+║   Versione: 50.08.02  (rev. pubblicata: V50.08.02 | Ago 2026)                    ║
+║   Data: 2 Agosto 2026                                                            ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V50.08.02 | Ago 2026:                                                ║
+║   ─────────────────────────                                                      ║
+║   • NUOVO export Excel (.xlsx) per i tab Ricerca Percorso RC e Unificato,        ║
+║     affiancato all'export TXT esistente. I bottoni "Esporta TXT" dei due tab     ║
+║     diventano "Esporta"; nella barra di selezione compaiono due bottoni:         ║
+║     "Esporta TXT (N)" e "Esporta XLSX (N)", con lo stesso contatore              ║
+║   • Il file Excel ha 4 fogli:                                                    ║
+║     - Riepilogo: intestazione (partenza in blu, arrivo in verde, Rif. SdF),      ║
+║       tabella percorsi con Percorso Centrali e ID Collegamenti su piu' righe     ║
+║       e colorati come nella tabella a video, Distanza (km) con ripartizione      ║
+║       per tratta (RA1/RA2/RC/RTN), Collegamenti con logici, fisici e mix         ║
+║       RA/RC/salti; sotto la tabella le note generate "Nota Lavorante" e          ║
+║       "Nota File Condiviso"                                                      ║
+║     - Centrali: una riga per centrale, gateway e centrali duplicate in viola     ║
+║     - Collegamenti: una riga per link, righe gateway inserite in posizione       ║
+║     - KMZ: replica del documento generato in Analisi Fattibilita'                ║
+║   • Barra di selezione export compattata: la nota "Zona e Rig rilevati           ║
+║     automaticamente" diventa un'icona con tooltip, etichette accorciate          ║
+║     (Cap.:, Soglia:) e bottoni di export raggruppati per non andare a capo       ║
+║   • FIX parser TXT (import KMZ e IRP in Analisi Fattibilita'): i link RA non     ║
+║     venivano riconosciuti quando il Subpath conteneva caratteri non              ║
+║     alfanumerici (es. ACA007/2) o la spaziatura attorno alle "|" variava;        ║
+║     ora riconosciuti anche i gateway RTN, prima ignorati                         ║
+║   • FIX segmentazione IRP: un segmento si chiude anche al cambio di Arco o       ║
+║     Subpath, non solo sui gateway espliciti (un gateway RA<->RA compare tra      ║
+║     le CENTRALI ma non tra i COLLEGAMENTI, quindi il secondo tratto RA           ║
+║     spariva dalla nota); nodi di confine ricalcolati sulla sequenza reale        ║
+║   • FIX calcUnifiedSegments non era esposta su window: l'export TXT non          ║
+║     mostrava la ripartizione per tratta accanto alla distanza totale             ║
+║   ─────────────────────────                                                      ║
 ║                                                                                  ║
 ║   CHANGELOG v50.08.17:                                                           ║
 ║   ─────────────────────────                                                      ║
@@ -14598,16 +14629,20 @@ textarea.db-search-input {
 
 .cro-modal-overlay{display:none;position:fixed;z-index:10000;left:0;top:0;width:100%;height:100%;background-color:var(--bg-overlay)}.cro-modal-overlay.active{display:flex;align-items:center;justify-content:center}.cro-modal-box{background:var(--card-bg);border-radius:12px;box-shadow:var(--shadow-xl);width:90%;max-width:480px;overflow:hidden;font-family:var(--font-sans)}.cro-modal-header{padding:1.25rem 1.5rem;background:linear-gradient(135deg,var(--tim-blue-600),var(--tim-blue-500));color:var(--text-inverted);display:flex;align-items:center;gap:0.75rem}.cro-modal-header.success{background:linear-gradient(135deg,var(--color-success-600),var(--color-success-500))}.cro-modal-header.warning{background:linear-gradient(135deg,var(--color-error-600),var(--color-error-500))}.cro-modal-icon{font-size:1.75rem}.cro-modal-title{font-size:1.125rem;font-weight:600;margin:0;flex:1}.cro-modal-copy-btn{background:rgba(255,255,255,0.2);border:none;border-radius:6px;padding:0.4rem 0.65rem;cursor:pointer}.cro-modal-body{padding:1.5rem;font-size:0.9375rem;line-height:1.7;color:var(--text-primary);white-space:pre-wrap}.cro-modal-footer{padding:1rem 1.5rem;background-color:var(--bg-secondary);border-top:1px solid var(--border-default);display:flex;justify-content:flex-end;gap:0.75rem}.cro-modal-btn{padding:0.5rem 1.25rem;border:none;border-radius:6px;font-size:0.875rem;font-weight:600;cursor:pointer}.cro-modal-btn-primary{background:var(--btn-primary-bg);color:var(--btn-primary-text)}.cro-modal-btn-secondary{background:var(--btn-secondary-bg);color:var(--btn-secondary-text)}
 /* ── EXPORT INLINE SELECTION BAR ── */
-.expsm-inline-bar{display:none;align-items:center;gap:7px;padding:7px 12px;background:linear-gradient(90deg,var(--tim-blue-50,#eff6ff),var(--bg-secondary));border:1.5px solid var(--tim-blue-300,#93c5fd);border-radius:8px;margin:6px 0 4px;flex-wrap:wrap;font-family:var(--font-sans)}
+.expsm-inline-bar{display:none;align-items:center;gap:5px;padding:6px 9px;background:linear-gradient(90deg,var(--tim-blue-50,#eff6ff),var(--bg-secondary));border:1.5px solid var(--tim-blue-300,#93c5fd);border-radius:8px;margin:6px 0 4px;flex-wrap:wrap;font-family:var(--font-sans)}
 .expsm-inline-bar.active{display:flex}
 .expsm-inline-bar-label{font-size:.78rem;font-weight:700;color:var(--tim-blue-700,#1d4ed8);white-space:nowrap}
 body.dark-mode .expsm-inline-bar{background:linear-gradient(90deg,rgba(29,78,216,.12),var(--bg-secondary));border-color:var(--tim-blue-500,#3b82f6)}
 body.dark-mode .expsm-inline-bar-label{color:var(--tim-blue-300,#93c5fd)}
-.expsm-inline-btn{padding:.28rem .7rem;border:1px solid var(--border-default);border-radius:6px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--card-bg);color:var(--text-primary);white-space:nowrap;transition:background .12s}
+.expsm-inline-btn{padding:.28rem .55rem;border:1px solid var(--border-default);border-radius:6px;font-size:.76rem;font-weight:600;cursor:pointer;background:var(--card-bg);color:var(--text-primary);white-space:nowrap;transition:background .12s}
 .expsm-inline-btn:hover{background:var(--bg-hover)}
 .expsm-inline-btn.export{background:var(--tim-blue-500,#3b82f6);color:#fff;border-color:transparent}
 .expsm-inline-btn.export:hover{opacity:.88}
 .expsm-inline-btn.export:disabled{opacity:.45;cursor:not-allowed}
+.expsm-inline-btn.export.xls{background:var(--color-success-600,#15803d)}
+.expsm-actions{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;flex-shrink:0;margin-left:auto}
+.expsm-hint{font-size:.92rem;line-height:1;color:var(--tim-blue-500,#3b82f6);cursor:help;user-select:none;flex-shrink:0}
+.expsm-hint:hover,.expsm-hint:focus{color:var(--tim-blue-700,#1d4ed8);outline:none}
 .expsm-inline-btn.cancel{background:transparent;color:var(--text-secondary);border-color:transparent;padding:.28rem .5rem}
 .expsm-inline-btn.cancel:hover{color:var(--color-error-600,#dc2626)}
 .expsm-inline-count{font-size:.76rem;color:var(--text-secondary);font-weight:500}
@@ -20598,7 +20633,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V50.07.20 | Lug 2026</div>
+<div class="version-tag">V50.08.02 | Ago 2026</div>
       </div>
     </div>
   </header>
@@ -20879,12 +20914,14 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
                     </div>
                     <div class="feature-header">
-                        <h3 class="feature-title" style="color: #65a30d;">Export Multi-formato</h3>
+                        <h3 class="feature-title" style="color: #65a30d;">Export Multi-formato — TXT + Excel</h3>
                         <span class="feature-badge" style="background: #f7fee7; color: #65a30d;">Enterprise Output</span>
                     </div>
-                    <p class="feature-desc">Export percorsi formato <strong>TXT professionale</strong> con header grafico, box percorso, centrali numerate e collegamenti con TipoSede. <strong>Copia formattata</strong> con emoji bandiere: 🇵🇦🇷🇹🇪🇳🇿🇦 Partenza, 🇵🇦🇸🇸🇦🇬🇬🇮🇴 Passaggio, 🇬🇦🇹🇪🇼🇦🇾 Gateway RA↔RC, 🇦🇷🇷🇮🇻🇴 Arrivo. Formato unificato per <strong>RC</strong>, <strong>RA</strong> e <strong>UNIFIED</strong>.</p>
+                    <p class="feature-desc">Export percorsi formato <strong>TXT professionale</strong> con header grafico, box percorso, centrali numerate e collegamenti con TipoSede. <strong>Copia formattata</strong> con emoji bandiere: 🇵🇦🇷🇹🇪🇳🇿🇦 Partenza, 🇵🇦🇸🇸🇦🇬🇬🇮🇴 Passaggio, 🇬🇦🇹🇪🇼🇦🇾 Gateway RA↔RC, 🇦🇷🇷🇮🇻🇴 Arrivo. Formato unificato per <strong>RC</strong>, <strong>RA</strong> e <strong>UNIFIED</strong>. Dai tab <strong>RC</strong> e <strong>Unificato</strong> gli stessi percorsi selezionati si esportano anche in <strong>Excel (.xlsx)</strong>, su quattro fogli: <strong>Riepilogo</strong> (una riga per percorso, con Percorso Centrali e ID Collegamenti su più righe e con gli stessi colori della tabella a video, distanza ripartita per tratta RA/RC/RTN, e sotto la tabella le note <strong>🌐 Nota Lavorante</strong> e <strong>📂 Nota File Condiviso</strong> già pronte da incollare), <strong>Centrali</strong>, <strong>Collegamenti</strong> (con le righe gateway al posto giusto) e <strong>KMZ</strong>, che replica il documento generato in Analisi Fattibilità.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #f7fee7; color: #65a30d;">TXT Pro</span>
+                        <span class="spec-tag" style="background: #f7fee7; color: #65a30d;">Excel 4 Fogli</span>
+                        <span class="spec-tag" style="background: #f7fee7; color: #65a30d;">Note IRP + KMZ</span>
                         <span class="spec-tag" style="background: #f7fee7; color: #65a30d;">Flag Emoji</span>
                         <span class="spec-tag" style="background: #f7fee7; color: #65a30d;">Unified Format</span>
                     </div>
@@ -21347,17 +21384,60 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     </svg>
   </div>
   <div class="feature-header">
-    <h3 class="feature-title" style="color: #d1008f;">🆕 Novità V50.07.20 — Lug 2026</h3>
+    <h3 class="feature-title" style="color: #d1008f;">🆕 Novità V50.08.02 — Ago 2026 · Export Excel</h3>
     <span class="feature-badge" style="background:#fdf2f8;color:#d1008f;">Latest</span>
   </div>
   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
-    <li><strong>🧭 Riorganizzazione menu</strong>: tab "Analisi Fattibilità" spostato dalla barra principale al menu <strong>Analisi Extra</strong> (primo elemento); menu riordinato in sequenza logica; tab "Verifica PXM" rinominato in <strong>"Analisi e Verifica PXM"</strong>.</li>
+    <li><strong>📊 Export Excel (.xlsx)</strong> nei tab <strong>RC</strong> e <strong>Unificato</strong>: i bottoni <strong>📄 Esporta TXT</strong> diventano <strong>📄 Esporta</strong> e nella barra di selezione compaiono due bottoni, <strong>📤 Esporta TXT (N)</strong> e <strong>📊 Esporta XLSX (N)</strong>, sulla stessa selezione di percorsi.</li>
+    <li><strong>📑 Quattro fogli</strong>: <strong>Riepilogo</strong> (una riga per percorso, Percorso Centrali e ID Collegamenti su più righe con gli stessi colori della tabella a video, Distanza ripartita per tratta RA/RC/RTN, Collegamenti con logici, fisici e mix RA/RC/salti), <strong>Centrali</strong>, <strong>Collegamenti</strong> con le righe gateway in posizione, e <strong>KMZ</strong>, che replica il documento generato in Analisi Fattibilità.</li>
+    <li><strong>📝 Note già pronte</strong>: sotto la tabella del Riepilogo il file riporta la <strong>🌐 Nota Lavorante — campo Note trasporto</strong> e la <strong>📂 Nota File Condiviso</strong>, generate dagli stessi dati del percorso.</li>
   </ul>
 
-  <p style="margin:0.8rem 0 0.3rem 0; font-size:0.75rem; font-weight:700; color:#7c3aed; letter-spacing:0.02em;">
-    📋 Aggiornamenti precedenti — V50.07.13 → V41.04.08
-  </p>
-  <ul style="margin:0 0 0.5rem 1rem; padding:0; font-size:0.8rem; color:var(--gray-700); line-height:1.65;">
+  <div class="feature-specs">
+    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Export XLSX</span>
+    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">4 Fogli</span>
+    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Note IRP</span>
+    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Foglio KMZ</span>
+  </div>
+</div>
+
+<!-- Feature: Correzioni V50.08.02 -->
+<div class="feature-card" style="border-left: 3px solid #b45309; background: linear-gradient(135deg,#fff 0%,#fffbeb 100%);">
+  <div class="feature-icon" style="color: #b45309;">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+    </svg>
+  </div>
+  <div class="feature-header">
+    <h3 class="feature-title" style="color: #b45309;">🔧 Correzioni V50.08.02 — Ago 2026</h3>
+    <span class="feature-badge" style="background:#fffbeb;color:#b45309;">Fix</span>
+  </div>
+  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🔧 FIX import TXT</strong> (Generatore Info KMZ e Generatore Note IRP): i collegamenti RA non venivano letti quando il Subpath conteneva caratteri non alfanumerici (es. <code>ACA007/2</code>) o la spaziatura attorno alle <code>|</code> variava; ora vengono riconosciuti anche i gateway <strong>🌐 RTN</strong>.</li>
+    <li><strong>🔧 FIX segmentazione IRP</strong>: un segmento si chiude anche al cambio di <strong>Arco</strong> o <strong>Subpath</strong>, non solo sui gateway espliciti — prima un secondo tratto RA dopo un gateway RA↔RA spariva dalla nota.</li>
+    <li><strong>🔧 FIX export TXT</strong>: la ripartizione della distanza per tratta (RA1, RA2, RC, RTN) ora compare anche nel file di testo, non solo nella tabella a video.</li>
+  </ul>
+
+  <div class="feature-specs">
+    <span class="spec-tag" style="background:#fffbeb;color:#b45309;">Parser TXT</span>
+    <span class="spec-tag" style="background:#fffbeb;color:#b45309;">Segmentazione IRP</span>
+    <span class="spec-tag" style="background:#fffbeb;color:#b45309;">Ripartizione Tratte</span>
+  </div>
+</div>
+
+<!-- Feature: Storico aggiornamenti -->
+<div class="feature-card" style="border-left: 3px solid #7c3aed; background: linear-gradient(135deg,#fff 0%,#f5f3ff 100%);">
+  <div class="feature-icon" style="color: #7c3aed;">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+  </div>
+  <div class="feature-header">
+    <h3 class="feature-title" style="color: #7c3aed;">📋 Aggiornamenti precedenti — V50.07.20 → V41.04.08</h3>
+    <span class="feature-badge" style="background:#f5f3ff;color:#7c3aed;">Storico</span>
+  </div>
+  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.8rem; color:var(--gray-700); line-height:1.65;">
+    <li><strong>V50.07.20 — 🧭 Riorganizzazione menu</strong>: tab "Analisi Fattibilità" spostato dalla barra principale al menu <strong>Analisi Extra</strong> (primo elemento); menu riordinato in sequenza logica; tab "Verifica PXM" rinominato in <strong>"Analisi e Verifica PXM"</strong>.</li>
     <li><strong>V50.07.13 — 🧩 Analisi e Verifica PXM</strong>: ricerca per coordinate/indirizzo Sede Cliente (centrale RA/RC più vicina + 3 centrali PXM più vicine via Haversine); filtro tipo Tutti/SOLO PXM1/SOLO PXM3/PXM1+PXM3; export CSV e copia appunti; layout riallineato e info PXM1/PXM3 arricchite con nota di fattibilità SdF.</li>
     <li><strong>V50.07.10 — 🧩 Selezione multipla</strong>: checkbox per riga + "seleziona tutto", pannello Selezione con chip rimovibili, "Mostra solo selezionate"</li>
     <li><strong>V50.06.24-26 — 🧩 NUOVO TAB Verifica PXM</strong>: ricerca centrali PXM1/PXM3 (DWDM) per CLLI/Descrizione; 3.478 record; scheda richiesta automatica (4WCC+2FO / 4WCC+4CSM); georeferenziazione Nome Sede/Comune/Lat/Long (1.845 centrali)</li>
@@ -21368,8 +21448,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </ul>
 
   <div class="feature-specs">
-    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Menu Riorganizzato</span>
-    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Analisi e Verifica PXM</span>
+    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Menu Riorganizzato</span>
+    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Analisi e Verifica PXM</span>
     <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">36 Nodi A1</span>
     <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Badge POP</span>
   </div>
@@ -21897,7 +21977,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
       <div style="font-size: 0.75rem; font-weight: 600; color: var(--gray-700); line-height: 1;">Percorsi Std</div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openExportSelectModal('rc_std')" style="white-space: nowrap;">📄 Esporta TXT</button>
+        <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openExportSelectModal('rc_std')" style="white-space: nowrap;">📄 Esporta</button>
         <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openRoutesMapTabRC_StdOnly()" style="white-space: nowrap;">🗺️ Maps</button>
       </div>
     </div>
@@ -21907,7 +21987,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
       <div style="font-size: 0.75rem; font-weight: 600; color: var(--gray-700); line-height: 1;">Percorsi Std + Div</div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openExportSelectModal('rc_std_div')" style="white-space: nowrap;">📄 Esporta TXT</button>
+        <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openExportSelectModal('rc_std_div')" style="white-space: nowrap;">📄 Esporta</button>
         <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openRoutesMapTabRC()" style="white-space: nowrap;">🗺️ Maps</button>
       </div>
     </div>
@@ -21973,19 +22053,22 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <span style="display:flex; align-items:center; gap:3px;">
                   <label style="font-size:.72rem; color:var(--text-secondary); white-space:nowrap;">Rif. Std:</label>
                   <input type="text" id="rcSdfRefStd" placeholder="SdF-2024-001" maxlength="60"
-                    style="width:110px; padding:1px 5px; border:1px solid var(--border-default); border-radius:4px; font-size:.73rem; font-family:inherit;"
+                    style="width:92px; padding:1px 4px; border:1px solid var(--border-default); border-radius:4px; font-size:.73rem; font-family:inherit;"
                     title="Riferimento fattibilità per i percorsi Standard (opzionale)">
                 </span>
                 <span style="display:flex; align-items:center; gap:3px;">
                   <label style="font-size:.72rem; color:var(--text-secondary); white-space:nowrap;">Rif. Div:</label>
                   <input type="text" id="rcSdfRefDiv" placeholder="SdF-2024-002" maxlength="60"
-                    style="width:110px; padding:1px 5px; border:1px solid var(--border-default); border-radius:4px; font-size:.73rem; font-family:inherit;"
+                    style="width:92px; padding:1px 4px; border:1px solid var(--border-default); border-radius:4px; font-size:.73rem; font-family:inherit;"
                     title="Riferimento fattibilità per i percorsi Diversificati (opzionale)">
                 </span>
               </span>
               <div style="flex:1"></div>
-              <button class="expsm-inline-btn export" id="rcSelBarExportBtn" onclick="window.expsmInlineExport('rc')" disabled>📤 Esporta<span class="expsm-exp-n"></span></button>
-              <button class="expsm-inline-btn cancel" onclick="window.expsmInlineCancel('rc')" title="Annulla selezione">✕ Annulla</button>
+              <span class="expsm-actions">
+                <button class="expsm-inline-btn export" id="rcSelBarExportBtn" onclick="window.expsmInlineExport('rc','txt')" disabled title="Esporta i percorsi selezionati in formato testo (.txt)">📤 Esporta TXT<span class="expsm-exp-n"></span></button>
+                <button class="expsm-inline-btn export xls" id="rcSelBarExportXlsBtn" onclick="window.expsmInlineExport('rc','xlsx')" disabled title="Esporta i percorsi selezionati in foglio Excel (.xlsx)">📊 Esporta XLSX<span class="expsm-exp-n"></span></button>
+                <button class="expsm-inline-btn cancel" onclick="window.expsmInlineCancel('rc')" title="Annulla selezione">✕ Annulla</button>
+              </span>
             </div>
             <table class="db-table route-table">
               <thead>
@@ -24171,7 +24254,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
                     <div style="font-size: 0.75rem; font-weight: 600; color: var(--gray-700); line-height: 1;">Percorsi Std</div>
                     <div style="display:flex; align-items:center; gap:8px;">
-                      <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openExportSelectModal('unified_std')" style="white-space: nowrap;">📄 Esporta TXT</button>
+                      <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openExportSelectModal('unified_std')" style="white-space: nowrap;">📄 Esporta</button>
                       <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openRoutesMapTabUNIFIED_StdOnly && window.openRoutesMapTabUNIFIED_StdOnly()" style="white-space: nowrap;">🗺️ Maps</button>
                     </div>
                   </div>
@@ -24179,7 +24262,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
                     <div style="font-size: 0.75rem; font-weight: 600; color: var(--gray-700); line-height: 1;">Percorsi Std + Div</div>
                     <div style="display:flex; align-items:center; gap:8px;">
-                      <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openExportSelectModal('unified_std_div')" style="white-space: nowrap;">📄 Esporta TXT</button>
+                      <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openExportSelectModal('unified_std_div')" style="white-space: nowrap;">📄 Esporta</button>
                       <button class="btn btn-mini-secondary btn-export-mini" type="button" onclick="window.openRoutesMapTabUNIFIED_All && window.openRoutesMapTabUNIFIED_All()" style="white-space: nowrap;">🗺️ Maps</button>
                     </div>
                   </div>
@@ -24239,7 +24322,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 💶 Includi Costi
               </label>
               <div class="expsm-cost-options" id="unifiedCostOptions">
-                <label>Capacità:
+                <label>Cap.:
                   <select id="unifiedCostCapacity">
                     <option value="1G">1G</option>
                     <option value="10G">10G</option>
@@ -24247,12 +24330,12 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   </select>
                 </label>
                 <span class="expsm-cost-sep"></span>
-                <label title="Soglia km per rilevamento automatico Rigeneratore (default 250km)">Soglia rig:
+                <label title="Soglia km per rilevamento automatico Rigeneratore (default 250km)">Soglia:
                   <input type="number" id="unifiedCostThreshold" value="250" min="50" max="1000" step="10"
                     style="width:55px; padding:1px 4px; border:1px solid var(--border-default); border-radius:4px; font-size:.74rem; text-align:center;">
                   km
                 </label>
-                <span style="font-size:.72rem; color:var(--text-secondary); font-style:italic;">— Zona e Rig rilevati automaticamente</span>
+                <span class="expsm-hint" tabindex="0" title="Zona (Nord Ovest / Standard) e necessità di Rigeneratore vengono rilevate automaticamente dal percorso, in base ai codici Zona degli archi e alla soglia km impostata.">&#9432;</span>
               </div>
               <span class="expsm-cost-sep"></span>
               <span style="display:flex; align-items:center; gap:6px; font-size:.74rem; color:var(--text-secondary);">
@@ -24260,19 +24343,22 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <span style="display:flex; align-items:center; gap:3px;">
                   <label style="font-size:.72rem; color:var(--text-secondary); white-space:nowrap;">Rif. Std:</label>
                   <input type="text" id="unifiedSdfRefStd" placeholder="SdF-2024-001" maxlength="60"
-                    style="width:110px; padding:1px 5px; border:1px solid var(--border-default); border-radius:4px; font-size:.73rem; font-family:inherit;"
+                    style="width:92px; padding:1px 4px; border:1px solid var(--border-default); border-radius:4px; font-size:.73rem; font-family:inherit;"
                     title="Riferimento fattibilità per i percorsi Standard (opzionale)">
                 </span>
                 <span style="display:flex; align-items:center; gap:3px;">
                   <label style="font-size:.72rem; color:var(--text-secondary); white-space:nowrap;">Rif. Div:</label>
                   <input type="text" id="unifiedSdfRefDiv" placeholder="SdF-2024-002" maxlength="60"
-                    style="width:110px; padding:1px 5px; border:1px solid var(--border-default); border-radius:4px; font-size:.73rem; font-family:inherit;"
+                    style="width:92px; padding:1px 4px; border:1px solid var(--border-default); border-radius:4px; font-size:.73rem; font-family:inherit;"
                     title="Riferimento fattibilità per i percorsi Diversificati (opzionale)">
                 </span>
               </span>
               <div style="flex:1"></div>
-              <button class="expsm-inline-btn export" id="unifiedSelBarExportBtn" onclick="window.expsmInlineExport('unified')" disabled>📤 Esporta<span class="expsm-exp-n"></span></button>
-              <button class="expsm-inline-btn cancel" onclick="window.expsmInlineCancel('unified')" title="Annulla selezione">✕ Annulla</button>
+              <span class="expsm-actions">
+                <button class="expsm-inline-btn export" id="unifiedSelBarExportBtn" onclick="window.expsmInlineExport('unified','txt')" disabled title="Esporta i percorsi selezionati in formato testo (.txt)">📤 Esporta TXT<span class="expsm-exp-n"></span></button>
+                <button class="expsm-inline-btn export xls" id="unifiedSelBarExportXlsBtn" onclick="window.expsmInlineExport('unified','xlsx')" disabled title="Esporta i percorsi selezionati in foglio Excel (.xlsx)">📊 Esporta XLSX<span class="expsm-exp-n"></span></button>
+                <button class="expsm-inline-btn cancel" onclick="window.expsmInlineCancel('unified')" title="Annulla selezione">✕ Annulla</button>
+              </span>
             </div>
             <div class="db-table-wrapper">
               <table class="db-table route-table">
@@ -29295,11 +29381,16 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         if (/^[─═└┌╔╚]/.test(l))          continue;
 
         if (section === 'centrali') {
-          // Gateway marker in centrali (usa indexOf per robustezza cross-browser)
-          if (l.indexOf('[GW]') !== -1 && (l.indexOf('.--') === 0 || l.indexOf('.-') === 0)) {
-            var gwTipoM = l.match(/\[GW\]\s+([^\s\[]+)/);
-            cur.centrali.push({ gw: true, tipo: gwTipoM ? gwTipoM[1] : 'GW' });
-            continue;
+          // Gateway marker in centrali: [GW] RA<->RC, [GW] RA<->RA, oppure riga RTN
+          if (l.indexOf('.--') === 0 || l.indexOf('.-') === 0) {
+            var gwTipo = '';
+            if (l.indexOf('[GW]') !== -1) {
+              var gwTipoM = l.match(/\[GW\]\s+([^\s\[]+)/);
+              gwTipo = gwTipoM ? gwTipoM[1] : 'GW';
+            } else if (l.indexOf('RTN') !== -1) {
+              gwTipo = 'RTN';
+            }
+            if (gwTipo) { cur.centrali.push({ gw: true, tipo: gwTipo }); continue; }
           }
           var mC = l.match(/^\.\d+\.\s+(.+)/);
           if (mC) {
@@ -29312,16 +29403,26 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         }
 
         if (section === 'collegamenti') {
-          // Gateway marker in collegamenti (usa indexOf per robustezza cross-browser)
-          if (l.indexOf('[GW]') !== -1 && (l.indexOf('.--') === 0 || l.indexOf('.-') === 0)) {
-            var gwTipoM2 = l.match(/\[GW\]\s+([^\s\[]+)/);
-            cur.gateways.push({ afterIdx: cur.collegamenti.length,
-                                tipo: gwTipoM2 ? gwTipoM2[1] : 'GW' });
-            continue;
+          // Gateway marker in collegamenti: [GW] RA<->RC, [GW] RA<->RA, oppure riga RTN
+          if (l.indexOf('.--') === 0 || l.indexOf('.-') === 0) {
+            var gwTipo2 = '';
+            if (l.indexOf('[GW]') !== -1) {
+              var gwTipoM2 = l.match(/\[GW\]\s+([^\s\[]+)/);
+              gwTipo2 = gwTipoM2 ? gwTipoM2[1] : 'GW';
+            } else if (l.indexOf('RTN') !== -1) {
+              gwTipo2 = 'RTN';
+            }
+            if (gwTipo2) {
+              cur.gateways.push({ afterIdx: cur.collegamenti.length, tipo: gwTipo2 });
+              continue;
+            }
           }
           // RA link: .01. [RA] CB_arco_1016 | CB_90 | ACB012 | 11 • 2↔2 • 14.65 km • [ATTIVO]
-          var mRA = l.match(/^\.\d+\.\s+\[RA\]\s+([\w]+_arco_\d+\s+\|\s+[\w]+\s+\|\s+\w+\s+\|\s+\d+)/);
+          // L'ID e tutto cio che precede il primo separatore •: il Subpath puo contenere
+          // caratteri non alfanumerici (es. ACA007/2) e la spaziatura attorno ai | puo variare.
+          var mRA = l.match(/^\.\d+\.\s+\[RA\]\s+([^•]+?)\s*•/);
           if (mRA) {
+            mRA[1] = mRA[1].replace(/\s*\|\s*/g, ' | ').trim();
             var stRA = l.match(/\[([^\]]+)\]\s*$/);
             // C-FOS dal campo IdCavo sulla riga successiva
             var cfos = '';
@@ -29339,7 +29440,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             continue;
           }
           // RC link: .12. [RC] CCB041 • 66.63 km • ...
-          var mRC = l.match(/^\.\d+\.\s+\[RC\]\s+(\w+)\s+•/);
+          var mRC = l.match(/^\.\d+\.\s+\[RC\]\s+([^•]+?)\s*•/);
           if (mRC) {
             var stRC = l.match(/\[([^\]]+)\]\s*$/);
             var cfosRC = '';
@@ -29532,6 +29633,55 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     }
 
     // ═══════════════════════════════════════════════════════════════════════
+
+    // ── Nodi di confine dei segmenti ricavati dalla lista CENTRALI ──────────
+    // Dopo un gateway, se il nodo ripete il CLLI precedente e un duplicato di
+    // layer (RA<->RA, RA<->RC) e va scartato; se il CLLI cambia (RTN) e un salto
+    // senza collegamento associato. Ogni transizione rimasta corrisponde a un
+    // collegamento, in ordine, e i confini dei gruppi diventano i nodi da
+    // scrivere nei campi nst_nX_nome / nst_nX_clli.
+    window._nstKeyNodes = function(allC, links, groups) {
+      var seqNodes = [], jumpAt = {}, pendingGw = false, prevN = null;
+      (allC || []).forEach(function(c) {
+        if (c.gw) { pendingGw = true; return; }
+        if (pendingGw) {
+          pendingGw = false;
+          if (prevN && prevN.clli && c.clli && prevN.clli === c.clli) return;
+          jumpAt[seqNodes.length - 1] = true;
+        }
+        seqNodes.push(c); prevN = c;
+      });
+
+      var transOfLink = [];
+      for (var t = 0; t < seqNodes.length - 1; t++) {
+        if (!jumpAt[t]) transOfLink.push(t);
+      }
+
+      var keyNodes = [];
+      if (groups && groups.length && transOfLink.length === (links || []).length) {
+        keyNodes.push(seqNodes[transOfLink[0]]);
+        var acc = 0;
+        groups.forEach(function(g) {
+          acc += g.ids.length;
+          keyNodes.push(seqNodes[transOfLink[acc - 1] + 1]);
+        });
+        return keyNodes;
+      }
+
+      // Fallback: primo nodo, ultimo nodo prima di ogni gateway, ultimo nodo
+      for (var ki = 0; ki < allC.length; ki++) {
+        if (!allC[ki].gw) { keyNodes.push(allC[ki]); break; }
+      }
+      var lastSeen = null;
+      for (var kj = 0; kj < allC.length; kj++) {
+        if (allC[kj].gw) { if (lastSeen) keyNodes.push(lastSeen); lastSeen = null; }
+        else { lastSeen = allC[kj]; }
+      }
+      if (lastSeen) keyNodes.push(lastSeen);
+      return keyNodes;
+    };
+
+    // ═══════════════════════════════════════════════════════════════════════
     // IMPORT → IRP Generatore Note
     // ═══════════════════════════════════════════════════════════════════════
     window.nstImportFromExport = function(input) {
@@ -29550,6 +29700,15 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             var gateways = perc.gateways || [];
 
             // ── Separa link in gruppi divisi dai gateway ────────────────
+            // Oltre ai gateway espliciti, un gruppo RA si chiude quando cambiano
+            // Arco o Subpath: la nota IRP dichiara un solo Arco e un solo Subpath
+            // per segmento. Un gateway RA<->RA compare fra le CENTRALI ma non fra
+            // i COLLEGAMENTI, quindi senza questo controllo i due tratti RA
+            // finivano in un unico segmento.
+            function _raKey(id) {
+              var p = String(id).split('|').map(function(s){ return s.trim(); });
+              return (p[0] || '') + ' :: ' + (p[2] || '');
+            }
             var groups = [];
             var segList = gateways.concat([{afterIdx: links.length, tipo:''}]);
             var start = 0;
@@ -29558,8 +29717,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               if (slice.length) {
                 var cur = null;
                 slice.forEach(function(lnk) {
-                  if (!cur || cur.tipo !== lnk.tipo) {
-                    cur = { tipo: lnk.tipo, ids: [] };
+                  var gkey = lnk.tipo === 'RA' ? _raKey(lnk.id) : 'RC';
+                  if (!cur || cur.tipo !== lnk.tipo || cur.gkey !== gkey) {
+                    cur = { tipo: lnk.tipo, gkey: gkey, ids: [] };
                     groups.push(cur);
                   }
                   cur.ids.push(lnk.id);
@@ -29596,27 +29756,12 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 }
               });
 
-              // ── Step 3: popola nodi chiave (partenza, gateway T1, arrivo) ───
+              // ── Step 3: popola nodi chiave (partenza, confini, arrivo) ───
               var allC = perc.centrali; // include {gw:true}
-              var keyNodes = [];
-              // Primo nodo non-GW
-              for (var ki = 0; ki < allC.length; ki++) {
-                if (!allC[ki].gw) { keyNodes.push(allC[ki]); break; }
-              }
-              // Per ogni GW: l'ultimo nodo NON-GW prima del marker
-              var lastSeen = null;
-              for (var ki = 0; ki < allC.length; ki++) {
-                if (allC[ki].gw) {
-                  if (lastSeen) keyNodes.push(lastSeen);
-                  lastSeen = null;
-                } else {
-                  lastSeen = allC[ki];
-                }
-              }
-              // Ultimo nodo = arrivo
-              if (lastSeen) keyNodes.push(lastSeen);
+              var keyNodes = window._nstKeyNodes(allC, links, groups);
 
               keyNodes.forEach(function(c, i) {
+                if (!c) return;
                 var elN = document.getElementById('nst_n' + i + '_nome');
                 var elC = document.getElementById('nst_n' + i + '_clli');
                 if (elN) elN.value = c.nome;
@@ -34389,7 +34534,23 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               </p>
 
               <div class="docs-callout docs-callout-warning novita-box-current" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border-left: 4px solid #d1008f; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;">
-                <strong style="color: #be185d; font-size: 1.05rem;">📌 Novità V50.07.20 | Lug 2026 — Ultimo Aggiornamento</strong>
+                <strong style="color: #be185d; font-size: 1.05rem;">📌 Novità V50.08.02 | Ago 2026 — Ultimo Aggiornamento</strong>
+                <p style="margin: 0.75rem 0 0.5rem 0; color: #9d174d;">
+                  Export Excel dei percorsi selezionati (RC e Unificato) con note IRP e foglio KMZ, più tre correzioni sull'import TXT
+                </p>
+                <ul class="docs-list docs-list-bullets" style="margin: 0;">
+                  <li><strong>📊 Export XLSX</strong>: nei tab <strong>Ricerca Percorso RC</strong> e <strong>Unificato</strong> i bottoni <strong>📄 Esporta TXT</strong> si chiamano ora <strong>📄 Esporta</strong>; nella barra di selezione ci sono due bottoni, <strong>📤 Esporta TXT (N)</strong> e <strong>📊 Esporta XLSX (N)</strong>, che lavorano sulla stessa selezione e sugli stessi Rif. SdF. Il tab RA mantiene per ora il solo export TXT.</li>
+                  <li><strong>📑 Foglio Riepilogo</strong>: una riga per percorso con Percorso Centrali e ID Collegamenti uno per riga, colorati come nella tabella a video (verde/blu/grigio per gli RA secondo i tipi sede, colore di stato per gli RC, viola per i gateway); Distanza (km) con il totale e la ripartizione per tratta (RA1, RA2, RC, 🌐 RTN); Collegamenti con logici, fisici e mix RA/RC/salti.</li>
+                  <li><strong>📝 Note generate</strong>: sotto la tabella il file riporta la <strong>🌐 Nota Lavorante — campo Note trasporto</strong> e la <strong>📂 Nota File Condiviso</strong>, costruite con la stessa logica del Generatore Note Standard IRP. Lo stato delle tratte ("Tutte le Tratte sono Attive" oppure l'elenco di quelle in realizzazione) è dedotto dal database: va riletto prima di incollarlo in pratica.</li>
+                  <li><strong>🗺️ Foglio KMZ</strong>: replica del documento prodotto dal Generatore Info KMZ, con numero SF, blocco CENTRALI numerato e blocco COLLEGAMENTI con la riga C-FOS sotto ciascun link.</li>
+                  <li><strong>🔧 FIX import TXT</strong>: i collegamenti RA non venivano riconosciuti quando il Subpath conteneva caratteri non alfanumerici (es. <code>ACA007/2</code>) o mancava uno spazio attorno alle <code>|</code>, e la sezione COLLEGAMENTI restava vuota; ora vengono letti anche i gateway <strong>🌐 RTN</strong>, prima ignorati sia tra le centrali sia tra i collegamenti.</li>
+                  <li><strong>🔧 FIX segmentazione IRP</strong>: un segmento si chiude anche al cambio di <strong>Arco</strong> o <strong>Subpath</strong> e non solo sui gateway presenti nella sezione COLLEGAMENTI. Un gateway RA↔RA compare solo tra le centrali, quindi il secondo tratto RA finiva accorpato al primo e spariva dalla nota.</li>
+                  <li><strong>🔧 FIX export TXT</strong>: la ripartizione della distanza per tratta ora compare anche nel file di testo, accanto alla distanza totale.</li>
+                </ul>
+              </div>
+
+              <div class="docs-callout docs-callout-warning novita-box-previous" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border-left: 4px solid #d1008f; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;">
+                <strong style="color: #be185d; font-size: 1.05rem;">📋 Novità V50.07.20 | Lug 2026</strong>
                 <p style="margin: 0.75rem 0 0.5rem 0; color: #9d174d;">
                   Riorganizzazione menu di navigazione: "Analisi Fattibilità" nel menu Analisi Extra, tab "Verifica PXM" rinominato
                 </p>
@@ -36759,7 +36920,7 @@ PERCORSI ALTERNATIVI (Div):
                 <li><strong>Calcolo percorsi Div</strong>: in modalità RTN usa <strong>▶ Div Zona A</strong> (A1 alternativo zona partenza) poi <strong>▶ Div Zona B</strong> su ogni Div A (A1 alternativo zona arrivo). I Div non condividono nessun collegamento fisico con il Std</li>
                 <li><strong>Visualizzazione mappa</strong>: click <strong>🗺️ Maps</strong> per analisi topografica; <strong>🌍 Mappa NAT</strong> per export su NAT Italia</li>
                 <li><strong>Selezione percorso ottimale</strong>: basati su distanza, composizione RA/RC, diversificazione geografica, badge 🏆🥇🥈🥉</li>
-                <li><strong>Export documentazione</strong>: <strong>📄 Esporta TXT</strong> per allegato tecnico NNI/IRP (include gateway RTN), copia formattata 📋 per inserimento rapido in pratiche</li>
+                <li><strong>Export documentazione</strong>: <strong>📄 Esporta</strong> apre la selezione dei percorsi, poi <strong>📤 Esporta TXT</strong> per l'allegato tecnico NNI/IRP (include gateway RTN) oppure <strong>📊 Esporta XLSX</strong> per il foglio Excel con Riepilogo, Centrali, Collegamenti, KMZ e note IRP già pronte; copia formattata 📋 per inserimento rapido in pratiche</li>
                 <li><strong>Archiviazione</strong>: allega export a ticket CR/GI, usa <strong>↩️ Undo</strong> per tornare alla ricerca precedente se necessario</li>
               </ol>
 
@@ -37066,7 +37227,8 @@ PERCORSI ALTERNATIVI (Div):
                 <li><strong>Colonna ID Collegamenti</strong>: separatore <span style="display:inline-block;padding:1px 5px;background:#f0f9ff;border:1px dashed #0891b2;border-radius:3px;color:#0891b2;font-weight:700;font-size:0.8em;">🌐 RTN</span> tra i link delle due zone</li>
                 <li><strong>Colonna Distanza</strong>: mostra i km separati per Zona A, badge 🌐 RTN, Zona B</li>
                 <li><strong>📋 Copia Percorso / 🔗 Copia ID</strong>: include il separatore <code>🌐 RTN</code> nel testo copiato</li>
-                <li><strong>📄 Esporta TXT</strong>: include la riga <code>.--. 🌐 RTN</code> tra i segmenti nel file di export</li>
+                <li><strong>📤 Esporta TXT</strong>: include la riga <code>.--. 🌐 RTN</code> tra i segmenti nel file di export</li>
+                <li><strong>📊 Esporta XLSX</strong>: il gateway RTN compare come riga dedicata nei fogli Centrali e Collegamenti, come <code>[RTN]</code> nelle colonne Percorso Centrali e ID Collegamenti del Riepilogo, e come voce 🌐 RTN nella ripartizione della colonna Distanza (km)</li>
               </ul>
             </div>
           </div>
@@ -37227,7 +37389,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V50.07.20 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V50.08.02 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -37244,6 +37406,25 @@ PERCORSI ALTERNATIVI (Div):
       </div>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+        <details open style="border:1px solid #d1008f;border-radius:12px;overflow:hidden;background:#fdf2f8;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#831843;display:flex;align-items:center;gap:0.5rem;background:#fce7f3;">
+            📊 V50.08.02 — Export Excel percorsi (RC e Unificato), note IRP e foglio KMZ, fix import TXT
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:0.35rem;">
+              <li><strong>Nuovo export XLSX</strong> nei tab Ricerca Percorso RC e Unificato, accanto all'export TXT: i bottoni <strong>📄 Esporta TXT</strong> diventano <strong>📄 Esporta</strong> e la barra di selezione mostra <strong>📤 Esporta TXT (N)</strong> e <strong>📊 Esporta XLSX (N)</strong>. Il tab RA resta al solo TXT.</li>
+              <li><strong>Foglio Riepilogo</strong>: intestazione con partenza in blu e arrivo in verde, una riga per percorso, Percorso Centrali e ID Collegamenti uno per riga con i colori della tabella a video, Distanza (km) con totale e ripartizione per tratta (RA1/RA2/RC/🌐 RTN), Collegamenti con logici, fisici e mix RA/RC/salti.</li>
+              <li><strong>Note generate</strong>: <strong>🌐 Nota Lavorante — campo Note trasporto</strong> e <strong>📂 Nota File Condiviso</strong> sotto la tabella, costruite con la stessa logica del Generatore Note Standard IRP.</li>
+              <li><strong>Fogli Centrali e Collegamenti</strong>: una riga per elemento, con le righe gateway inserite in posizione ed evidenziate in viola insieme alle centrali duplicate.</li>
+              <li><strong>Foglio KMZ</strong>: replica del documento del Generatore Info KMZ (numero SF, CENTRALI numerate, COLLEGAMENTI con riga C-FOS).</li>
+              <li><strong>Barra di selezione compattata</strong>: la nota "Zona e Rig rilevati automaticamente" diventa un'icona ⓘ con tooltip, etichette accorciate (Cap.:, Soglia:) e bottoni raggruppati, così con il toggle 💶 Includi Costi attivo la barra resta su una riga sola.</li>
+              <li><strong>FIX import TXT</strong> (Generatore Info KMZ e Generatore Note IRP): i link RA non venivano riconosciuti con Subpath contenente caratteri non alfanumerici (es. <code>ACA007/2</code>) o con spaziatura irregolare attorno alle <code>|</code>; aggiunto il riconoscimento dei gateway <strong>🌐 RTN</strong>.</li>
+              <li><strong>FIX segmentazione IRP</strong>: nuovo segmento anche al cambio di Arco o Subpath, non solo sui gateway espliciti; nodi di confine ricalcolati sulla sequenza reale delle centrali.</li>
+              <li><strong>FIX export TXT</strong>: <code>calcUnifiedSegments</code> non era esposta globalmente, quindi la ripartizione per tratta non compariva nel file di testo. Ora c'è.</li>
+            </ul>
+          </div>
+        </details>
 
         <details open style="border:1px solid #d1008f;border-radius:12px;overflow:hidden;background:#fdf2f8;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#831843;display:flex;align-items:center;gap:0.5rem;background:#fce7f3;">
@@ -310047,6 +310228,9 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
     if (curS) segs.push({src:curS, dist:curD, n:(curS==='RA'?++raC:++rcC)});
     return { segs:segs, multiRA:raC>1, multiRC:rcC>1 };
   }
+  // Esposta globalmente: usata dall'export TXT e dall'export XLSX per la
+  // ripartizione della distanza per tratta (RA1, RA2, RC1, RTN...)
+  window.calcUnifiedSegments = calcUnifiedSegments;
   function fmtSegsHtml(edges) {
     var info = calcUnifiedSegments(edges);
     if (!info.segs.length) return '';
@@ -318640,13 +318824,14 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
     const sel  = cbs.filter(c => c.checked).length;
     const tot  = cbs.length;
     const cEl  = document.getElementById(barId + 'Count');
-    const bEl  = document.getElementById(barId + 'ExportBtn');
     if (cEl) cEl.textContent = sel + ' / ' + tot + ' selezionat' + (sel === 1 ? 'o' : 'i');
-    if (bEl) {
+    ['ExportBtn', 'ExportXlsBtn'].forEach(function(sfx) {
+      const bEl = document.getElementById(barId + sfx);
+      if (!bEl) return;
       bEl.disabled = sel === 0;
       const nEl = bEl.querySelector('.expsm-exp-n');
       if (nEl) nEl.textContent = sel > 0 ? ' (' + sel + ')' : '';
-    }
+    });
   }
 
   function _selectAll(barId) {
@@ -318674,8 +318859,9 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
   }
 
   // ── Esporta con selezione ────────────────────────────────────────────────────
-  function _doExport(barId) {
+  function _doExport(barId, fmt) {
     const savedMode = _mode;
+    const savedFmt  = (fmt === 'xlsx') ? 'xlsx' : 'txt';
     const cbs = _getBarCbs(barId);
 
     const selStdIdx  = new Set();
@@ -318734,6 +318920,15 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
 
     _cancelByBarId(barId); // ripristina UI prima di esportare
 
+    if (savedFmt === 'xlsx') {
+      if (typeof window._croExportXlsx === 'function') {
+        window._croExportXlsx(savedMode, selStdIdx, selDivByBase);
+      } else {
+        alert('Modulo export XLSX non disponibile. Ricarica la pagina.');
+      }
+      return;
+    }
+
     if (savedMode === 'rc_std')          _exportRCStdFiltered(selStdIdx);
     else if (savedMode === 'rc_std_div') _exportRCStdDivFiltered(selStdIdx, selDivByBase);
     else if (savedMode === 'unified_std')     _exportUnifiedStdFiltered(selStdIdx);
@@ -318744,7 +318939,7 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
   window.expsmInlineSelectAll   = function(pfx) { _selectAll(pfx + 'SelBar'); };
   window.expsmInlineDeselectAll = function(pfx) { _deselectAll(pfx + 'SelBar'); };
   window.expsmInlineCancel      = function(pfx) { _cancelByBarId(pfx + 'SelBar'); };
-  window.expsmInlineExport      = function(pfx) { _doExport(pfx + 'SelBar'); };
+  window.expsmInlineExport      = function(pfx, fmt) { _doExport(pfx + 'SelBar', fmt); };
 
   window._expsmToggleCostOpts = function() {
     var cb   = document.getElementById('unifiedCostEnabled');
@@ -318930,6 +319125,943 @@ window._buildUnifiedCostBlock = function(opts) {
 
   return L.join('\n');
 };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// EXPORT XLSX — Percorsi RC e Unificato (usa ExcelJS già caricato via CDN)
+// Fogli: Riepilogo (+ Nota Lavorante), Centrali, Collegamenti, KMZ
+// Riceve la stessa selezione della barra inline usata per l'export TXT.
+// ═══════════════════════════════════════════════════════════════════════════════
+(function(){
+  'use strict';
+
+  var C_HDR_BG    = 'FF1D4ED8';
+  var C_HDR_TX    = 'FFFFFFFF';
+  var C_TITLE_BG  = 'FFEFF6FF';
+  var C_DIV_BG    = 'FFFEF3C7';
+  var C_GW_BG     = 'FFCCC0DA';
+  var C_GWSIDE_BG = 'FFE4DFEC';
+  var C_GW_TX     = 'FF7030A0';
+  var C_START     = 'FF0000FF';
+  var C_END       = 'FF008000';
+  var C_NOTE_BG   = 'FFF3F0FA';
+  var C_FC_TX     = 'FF7C3AED';
+  var C_FC_BG     = 'FFEDE9FE';
+  var C_YELLOW    = 'FFFFFF00';
+  var C_BLACK     = 'FF000000';
+  // Palette ID Collegamenti: stessi colori della colonna nel tab Ricerca Percorso
+  var ID_COLORS = {
+    green:     { argb: 'FF166534', bold: true  },
+    blue:      { argb: 'FF0066CC', bold: true  },
+    gray:      { argb: 'FF6B7280', bold: false },
+    red:       { argb: 'FF991B1B', bold: true  },
+    orange:    { argb: 'FFF59E0B', bold: true  },
+    purple:    { argb: 'FF8B5CF6', bold: true  },
+    celestino: { argb: 'FF00ACDB', bold: true  },
+    rtn:       { argb: 'FF0891B2', bold: true  },
+    normal:    { argb: null,       bold: false }
+  };
+  // Stati RC: stessi colori della colonna Id Collegamenti nel tab
+  var RC_STATE_COLORS = {
+    'ATTIVO':              'FF166534',
+    'NON ATTIVO':          'FF991B1B',
+    'IN ATTIVAZIONE':      'FFF59E0B',
+    'IN VARIAZIONE':       'FF1E40AF',
+    'IN REINSTRADAMENTO':  'FF8B5CF6',
+    'IN CESSAZIONE':       'FFBE185D',
+    'SATURO':              'FFF97316',
+    'MISTO':               'FF06B6D4',
+    'DA VERIFICARE SU NNI':'FF1F2937'
+  };
+  var RC_STATE_ORDER = ['MISTO', 'IN CESSAZIONE', 'DA VERIFICARE SU NNI', 'SATURO',
+                        'NON ATTIVO', 'IN REINSTRADAMENTO', 'IN VARIAZIONE',
+                        'IN ATTIVAZIONE', 'ATTIVO'];
+  // Colori per rete usati nella colonna Distanza (km)
+  var SEG_COLORS = { RA: 'FF0066CC', RC: 'FFDC2626', RTN: 'FF0891B2' };
+
+  var THIN = {
+    top:    { style: 'thin', color: { argb: 'FFD1D5DB' } },
+    left:   { style: 'thin', color: { argb: 'FFD1D5DB' } },
+    bottom: { style: 'thin', color: { argb: 'FFD1D5DB' } },
+    right:  { style: 'thin', color: { argb: 'FFD1D5DB' } }
+  };
+
+  var NOTA_IMPORTANTE = "*** IMPORTANTE: Qualora si rilevasse che la centrale di attestazione della sede A e/o della sede Z \u00e8 diversa da quella segnalata dal Validante, si chiede all'Analyst di ritornarci la pratica per le verifiche sul trasporto. ***";
+  var NOTA_KMZ_ALLEG  = "In allegato documento .docx con i dati tecnici necessari alla creazione del file KMZ (centrali, collegamenti, C-FOS).";
+  var NOTA_KMZ_INTRO  = "In merito alla richiesta dei file kmz, di seguito riporto le info relative ai collegamenti utilizzati per il routing completo.";
+
+  function _s(v){ return (v == null) ? '' : String(v).trim(); }
+  function _n(v){ var x = Number(v); return isNaN(x) ? 0 : x; }
+  function _r2(v){ return Math.round(_n(v) * 100) / 100; }
+  function _pad2(n){ var t = String(n); return t.length < 2 ? '0' + t : t; }
+
+  function _splitLabel(lbl){
+    var t = _s(lbl).replace(/::(RA|RC)$/, '');
+    var m = t.match(/^(.*?)\s*\(([^()]+)\)\s*(\[T[^\]]*\])?\s*$/);
+    if (m) return { nome: _s(m[1]), clli: _s(m[2]), tipo: _s(m[3]).replace(/[\[\]]/g, '') };
+    return { nome: t, clli: '', tipo: '' };
+  }
+
+  function _findRA(id){
+    var db = window.RAW_DB_RA;
+    if (!db || !db.length) return null;
+    var norm = _s(id).replace(/\s*\|\s*/g, '|');
+    for (var i = 0; i < db.length; i++){
+      if (_s(db[i].IdCollegamento).replace(/\s*\|\s*/g, '|') === norm) return db[i];
+    }
+    return null;
+  }
+
+  function _cfos(v){
+    var m = _s(v).match(/[A-Z0-9]+\/[A-Z0-9]+\/C-FOS\/\d+/g);
+    return m ? m.join(' + ') : '';
+  }
+
+  function _normId(v){ return _s(v).replace(/\s*\|\s*/g, ' | '); }
+
+  function _findRC(id){
+    var db = window.RAW_DB;
+    if (!db || !db.length) return null;
+    var t = _s(id);
+    for (var i = 0; i < db.length; i++){
+      if (_s(db[i].IdCollegamento) === t) return db[i];
+    }
+    return null;
+  }
+
+  // Colore di un ID RC in base allo stato, come colorizeRCIdSingle nel tab
+  function _rcArgb(stato){
+    var st = _s(stato).toUpperCase();
+    if (!st) return RC_STATE_COLORS['ATTIVO'];
+    if (RC_STATE_COLORS[st]) return RC_STATE_COLORS[st];
+    for (var i = 0; i < RC_STATE_ORDER.length; i++){
+      if (st.indexOf(RC_STATE_ORDER[i]) !== -1) return RC_STATE_COLORS[RC_STATE_ORDER[i]];
+    }
+    return RC_STATE_COLORS['ATTIVO'];
+  }
+
+  function _raKey(id){
+    var p = _normId(id).split('|').map(function(s){ return s.trim(); });
+    return (p[0] || '') + ' :: ' + (p[2] || '');
+  }
+
+  function _sanFile(v){ return _s(v).replace(/[/\\:*?"<>|]/g, '_'); }
+
+  function _sdfPrefix(){
+    var ref = window._exportSdfRef || {};
+    var s = _s(ref.std);
+    var d = (_s(ref.div) && _s(ref.div) !== s) ? _s(ref.div) : '';
+    if (s && d) return '[' + _sanFile(s) + ' -- ' + _sanFile(d) + '] ';
+    if (s)      return '[' + _sanFile(s) + '] ';
+    if (d)      return '[' + _sanFile(d) + '] ';
+    return '';
+  }
+
+  // ── Raccolta percorsi selezionati ────────────────────────────────────────────
+  function _collect(mode, selStdIdx, selDivByBase){
+    var out = [];
+    if (mode.indexOf('rc') === 0){
+      var st   = (typeof window._getRCExportState === 'function') ? window._getRCExportState() : {};
+      var base = st.baseRoutes || [];
+      var alt  = st.altRoutes  || [];
+      var abi  = st.inlineAltBaseIndex;
+      base.forEach(function(r, idx){
+        if (r && (!selStdIdx || selStdIdx.has(idx))) out.push({ label: 'STD ' + (idx + 1), tipo: 'Std', route: r });
+        if (mode !== 'rc_std_div' || abi == null || idx !== abi) return;
+        var ds = selDivByBase ? (selDivByBase[idx] || selDivByBase[0]) : null;
+        if (!ds || !ds.size) return;
+        alt.forEach(function(ar, j){
+          if (!ds.has(j) || !ar) return;
+          out.push({ label: 'DIV ' + (idx + 1) + '.' + (j + 1), tipo: 'Div', route: ar });
+        });
+      });
+      return out;
+    }
+
+    var b         = window._baseRoutesUNIFIED || [];
+    var divAStore = window._uDivAStoreByBase   || {};
+    var bStore    = window._bDivRoutesStore    || {};
+    b.forEach(function(r, idx){
+      if (r && (!selStdIdx || selStdIdx.has(idx))) out.push({ label: 'STD ' + (idx + 1), tipo: 'Std', route: r });
+      var ds = selDivByBase ? selDivByBase[idx] : null;
+      if (!ds || !ds.size) return;
+      var divA = divAStore[idx] ||
+        (window._selectedBaseIndexUNIFIED === idx ? (window._altRoutesUNIFIED || []) : []);
+      var aIdx = [], bKeys = [];
+      ds.forEach(function(k){
+        if (typeof k === 'string' && k.indexOf('B_') === 0) bKeys.push(k);
+        else aIdx.push(parseInt(k, 10));
+      });
+      aIdx.sort(function(x, y){ return x - y; });
+      aIdx.forEach(function(j){
+        var ar = divA[j];
+        if (ar) out.push({ label: 'DIV ' + (idx + 1) + '.' + (j + 1), tipo: 'Div', route: ar });
+      });
+      bKeys.sort();
+      bKeys.forEach(function(k){
+        var p  = k.split('_');
+        var ai = parseInt(p[1], 10), bi = parseInt(p[2], 10);
+        var br = (bStore[idx + '_' + ai] || [])[bi];
+        if (br) out.push({ label: 'DIV ' + (idx + 1) + '.' + (ai + 1) + '.' + (bi + 1), tipo: 'Div', route: br });
+      });
+    });
+    return out;
+  }
+
+  // ── Collegamenti e gateway espliciti ─────────────────────────────────────────
+  function _seq(route, isUni){
+    var links = [], gws = [];
+    (route.edges || []).forEach(function(e){
+      var src = _s(e.source) || (isUni ? 'ND' : 'RC');
+      if (isUni && (src === 'XFER' || src === 'RTN')){
+        gws.push({ afterIdx: links.length, tipo: src === 'RTN' ? 'RTN' : 'XFER' });
+        return;
+      }
+      var raw = e.raw || {};
+      if (isUni && src === 'RA'){
+        var rec = _findRA(e.id);
+        if (rec) raw = rec;
+      }
+      var tipoA = _s(e.fromTipo) || _s(raw.TipoSedeA);
+      var tipoZ = _s(e.toTipo)   || _s(raw.TipoSedeZ);
+      var cavo  = _s(raw.IdCavo || raw.Id_Cavo || raw.ID_CAVO);
+      var rete  = src === 'RA' ? 'RA' : 'RC';
+      var stato = _s(raw.Stato_IdCollegamento || raw.StatoIdCollegamento || raw.Stato || e.stato).toUpperCase();
+      if (rete === 'RC' && !stato){
+        var recRC = _findRC(e.id);
+        if (recRC) stato = _s(recRC.Stato_IdCollegamento || recRC.Stato).toUpperCase();
+      }
+      var lcol = null;   // null = colore risolto piu avanti dallo stato RC
+      if (rete === 'RA'){
+        lcol = 'green';
+        if (typeof window.getLinkColorUNIFIED === 'function'){
+          try {
+            var gc = (window.getLinkColorUNIFIED(e) || {}).color;
+            if (gc === 'blue' || gc === 'gray' || gc === 'green') lcol = gc;
+          } catch(ex){ lcol = 'green'; }
+        }
+      }
+      links.push({
+        rete:  rete,
+        col:   lcol,
+        id:    _normId(e.id),
+        km:    _r2(e.weight),
+        cavo:  cavo,
+        cfos:  _cfos(cavo),
+        stato: stato,
+        tipo:  (tipoA || tipoZ) ? (tipoA || '?') + '<->' + (tipoZ || '?') : '',
+        a1:    _s(raw.Altro1),
+        a2:    _s(raw.Altro2),
+        ix:    _s(raw['Info Extra'] || raw.InfoExtra),
+        note:  _s(raw.Note)
+      });
+    });
+    return { links: links, gws: gws };
+  }
+
+  // ── Segmenti: un gruppo si chiude su gateway o su cambio Arco/Subpath ────────
+  function _groups(links, gws){
+    var gwAt = {};
+    gws.forEach(function(g){ gwAt[g.afterIdx] = g.tipo; });
+    var groups = [], cur = null;
+    links.forEach(function(l, i){
+      var key    = l.rete === 'RA' ? _raKey(l.id) : 'RC';
+      var forced = (i > 0 && gwAt[i]);
+      if (!cur || cur.rete !== l.rete || cur.key !== key || forced){
+        cur = { rete: l.rete, tipo: l.rete, key: key, ids: [], from: i, to: i };
+        groups.push(cur);
+      }
+      cur.ids.push(l.id);
+      cur.to = i;
+    });
+    return groups;
+  }
+
+  // Righe gateway da inserire fra i collegamenti: espliciti + confini fra gruppi
+  function _gwRows(links, gws, groups){
+    var out = {}, i;
+    gws.forEach(function(g){
+      var tipo = g.tipo;
+      if (tipo === 'XFER'){
+        var prev = links[g.afterIdx - 1], next = links[g.afterIdx];
+        var a = prev ? prev.rete : 'RA', z = next ? next.rete : 'RC';
+        tipo = a + '\u2194' + z;
+      }
+      out[g.afterIdx] = tipo;
+    });
+    for (i = 1; i < groups.length; i++){
+      var pos = groups[i].from;
+      if (!out[pos]) out[pos] = groups[i - 1].rete + '\u2194' + groups[i].rete;
+    }
+    return out;
+  }
+
+  // ── Lista centrali ───────────────────────────────────────────────────────────
+  function _reteByClli(route){
+    var m = {};
+    (route.edges || []).forEach(function(e){
+      if (e.source !== 'RA' && e.source !== 'RC') return;
+      var raw = e.raw || {};
+      if (e.source === 'RA' && !raw.CLLI_A){
+        var rec = _findRA(e.id);
+        if (rec) raw = rec;
+      }
+      [_s(raw.CLLI_A), _s(raw.CLLI_Z)].forEach(function(cl){
+        if (!cl) return;
+        if (!m[cl]) m[cl] = e.source;
+        else if (m[cl] !== e.source) m[cl] = 'RA/RC';
+      });
+    });
+    return m;
+  }
+
+  function _centrali(route, isUni){
+    var edges = route.edges || [];
+    var nodes = route.nodes || [];
+    if (!isUni){
+      return nodes.map(function(nd){
+        var p = _splitLabel(nd);
+        return { rete: 'RC', nome: p.nome, clli: p.clli, tipo: '', gw: false };
+      });
+    }
+    var rmap = _reteByClli(route);
+    var nodeInfo = (typeof window.buildUnifiedLabelsAndInfo === 'function')
+      ? window.buildUnifiedLabelsAndInfo().nodeInfo : new Map();
+    var list = (typeof window.getCentralsListForExport === 'function')
+      ? window.getCentralsListForExport(nodes, edges, nodeInfo) : [];
+    if (!list.length){
+      return nodes.map(function(nd){
+        var p = _splitLabel(nd);
+        return { rete: /::RA$/.test(_s(nd)) ? 'RA' : 'RC', nome: p.nome, clli: p.clli, tipo: p.tipo, gw: false };
+      });
+    }
+    return list.map(function(it){
+      if (it.isGateway){
+        return { rete: 'GW', nome: (it.gatewayType === 'RTN' ? 'RTN' : _s(it.gatewayType)),
+                 clli: '', tipo: 'GATEWAY', gw: true };
+      }
+      var p = _splitLabel(it.name);
+      return { rete: rmap[p.clli] || '', nome: p.nome, clli: p.clli, tipo: p.tipo, gw: false };
+    });
+  }
+
+  // ── Nodi di confine dei segmenti ─────────────────────────────────────────────
+  function _keyNodes(centrali, links, groups){
+    if (typeof window._nstKeyNodes === 'function'){
+      try { return window._nstKeyNodes(centrali, links, groups) || []; } catch(e){ /* fallback */ }
+    }
+    var out = [], last = null;
+    centrali.forEach(function(c){ if (!c.gw){ if (!out.length) out.push(c); last = c; } });
+    if (last && out[0] !== last) out.push(last);
+    return out;
+  }
+
+  // ── Nome nodo per le note ────────────────────────────────────────────────────
+  function _ndName(keyNodes, i){
+    var c = keyNodes[i];
+    if (!c) return i === 0 ? 'SedeA' : 'SedeZ';
+    var n = _s(c.nome).toUpperCase(), cl = _s(c.clli).toUpperCase();
+    if (n && cl) return n + ' (' + cl + ')';
+    return n || cl || ('Sede' + i);
+  }
+
+  // ── Nota Lavorante (campo Note trasporto) ────────────────────────────────────
+  function _notaLavorante(groups, keyNodes){
+    var parts = groups.map(function(g, i){
+      return 'Trasporto DWDM ' + g.rete + ' da ' + _ndName(keyNodes, i) + ' a ' + _ndName(keyNodes, i + 1);
+    });
+    if (!parts.length) return '';
+    return parts.join(' + ') + '.\n\n' + NOTA_IMPORTANTE + '\n\n' + NOTA_KMZ_ALLEG;
+  }
+
+  // Collegamento non attivo: stato diverso da ATTIVO, oppure SubPath/C-FOS non attivi
+  function _nonAttivo(l){
+    var st = _s(l.stato).toUpperCase();
+    var sp = _s(l.ix).toUpperCase();
+    var cf = _s(l.a2).toUpperCase();
+    if (st.indexOf('NON ATTIVO') !== -1) return true;
+    if (st && st.indexOf('ATTIVO') === -1) return true;
+    if (sp.indexOf('SUBPATH') !== -1 && sp.indexOf('NON ATTIVO') !== -1) return true;
+    if (cf.indexOf('C-FOS') !== -1 && cf.indexOf('NON ATTIVO') !== -1) return true;
+    return false;
+  }
+
+  function _statoStr(nonAtt){
+    if (!nonAtt.length) return '[Tutte le Tratte sono Attive]';
+    var label = nonAtt.length === 1 ? 'La Tratta' : 'Le Tratte';
+    var verb  = nonAtt.length === 1 ? '\u00e8' : 'sono';
+    var list  = nonAtt.length === 1
+      ? nonAtt[0]
+      : nonAtt.slice(0, -1).join(' e ') + ' e ' + nonAtt[nonAtt.length - 1];
+    return '[' + label + ' ' + list + ' ' + verb + ' in corso di realizzazione]';
+  }
+
+  // ── Nota File Condiviso ──────────────────────────────────────────────────────
+  function _notaFileCondiviso(groups, keyNodes, links){
+    if (!groups.length) return '';
+    var parts = groups.map(function(g, i){
+      var nA = '[' + _ndName(keyNodes, i) + ']';
+      var nZ = '[' + _ndName(keyNodes, i + 1) + ']';
+      var slice = links.slice(g.from, g.to + 1);
+      var noAtt = [], ids = [];
+      if (g.rete === 'RA'){
+        var arco = '', sub = '';
+        slice.forEach(function(l){
+          var p = _normId(l.id).split('|').map(function(x){ return x.trim(); });
+          if (!arco) arco = p[0] || '???';
+          if (!sub)  sub  = p[2] || '???';
+          var idc = p[1] || '';
+          if (idc && ids.indexOf(idc) === -1) ids.push(idc);
+          if (idc && _nonAttivo(l) && noAtt.indexOf(idc) === -1) noAtt.push(idc);
+        });
+        return 'Trasporto DWDM RA su Arco: ' + (arco || '???')
+             + '  --  Subpath: ' + (sub || '???')
+             + '  --  ID Collegamento: ' + (ids.length ? ids.join(' + ') : '???')
+             + ' ' + _statoStr(noAtt) + ' tra ' + nA + ' e ' + nZ;
+      }
+      slice.forEach(function(l){
+        var idc = _s(l.id);
+        if (!idc) return;
+        if (_nonAttivo(l)){ if (noAtt.indexOf(idc) === -1) noAtt.push(idc); }
+        else if (ids.indexOf(idc) === -1) ids.push(idc);
+      });
+      var tutti = noAtt.concat(ids.filter(function(x){ return noAtt.indexOf(x) === -1; }));
+      return 'Trasporto DWDM RC su ' + (tutti.length ? tutti.join(' + ') : '???')
+           + ' ' + _statoStr(noAtt) + ' tra ' + nA + ' e ' + nZ;
+    });
+    // I segmenti restano sulla stessa riga, separati da " + " (a capo solo prima
+    // della nota sull'allegato)
+    return parts.join(' + ') + '.\n\n' + NOTA_KMZ_ALLEG;
+  }
+
+  // ── Mix RA/RC/salti: stessa regola di calculateMixUNIFIED (verde 1, blu 0.5) ──
+  function _mix(links, gws){
+    var raGreen = 0, raBlue = 0, rcLinks = 0, jumps = 0;
+    links.forEach(function(l){
+      if (l.rete === 'RA'){
+        if (l.col === 'green') raGreen++;
+        else if (l.col === 'blue') raBlue++;
+      } else rcLinks++;
+    });
+    (gws || []).forEach(function(g){ if (g.tipo === 'XFER') jumps++; });
+    var raLinks = raGreen + Math.floor(raBlue / 2);
+    var parts = [];
+    if (raLinks > 0) parts.push('RA:' + raLinks);
+    if (rcLinks > 0) parts.push('RC:' + rcLinks);
+    if (jumps   > 0) parts.push(jumps + (jumps === 1 ? ' salto' : ' salti'));
+    return parts;
+  }
+
+  // ── Metriche ─────────────────────────────────────────────────────────────────
+  function _metrics(route, links, isUni){
+    var edges = route.edges || [];
+    var km = links.reduce(function(s, l){ return s + _n(l.km); }, 0);
+    var fisici = links.length;
+    var logici = fisici;
+    if (isUni && typeof window.calculateLinksCountUNIFIED === 'function'){
+      var li = window.calculateLinksCountUNIFIED(edges);
+      if (li && typeof li.total === 'number') logici = li.total;
+    } else {
+      var seen = {}, n = 0;
+      links.forEach(function(l){ if (l.id && !seen[l.id]){ seen[l.id] = 1; n++; } });
+      logici = n;
+    }
+    return { km: km, logici: logici, fisici: fisici, centrali: (route.nodes || []).length };
+  }
+
+  // ── Dati completi di un percorso ─────────────────────────────────────────────
+  function _routeData(item, isUni){
+    var sq       = _seq(item.route, isUni);
+    var groups   = _groups(sq.links, sq.gws);
+    var gwRows   = _gwRows(sq.links, sq.gws, groups);
+    var centrali = _centrali(item.route, isUni);
+    var keyNodes = _keyNodes(centrali, sq.links, groups);
+    return {
+      label: item.label, tipo: item.tipo, route: item.route,
+      links: sq.links, gws: sq.gws, groups: groups, gwRows: gwRows,
+      centrali: centrali, keyNodes: keyNodes,
+      metrics: _metrics(item.route, sq.links, isUni),
+      mix: _mix(sq.links, sq.gws),
+      nota: _notaLavorante(groups, keyNodes),
+      notaFC: _notaFileCondiviso(groups, keyNodes, sq.links)
+    };
+  }
+
+  // ── Helper di stile ──────────────────────────────────────────────────────────
+  function _headerRow(ws, rowNum, cols){
+    var row = ws.getRow(rowNum);
+    row.font      = { bold: true, size: 10, color: { argb: C_HDR_TX } };
+    row.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+    row.height    = 26;
+    for (var i = 1; i <= cols; i++){
+      var c = row.getCell(i);
+      c.fill   = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_HDR_BG } };
+      c.border = THIN;
+    }
+  }
+  function _widths(ws, arr){ arr.forEach(function(w, i){ ws.getColumn(i + 1).width = w; }); }
+  function _fillRow(row, cols, argb){
+    for (var i = 1; i <= cols; i++){
+      row.getCell(i).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: argb } };
+    }
+  }
+  function _borderRow(row, cols){
+    for (var i = 1; i <= cols; i++) row.getCell(i).border = THIN;
+  }
+
+  // ── Rich text: righe con colore e corpo diversi nella stessa cella ───────────
+  function _rFont(kind, size){
+    var f = { name: 'Calibri', size: size || 10 };
+    if (kind === 'START'){ f.bold = true; f.color = { argb: C_START }; }
+    else if (kind === 'END'){ f.bold = true; f.color = { argb: C_END }; }
+    else if (kind === 'GW'){ f.bold = true; f.color = { argb: C_GW_TX }; }
+    return f;
+  }
+
+  function _richLines(lines, kinds, pre, post){
+    return _richLinesF(lines, kinds.map(function(k){ return _rFont(k, 10); }), pre, post);
+  }
+
+  // Variante con font gia risolti riga per riga
+  function _richLinesF(lines, fonts, pre, post){
+    var runs = [], buf = [], curKey = null, curFont = null;
+    var base = pre ? 1 : 0;
+    function flush(){
+      if (!buf.length) return;
+      runs.push({ font: curFont, text: (runs.length === base ? '' : '\n') + buf.join('\n') });
+      buf = [];
+    }
+    if (pre) runs.push(pre);
+    lines.forEach(function(txt, i){
+      var f = fonts[i] || { name: 'Calibri', size: 10 };
+      var key = JSON.stringify(f);
+      if (curKey === null){ curKey = key; curFont = f; }
+      if (key !== curKey){ flush(); curKey = key; curFont = f; }
+      buf.push(txt);
+    });
+    flush();
+    if (post) runs.push(post);
+    return { richText: runs };
+  }
+
+  function _idFont(l){
+    var f = { name: 'Calibri', size: 10 };
+    if (l.rete === 'RC'){
+      f.bold = true;
+      f.color = { argb: _rcArgb(l.stato) };
+      return f;
+    }
+    var c = ID_COLORS[l.col] || ID_COLORS.green;
+    if (c.bold) f.bold = true;
+    if (c.argb) f.color = { argb: c.argb };
+    return f;
+  }
+
+  // ── Cella Distanza (km): totale + ripartizione per tratta, come nella tabella
+  // della Ricerca Percorso. Con una sola tratta resta un numero, cosi la colonna
+  // si puo ancora ordinare e sommare.
+  function _distCell(d, isUni){
+    var tot = _r2(d.metrics.km);
+    if (!isUni || typeof window.calcUnifiedSegments !== 'function') return tot;
+    var info;
+    try { info = window.calcUnifiedSegments(d.route.edges || []); } catch(e){ return tot; }
+    var segs = (info && info.segs) || [];
+    if (segs.length < 2) return tot;
+
+    var lines = [tot.toFixed(2).replace('.', ',') + ' km'];
+    var fonts = [{ name: 'Calibri', size: 11, bold: true }];
+    segs.forEach(function(sg){
+      if (sg.src === 'RTN'){
+        lines.push('\uD83C\uDF10 RTN');
+        fonts.push({ name: 'Calibri', size: 9, bold: true, color: { argb: SEG_COLORS.RTN } });
+        return;
+      }
+      var lab = (info.multiRA && sg.src === 'RA') ? sg.src + sg.n
+              : (info.multiRC && sg.src === 'RC') ? sg.src + sg.n
+              : sg.src;
+      lines.push(lab + '  ' + _n(sg.dist).toFixed(2).replace('.', ',') + ' km');
+      fonts.push({ name: 'Calibri', size: 9, bold: true,
+                   color: { argb: SEG_COLORS[sg.src] || 'FF6B7280' } });
+    });
+    return _richLinesF(lines, fonts, null, null);
+  }
+
+  // ── Costruzione workbook ─────────────────────────────────────────────────────
+  function _build(mode, items){
+    var isUni = mode.indexOf('unified') === 0;
+    var data  = items.map(function(it){ return _routeData(it, isUni); });
+
+    var wb = new ExcelJS.Workbook();
+    wb.creator = 'CRO ITALIA';
+    wb.created = new Date();
+
+    var ref  = window._exportSdfRef || {};
+    var sdfS = _s(ref.std);
+    var sdfD = _s(ref.div);
+    var start = '', end = '';
+    if (isUni){
+      var si = document.getElementById('uRouteStartInput');
+      var ei = document.getElementById('uRouteEndInput');
+      start = si ? _s(si.value) : '';
+      end   = ei ? _s(ei.value) : '';
+    }
+    if (!start || !end){
+      var fr = data[0] ? (data[0].route.nodes || []) : [];
+      if (!start) start = fr.length ? _s(fr[0]) : '';
+      if (!end)   end   = fr.length ? _s(fr[fr.length - 1]) : '';
+    }
+
+    // ══ Foglio 1: Riepilogo ═══════════════════════════════════════════════════
+    var ws = wb.addWorksheet('Riepilogo', { properties: { tabColor: { argb: C_HDR_BG } } });
+    var H1 = ['Percorso', 'Tipo', 'Distanza (km)', 'Collegamenti', 'Centrali',
+              'Rif. SdF', 'Percorso Centrali', 'ID Collegamenti'];
+
+    ws.mergeCells(1, 1, 1, H1.length);
+    var t = ws.getCell(1, 1);
+    t.value = 'CRO ITALIA \u2014 Export Percorsi ' + (isUni ? 'Unificati (RA+RC)' : 'Rete RC');
+    t.font  = { bold: true, size: 14, color: { argb: C_HDR_BG } };
+    t.alignment = { horizontal: 'center', vertical: 'middle' };
+    t.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_TITLE_BG } };
+    ws.getRow(1).height = 22;
+
+    var meta = [
+      ['Data export',        new Date().toLocaleString('it-IT'), null],
+      ['Partenza',           start,        C_START],
+      ['Arrivo',             end,          C_END],
+      ['Percorsi esportati', items.length, null]
+    ];
+    if (sdfS) meta.push(['Fattibilit\u00e0 Std', sdfS, null]);
+    if (sdfD && sdfD !== sdfS) meta.push(['Fattibilit\u00e0 Div', sdfD, null]);
+
+    meta.forEach(function(m, i){
+      var r = ws.getRow(2 + i);
+      r.getCell(1).value = m[0];
+      r.getCell(1).font  = { bold: true, size: 10 };
+      r.getCell(2).value = m[1];
+      r.getCell(2).font  = m[2]
+        ? { bold: true, size: 10, color: { argb: m[2] } }
+        : { bold: (i >= 4), size: 10 };
+    });
+
+    var hRow = 2 + meta.length + 1;
+    ws.getRow(hRow).values = H1;
+    _headerRow(ws, hRow, H1.length);
+
+    data.forEach(function(d){
+      // Percorso Centrali: una centrale per riga, gateway fra parentesi quadre
+      var cen = d.centrali.map(function(c){
+        if (c.gw) return '[' + c.nome + ']';
+        return c.nome + (c.clli ? ' (' + c.clli + ')' : '') + (c.tipo ? ' ' + c.tipo : '');
+      });
+      var iFirst = 0, iLast = cen.length - 1;
+      while (iFirst < cen.length && d.centrali[iFirst].gw) iFirst++;
+      while (iLast >= 0 && d.centrali[iLast].gw) iLast--;
+
+      // Stile per riga: gateway e centrali adiacenti in viola, partenza blu, arrivo verde
+      var kind = cen.map(function(){ return ''; });
+      d.centrali.forEach(function(c, i){
+        if (!c.gw) return;
+        kind[i] = 'GW';
+        if (i > 0 && !d.centrali[i - 1].gw) kind[i - 1] = 'GW';
+        if (i + 1 < cen.length && !d.centrali[i + 1].gw) kind[i + 1] = 'GW';
+      });
+      if (iFirst < cen.length) kind[iFirst] = 'START';
+      if (iLast >= 0)          kind[iLast]  = 'END';
+
+      var pathRt = _richLines(cen, kind,
+        { text: 'PARTENZA  \u2192  ', font: _rFont('START', 8) },
+        { text: '  \u2192  ARRIVO',   font: _rFont('END', 8) });
+
+      // ID Collegamenti: uno per riga, con i gateway al posto giusto
+      var idsArr = [], idsFonts = [];
+      d.links.forEach(function(l, i){
+        if (d.gwRows[i]) { idsArr.push('[' + d.gwRows[i] + ']'); idsFonts.push(_rFont('GW', 10)); }
+        idsArr.push(l.id); idsFonts.push(_idFont(l));
+      });
+      if (d.gwRows[d.links.length]) {
+        idsArr.push('[' + d.gwRows[d.links.length] + ']'); idsFonts.push(_rFont('GW', 10));
+      }
+      var idsRt = _richLinesF(idsArr, idsFonts, null, null);
+
+      var collLines = [d.metrics.logici + ' Logici'];
+      var collFonts = [{ name: 'Calibri', size: 10 }];
+      if (d.metrics.logici !== d.metrics.fisici){
+        collLines.push('(' + d.metrics.fisici + ' Fisici)');
+        collFonts.push({ name: 'Calibri', size: 10 });
+      }
+      d.mix.forEach(function(mp){
+        collLines.push(mp);
+        var cArgb = mp.indexOf('RA:') === 0 ? SEG_COLORS.RA
+                  : mp.indexOf('RC:') === 0 ? SEG_COLORS.RC : 'FF6B7280';
+        collFonts.push({ name: 'Calibri', size: 9, bold: true, color: { argb: cArgb } });
+      });
+      var collTxt = (collLines.length > 1)
+        ? _richLinesF(collLines, collFonts, null, null)
+        : collLines[0];
+
+      var distVal = _distCell(d, isUni);
+
+      var r = ws.addRow([d.label, d.tipo, distVal, collTxt, d.metrics.centrali,
+                         d.tipo === 'Div' ? (sdfD || sdfS) : sdfS, pathRt, idsRt]);
+      r.font      = { size: 10 };
+      r.alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
+      if (typeof distVal === 'number') r.getCell(3).numFmt = '0.00';
+      r.getCell(3).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+      r.getCell(2).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+      r.getCell(4).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+      r.getCell(5).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+      r.getCell(6).font = { size: 10, bold: true };
+      if (d.tipo === 'Div') _fillRow(r, H1.length, C_DIV_BG);
+      _borderRow(r, H1.length);
+      r.height = Math.max(30, Math.max(idsArr.length, cen.length, collLines.length) * 12.8);
+    });
+
+    _widths(ws, [15, 9, 13, 14, 10, 18, 62, 34]);
+    ws.views = [{ state: 'frozen', ySplit: hRow }];
+    if (data.length){
+      ws.autoFilter = { from: { row: hRow, column: 1 }, to: { row: hRow + data.length, column: H1.length } };
+    }
+
+    // ── Note generate sotto la tabella ─────────────────────────────────────────
+    var rNote = hRow + data.length + 2;
+    function _notaBlock(titolo, testo, txCol, bgCol){
+      ws.mergeCells(rNote, 1, rNote, H1.length);
+      var hc = ws.getCell(rNote, 1);
+      hc.value = titolo;
+      hc.font  = { bold: true, size: 11, color: { argb: txCol } };
+      hc.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: bgCol } };
+      hc.alignment = { vertical: 'middle', horizontal: 'left' };
+      ws.getRow(rNote).height = 18;
+      rNote++;
+
+      var nLines = 0;
+      testo.split('\n').forEach(function(p){ nLines += Math.max(1, Math.ceil(p.length / 165)); });
+      var span = Math.max(5, nLines + 1);
+      ws.mergeCells(rNote, 1, rNote + span - 1, H1.length);
+      var tc = ws.getCell(rNote, 1);
+      tc.value = testo;
+      tc.font  = { name: 'Courier New', size: 10 };
+      tc.alignment = { vertical: 'top', horizontal: 'left', wrapText: true };
+      tc.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_NOTE_BG } };
+      tc.border = THIN;
+      for (var q = 0; q < span; q++) ws.getRow(rNote + q).height = 15;
+      rNote += span + 1;
+    }
+    data.forEach(function(d){
+      var suffix = (data.length > 1 ? '   [' + d.label + ']' : '');
+      if (d.nota){
+        _notaBlock('\uD83C\uDF10 Nota Lavorante \u2014 campo Note trasporto' + suffix,
+                   d.nota, C_GW_TX, C_GWSIDE_BG);
+      }
+      if (d.notaFC){
+        _notaBlock('\uD83D\uDCC2 Nota File Condiviso' + suffix,
+                   d.notaFC, C_FC_TX, C_FC_BG);
+      }
+      rNote += 1;
+    });
+
+    // ══ Foglio 2: Centrali ════════════════════════════════════════════════════
+    var ws2 = wb.addWorksheet('Centrali');
+    var H2 = ['Percorso', 'Tipo', '#', 'Rete', 'Centrale (GAT)', 'CLLI', 'Tipo Sede'];
+    ws2.getRow(1).values = H2;
+    _headerRow(ws2, 1, H2.length);
+    var n2 = 0;
+    data.forEach(function(d){
+      var num = 0, rows = [];
+      d.centrali.forEach(function(c){
+        var label = c.gw ? '--' : _pad2(++num);
+        var r = ws2.addRow([d.label, d.tipo, label, c.gw ? 'GW' : (c.rete || (isUni ? '' : 'RC')),
+                            c.nome, c.clli, c.gw ? 'GATEWAY' : c.tipo]);
+        r.font = { size: 10 };
+        _borderRow(r, H2.length);
+        rows.push({ row: r, gw: c.gw });
+        n2++;
+      });
+      rows.forEach(function(x, i){
+        if (!x.gw) return;
+        x.row.font = { size: 10, bold: true, color: { argb: C_GW_TX } };
+        _fillRow(x.row, H2.length, C_GW_BG);
+        [i - 1, i + 1].forEach(function(j){
+          if (j < 0 || j >= rows.length || rows[j].gw) return;
+          rows[j].row.font = { size: 10, bold: true, color: { argb: C_GW_TX } };
+          _fillRow(rows[j].row, H2.length, C_GWSIDE_BG);
+        });
+      });
+    });
+    _widths(ws2, [15, 9, 6, 8, 34, 14, 12]);
+    ws2.views = [{ state: 'frozen', ySplit: 1 }];
+    if (n2) ws2.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1 + n2, column: H2.length } };
+
+    // ══ Foglio 3: Collegamenti ════════════════════════════════════════════════
+    var ws3 = wb.addWorksheet('Collegamenti');
+    var H3 = ['Percorso', 'Tipo', '#', 'Rete', 'Id Collegamento', 'Distanza (km)',
+              'Id Cavo', 'Stato', 'Tipo Sede A/Z', 'Altro1', 'Altro2', 'Info Extra', 'Note'];
+    ws3.getRow(1).values = H3;
+    _headerRow(ws3, 1, H3.length);
+    var n3 = 0;
+    data.forEach(function(d){
+      var num = 0;
+      function gwRow(tipo){
+        var r = ws3.addRow([d.label, d.tipo, '--', 'GW', 'GATEWAY', '--', '--', '--',
+                            tipo, '--', '--', '--', '--']);
+        r.font = { size: 10, bold: true, color: { argb: C_GW_TX } };
+        r.alignment = { vertical: 'middle', horizontal: 'left' };
+        _fillRow(r, H3.length, C_GW_BG);
+        _borderRow(r, H3.length);
+        n3++;
+      }
+      d.links.forEach(function(l, i){
+        if (d.gwRows[i]) gwRow(d.gwRows[i]);
+        var r = ws3.addRow([d.label, d.tipo, _pad2(++num), l.rete, l.id, l.km,
+                            l.cavo, l.stato, l.tipo, l.a1, l.a2, l.ix, l.note]);
+        r.font = { size: 10 };
+        r.alignment = { vertical: 'top', wrapText: true };
+        r.getCell(6).numFmt = '0.00';
+        _borderRow(r, H3.length);
+        n3++;
+      });
+      if (d.gwRows[d.links.length]) gwRow(d.gwRows[d.links.length]);
+    });
+    _widths(ws3, [15, 9, 6, 8, 32, 13, 30, 20, 13, 40, 16, 18, 22]);
+    ws3.views = [{ state: 'frozen', ySplit: 1 }];
+    if (n3) ws3.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1 + n3, column: H3.length } };
+
+    // ══ Foglio 4: KMZ ═════════════════════════════════════════════════════════
+    var ws4 = wb.addWorksheet('KMZ');
+    _widths(ws4, [15, 42, 14, 9]);
+    var rk = 1;
+    function put(row, col, val, font, fill){
+      var c = ws4.getCell(row, col);
+      c.value = val;
+      if (font) c.font = font;
+      if (fill) c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: fill } };
+      return c;
+    }
+    data.forEach(function(d, di){
+      if (di > 0) rk += 2;
+      if (data.length > 1){
+        put(rk, 1, '\u2014 PERCORSO ' + d.label + ' \u2014',
+            { bold: true, size: 11, color: { argb: C_GW_TX } }, C_GWSIDE_BG);
+        rk += 2;
+      }
+      put(rk, 1, (d.tipo === 'Div' ? (sdfD || sdfS) : sdfS) || 'SF?????????/0',
+          { bold: true, size: 11 });
+      rk += 2;
+      put(rk, 1, NOTA_KMZ_INTRO, { size: 10 });
+      rk += 2;
+
+      // CENTRALI
+      put(rk, 1, 'CENTRALI:', { bold: true, size: 10, color: { argb: C_BLACK } }, C_YELLOW);
+      rk++;
+      var num = 0, rows = [];
+      d.centrali.forEach(function(c){
+        if (c.gw){
+          put(rk, 1, c.nome, { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG);
+          rows.push({ r: rk, gw: true });
+          rk++;
+          return;
+        }
+        num++;
+        put(rk, 1, '.' + _pad2(num) + '.', { size: 10 });
+        put(rk, 2, c.nome, { size: 10 });
+        put(rk, 3, c.clli ? '(' + c.clli + ')' : '', { size: 10 });
+        put(rk, 4, c.tipo ? '[' + c.tipo + ']' : '', { size: 10 });
+        rows.push({ r: rk, gw: false });
+        rk++;
+      });
+      // evidenziazioni: prima centrale blu, ultima verde, coppie attorno ai gateway
+      var real = rows.filter(function(x){ return !x.gw; });
+      if (real.length){
+        [[real[0].r, C_START], [real[real.length - 1].r, C_END]].forEach(function(x){
+          for (var col = 1; col <= 4; col++){
+            ws4.getCell(x[0], col).font = { bold: true, size: 10, color: { argb: x[1] } };
+          }
+        });
+      }
+      rows.forEach(function(x, i){
+        if (!x.gw) return;
+        [i - 1, i + 1].forEach(function(j){
+          if (j < 0 || j >= rows.length || rows[j].gw) return;
+          for (var col = 1; col <= 4; col++){
+            var cc = ws4.getCell(rows[j].r, col);
+            cc.font = { bold: true, size: 10, color: { argb: C_GW_TX } };
+            cc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_GWSIDE_BG } };
+          }
+        });
+      });
+      rk += 2;
+
+      // COLLEGAMENTI
+      put(rk, 1, 'COLLEGAMENTI:', { bold: true, size: 10, color: { argb: C_BLACK } }, C_YELLOW);
+      rk++;
+      var numL = 0;
+      d.links.forEach(function(l, i){
+        if (d.gwRows[i]){
+          put(rk, 1, d.gwRows[i], { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG);
+          rk += 2;
+        }
+        numL++;
+        put(rk, 1, '.' + _pad2(numL) + '. [' + l.rete + ']', { size: 10 });
+        put(rk, 2, l.id, { size: 10 });
+        rk++;
+        if (l.cfos){
+          put(rk, 1, 'C-FOS > ', { bold: true, size: 10 });
+          put(rk, 2, l.cfos, { size: 10 });
+          rk++;
+        }
+        rk++;
+      });
+      if (d.gwRows[d.links.length]){
+        put(rk, 1, d.gwRows[d.links.length], { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG);
+        rk += 2;
+      }
+    });
+
+    return wb;
+  }
+
+  // ── API pubblica ─────────────────────────────────────────────────────────────
+  window._croExportXlsx = function(mode, selStdIdx, selDivByBase){
+    try {
+      if (typeof ExcelJS === 'undefined'){
+        alert('Libreria ExcelJS non disponibile. Ricarica la pagina.');
+        return;
+      }
+      var items = _collect(mode, selStdIdx, selDivByBase);
+      if (!items.length){
+        alert('Nessun percorso selezionato da esportare.');
+        return;
+      }
+
+      var isUni = mode.indexOf('unified') === 0;
+      var wb    = _build(mode, items);
+      var hasD  = items.some(function(i){ return i.tipo === 'Div'; });
+      var name  = _sdfPrefix() + 'CRO_' + (isUni ? 'UNIFIED' : 'RC') + '_' +
+                  (hasD ? 'StdDiv' : 'Std') + '_' +
+                  new Date().toISOString().slice(0, 10) + '.xlsx';
+
+      wb.xlsx.writeBuffer().then(function(buf){
+        var blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        var url  = URL.createObjectURL(blob);
+        var a    = document.createElement('a');
+        a.href = url;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+        if (typeof showToast === 'function') showToast('Export XLSX completato: ' + items.length + ' percorsi', 'success');
+      }).catch(function(err){
+        console.error('[EXPORT XLSX]', err);
+        alert('Errore durante la generazione del file XLSX: ' + (err && err.message ? err.message : err));
+      });
+    } catch (e){
+      console.error('[EXPORT XLSX]', e);
+      alert('Errore export XLSX: ' + (e && e.message ? e.message : e));
+    }
+  };
+
+  console.log('[EXPORT XLSX] Modulo caricato');
+})();
 
 </script>
 
