@@ -34547,10 +34547,10 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 </p>
                 <ul class="docs-list docs-list-bullets" style="margin: 0;">
                   <li><strong>📊 Export XLSX</strong>: nei tab <strong>Ricerca Percorso RC</strong> e <strong>Unificato</strong> i bottoni <strong>📄 Esporta TXT</strong> si chiamano ora <strong>📄 Esporta</strong>; nella barra di selezione ci sono due bottoni, <strong>📤 Esporta TXT (N)</strong> e <strong>📊 Esporta XLSX (N)</strong>, che lavorano sulla stessa selezione e sugli stessi Rif. SdF. Il tab RA mantiene per ora il solo export TXT.</li>
-                  <li><strong>ℹ️ Info Zona in testata</strong>: il Riepilogo riporta le stesse righe VENDOR • ZONA • REGIONE • AREA mostrate sotto la ricerca percorso, distinte per PARTENZA e ARRIVO.</li>
+                  <li><strong>ℹ️ Info Zona in testata</strong>: il Riepilogo riporta le stesse righe VENDOR • ZONA • REGIONE • AREA mostrate sotto la ricerca percorso, distinte per PARTENZA e ARRIVO quando le due centrali stanno in zone diverse, su riga unica quando condividono zona, regione e area.</li>
                   <li><strong>📑 Foglio Riepilogo</strong>: una riga per percorso con Percorso Centrali e ID Collegamenti uno per riga, colorati come nella tabella a video (verde/blu/grigio per gli RA secondo i tipi sede, colore di stato per gli RC, viola per i gateway); Distanza (km) con il totale e la ripartizione per tratta (RA1, RA2, RC, 🌐 RTN); Collegamenti con logici, fisici e ripartizione per tratta: una voce per ogni sequenza contigua della stessa rete, separata dai passaggi RA↔RC e dalle tratte RTN, nello stesso ordine della colonna ID Collegamenti (es. <code>12 Logici / RC1:8 / RTN / RC2:4</code>).</li>
                   <li><strong>📝 Foglio Note</strong>: raccoglie per ogni percorso la <strong>🌐 Nota Lavorante — campo Note trasporto</strong>, la <strong>📂 Nota File Condiviso</strong> e le <strong>💶 Note Costi</strong>, costruite con la stessa logica del Generatore Note Standard IRP. Lo stato delle tratte ("Tutte le Tratte sono Attive" oppure l'elenco di quelle in realizzazione) è dedotto dal database: va riletto prima di incollarlo in pratica.</li>
-                  <li><strong>💶 Costi</strong>: con il toggle <strong>Includi Costi</strong> attivo il Riepilogo aggiunge le colonne <strong>Costo stimato (€)</strong> e <strong>Dettaglio Costi</strong>. Il tariffario è scelto <strong>tratta per tratta</strong> in base alla zona dei collegamenti (Nord Ovest per PV/MILO/LO/LI, Italia Std altrove), quindi un percorso che va dal Centro al Nord Ovest via RTN valorizza le tratte del Centro a listino Italia Std e quelle lombarde a listino Nord Ovest. Il Dettaglio elenca le tratte nell'ordine del percorso con il marcatore 🌐 RTN al posto giusto, e il Costo stimato è la somma. Tratte RA contigue separate solo dal cambio arco contano come una sola. La clausola <em>"-- 180 Giorni a causa del/dei Subpath…"</em> viene aggiunta a ogni tratta, Italia Std e Nord Ovest allo stesso modo, quando lo stato del collegamento, del SubPath o del C-FOS è diverso da ATTIVO: per gli RA la frase cita il codice SubPath, per gli RC l'IdCollegamento. Nelle tratte RA il dettaglio fra parentesi è esplicitato come <code>[Arco: … - Subpath: … - Id Collegamento: … + …]</code>; nelle tratte RC resta il solo elenco degli IdCollegamento. Uno stato <code>ATTIVO &gt; SATURO</code> non viene segnalato, perché saturo non significa in realizzazione. Nel foglio Note compare una riga per tratta: <code>Rete RC1: [HW…] Scorte Incluse -- [ID della tratta] -- 180 Giorni a causa dei Subpath … che sono in fase di realizzazione.</code>, con la numerazione RA1/RA2/RC1/RC2 identica a quella del blocco COSTI STIMATI del file TXT e la frase sui subpath già compilata invece del testo segnaposto. Il separatore è <code> -- </code> con un solo spazio per lato, come richiede il tool enterprise aziendale in cui la nota viene incollata. Sotto ogni nota una riga in corsivo verde <code>Costo Rete RC1: 23.135,00 €  --&gt;  23135</code>, da leggere e non da copiare.</li>
+                  <li><strong>💶 Costi</strong>: con il toggle <strong>Includi Costi</strong> attivo il Riepilogo aggiunge le colonne <strong>Costo stimato (€)</strong> e <strong>Dettaglio Costi</strong>. Il tariffario è scelto <strong>tratta per tratta</strong> in base alla zona dei collegamenti (Nord Ovest per PV/MILO/LO/LI, Italia Std altrove), quindi un percorso che va dal Centro al Nord Ovest via RTN valorizza le tratte del Centro a listino Italia Std e quelle lombarde a listino Nord Ovest. Il Dettaglio elenca le tratte nell'ordine del percorso con il marcatore 🌐 RTN al posto giusto, e il Costo stimato è la somma. Tratte RA contigue separate solo dal cambio arco contano come una sola. La clausola <em>"-- 180 Giorni a causa del/dei Subpath…"</em> viene aggiunta a ogni tratta, Italia Std e Nord Ovest allo stesso modo, quando lo stato del collegamento, del SubPath o del C-FOS rientra fra quelli non esercibili (NON ATTIVO, IN ATTIVAZIONE, IN CESSAZIONE, IN VARIAZIONE, IN REINSTRADAMENTO, IN REALIZZAZIONE, DA REALIZZARE, NON DISPONIBILE). Un testo libero non riconosciuto in Altro2 o Info Extra non fa scattare la clausola: per gli RA la frase cita il codice SubPath, per gli RC l'IdCollegamento. Nelle tratte RA il dettaglio fra parentesi è esplicitato come <code>[Arco: … - Subpath: … - Id Collegamento: … + …]</code>; nelle tratte RC resta il solo elenco degli IdCollegamento. Uno stato <code>ATTIVO &gt; SATURO</code> non viene segnalato, perché saturo non significa in realizzazione. Nel foglio Note compare una riga per tratta: <code>Rete RC1: [HW…] Scorte Incluse -- [ID della tratta] -- 180 Giorni a causa dei Subpath … che sono in fase di realizzazione.</code>, con la numerazione RA1/RA2/RC1/RC2 identica a quella del blocco COSTI STIMATI del file TXT e la frase sui subpath già compilata invece del testo segnaposto. Il separatore è <code> -- </code> con un solo spazio per lato, come richiede il tool enterprise aziendale in cui la nota viene incollata. Sotto ogni nota una riga in corsivo verde <code>Costo Rete RC1: 23.135,00 €  --&gt;  23135</code>, da leggere e non da copiare.</li>
                   <li><strong>🗺️ Foglio KMZ</strong>: replica del documento prodotto dal Generatore Info KMZ, con numero SF, blocco CENTRALI numerato e blocco COLLEGAMENTI con la riga C-FOS sotto ciascun link.</li>
                   <li><strong>🔧 FIX import TXT</strong>: i collegamenti RA non venivano riconosciuti quando il Subpath conteneva caratteri non alfanumerici (es. <code>ACA007/2</code>) o mancava uno spazio attorno alle <code>|</code>, e la sezione COLLEGAMENTI restava vuota; ora vengono letti anche i gateway <strong>🌐 RTN</strong>, prima ignorati sia tra le centrali sia tra i collegamenti.</li>
                   <li><strong>🔧 FIX segmentazione IRP</strong>: un segmento si chiude anche al cambio di <strong>Arco</strong> o <strong>Subpath</strong> e non solo sui gateway presenti nella sezione COLLEGAMENTI. Un gateway RA↔RA compare solo tra le centrali, quindi il secondo tratto RA finiva accorpato al primo e spariva dalla nota.</li>
@@ -319162,6 +319162,8 @@ window._buildUnifiedCostBlock = function(opts) {
   var C_YELLOW    = 'FFFFFF00';
   var C_KMZ_ID    = 'FF002060';
   var C_KMZ_CFOS  = 'FF595959';
+  var C_START_BG  = 'FFDCE6F1';
+  var C_END_BG    = 'FFEBF1DE';
   var C_BLACK     = 'FF000000';
   // Palette ID Collegamenti: stessi colori della colonna nel tab Ricerca Percorso
   var ID_COLORS = {
@@ -319208,6 +319210,7 @@ window._buildUnifiedCostBlock = function(opts) {
   function _n(v){ var x = Number(v); return isNaN(x) ? 0 : x; }
   function _r2(v){ return Math.round(_n(v) * 100) / 100; }
   function _pad2(n){ var t = String(n); return t.length < 2 ? '0' + t : t; }
+  function _tipoLabel(t){ return t === 'Div' ? 'Diversificato' : 'Standard'; }
 
   function _splitLabel(lbl){
     var t = _s(lbl).replace(/::(RA|RC)$/, '');
@@ -319276,14 +319279,21 @@ window._buildUnifiedCostBlock = function(opts) {
     var el = document.getElementById(isUni ? 'routeZoneInfoTextUNIFIED' : 'routeZoneInfoText');
     if (!el) return [];
     var out = [];
+    // Il pannello ha due forme: una riga per PARTENZA e una per ARRIVO, ciascuna
+    // in un <div> con badge + testo, oppure una riga unica di testo con <strong>
+    // quando partenza e arrivo condividono zona, regione e area.
+    var righe = [];
     var kids = el.children || [];
-    if (kids.length){
-      for (var i = 0; i < kids.length; i++){
-        var spans = kids[i].getElementsByTagName('span');
+    for (var i = 0; i < kids.length; i++){
+      if (kids[i].tagName && kids[i].tagName.toUpperCase() === 'DIV') righe.push(kids[i]);
+    }
+    if (righe.length){
+      righe.forEach(function(riga){
+        var spans = riga.getElementsByTagName('span');
         var lab = spans.length     ? _s(spans[0].textContent) : '';
-        var txt = spans.length > 1 ? _s(spans[1].textContent) : _s(kids[i].textContent);
+        var txt = spans.length > 1 ? _s(spans[1].textContent) : _s(riga.textContent);
         out.push({ label: lab, testo: txt });
-      }
+      });
     } else {
       out.push({ label: '', testo: _s(el.textContent) });
     }
@@ -319512,26 +319522,31 @@ window._buildUnifiedCostBlock = function(opts) {
     return parts.join(' + ') + '.\n\n' + NOTA_IMPORTANTE + '\n\n' + NOTA_KMZ_ALLEG;
   }
 
-  // Estrae lo stato da etichette tipo "[SubPath NON ATTIVO]" o "[C-FOS ATTIVO]"
-  function _statoEtichetta(val, chiave){
+  // Stati che indicano un elemento non ancora esercibile. Il confronto e' su
+  // questa lista chiusa: un testo non riconosciuto NON viene mai interpretato
+  // come "non attivo", altrimenti campi descrittivi generano falsi positivi.
+  var STATI_NON_ATTIVI = ['NON ATTIVO', 'NON DISPONIBILE', 'IN ATTIVAZIONE',
+                          'IN CESSAZIONE', 'IN VARIAZIONE', 'IN REINSTRADAMENTO',
+                          'IN REALIZZAZIONE', 'DA REALIZZARE'];
+
+  function _haStatoNonAttivo(val, chiave){
     var t = _s(val).toUpperCase();
-    if (!t || t.indexOf(chiave) === -1) return '';
-    var m = t.match(/\[\s*[^\]]*?\s*(ATTIVO|NON ATTIVO|IN ATTIVAZIONE|IN CESSAZIONE|IN VARIAZIONE|IN REINSTRADAMENTO|NON DISPONIBILE|DA REALIZZARE|IN REALIZZAZIONE)\s*\]/);
-    if (m) return m[1];
-    return t.replace(/[\[\]]/g, '').replace(chiave, '').trim();
+    if (!t) return false;
+    if (chiave && t.indexOf(chiave) === -1) return false;
+    for (var i = 0; i < STATI_NON_ATTIVI.length; i++){
+      if (t.indexOf(STATI_NON_ATTIVI[i]) !== -1) return true;
+    }
+    return false;
   }
 
-  // Collegamento da segnalare: stato del collegamento, del SubPath o del C-FOS
-  // diverso da ATTIVO. "ATTIVO > SATURO" resta attivo (e' saturo, non in
-  // realizzazione); tutto il resto (IN ATTIVAZIONE, IN CESSAZIONE, MISTO,
-  // NON ATTIVO...) viene segnalato.
+  // Collegamento da segnalare nella frase "180 Giorni...": stato del
+  // collegamento, del SubPath o del C-FOS fra quelli non attivi.
+  // "ATTIVO" e "ATTIVO > SATURO" non vengono segnalati (saturo non significa
+  // in realizzazione), e nemmeno un campo con testo libero non riconosciuto.
   function _nonAttivo(l){
-    var st = _s(l.stato).toUpperCase();
-    if (st && st.indexOf('ATTIVO') !== 0) return true;
-    var sp = _statoEtichetta(l.ix, 'SUBPATH');
-    if (sp && sp !== 'ATTIVO') return true;
-    var cf = _statoEtichetta(l.a2, 'C-FOS');
-    if (cf && cf !== 'ATTIVO') return true;
+    if (_haStatoNonAttivo(l.stato, ''))      return true;
+    if (_haStatoNonAttivo(l.ix, 'SUBPATH'))  return true;
+    if (_haStatoNonAttivo(l.a2, 'C-FOS'))    return true;
     return false;
   }
 
@@ -320100,7 +320115,8 @@ window._buildUnifiedCostBlock = function(opts) {
 
       var distVal = _distCell(d, isUni);
 
-      var rowVals = [d.label, d.tipo, distVal, collTxt, d.metrics.centrali,
+      var tipoLbl = _tipoLabel(d.tipo);
+      var rowVals = [d.label, tipoLbl, distVal, collTxt, d.metrics.centrali,
                      d.tipo === 'Div' ? (sdfD || sdfS) : sdfS, pathRt, idsRt];
       if (hasCosti){
         var ci = d.costi;
@@ -320149,8 +320165,8 @@ window._buildUnifiedCostBlock = function(opts) {
       r.height = Math.max(30, Math.max(idsArr.length, cen.length, collLines.length) * 12.8);
     });
 
-    _widths(ws, hasCosti ? [15, 9, 13, 14, 10, 18, 62, 34, 16, 30]
-                         : [15, 9, 13, 14, 10, 18, 62, 34]);
+    _widths(ws, hasCosti ? [15, 14, 13, 14, 10, 18, 62, 34, 16, 30]
+                         : [15, 14, 13, 14, 10, 18, 62, 34]);
     ws.views = [{ state: 'frozen', ySplit: hRow }];
     if (data.length){
       ws.autoFilter = { from: { row: hRow, column: 1 }, to: { row: hRow + data.length, column: H1.length } };
@@ -320225,7 +320241,6 @@ window._buildUnifiedCostBlock = function(opts) {
         rn++;
       }
     });
-    wsN.views = [{ state: 'frozen', ySplit: 0 }];
 
     // ══ Foglio 3: Centrali ════════════════════════════════════════════════════
     var ws2 = wb.addWorksheet('Centrali');
@@ -320237,7 +320252,7 @@ window._buildUnifiedCostBlock = function(opts) {
       var num = 0, rows = [];
       d.centrali.forEach(function(c){
         var label = c.gw ? '--' : _pad2(++num);
-        var r = ws2.addRow([d.label, d.tipo, label, c.gw ? 'GW' : (c.rete || (isUni ? '' : 'RC')),
+        var r = ws2.addRow([d.label, _tipoLabel(d.tipo), label, c.gw ? 'GW' : (c.rete || (isUni ? '' : 'RC')),
                             c.nome, c.clli, c.gw ? 'GATEWAY' : c.tipo]);
         r.font = { size: 10 };
         _borderRow(r, H2.length);
@@ -320254,8 +320269,17 @@ window._buildUnifiedCostBlock = function(opts) {
           _fillRow(rows[j].row, H2.length, C_GWSIDE_BG);
         });
       });
+      // Partenza e arrivo del percorso: hanno la precedenza sul viola dei gateway
+      var reali = rows.filter(function(x){ return !x.gw; });
+      if (reali.length){
+        reali[0].row.font = { size: 10, bold: true, color: { argb: C_START } };
+        _fillRow(reali[0].row, H2.length, C_START_BG);
+        var ultima = reali[reali.length - 1];
+        ultima.row.font = { size: 10, bold: true, color: { argb: C_END } };
+        _fillRow(ultima.row, H2.length, C_END_BG);
+      }
     });
-    _widths(ws2, [15, 9, 6, 8, 34, 14, 12]);
+    _widths(ws2, [15, 14, 6, 8, 34, 14, 12]);
     ws2.views = [{ state: 'frozen', ySplit: 1 }];
     if (n2) ws2.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1 + n2, column: H2.length } };
 
@@ -320269,7 +320293,7 @@ window._buildUnifiedCostBlock = function(opts) {
     data.forEach(function(d){
       var num = 0;
       function gwRow(tipo){
-        var r = ws3.addRow([d.label, d.tipo, '--', 'GW', 'GATEWAY', '--', '--', '--',
+        var r = ws3.addRow([d.label, _tipoLabel(d.tipo), '--', 'GW', 'GATEWAY', '--', '--', '--',
                             tipo, '--', '--', '--', '--']);
         r.font = { size: 10, bold: true, color: { argb: C_GW_TX } };
         r.alignment = { vertical: 'middle', horizontal: 'left' };
@@ -320279,7 +320303,7 @@ window._buildUnifiedCostBlock = function(opts) {
       }
       d.links.forEach(function(l, i){
         if (d.gwRows[i]) gwRow(d.gwRows[i]);
-        var r = ws3.addRow([d.label, d.tipo, _pad2(++num), l.rete, l.id, l.km,
+        var r = ws3.addRow([d.label, _tipoLabel(d.tipo), _pad2(++num), l.rete, l.id, l.km,
                             l.cavo, l.stato, l.tipo, l.a1, l.a2, l.ix, l.note]);
         r.font = { size: 10 };
         r.alignment = { vertical: 'top', wrapText: true };
@@ -320289,7 +320313,7 @@ window._buildUnifiedCostBlock = function(opts) {
       });
       if (d.gwRows[d.links.length]) gwRow(d.gwRows[d.links.length]);
     });
-    _widths(ws3, [15, 9, 6, 8, 32, 13, 30, 20, 13, 40, 16, 18, 22]);
+    _widths(ws3, [15, 14, 6, 8, 32, 13, 30, 20, 13, 40, 16, 18, 22]);
     ws3.views = [{ state: 'frozen', ySplit: 1 }];
     if (n3) ws3.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1 + n3, column: H3.length } };
 
@@ -320309,6 +320333,7 @@ window._buildUnifiedCostBlock = function(opts) {
       if (data.length > 1){
         put(rk, 1, '\u2014 PERCORSO ' + d.label + ' \u2014',
             { bold: true, size: 11, color: { argb: C_GW_TX } }, C_GWSIDE_BG);
+        ws4.getCell(rk, 2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_GWSIDE_BG } };
         rk += 2;
       }
       put(rk, 1, (d.tipo === 'Div' ? (sdfD || sdfS) : sdfS) || 'SF?????????/0',
