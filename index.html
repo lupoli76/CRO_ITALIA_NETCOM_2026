@@ -21394,7 +21394,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
     <li><strong>📊 Export Excel (.xlsx)</strong> nei tab <strong>RC</strong> e <strong>Unificato</strong>: i bottoni <strong>📄 Esporta TXT</strong> diventano <strong>📄 Esporta</strong> e nella barra di selezione compaiono due bottoni, <strong>📤 Esporta TXT (N)</strong> e <strong>📊 Esporta XLSX (N)</strong>, sulla stessa selezione di percorsi.</li>
-    <li><strong>📑 Cinque fogli</strong>: <strong>Riepilogo</strong> (una riga per percorso, Percorso Centrali e ID Collegamenti su più righe con gli stessi colori della tabella a video, Distanza ripartita per tratta RA/RC/RTN, Collegamenti con logici, fisici e ripartizione per tratta (RA1, RC1, RTN, RC2…) nell'ordine del percorso, e in testata le <strong>ℹ️ Info Zona</strong> di partenza e arrivo con Vendor, Zona, Regione e Area), <strong>Note</strong>, <strong>Centrali</strong>, <strong>Collegamenti</strong> con le righe gateway in posizione, e <strong>KMZ</strong>, che replica il documento generato in Analisi Fattibilità.</li>
+    <li><strong>📑 Cinque fogli</strong>: <strong>Riepilogo</strong> (una riga per percorso, Percorso Centrali e ID Collegamenti su più righe con gli stessi colori della tabella a video, Distanza ripartita per tratta RA/RC/RTN, Collegamenti con logici, fisici e ripartizione per tratta (RA1, RC1, RTN, RC2…) nell'ordine del percorso, una colonna <strong>Routing CLLI [C-FOS]</strong> con la catena dei CLLI ricostruita dalle tratte C-FOS, e in testata le <strong>ℹ️ Info Zona</strong> di partenza e arrivo con Vendor, Zona, Regione e Area), <strong>Note</strong>, <strong>Centrali</strong>, <strong>Collegamenti</strong> con le righe gateway in posizione, e <strong>KMZ</strong>, che replica il documento generato in Analisi Fattibilità.</li>
     <li><strong>📝 Foglio Note</strong>: per ogni percorso la <strong>🌐 Nota Lavorante — campo Note trasporto</strong>, la <strong>📂 Nota File Condiviso</strong> e le <strong>💶 Note Costi</strong>, una per tratta (Rete RA1, Rete RC1, Rete RC2…), con HW da tariffario, elenco ID della tratta e la frase <em>"180 Giorni a causa del/dei Subpath…"</em> già compilata con i subpath non attivi.</li>
     <li><strong>💶 Costi nel Riepilogo</strong>: con il toggle <strong>Includi Costi</strong> attivo compaiono le colonne <strong>Costo stimato (€)</strong> e <strong>Dettaglio Costi</strong>, con capacità, zona (Nord Ovest o Italia Std), importo RA e RC e avviso rigeneratore oltre soglia.</li>
   </ul>
@@ -34548,8 +34548,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <ul class="docs-list docs-list-bullets" style="margin: 0;">
                   <li><strong>📊 Export XLSX</strong>: nei tab <strong>Ricerca Percorso RC</strong> e <strong>Unificato</strong> i bottoni <strong>📄 Esporta TXT</strong> si chiamano ora <strong>📄 Esporta</strong>; nella barra di selezione ci sono due bottoni, <strong>📤 Esporta TXT (N)</strong> e <strong>📊 Esporta XLSX (N)</strong>, che lavorano sulla stessa selezione e sugli stessi Rif. SdF. Il tab RA mantiene per ora il solo export TXT.</li>
                   <li><strong>ℹ️ Info Zona in testata</strong>: il Riepilogo riporta le stesse righe VENDOR • ZONA • REGIONE • AREA mostrate sotto la ricerca percorso, distinte per PARTENZA e ARRIVO quando le due centrali stanno in zone diverse, su riga unica quando condividono zona, regione e area.</li>
+                  <li><strong>🔗 Routing CLLI [C-FOS]</strong>: colonna che ricostruisce il percorso fisico centrale per centrale a partire dalle tratte C-FOS dell'Id Cavo. I segmenti nel database non sono né ordinati né orientati: il verso di percorrenza di ogni collegamento viene preso dalla sequenza reale delle centrali del percorso, così la catena resta continua anche attraverso i gateway RA↔RA e RA↔RC, dove la centrale si ripete; dove la C-FOS manca la catena non viene ricostruita in altro modo: compare <code>⚠ [IdCollegamento] senza C-FOS</code> al posto della tratta e la riga si chiude con <code>⚠ catena C-FOS incompleta</code>, così il routing dice anche dove il dato manca. I colori seguono quelli della colonna Percorso Centrali: primo CLLI e label PARTENZA in blu, ultimo CLLI e label ARRIVO in verde, gateway RA↔RC e 🌐 RTN in viola insieme ai CLLI adiacenti, tratte scoperte in arancio.</li>
                   <li><strong>📑 Foglio Riepilogo</strong>: una riga per percorso con Percorso Centrali e ID Collegamenti uno per riga, colorati come nella tabella a video (verde/blu/grigio per gli RA secondo i tipi sede, colore di stato per gli RC, viola per i gateway); Distanza (km) con il totale e la ripartizione per tratta (RA1, RA2, RC, 🌐 RTN); Collegamenti con logici, fisici e ripartizione per tratta: una voce per ogni sequenza contigua della stessa rete, separata dai passaggi RA↔RC e dalle tratte RTN, nello stesso ordine della colonna ID Collegamenti (es. <code>12 Logici / RC1:8 / RTN / RC2:4</code>).</li>
-                  <li><strong>📝 Foglio Note</strong>: raccoglie per ogni percorso la <strong>🌐 Nota Lavorante — campo Note trasporto</strong>, la <strong>📂 Nota File Condiviso</strong> e le <strong>💶 Note Costi</strong>, costruite con la stessa logica del Generatore Note Standard IRP. Lo stato delle tratte ("Tutte le Tratte sono Attive" oppure l'elenco di quelle in realizzazione) è dedotto dal database: va riletto prima di incollarlo in pratica.</li>
+                  <li><strong>📝 Foglio Note</strong>: raccoglie per ogni percorso la <strong>🌐 Nota Lavorante — campo Note trasporto</strong>, la <strong>📂 Nota File Condiviso</strong> e le <strong>💶 Note Costi</strong>, costruite con la stessa logica del Generatore Note Standard IRP. La frase sulla diversificazione viene dedotta dai campi <strong>Rif. Std</strong> e <strong>Rif. Div</strong> della barra di export: con il solo Rif. Std non compare, con i due riferimenti uguali diventa <em>"Prima/Seconda Via della fattibilità X, completamente diversificata rispetto alla … presente sulla stessa pratica"</em>, con riferimenti diversi diventa <em>"Diversificato al 100% rispetto alla fattibilità Y come richiesto"</em>, dove Y è l'altra fattibilità. La diversificazione è sempre dichiarata al 100%: se è parziale va corretta a mano. Lo stato delle tratte ("Tutte le Tratte sono Attive" oppure l'elenco di quelle in realizzazione) è dedotto dal database: va riletto prima di incollarlo in pratica.</li>
                   <li><strong>💶 Costi</strong>: con il toggle <strong>Includi Costi</strong> attivo il Riepilogo aggiunge le colonne <strong>Costo stimato (€)</strong> e <strong>Dettaglio Costi</strong>. Il tariffario è scelto <strong>tratta per tratta</strong> in base alla zona dei collegamenti (Nord Ovest per PV/MILO/LO/LI, Italia Std altrove), quindi un percorso che va dal Centro al Nord Ovest via RTN valorizza le tratte del Centro a listino Italia Std e quelle lombarde a listino Nord Ovest. Il Dettaglio elenca le tratte nell'ordine del percorso con il marcatore 🌐 RTN al posto giusto, e il Costo stimato è la somma. Tratte RA contigue separate solo dal cambio arco contano come una sola. La clausola <em>"-- 180 Giorni a causa del/dei Subpath…"</em> viene aggiunta a ogni tratta, Italia Std e Nord Ovest allo stesso modo, quando lo stato del collegamento, del SubPath o del C-FOS rientra fra quelli non esercibili (NON ATTIVO, IN ATTIVAZIONE, IN CESSAZIONE, IN VARIAZIONE, IN REINSTRADAMENTO, IN REALIZZAZIONE, DA REALIZZARE, NON DISPONIBILE). Un testo libero non riconosciuto in Altro2 o Info Extra non fa scattare la clausola: per gli RA la frase cita il codice SubPath, per gli RC l'IdCollegamento. Nelle tratte RA il dettaglio fra parentesi è esplicitato come <code>[Arco: … - Subpath: … - Id Collegamento: … + …]</code>; nelle tratte RC resta il solo elenco degli IdCollegamento. Uno stato <code>ATTIVO &gt; SATURO</code> non viene segnalato, perché saturo non significa in realizzazione. Nel foglio Note compare una riga per tratta: <code>Rete RC1: [HW…] Scorte Incluse -- [ID della tratta] -- 180 Giorni a causa dei Subpath … che sono in fase di realizzazione.</code>, con la numerazione RA1/RA2/RC1/RC2 identica a quella del blocco COSTI STIMATI del file TXT e la frase sui subpath già compilata invece del testo segnaposto. Il separatore è <code> -- </code> con un solo spazio per lato, come richiede il tool enterprise aziendale in cui la nota viene incollata. Sotto ogni nota una riga in corsivo verde <code>Costo Rete RC1: 23.135,00 €  --&gt;  23135</code>, da leggere e non da copiare.</li>
                   <li><strong>🗺️ Foglio KMZ</strong>: replica del documento prodotto dal Generatore Info KMZ, con numero SF, blocco CENTRALI numerato e blocco COLLEGAMENTI con la riga C-FOS sotto ciascun link.</li>
                   <li><strong>🔧 FIX import TXT</strong>: i collegamenti RA non venivano riconosciuti quando il Subpath conteneva caratteri non alfanumerici (es. <code>ACA007/2</code>) o mancava uno spazio attorno alle <code>|</code>, e la sezione COLLEGAMENTI restava vuota; ora vengono letti anche i gateway <strong>🌐 RTN</strong>, prima ignorati sia tra le centrali sia tra i collegamenti.</li>
@@ -37423,7 +37424,7 @@ PERCORSI ALTERNATIVI (Div):
           <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
             <ul style="margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:0.35rem;">
               <li><strong>Nuovo export XLSX</strong> nei tab Ricerca Percorso RC e Unificato, accanto all'export TXT: i bottoni <strong>📄 Esporta TXT</strong> diventano <strong>📄 Esporta</strong> e la barra di selezione mostra <strong>📤 Esporta TXT (N)</strong> e <strong>📊 Esporta XLSX (N)</strong>. Il tab RA resta al solo TXT.</li>
-              <li><strong>Foglio Riepilogo</strong>: intestazione con partenza in blu, arrivo in verde e <strong>ℹ️ Info Zona</strong> (Vendor, Zona, Regione, Area di partenza e arrivo), una riga per percorso, Percorso Centrali e ID Collegamenti uno per riga con i colori della tabella a video, Distanza (km) con totale e ripartizione per tratta (RA1/RA2/RC/🌐 RTN), Collegamenti con logici, fisici e ripartizione per tratta nell'ordine del percorso.</li>
+              <li><strong>Foglio Riepilogo</strong>: nuova colonna <strong>Routing CLLI [C-FOS]</strong> con la catena dei CLLI ricostruita dalle tratte C-FOS; intestazione con partenza in blu, arrivo in verde e <strong>ℹ️ Info Zona</strong> (Vendor, Zona, Regione, Area di partenza e arrivo), una riga per percorso, Percorso Centrali e ID Collegamenti uno per riga con i colori della tabella a video, Distanza (km) con totale e ripartizione per tratta (RA1/RA2/RC/🌐 RTN), Collegamenti con logici, fisici e ripartizione per tratta nell'ordine del percorso.</li>
               <li><strong>Foglio Note</strong>: <strong>🌐 Nota Lavorante — campo Note trasporto</strong>, <strong>📂 Nota File Condiviso</strong> e <strong>💶 Note Costi</strong> per ogni percorso, costruite con la stessa logica del Generatore Note Standard IRP.</li>
               <li><strong>Costi</strong>: con il toggle Includi Costi attivo il Riepilogo mostra <strong>Costo stimato (€)</strong> e <strong>Dettaglio Costi</strong>, con tariffario scelto tratta per tratta secondo la zona dei collegamenti (Nord Ovest o Italia Std) e marcatore 🌐 RTN nell'ordine del percorso; il foglio Note riporta una riga per tratta (Rete RA1, Rete RC1, Rete RC2…) con HW da tariffario, elenco ID e la frase "180 Giorni a causa del/dei Subpath…" compilata con i subpath non attivi al posto del testo segnaposto del TXT, separatore <code> -- </code> a spazio singolo per compatibilità con il tool enterprise aziendale, e sotto una riga con il costo della tratta da leggere soltanto.</li>
               <li><strong>Fogli Centrali e Collegamenti</strong>: una riga per elemento, con le righe gateway inserite in posizione ed evidenziate in viola insieme alle centrali duplicate.</li>
@@ -70698,7 +70699,7 @@ var RAW_DB = [
     "Area": "CENTRO",
     "Tipo": "-",
     "TipoPortante": "DWDM",
-    "IdCavo": "MOTEITAF/MOTEITAG/C-FOS/00003 4,18 + MOTEITAG/PISTITAR/C-FOS/00001 6,44 + PISTITAL/PISTITAR/C-FOS/00002 6,07 + PISTITAL/PISTITAZ/C-FOS/00002 3,12",
+    "IdCavo": "MOTEITAF/MOTEITAG/C-FOS/00003 + MOTEITAG/PISTITAR/C-FOS/00001 + PISTITAL/PISTITAR/C-FOS/00002 + PISTITAL/PISTITAZ/C-FOS/00002",
     "SubPath": "CTO015",
     "Stato_IdCollegamento": "ATTIVO",
     "Note": "-",
@@ -319230,8 +319231,8 @@ window._buildUnifiedCostBlock = function(opts) {
   }
 
   function _cfos(v){
-    var m = _s(v).match(/[A-Z0-9]+\/[A-Z0-9]+\/C-FOS\/\d+/g);
-    return m ? m.join(' + ') : '';
+    var m = _s(v).match(/[A-Z0-9]+\/[A-Z0-9]+\/C-FOS(?:\/\w+)?/gi);
+    return m ? m.map(function(x){ return x.trim(); }).join(' + ') : '';
   }
 
   function _normId(v){ return _s(v).replace(/\s*\|\s*/g, ' | '); }
@@ -319396,6 +319397,10 @@ window._buildUnifiedCostBlock = function(opts) {
         km:    _r2(e.weight),
         cavo:  cavo,
         cfos:  _cfos(cavo),
+        clliA: _s(raw.CLLI_A).toUpperCase(),
+        clliZ: _s(raw.CLLI_Z).toUpperCase(),
+        clliA: _s(raw.CLLI_A || raw.clli_A).toUpperCase(),
+        clliZ: _s(raw.CLLI_Z || raw.clli_Z).toUpperCase(),
         stato: stato,
         tipo:  (tipoA || tipoZ) ? (tipoA || '?') + '<->' + (tipoZ || '?') : '',
         a1:    _s(raw.Altro1),
@@ -319493,6 +319498,153 @@ window._buildUnifiedCostBlock = function(opts) {
     });
   }
 
+  // ── Routing CLLI [C-FOS] ─────────────────────────────────────────────────────
+  // L'IdCavo di un collegamento contiene una o piu' tratte C-FOS nella forma
+  // "CLLI_A/CLLI_Z/C-FOS/NNNNN", concatenate con "+" e non necessariamente in
+  // ordine ne' orientate. Si ricostruisce la catena reale partendo dal CLLI di
+  // ingresso del collegamento e agganciando ogni volta la tratta che lo tocca.
+  function _cfosPairs(cavo){
+    var out = [];
+    _s(cavo).split('+').forEach(function(seg){
+      var m = _s(seg).toUpperCase().match(/^([A-Z0-9]+)\s*\/\s*([A-Z0-9]+)\s*\//);
+      if (m) out.push([m[1], m[2]]);
+    });
+    return out;
+  }
+
+  function _pairsHas(pairs, clli){
+    for (var i = 0; i < pairs.length; i++){
+      if (pairs[i][0] === clli || pairs[i][1] === clli) return true;
+    }
+    return false;
+  }
+
+  function _pairsEndpoints(pairs){
+    var deg = {};
+    pairs.forEach(function(p){
+      deg[p[0]] = (deg[p[0]] || 0) + 1;
+      deg[p[1]] = (deg[p[1]] || 0) + 1;
+    });
+    return Object.keys(deg).filter(function(k){ return deg[k] === 1; });
+  }
+
+  function _chainFrom(pairs, start){
+    var used = [], chain = [start], cur = start, moved = true;
+    for (var k = 0; k < pairs.length; k++) used.push(false);
+    while (moved){
+      moved = false;
+      for (var i = 0; i < pairs.length; i++){
+        if (used[i]) continue;
+        if (pairs[i][0] === cur){ used[i] = true; cur = pairs[i][1]; chain.push(cur); moved = true; break; }
+        if (pairs[i][1] === cur){ used[i] = true; cur = pairs[i][0]; chain.push(cur); moved = true; break; }
+      }
+    }
+    var mancanti = 0;
+    used.forEach(function(u){ if (!u) mancanti++; });
+    return { chain: chain, completa: mancanti === 0 };
+  }
+
+  // Estremi attesi di ogni collegamento, ricavati dalla sequenza reale delle
+  // centrali del percorso: e' l'unica fonte che dice con certezza in che verso
+  // va percorso ogni collegamento. Dopo un gateway RA<->RA o RA<->RC la centrale
+  // si ripete e va scartata; dopo un RTN cambia e la transizione non ha un
+  // collegamento associato.
+  function _linkEndpoints(centrali, links){
+    var seq = [], jumpAt = {}, pending = false, prev = null;
+    (centrali || []).forEach(function(c){
+      if (c.gw){ pending = true; return; }
+      if (pending){
+        pending = false;
+        if (prev && prev.clli && c.clli && prev.clli === c.clli) return;
+        jumpAt[seq.length - 1] = true;
+      }
+      seq.push(c); prev = c;
+    });
+    var trans = [];
+    for (var t = 0; t < seq.length - 1; t++){ if (!jumpAt[t]) trans.push(t); }
+    if (trans.length !== links.length) return null;
+    return links.map(function(l, i){
+      return { a: _s(seq[trans[i]].clli).toUpperCase(),
+               z: _s(seq[trans[i] + 1].clli).toUpperCase() };
+    });
+  }
+
+  function _routingClli(d){
+    var out = [], cur = '', parziale = false;
+    var ep = _linkEndpoints(d.centrali, d.links);
+    var reali = d.centrali.filter(function(c){ return !c.gw; });
+    if (reali.length) cur = _s(reali[0].clli).toUpperCase();
+
+    function push(clli){
+      if (!clli) return;
+      if (out.length && out[out.length - 1] === clli) return;
+      out.push(clli);
+    }
+
+    d.links.forEach(function(l, idx){
+      var gw = d.gwRows[idx];
+      if (gw){
+        out.push(gw === 'RTN' ? '\uD83C\uDF10 RTN' : '[' + gw + ']');
+        // Su RA<->RA e RA<->RC la centrale e' la stessa prima e dopo il gateway:
+        // la continuita' non si perde. Solo l'RTN spezza davvero la catena.
+        if (gw === 'RTN') cur = '';
+      }
+      var pairs = _cfosPairs(l.cavo);
+      if (!pairs.length){
+        // Nessuna C-FOS sul collegamento: la catena NON viene ricostruita dai
+        // CLLI del collegamento, si segnala la tratta scoperta. Il routing deve
+        // dire anche dove la C-FOS manca, non colmare il buco da solo.
+        out.push('\u26a0 ' + (_s(l.id) || l.rete) + ' senza C-FOS');
+        parziale = true;
+        cur = '';
+        return;
+      }
+
+      var epA = ep ? ep[idx].a : '';
+      var epZ = ep ? ep[idx].z : '';
+      var r = null;
+
+      // 1) si entra dal CLLI di ingresso previsto dal percorso
+      if (epA && _pairsHas(pairs, epA)) r = _chainFrom(pairs, epA);
+      // 2) altrimenti si entra dall'uscita e si inverte la catena
+      if ((!r || !r.completa) && epZ && _pairsHas(pairs, epZ)){
+        var rz = _chainFrom(pairs, epZ);
+        if (!r || (rz.completa && !r.completa)){
+          r = { chain: rz.chain.slice().reverse(), completa: rz.completa };
+        }
+      }
+      // 3) ripiego: continuita' con la tratta precedente, poi estremi del grafo
+      if (!r){
+        var start = (cur && _pairsHas(pairs, cur)) ? cur : '';
+        if (!start){
+          var eps = _pairsEndpoints(pairs);
+          if (eps.length && l.clliA && eps.indexOf(l.clliA) >= 0)      start = l.clliA;
+          else if (eps.length && l.clliZ && eps.indexOf(l.clliZ) >= 0) start = l.clliZ;
+          else if (eps.length)                                         start = eps[0];
+          else                                                         start = pairs[0][0];
+        }
+        r = _chainFrom(pairs, start);
+      }
+
+      // La catena deve agganciarsi al CLLI su cui siamo fermi
+      if (cur && r.chain.length > 1 &&
+          r.chain[0] !== cur && r.chain[r.chain.length - 1] === cur){
+        r = { chain: r.chain.slice().reverse(), completa: r.completa };
+      }
+
+      if (!r.completa) parziale = true;
+      if (cur && r.chain.length && r.chain[0] !== cur) parziale = true;
+      r.chain.forEach(push);
+      cur = r.chain[r.chain.length - 1];
+    });
+
+    if (d.gwRows[d.links.length]){
+      var gwe = d.gwRows[d.links.length];
+      out.push(gwe === 'RTN' ? '\uD83C\uDF10 RTN' : '[' + gwe + ']');
+    }
+    return { catena: out, parziale: parziale };
+  }
+
   // ── Nodi di confine dei segmenti ─────────────────────────────────────────────
   function _keyNodes(centrali, links, groups){
     if (typeof window._nstKeyNodes === 'function'){
@@ -319513,13 +319665,37 @@ window._buildUnifiedCostBlock = function(opts) {
     return n || cl || ('Sede' + i);
   }
 
+  // ── Diversificazione: dedotta dai campi Rif. Std / Rif. Div dell'export ──────
+  // Solo Rif. Std valorizzato       -> nessun diversificato, nessuna frase
+  // Rif. Std uguale a Rif. Div      -> Prima e Seconda Via sulla stessa pratica
+  // Rif. Std diverso da Rif. Div    -> due fattibilita' distinte
+  // La diversificazione e' sempre dichiarata al 100%: se parziale si corregge
+  // a mano sulla pratica.
+  function _divStr(tipo){
+    var ref = window._exportSdfRef || {};
+    var s = _s(ref.std), d = _s(ref.div);
+    if (!s || !d) return '';
+    if (s === d){
+      var via = tipo === 'Div' ? 'Seconda Via' : 'Prima Via';
+      var alt = tipo === 'Div' ? 'Prima Via'   : 'Seconda Via';
+      return 'Trasporto DWDM \u2014 ' + via + ' della fattibilit\u00e0 ' + s
+        + ', completamente diversificata rispetto alla ' + alt
+        + ' presente sulla stessa pratica.';
+    }
+    var altro = tipo === 'Div' ? s : d;
+    return 'Trasporto DWDM Diversificato al 100% rispetto alla fattibilit\u00e0 '
+      + altro + ' come richiesto.';
+  }
+
   // ── Nota Lavorante (campo Note trasporto) ────────────────────────────────────
-  function _notaLavorante(groups, keyNodes){
+  function _notaLavorante(groups, keyNodes, tipo){
     var parts = groups.map(function(g, i){
       return 'Trasporto DWDM ' + g.rete + ' da ' + _ndName(keyNodes, i) + ' a ' + _ndName(keyNodes, i + 1);
     });
     if (!parts.length) return '';
-    return parts.join(' + ') + '.\n\n' + NOTA_IMPORTANTE + '\n\n' + NOTA_KMZ_ALLEG;
+    var div = _divStr(tipo);
+    return parts.join(' + ') + '.\n\n' + NOTA_IMPORTANTE
+      + (div ? '\n\n' + div : '') + '\n\n' + NOTA_KMZ_ALLEG;
   }
 
   // Stati che indicano un elemento non ancora esercibile. Il confronto e' su
@@ -319561,7 +319737,7 @@ window._buildUnifiedCostBlock = function(opts) {
   }
 
   // ── Nota File Condiviso ──────────────────────────────────────────────────────
-  function _notaFileCondiviso(groups, keyNodes, links){
+  function _notaFileCondiviso(groups, keyNodes, links, tipo){
     if (!groups.length) return '';
     var parts = groups.map(function(g, i){
       var nA = '[' + _ndName(keyNodes, i) + ']';
@@ -319595,7 +319771,8 @@ window._buildUnifiedCostBlock = function(opts) {
     });
     // I segmenti restano sulla stessa riga, separati da " + " (a capo solo prima
     // della nota sull'allegato)
-    return parts.join(' + ') + '.\n\n' + NOTA_KMZ_ALLEG;
+    var div = _divStr(tipo);
+    return parts.join(' + ') + '.' + (div ? '\n' + div : '') + '\n\n' + NOTA_KMZ_ALLEG;
   }
 
   // ── Mix per tratta: una voce per ogni sequenza contigua della stessa rete,
@@ -319881,11 +320058,17 @@ window._buildUnifiedCostBlock = function(opts) {
       links: sq.links, gws: sq.gws, groups: groups, gwRows: gwRows,
       centrali: centrali, keyNodes: keyNodes,
       metrics: _metrics(item.route, sq.links, isUni),
+      routing: null,
       mix: _mix(sq.links, sq.gws),
-      nota: _notaLavorante(groups, keyNodes),
-      notaFC: _notaFileCondiviso(groups, keyNodes, sq.links),
+      nota: _notaLavorante(groups, keyNodes, item.tipo),
+      notaFC: _notaFileCondiviso(groups, keyNodes, sq.links, item.tipo),
       costi: _costInfo(item.route, sq.links, sq.gws)
     };
+  }
+
+  function _addRouting(d){
+    d.routing = _routingClli(d);
+    return d;
   }
 
   // ── Helper di stile ──────────────────────────────────────────────────────────
@@ -319945,6 +320128,28 @@ window._buildUnifiedCostBlock = function(opts) {
     return { richText: runs };
   }
 
+  // Come _richLinesF ma con separatore libero (usato per la catena CLLI)
+  function _richJoin(items, fonts, sep, pre, post){
+    var runs = [], buf = [], curKey = null, curFont = null;
+    var base = pre ? 1 : 0;
+    function flush(){
+      if (!buf.length) return;
+      runs.push({ font: curFont, text: (runs.length === base ? '' : sep) + buf.join(sep) });
+      buf = [];
+    }
+    if (pre) runs.push(pre);
+    items.forEach(function(t, i){
+      var f = fonts[i] || { name: 'Calibri', size: 10 };
+      var k = JSON.stringify(f);
+      if (curKey === null){ curKey = k; curFont = f; }
+      if (k !== curKey){ flush(); curKey = k; curFont = f; }
+      buf.push(t);
+    });
+    flush();
+    if (post) runs.push(post);
+    return { richText: runs };
+  }
+
   function _idFont(l){
     var f = { name: 'Calibri', size: 10 };
     if (l.rete === 'RC'){
@@ -319990,7 +320195,7 @@ window._buildUnifiedCostBlock = function(opts) {
   // ── Costruzione workbook ─────────────────────────────────────────────────────
   function _build(mode, items){
     var isUni = mode.indexOf('unified') === 0;
-    var data  = items.map(function(it){ return _routeData(it, isUni); });
+    var data  = items.map(function(it){ return _addRouting(_routeData(it, isUni)); });
 
     var wb = new ExcelJS.Workbook();
     wb.creator = 'CRO ITALIA';
@@ -320016,7 +320221,7 @@ window._buildUnifiedCostBlock = function(opts) {
     var ws = wb.addWorksheet('Riepilogo', { properties: { tabColor: { argb: C_HDR_BG } } });
     var hasCosti = data.some(function(d){ return !!d.costi; });
     var H1 = ['Percorso', 'Tipo', 'Distanza (km)', 'Collegamenti', 'Centrali',
-              'Rif. SdF', 'Percorso Centrali', 'ID Collegamenti'];
+              'Rif. SdF', 'Percorso Centrali', 'Routing CLLI [C-FOS]', 'ID Collegamenti'];
     if (hasCosti) H1 = H1.concat(['Costo stimato (\u20ac)', 'Dettaglio Costi']);
 
     ws.mergeCells(1, 1, 1, H1.length);
@@ -320116,8 +320321,47 @@ window._buildUnifiedCostBlock = function(opts) {
       var distVal = _distCell(d, isUni);
 
       var tipoLbl = _tipoLabel(d.tipo);
+      // Routing CLLI [C-FOS]: catena su riga unica, come la colonna Percorso Centrali
+      var rc = d.routing || { catena: [], parziale: false };
+      var rtRt;
+      if (rc.catena.length){
+        // Stessa logica di colori della colonna Percorso Centrali: partenza blu,
+        // arrivo verde, gateway e CLLI adiacenti in viola, tratte scoperte in
+        // arancio.
+        var cat  = rc.catena;
+        var kRt  = cat.map(function(){ return ''; });
+        var isGw = function(t){ return /^\[/.test(t) || t.indexOf('RTN') === 0 || t.indexOf('\uD83C\uDF10') === 0; };
+        var isWn = function(t){ return t.indexOf('\u26a0') === 0; };
+        cat.forEach(function(t, i){
+          if (isWn(t)){ kRt[i] = 'WARN'; return; }
+          if (!isGw(t)) return;
+          kRt[i] = 'GW';
+          if (i > 0 && !isGw(cat[i - 1]) && !isWn(cat[i - 1])) kRt[i - 1] = 'GW';
+          if (i + 1 < cat.length && !isGw(cat[i + 1]) && !isWn(cat[i + 1])) kRt[i + 1] = 'GW';
+        });
+        var iP = 0, iA = cat.length - 1;
+        while (iP < cat.length && (isGw(cat[iP]) || isWn(cat[iP]))) iP++;
+        while (iA >= 0 && (isGw(cat[iA]) || isWn(cat[iA]))) iA--;
+        if (iP < cat.length) kRt[iP] = 'START';
+        if (iA >= 0)         kRt[iA] = 'END';
+
+        var fRt = kRt.map(function(k){
+          if (k === 'WARN') return { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFF59E0B' } };
+          return _rFont(k, 10);
+        });
+        var postRt = rc.parziale
+          ? { font: { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFF59E0B' } },
+              text: '  \u2192  ARRIVO   \u26a0 catena C-FOS incompleta' }
+          : { font: _rFont('END', 8), text: '  \u2192  ARRIVO' };
+        rtRt = _richJoin(cat, fRt, '  \u2192  ',
+                         { font: _rFont('START', 8), text: 'PARTENZA  \u2192  ' },
+                         postRt);
+      } else {
+        rtRt = '\u2014';
+      }
+
       var rowVals = [d.label, tipoLbl, distVal, collTxt, d.metrics.centrali,
-                     d.tipo === 'Div' ? (sdfD || sdfS) : sdfS, pathRt, idsRt];
+                     d.tipo === 'Div' ? (sdfD || sdfS) : sdfS, pathRt, rtRt, idsRt];
       if (hasCosti){
         var ci = d.costi;
         rowVals.push(ci ? _r2(ci.totale) : '\u2014');
@@ -320155,18 +320399,20 @@ window._buildUnifiedCostBlock = function(opts) {
       r.getCell(5).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
       r.getCell(6).font = { size: 10, bold: true };
       if (hasCosti){
-        r.getCell(9).numFmt = '#,##0.00';
-        r.getCell(9).font = { size: 10, bold: true };
-        r.getCell(9).alignment = { vertical: 'middle', horizontal: 'left' };
-        r.getCell(10).alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
+        r.getCell(10).numFmt = '#,##0.00';
+        r.getCell(10).font = { size: 10, bold: true };
+        r.getCell(10).alignment = { vertical: 'middle', horizontal: 'left' };
+        r.getCell(11).alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
       }
       if (d.tipo === 'Div') _fillRow(r, H1.length, C_DIV_BG);
       _borderRow(r, H1.length);
-      r.height = Math.max(30, Math.max(idsArr.length, cen.length, collLines.length) * 12.8);
+      var rtLines = rc.catena.length
+        ? Math.ceil((rc.catena.join('  \u2192  ').length + 24) / 58) : 1;
+      r.height = Math.max(30, Math.max(idsArr.length, cen.length, collLines.length, rtLines) * 12.8);
     });
 
-    _widths(ws, hasCosti ? [15, 14, 13, 14, 10, 18, 62, 34, 16, 30]
-                         : [15, 14, 13, 14, 10, 18, 62, 34]);
+    _widths(ws, hasCosti ? [15, 14, 13, 14, 10, 18, 62, 60, 34, 16, 30]
+                         : [15, 14, 13, 14, 10, 18, 62, 60, 34]);
     ws.views = [{ state: 'frozen', ySplit: hRow }];
     if (data.length){
       ws.autoFilter = { from: { row: hRow, column: 1 }, to: { row: hRow + data.length, column: H1.length } };
@@ -320286,7 +320532,9 @@ window._buildUnifiedCostBlock = function(opts) {
     // ══ Foglio 4: Collegamenti ════════════════════════════════════════════════
     var ws3 = wb.addWorksheet('Collegamenti');
     var H3 = ['Percorso', 'Tipo', '#', 'Rete', 'Id Collegamento', 'Distanza (km)',
-              'Id Cavo', 'Stato', 'Tipo Sede A/Z', 'Altro1', 'Altro2', 'Info Extra', 'Note'];
+              'Id Cavo', 'Stato', 'Tipo Sede A/Z',
+              'Info Aggiornamento e Verifica 1', 'Info Aggiornamento e Verifica 2',
+              'Info Extra', 'Note'];
     ws3.getRow(1).values = H3;
     _headerRow(ws3, 1, H3.length);
     var n3 = 0;
@@ -320313,7 +320561,7 @@ window._buildUnifiedCostBlock = function(opts) {
       });
       if (d.gwRows[d.links.length]) gwRow(d.gwRows[d.links.length]);
     });
-    _widths(ws3, [15, 14, 6, 8, 32, 13, 30, 20, 13, 40, 16, 18, 22]);
+    _widths(ws3, [15, 14, 6, 8, 32, 13, 30, 20, 13, 40, 22, 18, 22]);
     ws3.views = [{ state: 'frozen', ySplit: 1 }];
     if (n3) ws3.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1 + n3, column: H3.length } };
 
