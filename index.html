@@ -4,13 +4,35 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 50.08.02  (rev. pubblicata: V50.08.02 | Ago 2026)                    ║
-║   Data: 2 Agosto 2026                                                            ║
+║   Versione: 50.08.04  (rev. pubblicata: V50.08.04 | Ago 2026)                    ║
+║   Data: 4 Agosto 2026                                                            ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V50.08.04 | Ago 2026:                                                ║
+║   ─────────────────────────                                                      ║
+║   • NUOVO vincolo "Raccordo in fibra" per i DC con una sola via IN/OUT.          ║
+║     Se un estremo del percorso e' una sede in tabella DC_RACCORDO_FIBRA e si     ║
+║     chiede la diversificazione, il tool avvisa che al 100% non e' possibile su   ║
+║     quella sede e propone di cercare il Div sulla sede gemella dello stesso      ║
+║     complesso, prevedendo un rilancio in fibra fra le due. Attivo nei tab        ║
+║     Ricerca Percorso RC e Unificato (le sedi non esistono nel DB RA).            ║
+║   • Il raccordo compare come hop virtuale con i suoi 0,4 km nel totale, con      ║
+║     nota dedicata nella tabella dei risultati, nell'export TXT dentro il box     ║
+║     del percorso, nell'export XLSX (Riepilogo, Centrali, Collegamenti, KMZ,      ║
+║     Note) e nel documento .docx del Generatore Info KMZ                          ║
+║   • Note IRP e documento KMZ: importando il TXT la nota del raccordo viene       ║
+║     riconosciuta e aggiunta da sola a Nota Lavorante e Nota File Condiviso       ║
+║   • La selezione dei percorsi non si azzera piu' dopo un export: si puo'         ║
+║     esportare piu' volte, anche in formati diversi, senza rifarla                ║
+║   • FIX export TXT RC: selezionando il solo percorso Div il file usciva con la   ║
+║     sola intestazione, perche' lo Std non selezionato faceva saltare il base     ║
+║   • Colonna ID Collegamenti: 8 per riga nel tab Unificato (6 sulla riga che      ║
+║     apre con il raccordo) e Top 4 allineata alla tabella Std in entrambi i tab   ║
+║   ─────────────────────────                                                      ║
 ║                                                                                  ║
 ║   CHANGELOG V50.08.02 | Ago 2026:                                                ║
 ║   ─────────────────────────                                                      ║
@@ -20638,7 +20660,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V50.08.02 | Ago 2026</div>
+<div class="version-tag">V50.08.04 | Ago 2026</div>
       </div>
     </div>
   </header>
@@ -21389,10 +21411,15 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     </svg>
   </div>
   <div class="feature-header">
-    <h3 class="feature-title" style="color: #d1008f;">🆕 Novità V50.08.02 — Ago 2026 · Export Excel</h3>
+    <h3 class="feature-title" style="color: #d1008f;">🆕 Novità V50.08.04 — Ago 2026 · Raccordo in fibra</h3>
     <span class="feature-badge" style="background:#fdf2f8;color:#d1008f;">Latest</span>
   </div>
   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🔀 Raccordo in fibra per DC con una sola via</strong>: se un estremo del percorso è una sede con un unico SubPath di ingresso/uscita e chiedi la diversificazione, il tool avvisa che il 100% non è raggiungibile su quella sede e propone di cercare il Div sulla <strong>sede gemella dello stesso complesso</strong>, prevedendo un rilancio in fibra fra le due. Attivo nei tab <strong>RC</strong> e <strong>Unificato</strong>.</li>
+    <li><strong>📍 Hop virtuale e nota</strong>: il raccordo entra nel percorso con i suoi 0,4 km nel totale e compare nella tabella dei risultati, nell'export TXT dentro il box del percorso, nell'export XLSX (Riepilogo, Centrali, Collegamenti, KMZ e Note) e nel documento .docx del Generatore Info KMZ.</li>
+    <li><strong>📝 Note IRP automatiche</strong>: importando il TXT nel Generatore Note Standard IRP la nota del raccordo viene riconosciuta e aggiunta da sola alla <strong>Nota Lavorante</strong> e alla <strong>Nota File Condiviso</strong>.</li>
+    <li><strong>🔧 La selezione non si azzera dopo l'export</strong>: si può esportare più volte, anche in formati diversi, senza rifare le spunte. Si chiude con Annulla.</li>
+    <li><strong>🔧 FIX export TXT RC</strong>: selezionando il solo percorso Div il file usciva con la sola intestazione, perché lo Std non selezionato faceva saltare l'intero blocco.</li>
     <li><strong>📊 Export Excel (.xlsx)</strong> nei tab <strong>RC</strong> e <strong>Unificato</strong>: i bottoni <strong>📄 Esporta TXT</strong> diventano <strong>📄 Esporta</strong> e nella barra di selezione compaiono due bottoni, <strong>📤 Esporta TXT (N)</strong> e <strong>📊 Esporta XLSX (N)</strong>, sulla stessa selezione di percorsi.</li>
     <li><strong>📑 Cinque fogli</strong>: <strong>Riepilogo</strong> (una riga per percorso, Percorso Centrali e ID Collegamenti su più righe con gli stessi colori della tabella a video, Distanza ripartita per tratta RA/RC/RTN, Collegamenti con logici, fisici e ripartizione per tratta (RA1, RC1, RTN, RC2…) nell'ordine del percorso, una colonna <strong>Routing CLLI [C-FOS]</strong> con la catena dei CLLI ricostruita dalle tratte C-FOS, e in testata le <strong>ℹ️ Info Zona</strong> di partenza e arrivo con Vendor, Zona, Regione e Area), <strong>Note</strong>, <strong>Centrali</strong>, <strong>Collegamenti</strong> con le righe gateway in posizione, e <strong>KMZ</strong>, che replica il documento generato in Analisi Fattibilità.</li>
     <li><strong>📝 Foglio Note</strong>: per ogni percorso la <strong>🌐 Nota Lavorante — campo Note trasporto</strong>, la <strong>📂 Nota File Condiviso</strong> e le <strong>💶 Note Costi</strong>, una per tratta (Rete RA1, Rete RC1, Rete RC2…), con HW da tariffario, elenco ID della tratta e la frase <em>"180 Giorni a causa del/dei Subpath…"</em> già compilata con i subpath non attivi.</li>
@@ -21416,7 +21443,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     </svg>
   </div>
   <div class="feature-header">
-    <h3 class="feature-title" style="color: #b45309;">🔧 Correzioni V50.08.02 — Ago 2026</h3>
+    <h3 class="feature-title" style="color: #b45309;">🔧 Correzioni V50.08.04 — Ago 2026</h3>
     <span class="feature-badge" style="background:#fffbeb;color:#b45309;">Fix</span>
   </div>
   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -21440,7 +21467,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     </svg>
   </div>
   <div class="feature-header">
-    <h3 class="feature-title" style="color: #7c3aed;">📋 Aggiornamenti precedenti — V50.07.20 → V41.04.08</h3>
+    <h3 class="feature-title" style="color: #7c3aed;">📋 Aggiornamenti precedenti — V50.08.02 → V41.04.08</h3>
     <span class="feature-badge" style="background:#f5f3ff;color:#7c3aed;">Storico</span>
   </div>
   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.8rem; color:var(--gray-700); line-height:1.65;">
@@ -29365,6 +29392,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       }
 
       var cur = null, section = null;
+      var racc = false, raccBuf = [];
       for (var li = 0; li < lines.length; li++) {
         var l = lines[li];
 
@@ -29382,6 +29410,19 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         var mDist = l.match(/^│\s+Distanza totale:\s+([\d.]+)\s*km/);
         if (mDist) { cur.distanza = parseFloat(mDist[1]); continue; }
 
+        // Nota raccordo in fibra dentro il box del percorso
+        if (l.indexOf('\uD83D\uDD00 RACCORDO IN FIBRA:') !== -1) { racc = true; raccBuf = []; continue; }
+        if (racc) {
+          var _ln = l.replace(/^\u2502\s*/, '').trim();
+          var _fine = (l === '') || /^[\u2514\u2500\u251c]/.test(l)
+            || /^(Distanza totale|Collegamenti|Centrali attraversate|CENTRALI:|COLLEGAMENTI:)/.test(_ln);
+          if (_fine) {
+            if (cur && raccBuf.length && !cur.raccordoNota) {
+              cur.raccordoNota = raccBuf.join(' ').replace(/\s+/g, ' ').trim();
+            }
+            racc = false; raccBuf = [];
+          } else { if (_ln) raccBuf.push(_ln); continue; }
+        }
         if (l === 'CENTRALI:')            { section = 'centrali';    continue; }
         if (l === 'COLLEGAMENTI:')        { section = 'collegamenti'; continue; }
         if (l === 'VERIFICA & INFO NNI:') { section = null;           continue; }
@@ -29394,6 +29435,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             if (l.indexOf('[GW]') !== -1) {
               var gwTipoM = l.match(/\[GW\]\s+([^\s\[]+)/);
               gwTipo = gwTipoM ? gwTipoM[1] : 'GW';
+            } else if (l.indexOf('RACCORDO') !== -1) {
+              gwTipo = 'RACCORDO IN FIBRA';
             } else if (l.indexOf('RTN') !== -1) {
               gwTipo = 'RTN';
             }
@@ -29416,6 +29459,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             if (l.indexOf('[GW]') !== -1) {
               var gwTipoM2 = l.match(/\[GW\]\s+([^\s\[]+)/);
               gwTipo2 = gwTipoM2 ? gwTipoM2[1] : 'GW';
+            } else if (l.indexOf('RACCORDO') !== -1) {
+              gwTipo2 = 'RACCORDO IN FIBRA';
             } else if (l.indexOf('RTN') !== -1) {
               gwTipo2 = 'RTN';
             }
@@ -29765,6 +29810,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 
               // ── Step 3: popola nodi chiave (partenza, confini, arrivo) ───
               var allC = perc.centrali; // include {gw:true}
+              window._nstRaccordoNota = perc.raccordoNota || '';
               var keyNodes = window._nstKeyNodes(allC, links, groups);
 
               keyNodes.forEach(function(c, i) {
@@ -30341,6 +30387,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       }
       if (nstDiversif && divStr) fcText += '\n' + divStr;
       if (nstKmz) fcText += '\n\nIn allegato documento .docx con i dati tecnici necessari alla creazione del file KMZ (centrali, collegamenti, C-FOS).';
+      // Raccordo in fibra rilevato all'import del TXT: la nota si aggiunge da sola
+      if (window._nstRaccordoNota) fcText += '\n\n' + window._nstRaccordoNota;
       if (fcEl) fcEl.textContent = fcText;
 
       // Nota Lavorante: riga vuota tra parti, IMPORTANTE con ***
@@ -30348,6 +30396,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       genText += '\n\n*** IMPORTANTE: Qualora si rilevasse che la centrale di attestazione della sede A e/o della sede Z è diversa da quella segnalata dal Validante, si chiede all\'Analyst di ritornarci la pratica per le verifiche sul trasporto. ***';
       if (nstDiversif && divStr) genText += '\n\n' + divStr;
       if (nstKmz)      genText += '\n\nIn allegato documento .docx con i dati tecnici necessari alla creazione del file KMZ (centrali, collegamenti, C-FOS).';
+      // Raccordo in fibra rilevato all'import del TXT: la nota si aggiunge da sola
+      if (window._nstRaccordoNota) genText += '\n\n' + window._nstRaccordoNota;
       if (genEl) genEl.textContent = genText;
 
       // ── Preview percorso ──────────────────────────────────────────
@@ -30607,6 +30657,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 
           // ── Helper: popola un blocco KMZ da un percorso parsed ───────
           function _fillBlock(blk, perc) {
+            // La nota del raccordo segue il blocco: il documento KMZ non deve
+            // dipendere da un import precedente nel Generatore Note IRP
+            if (perc.raccordoNota) blk.raccordoNota = perc.raccordoNota;
             perc.centrali.forEach(function(c) {
               if (c.gw) {
                 blk.centrali.push({ id: ++_kmzId, tipo: 'sep', sep: c.tipo });
@@ -31231,17 +31284,57 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       p.push(emptyPara());
       p.push(mkPara([mkRun('CENTRALI:', {bold:true})]));
       var seq = 0;
-      blk.centrali.forEach(function(c){
+      var _rl = _raccLabelKmz(blk);
+      var _rset = _rl ? [_rl.a, _rl.z] : [];
+      blk.centrali.forEach(function(c, ci){
         if (c.tipo==='sep') {
           p.push(mkPara([mkRun(c.sep, {bold:true})]));
-        } else {
-          seq++;
-          var num = '.'+String(seq).padStart(2,'0')+'.';
-          var grade = c.grade ? ' ['+c.grade+']' : '';
-          p.push(mkPara([mkRun(num+' '+c.nome+' ('+c.clli+')'+grade)]));
+          return;
+        }
+        seq++;
+        var num = '.'+String(seq).padStart(2,'0')+'.';
+        var grade = c.grade ? ' ['+c.grade+']' : '';
+        var _cl = String(c.clli||'').toUpperCase();
+        var _inRacc = _rl && _rset.indexOf(_cl) !== -1;
+        p.push(mkPara([mkRun(num+' '+c.nome+' ('+c.clli+')'+grade,
+          _inRacc ? {bold:true, color:'0000FF'} : undefined)]));
+        // Separatore fra le due sedi dello stesso complesso
+        if (_rl && _inRacc) {
+          var _next = blk.centrali[ci+1];
+          var _ncl = _next ? String(_next.clli||'').toUpperCase() : '';
+          if (_ncl && _ncl !== _cl && _rset.indexOf(_ncl) !== -1) {
+            p.push(mkPara(_raccRunsKmz(_rl.testo)));
+          }
         }
       });
       return p;
+    }
+
+    // Etichetta del raccordo per il documento KMZ, con i due CLLI del complesso
+    function _raccLabelKmz(blk) {
+      var nota = (blk && blk.raccordoNota) || window._nstRaccordoNota || '';
+      if (!nota) return null;
+      var cl = String(nota).match(/\(([A-Z0-9]{6,10})\)/g) || [];
+      cl = cl.map(function(x){ return x.replace(/[()]/g, ''); });
+      var uniq = [];
+      cl.forEach(function(x){ if (uniq.indexOf(x) === -1) uniq.push(x); });
+      if (uniq.length < 2) return null;
+      return { a: uniq[1], z: uniq[0],
+               testo: '\uD83D\uDD00 Raccordo in Fibra tra ' + uniq[1] + ' e ' + uniq[0]
+                      + ' \u2014 DA REALIZZARE' };
+    }
+
+    // Runs della riga raccordo: icona con i suoi colori originali, testo in blu,
+    // entrambi evidenziati in turchese
+    function _raccRunsKmz(testo) {
+      var t = String(testo || '');
+      var m = t.match(/^(\uD83D\uDD00\s*)([\s\S]*)$/);
+      var icona = m ? m[1] : '';
+      var resto = m ? m[2] : t;
+      var runs = [];
+      if (icona) runs.push(mkRun(icona, {bold:true, highlight:true, highlightColor:'cyan'}));
+      runs.push(mkRun(resto, {bold:true, color:'0000FF', highlight:true, highlightColor:'cyan'}));
+      return runs;
     }
 
     function buildCollegParas(blk) {
@@ -31250,6 +31343,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       p.push(emptyPara());
       p.push(mkPara([mkRun('COLLEGAMENTI:', {bold:true})]));
       var seq = 0;
+      var _raccNotaKmz = blk.raccordoNota || window._nstRaccordoNota || '';
       blk.colleg.forEach(function(c){
         if (c.tipo==='sep') {
           p.push(mkPara([mkRun(c.sep, {bold:true})]));
@@ -31260,6 +31354,14 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
           p.push(mkPara([mkRun(num+' [RA] '+idStr)]));
           if (c.cfos) p.push(mkPara([mkRun('C-FOS > ', {bold:true}), mkRun(c.cfos)], {indent:true}));
         } else if (c.tipo==='rc') {
+          // Raccordo in fibra: riga dedicata, non numerata, come nel foglio KMZ
+          // dell'export Excel
+          if (/^RACCORDO/i.test(String(c.id_col||''))) {
+            var _rl2 = _raccLabelKmz(blk);
+            p.push(mkPara(_raccRunsKmz(_rl2 ? _rl2.testo
+              : '\uD83D\uDD00 Raccordo in Fibra \u2014 DA REALIZZARE')));
+            return;
+          }
           seq++;
           var num2 = '.'+String(seq).padStart(2,'0')+'.';
           p.push(mkPara([mkRun(num2+' [RC] '+(c.id_col||''))]));
@@ -31271,6 +31373,11 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
           p.push(mkPara([mkRun(line)]));
         }
       });
+      if (_raccNotaKmz) {
+        p.push(mkPara([mkRun('')]));
+        p.push(mkPara([mkRun('\uD83D\uDD00 RACCORDO IN FIBRA:', {bold:true})]));
+        p.push(mkPara([mkRun(String(_raccNotaKmz))]));
+      }
       return p;
     }
 
@@ -31283,7 +31390,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       var rPr = '';
       if (opts.bold)      rPr += '<w:b/>';
       if (opts.italic)    rPr += '<w:i/>';
-      if (opts.highlight) rPr += '<w:highlight w:val="yellow"/>';
+      if (opts.highlight) rPr += '<w:highlight w:val="' + (opts.highlightColor || 'yellow') + '"/>';
+      if (opts.color)     rPr += '<w:color w:val="' + opts.color + '"/>';
       var rPrEl = rPr ? '<w:rPr>'+rPr+'</w:rPr>' : '';
       return { rPr:rPrEl, text:esc(text) };
     }
@@ -34541,7 +34649,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               </p>
 
               <div class="docs-callout docs-callout-warning novita-box-current" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border-left: 4px solid #d1008f; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;">
-                <strong style="color: #be185d; font-size: 1.05rem;">📌 Novità V50.08.02 | Ago 2026 — Ultimo Aggiornamento</strong>
+                <strong style="color: #be185d; font-size: 1.05rem;">📌 Novità V50.08.04 | Ago 2026 — Ultimo Aggiornamento</strong>
                 <p style="margin: 0.75rem 0 0.5rem 0; color: #9d174d;">
                   Export Excel dei percorsi selezionati (RC e Unificato) con note IRP e foglio KMZ, più tre correzioni sull'import TXT
                 </p>
@@ -37399,7 +37507,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V50.08.02 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V50.08.04 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -37416,6 +37524,22 @@ PERCORSI ALTERNATIVI (Div):
       </div>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+        <details open style="border:1px solid #d1008f;border-radius:12px;overflow:hidden;background:#fdf2f8;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#831843;display:flex;align-items:center;gap:0.5rem;background:#fce7f3;">
+            🔀 V50.08.04 — Raccordo in fibra per DC con una sola via IN/OUT (RC e Unificato), note IRP e KMZ automatiche, fix export solo Div
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:0.35rem;">
+              <li><strong>Vincolo raccordo</strong>: sui DC con un unico SubPath di ingresso/uscita la ricerca Div propone, previa conferma, la sede gemella dello stesso complesso con un rilancio in fibra fra le due. Tabella <code>DC_RACCORDO_FIBRA</code>: una riga per sede.</li>
+              <li><strong>Hop virtuale</strong>: 0,4 km nel totale, nota dedicata nella tabella, nel TXT dentro il box del percorso, nell'XLSX su tutti i fogli e nel .docx del Generatore Info KMZ.</li>
+              <li><strong>Note IRP</strong>: all'import del TXT la nota viene riconosciuta e aggiunta da sola a Nota Lavorante e Nota File Condiviso.</li>
+              <li><strong>Selezione persistente</strong>: dopo un export le spunte restano, si può esportare di nuovo in un altro formato.</li>
+              <li><strong>FIX export TXT RC</strong>: il solo percorso Div selezionato produceva un file con la sola intestazione.</li>
+              <li><strong>ID Collegamenti</strong>: 8 per riga nel tab Unificato, 6 sulla riga che apre con il raccordo; Top 4 allineata alla tabella Std in entrambi i tab.</li>
+            </ul>
+          </div>
+        </details>
 
         <details open style="border:1px solid #d1008f;border-radius:12px;overflow:hidden;background:#fdf2f8;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#831843;display:flex;align-items:center;gap:0.5rem;background:#fce7f3;">
@@ -289852,6 +289976,15 @@ let dbState = null;
       // Recupera le Note dal raw edge
       const raw = e.raw || {};
       const note = raw.Note || '';
+
+      // Raccordo in fibra: cornice evidente, identica a quella del tab Unificato
+      if (e.source === 'RACC' || /^RACCORDO/i.test(id)) {
+        parts.push('<span style="display:inline-block;background:#ffedd5;border:1px solid #fdba74;'
+          + 'border-radius:4px;padding:1px 6px;color:#000000;font-weight:700;">\uD83D\uDD00 '
+          + escapeHtml(String(id).trim()) + '</span>');
+        if (idx < edges.length - 1) parts.push('<span class="route-id-sep">\u2192</span>');
+        return;
+      }
       
       let cls = 'route-id';
       if (stato === 'ATTIVO') {
@@ -290395,9 +290528,12 @@ function renderBaseTable() {
           if (Array.isArray(altRoutes) && inlineAltBaseIndex === idx) {
             altRoutes.slice(0, 10).forEach((altRoute, j) => {
       // Nota Div parziale se presente
-      const _divNoteHtml = altRoute._divNote
+      const _divNoteHtml = (altRoute._divNote
         ? '<div style="margin-top:2px;font-size:0.68rem;color:#b45309;background:#fef3c7;border:1px solid #fde68a;border-radius:3px;padding:1px 5px;">' + altRoute._divNote + '</div>'
-        : '';
+        : '')
+        + (altRoute._raccordoNota
+        ? '<div style="margin-top:2px;font-size:0.68rem;color:#9a3412;background:#ffedd5;border:1px solid #fed7aa;border-radius:3px;padding:1px 5px;"><strong>🔀 Raccordo in fibra</strong> — ' + altRoute._raccordoNota + '</div>'
+        : '');
               const altLinks = extractLinksFromRoute(altRoute);
               if (altLinks.length) {
                 routesForMap.push({
@@ -290451,9 +290587,12 @@ function renderBaseTable() {
         '</div>';
       
       // Bottone copia percorso nella cella Percorso Centrali
-      const _rcDivNoteHtml = route._divNote
+      const _rcDivNoteHtml = (route._divNote
         ? '<div style="margin-top:3px;font-size:0.68rem;color:#b45309;background:#fef3c7;border:1px solid #fde68a;border-radius:3px;padding:2px 6px;">' + route._divNote + '</div>'
-        : '';
+        : '')
+        + (route._raccordoNota
+        ? '<div style="margin-top:3px;font-size:0.68rem;color:#9a3412;background:#ffedd5;border:1px solid #fed7aa;border-radius:3px;padding:2px 6px;"><strong>🔀 Raccordo in fibra</strong> — ' + route._raccordoNota + '</div>'
+        : '');
       const pathCellHtml = '<div style="display:flex; justify-content:flex-end; margin-bottom:2px;">' +
         '<button type="button" class="btn btn-chip" style="padding:2px 6px; font-size:0.7rem;" onclick="window.copyRouteFormattedAltRC(' + idx + ')" title="Copia Percorso Formattato">📋</button>' +
         '</div>' +
@@ -290464,7 +290603,7 @@ function renderBaseTable() {
       const idsCellHtml = '<div style="display:flex; justify-content:flex-end; margin-bottom:2px;">' +
         '<button type="button" class="btn btn-chip" style="padding:2px 6px; font-size:0.7rem;" onclick="window.copyRouteIdsAltRC(' + idx + ')" title="Copia ID Collegamenti">🔗</button>' +
         '</div>' +
-        '<div style="white-space: normal; word-wrap: break-word; font-size: 0.85rem;">' + renderRouteIds(route) + '</div>';
+        '<div style="white-space: normal; word-wrap: break-word; font-size: 0.78rem;">' + renderRouteIds(route) + '</div>';
 
       return (
         '<tr id="routeAltRow_' + idx + '">' +
@@ -290524,9 +290663,12 @@ function renderBaseTable() {
         '</div>';
       
       // Bottone copia percorso nella cella Percorso Centrali
-      const _rcDivNoteHtml = route._divNote
+      const _rcDivNoteHtml = (route._divNote
         ? '<div style="margin-top:3px;font-size:0.68rem;color:#b45309;background:#fef3c7;border:1px solid #fde68a;border-radius:3px;padding:2px 6px;">' + route._divNote + '</div>'
-        : '';
+        : '')
+        + (route._raccordoNota
+        ? '<div style="margin-top:3px;font-size:0.68rem;color:#9a3412;background:#ffedd5;border:1px solid #fed7aa;border-radius:3px;padding:2px 6px;"><strong>🔀 Raccordo in fibra</strong> — ' + route._raccordoNota + '</div>'
+        : '');
       const pathCellHtml = '<div style="display:flex; justify-content:flex-end; margin-bottom:2px;">' +
         '<button type="button" class="btn btn-chip" style="padding:2px 6px; font-size:0.7rem;" onclick="window.copyRouteFormattedAltRC(' + idx + ')" title="Copia Percorso Formattato">📋</button>' +
         '</div>' +
@@ -290537,7 +290679,7 @@ function renderBaseTable() {
       const idsCellHtml = '<div style="display:flex; justify-content:flex-end; margin-bottom:2px;">' +
         '<button type="button" class="btn btn-chip" style="padding:2px 6px; font-size:0.7rem;" onclick="window.copyRouteIdsAltRC(' + idx + ')" title="Copia ID Collegamenti">🔗</button>' +
         '</div>' +
-        '<div style="white-space: normal; word-wrap: break-word; font-size: 0.85rem;">' + renderRouteIds(route) + '</div>';
+        '<div style="white-space: normal; word-wrap: break-word; font-size: 0.78rem;">' + renderRouteIds(route) + '</div>';
 
       html +=
         '<tr id="routeAltRow_' + idx + '" class="route-alt-inline" style="background-color: #eff6ff;">' +
@@ -291836,6 +291978,9 @@ function getRouteVendor(route) {
     if (route._divNote) {
       lines.push('│  ⚠️  ' + route._divNote);
     }
+    if (typeof window._croRaccordoTxtLines === 'function'){
+      window._croRaccordoTxtLines(route, '│  ').forEach(function(l){ lines.push(l); });
+    }
     lines.push('│  Distanza totale: ' + formatKm(totalKm) + ' km');
     lines.push('│  Collegamenti: ' + hopsLabel);
     lines.push('│  Centrali attraversate: ' + nodes.length);
@@ -291848,6 +291993,11 @@ function getRouteVendor(route) {
       const gat = parsed.gat || '';
       const clli = parsed.clli ? ' (' + parsed.clli + ')' : '';
       lines.push(' .' + num + '. ' + gat + clli);
+      // Raccordo in fibra: marcatore fra le due sedi, come i gateway
+      const _eR = edges[idx];
+      if (_eR && _eR.source === 'RACC') {
+        lines.push(' .--. [RACCORDO IN FIBRA] DA REALIZZARE');
+      }
     });
     lines.push('');
     lines.push('COLLEGAMENTI:');
@@ -292092,9 +292242,15 @@ function getRouteVendor(route) {
 
     // Std con Div interleaved subito dopo il padre, numerazione originale
     baseRoutes.forEach((route, idx) => {
-      if (selStdIdx && !selStdIdx.has(idx)) return;
+      // Uno Std non selezionato non deve far saltare i suoi Div selezionati:
+      // si puo' esportare il solo percorso diversificato.
+      const stdSelected = !selStdIdx || selStdIdx.has(idx);
+      const divSetIdx   = (hasAlt && inlineAltBaseIndex === idx && selDivByBase) ? selDivByBase[idx] : null;
+      const hasDivSelected = hasAlt && inlineAltBaseIndex === idx &&
+        (!selDivByBase || (divSetIdx && divSetIdx.size > 0));
+      if (!stdSelected && !hasDivSelected) return;
       const baseLabel = String(idx + 1);
-      txt += buildRouteBlock(baseLabel, route);
+      if (stdSelected) txt += buildRouteBlock(baseLabel, route);
 
       if (hasAlt && inlineAltBaseIndex === idx) {
         altRoutes.forEach((altRoute, j) => {
@@ -293519,6 +293675,34 @@ window.runBaseRoutesSearch = function() {
     let startAlt = resolvedStartAlt;
     let endAlt = resolvedEndAlt;
 
+    // ── Raccordo in fibra per DC con una sola via IN/OUT ────────────────────
+    const _racInfo = window._croRaccordoPending || null;
+    if (!_racInfo && typeof window.croRaccordoCheck === 'function'){
+      const _racChk = window.croRaccordoCheck(startAlt, endAlt);
+      console.log('[RACCORDO] verifica Div RC:', startAlt, '->', endAlt, '=>', !!_racChk);
+      if (_racChk){
+        hideLoading();
+        window.croRaccordoConfirm(_racChk).then(function(ok){
+          if (!ok) return;
+          window._croRaccordoPending = _racChk;
+          showLoading('Calcolo percorsi alternativi...', 'Ricerca percorsi diversificati');
+          setTimeout(function(){
+            try { _runAltRoutesSearchInternal(baseIndex); }
+            catch (e){ console.error('[RACCORDO]', e); }
+            finally { window._croRaccordoPending = null; hideLoading(); }
+          }, 50);
+        });
+        return;
+      }
+    }
+    if (_racInfo){
+      const _gem = resolveCentral(_racInfo.gemelloLabel, 'Centrale gemella raccordo', altInfo);
+      if (_gem){
+        if (_racInfo.suStart) startAlt = _gem;
+        if (_racInfo.suEnd)   endAlt   = _gem;
+      }
+    }
+
     const mustPass = routeState.mustPass;
     const avoid = routeState.avoid;
     const onlyActive = routeState.onlyActive;
@@ -293662,6 +293846,10 @@ window.runBaseRoutesSearch = function() {
       if (altBody) altBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--gray-500);">Nessun percorso Div trovato.</td></tr>';
       showAlert('Nessun percorso Div trovato per il percorso 1.' + (idx + 1) + '.' + _maxWarn, 'warning');
       return;
+    }
+
+    if (_racInfo && typeof window.croRaccordoApply === 'function'){
+      enriched.forEach(function(p){ window.croRaccordoApply(p, _racInfo); });
     }
 
     altRoutes = enriched;
@@ -297814,6 +298002,9 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
 
         txt += '┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────┐\n';
         txt += '│  PERCORSO STD ' + (idx + 1) + '\n';
+        if (typeof window._croRaccordoTxtLines === 'function'){
+          window._croRaccordoTxtLines(route, '│  ').forEach(function(l){ txt += l + '\n'; });
+        }
         txt += '├───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤\n';
         txt += '│  Distanza totale: ' + totalDist.toFixed(2) + ' km';
         if (_sTxt) txt += ' [' + _sTxt + ']';
@@ -298120,6 +298311,9 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
         block += '┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────┐\n';
         block += '│  PERCORSO ' + label + '\n';
         block += '├───────────────────────────────────────────────────────────────────────────────────────────────────────────────┤\n';
+        if (typeof window._croRaccordoTxtLines === 'function'){
+          window._croRaccordoTxtLines(route, '│  ').forEach(function(l){ block += l + '\n'; });
+        }
         block += '│  Distanza totale: ' + totalDist.toFixed(2) + ' km';
         if (_sT) block += ' [' + _sT + ']';
         block += '\n';
@@ -310014,6 +310208,10 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
     
     // Funzione per colorare un singolo ID RC cercando nel database
     function colorizeRCIdSingle(idStr) {
+      // Raccordo in fibra: cornice evidente, non e' un IdCollegamento di rete
+      if (/^RACCORDO/i.test(String(idStr).trim())) {
+        return '<span style="display:inline-block;background:#ffedd5;border:1px solid #fdba74;border-radius:4px;padding:1px 6px;color:#000000;font-weight:700;">\uD83D\uDD00 ' + escapeHtml(String(idStr).trim()) + '</span>';
+      }
       const lookup = getRCLookup();
       const rec = lookup.get(idStr.trim());
       
@@ -310068,7 +310266,18 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
       const id = e.id || 'ND';
       const source = (e.source || '').toUpperCase();
       const arco = e.arco || '';
-      
+
+      // Raccordo in fibra: entra nella sequenza RC, non su una riga a se'.
+      // La riga che lo contiene ospita la label piu' 5 subpath, le altre 8.
+      if (source === 'RACC') {
+        currentRCIds.push('<span style="display:inline-block;background:#ffedd5;border:1px solid #fdba74;'
+          + 'border-radius:4px;padding:1px 6px;color:#000000;font-weight:700;">\uD83D\uDD00 '
+          + String(id).trim() + '</span>');
+        prevSource = 'RC';
+        prevArco = null;
+        return;
+      }
+
       // Gestione cambio RA↔RC (XFER) - non cambia lastNonXferSource
       if (source === 'XFER') {
         prevSource = 'XFER';
@@ -310080,10 +310289,13 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
       if (source === 'RTN') {
         // Flush RC correnti se pendenti
         if (currentRCIds.length > 0) {
-          const maxPerRow = 4;
-          for (let i = 0; i < currentRCIds.length; i += maxPerRow) {
-            const chunk = currentRCIds.slice(i, i + maxPerRow);
-            const isLastChunk = (i + maxPerRow >= currentRCIds.length);
+          let _i = 0;
+          while (_i < currentRCIds.length) {
+            // La riga che apre con il raccordo ne ospita 6 in tutto, le altre 8
+            const _n = (currentRCIds[_i] && currentRCIds[_i].indexOf('RACCORDO') !== -1) ? 6 : 8;
+            const chunk = currentRCIds.slice(_i, _i + _n);
+            _i += _n;
+            const isLastChunk = (_i >= currentRCIds.length);
             const suffix = isLastChunk ? '' : ' <span style="color:#9ca3af;">→</span>';
             lines.push(chunk.join(' <span style="color:#9ca3af;">→</span> ') + suffix);
           }
@@ -310100,10 +310312,13 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
       if (source === 'RA') {
         // Flush RC correnti se ci sono - max 4 collegamenti per riga
         if (currentRCIds.length > 0) {
-          const maxPerRow = 4;
-          for (let i = 0; i < currentRCIds.length; i += maxPerRow) {
-            const chunk = currentRCIds.slice(i, i + maxPerRow);
-            const isLastChunk = (i + maxPerRow >= currentRCIds.length);
+          let _i = 0;
+          while (_i < currentRCIds.length) {
+            // La riga che apre con il raccordo ne ospita 6 in tutto, le altre 8
+            const _n = (currentRCIds[_i] && currentRCIds[_i].indexOf('RACCORDO') !== -1) ? 6 : 8;
+            const chunk = currentRCIds.slice(_i, _i + _n);
+            _i += _n;
+            const isLastChunk = (_i >= currentRCIds.length);
             const suffix = isLastChunk ? '' : ' <span style="color:#9ca3af;">→</span>';
             lines.push(chunk.join(' <span style="color:#9ca3af;">→</span> ') + suffix);
           }
@@ -310152,13 +310367,14 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
       }
     });
     
-    // Flush RC finali - max 4 collegamenti per riga
+    // Flush RC finali - 8 per riga, 6 sulla riga che apre con il raccordo
     if (currentRCIds.length > 0) {
-      const maxPerRow = 4;
-      for (let i = 0; i < currentRCIds.length; i += maxPerRow) {
-        const chunk = currentRCIds.slice(i, i + maxPerRow);
-        // Aggiungi freccia finale se non è l'ultimo chunk
-        const isLastChunk = (i + maxPerRow >= currentRCIds.length);
+      let _j = 0;
+      while (_j < currentRCIds.length) {
+        const _m = (currentRCIds[_j] && currentRCIds[_j].indexOf('RACCORDO') !== -1) ? 6 : 8;
+        const chunk = currentRCIds.slice(_j, _j + _m);
+        _j += _m;
+        const isLastChunk = (_j >= currentRCIds.length);
         const suffix = isLastChunk ? '' : ' <span style="color:#9ca3af;">→</span>';
         lines.push(chunk.join(' <span style="color:#9ca3af;">→</span> ') + suffix);
       }
@@ -311737,9 +311953,12 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
       
       // Bottone copia percorso nella cella Percorso Centrali
       const _altRoute = (_altRoutesUNIFIED||[])[idx];
-      const _divNoteHtmlU = _altRoute && _altRoute._divNote
-        ? '<div style="margin-top:2px;font-size:0.67rem;color:#b45309;background:#fef3c7;border:1px solid #fde68a;border-radius:3px;padding:2px 6px;">' + _altRoute._divNote + '</div>'
+      const _raccNoteHtmlU = _altRoute && _altRoute._raccordoNota
+        ? '<div style="margin-top:2px;font-size:0.67rem;color:#9a3412;background:#ffedd5;border:1px solid #fed7aa;border-radius:3px;padding:2px 6px;"><strong>🔀 Raccordo in fibra</strong> — ' + _altRoute._raccordoNota + '</div>'
         : '';
+      const _divNoteHtmlU = (_altRoute && _altRoute._divNote
+        ? '<div style="margin-top:2px;font-size:0.67rem;color:#b45309;background:#fef3c7;border:1px solid #fde68a;border-radius:3px;padding:2px 6px;">' + _altRoute._divNote + '</div>'
+        : '') + _raccNoteHtmlU;
       const nodesCellHtml = '<div style="display:flex; justify-content:flex-end; margin-bottom:2px;">' +
         '<button type="button" class="btn btn-chip" style="padding:2px 6px; font-size:0.7rem;" onclick="window.copyRouteFormattedAltUNIFIED(' + idx + ',' + baseIdx + ')" title="Copia Percorso Formattato">📋</button>' +
         '</div>' +
@@ -313532,6 +313751,32 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
     // nel Div (es. TORINO LANCIA come destinazione Std non può essere un nodo
     // intermedio del percorso Div). Li escludiamo come intermedi del Div,
     // ma il Div può comunque iniziare/terminare sugli stessi endpoint dello Std.
+    // ── Raccordo in fibra per DC con una sola via IN/OUT ──────────────────
+    const _racInfoU = window._croRaccordoPending || null;
+    if (!_racInfoU && typeof window.croRaccordoCheck === 'function'){
+      const _racChkU = window.croRaccordoCheck(startAlt, endAlt);
+      console.log('[RACCORDO] verifica Div UNIFIED:', startAlt, '->', endAlt, '=>', !!_racChkU);
+      if (_racChkU){
+        if (typeof hideLoading === 'function') hideLoading();
+        window.croRaccordoConfirm(_racChkU).then(function(ok){
+          if (!ok) return;
+          window._croRaccordoPending = _racChkU;
+          setTimeout(function(){
+            try { _runAltRoutesSearchInternalUNIFIED(baseIndex, rtnZona); }
+            catch (e){ console.error('[RACCORDO]', e); }
+            finally { window._croRaccordoPending = null; if (typeof hideLoading === 'function') hideLoading(); }
+          }, 50);
+        });
+        return;
+      }
+    }
+    if (_racInfoU){
+      const _sfx = '::RC';
+      const _gemU = _racInfoU.row.gemelloClli + _sfx;
+      if (_racInfoU.suStart) startAlt = _gemU;
+      if (_racInfoU.suEnd)   endAlt   = _gemU;
+    }
+
     const startAltBase = startAlt.replace(/::(RA|RC)$/, '');
     const endAltBase   = endAlt.replace(/::(RA|RC)$/, '');
     const stdStart = (baseNodes[0] || '').replace(/::(RA|RC)$/, '');
@@ -313778,6 +314023,9 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
         }
 
         if (uniqueZonaDiv.length > 0) {
+          if (_racInfoU && typeof window.croRaccordoApply === 'function'){
+            uniqueZonaDiv.forEach(function(p){ window.croRaccordoApply(p, _racInfoU, '::RC'); });
+          }
           _altRoutesUNIFIED = uniqueZonaDiv;
           renderInlineAltRoutesUNIFIED(baseIndex);
           const btnActive = document.getElementById(btnId);
@@ -313869,6 +314117,9 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
               + (altCandE.length===0&&rtnZona==='B' ? '\n\nNell\'area di arrivo non esiste un Nodo A1 alternativo.' : '')
               + '\n\nVengono proposti ' + zonaDivPartial.length + ' percorsi Div parziali con routing alternativo verso lo stesso Nodo A1.';
             if (typeof window.showAlert === 'function') showAlert(_msgPRtn, 'warning');
+            if (_racInfoU && typeof window.croRaccordoApply === 'function'){
+              zonaDivPartial.forEach(function(p){ window.croRaccordoApply(p, _racInfoU, '::RC'); });
+            }
             _altRoutesUNIFIED = zonaDivPartial;
             renderInlineAltRoutesUNIFIED(baseIndex);
             const btnFb = document.getElementById(btnId);
@@ -313965,6 +314216,9 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
             + '\n\nVengono proposti ' + _partialDiv.length + ' percorsi Div parziali. '
             + 'Ogni percorso è annotato con % diversificazione e i subpath/centrali condivisi.';
           if (typeof window.showAlert === 'function') showAlert(_msgP, 'warning');
+          if (_racInfoU && typeof window.croRaccordoApply === 'function'){
+            _partialDiv.forEach(function(p){ window.croRaccordoApply(p, _racInfoU, '::RC'); });
+          }
           _altRoutesUNIFIED = _partialDiv;
           renderInlineAltRoutesUNIFIED(baseIndex);
           const altBtnP = document.getElementById('uRouteAltBtn_' + baseIndex);
@@ -314006,6 +314260,10 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
       if (unique.length >= 10) break;
     }
     
+    if (_racInfoU && typeof window.croRaccordoApply === 'function'){
+      unique.forEach(function(p){ window.croRaccordoApply(p, _racInfoU, '::RC'); });
+    }
+
     _altRoutesUNIFIED = unique;
     
     if (_altRoutesUNIFIED.length === 0) {
@@ -314109,7 +314367,7 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
         +'<button type="button" class="btn btn-chip" style="padding:2px 6px;font-size:0.7rem;" '
           +'onclick="window.copyRouteIdsUNIFIED('+idx+')" title="Copia ID Collegamenti">🔗</button>'
         +'</div>'
-        +'<div style="white-space:normal;word-wrap:break-word;font-size:0.78rem;">'+idsStr+'</div>';
+        +'<div style="white-space:normal;word-wrap:break-word;font-size:0.75rem;">'+idsStr+'</div>';
 
       var distHtml = '<span style="font-size:0.82rem;font-weight:700;">'+distStr+'</span>'
         +(_segHtml?'<br><span style="font-size:0.7rem;line-height:1.5;">'+_segHtml+'</span>':'');
@@ -315192,6 +315450,12 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
     text += '[UNIFICATO RA+RC] PERCORSO DIV ' + baseIdx + '.' + (idx + 1) + _divNoteStr + '\n';
     if (_routeForNote && _routeForNote._divNote) {
       text += '⚠️  ' + _routeForNote._divNote + '\n';
+    }
+    if (_routeForNote && _routeForNote._raccordoNota) {
+      text += '🔀 RACCORDO IN FIBRA:\n';
+      String(_routeForNote._raccordoNota).replace(/(.{1,110})(\s|$)/g, '$1\n').split('\n')
+        .filter(function(x){ return x.trim(); })
+        .forEach(function(x){ text += '   ' + x.trim() + '\n'; });
     }
     text += SEP_MID + '\n';
     
@@ -318897,7 +319161,8 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
       } : { enabled: false };
     }
 
-    _cancelByBarId(barId); // ripristina UI prima di esportare
+    // La selezione resta attiva: si puo' esportare piu' volte, anche in formati
+    // diversi, senza doverla rifare. Si chiude con "Annulla".
 
     if (savedFmt === 'xlsx') {
       if (typeof window._croExportXlsx === 'function') {
@@ -319123,6 +319388,8 @@ window._buildUnifiedCostBlock = function(opts) {
   var C_GW_BG     = 'FFCCC0DA';
   var C_GWSIDE_BG = 'FFE4DFEC';
   var C_GW_TX     = 'FF7030A0';
+  var C_RACC_TX   = 'FF9A3412';
+  var C_RACC_BG   = 'FFFFEDD5';
   var C_START     = 'FF0000FF';
   var C_END       = 'FF008000';
   var C_NOTE_BG   = 'FFF3F0FA';
@@ -319178,6 +319445,9 @@ window._buildUnifiedCostBlock = function(opts) {
   function _s(v){ return (v == null) ? '' : String(v).trim(); }
   function _n(v){ var x = Number(v); return isNaN(x) ? 0 : x; }
   function _r2(v){ return Math.round(_n(v) * 100) / 100; }
+  // Decorazione delle etichette del raccordo: ●−[ ... ]−●
+  function _deco(t){ return '\u25CF\u2212[' + t + ']\u2212\u25CF'; }
+
   function _pad2(n){ var t = String(n); return t.length < 2 ? '0' + t : t; }
   function _tipoLabel(t){ return t === 'Div' ? 'Diversificato' : 'Standard'; }
 
@@ -319332,6 +319602,16 @@ window._buildUnifiedCostBlock = function(opts) {
         return;
       }
       var raw = e.raw || {};
+      if (src === 'RACC'){
+        // Raccordo in fibra fra DC dello stesso complesso: non e' ne' RA ne' RC
+        var _rA = _s(raw.CLLI_A).toUpperCase(), _rZ = _s(raw.CLLI_Z).toUpperCase();
+        links.push({ rete: 'RACC', col: 'normal', arco: '', subpath: '',
+                     id: _deco('Raccordo in Fibra' + ((_rA && _rZ) ? (' fra ' + _rA + ' e ' + _rZ) : '')),
+                     km: _r2(e.weight), cavo: '', cfos: '', clliA: _s(raw.CLLI_A).toUpperCase(),
+                     clliZ: _s(raw.CLLI_Z).toUpperCase(), stato: 'DA REALIZZARE', tipo: '',
+                     a1: '', a2: '', ix: '', note: _s(raw.Note) });
+        return;
+      }
       if (isUni && src === 'RA'){
         var rec = _findRA(e.id);
         if (rec) raw = rec;
@@ -319386,6 +319666,7 @@ window._buildUnifiedCostBlock = function(opts) {
     gws.forEach(function(g){ gwAt[g.afterIdx] = g.tipo; });
     var groups = [], cur = null;
     links.forEach(function(l, i){
+      if (l.rete === 'RACC') return;
       var key    = l.rete === 'RA' ? _raKey(l.id) : 'RC';
       var forced = (i > 0 && gwAt[i]);
       if (!cur || cur.rete !== l.rete || cur.key !== key || forced){
@@ -319440,10 +319721,20 @@ window._buildUnifiedCostBlock = function(opts) {
     var edges = route.edges || [];
     var nodes = route.nodes || [];
     if (!isUni){
-      return nodes.map(function(nd){
+      var outC = [];
+      nodes.forEach(function(nd, i){
         var p = _splitLabel(nd);
-        return { rete: 'RC', nome: p.nome, clli: p.clli, tipo: '', gw: false };
+        outC.push({ rete: 'RC', nome: p.nome, clli: p.clli, tipo: '', gw: false });
+        var eR = edges[i];
+        if (eR && eR.source === 'RACC'){
+          var rA = _s((eR.raw || {}).CLLI_A).toUpperCase();
+          var rZ = _s((eR.raw || {}).CLLI_Z).toUpperCase();
+          outC.push({ rete: 'RACC', clli: '', tipo: '', gw: true, racc: true,
+                      clliA: rA, clliZ: rZ,
+                      nome: 'Raccordo in Fibra' + ((rA && rZ) ? (' fra ' + rA + ' e ' + rZ) : '') });
+        }
       });
+      return outC;
     }
     var rmap = _reteByClli(route);
     var nodeInfo = (typeof window.buildUnifiedLabelsAndInfo === 'function')
@@ -319456,7 +319747,7 @@ window._buildUnifiedCostBlock = function(opts) {
         return { rete: /::RA$/.test(_s(nd)) ? 'RA' : 'RC', nome: p.nome, clli: p.clli, tipo: p.tipo, gw: false };
       });
     }
-    return list.map(function(it){
+    var mapped = list.map(function(it){
       if (it.isGateway){
         return { rete: 'GW', nome: (it.gatewayType === 'RTN' ? 'RTN' : _s(it.gatewayType)),
                  clli: '', tipo: 'GATEWAY', gw: true };
@@ -319464,6 +319755,26 @@ window._buildUnifiedCostBlock = function(opts) {
       var p = _splitLabel(it.name);
       return { rete: rmap[p.clli] || '', nome: p.nome, clli: p.clli, tipo: p.tipo, gw: false };
     });
+
+    // Raccordo in fibra: inserisce il marcatore fra le due sedi del complesso
+    var eRacc = null;
+    edges.forEach(function(e){ if (e.source === 'RACC') eRacc = e; });
+    if (eRacc){
+      var rA = _s((eRacc.raw || {}).CLLI_A).toUpperCase();
+      var rZ = _s((eRacc.raw || {}).CLLI_Z).toUpperCase();
+      var marker = { rete: 'RACC', clli: '', tipo: '', gw: true, racc: true,
+                     clliA: rA, clliZ: rZ,
+                     nome: 'Raccordo in Fibra' + ((rA && rZ) ? (' fra ' + rA + ' e ' + rZ) : '') };
+      for (var mi = 0; mi < mapped.length - 1; mi++){
+        var c1 = _s(mapped[mi].clli).toUpperCase();
+        var c2 = _s(mapped[mi + 1].clli).toUpperCase();
+        if ((c1 === rA && c2 === rZ) || (c1 === rZ && c2 === rA)){
+          mapped.splice(mi + 1, 0, marker);
+          break;
+        }
+      }
+    }
+    return mapped;
   }
 
   // ── Routing CLLI [C-FOS] ─────────────────────────────────────────────────────
@@ -319556,6 +319867,13 @@ window._buildUnifiedCostBlock = function(opts) {
         // Su RA<->RA e RA<->RC la centrale e' la stessa prima e dopo il gateway:
         // la continuita' non si perde. Solo l'RTN spezza davvero la catena.
         if (gw === 'RTN') cur = '';
+      }
+      if (l.rete === 'RACC'){
+        if (l.clliA) push(l.clliA);
+        out.push(_deco('RACCORDO FIBRA'));
+        cur = l.clliZ || '';
+        push(cur);
+        return;
       }
       var pairs = _cfosPairs(l.cavo);
       if (!pairs.length){
@@ -319758,6 +320076,7 @@ window._buildUnifiedCostBlock = function(opts) {
     }
     links.forEach(function(l, i){
       bound(pre[i]);
+      if (l.rete === 'RACC') return;
       if (!cur || cur.rete !== l.rete){
         cur = { rete: l.rete, green: 0, blue: 0, rc: 0 };
         runs.push(cur);
@@ -319833,6 +320152,7 @@ window._buildUnifiedCostBlock = function(opts) {
     }
     links.forEach(function(l, i){
       gwHere(pre[i]);
+      if (l.rete === 'RACC') return;
       var eA = l.arco;
       if (!cur || cur.src !== l.rete || (curArco && eA && eA !== curArco)){
         cur = { src: l.rete, dist: 0, links: [] };
@@ -319869,6 +320189,7 @@ window._buildUnifiedCostBlock = function(opts) {
     }
     links.forEach(function(l, i){
       bound(pre[i]);
+      if (l.rete === 'RACC') return;   // il raccordo non ha valorizzazione
       var tf = _linkTariffa(l);
       if (!cur || cur.rete !== l.rete || cur.tariffa !== tf){
         cur = { rete: l.rete, tariffa: tf, links: [], dist: 0 };
@@ -320020,7 +320341,8 @@ window._buildUnifiedCostBlock = function(opts) {
     var groups   = _groups(sq.links, sq.gws);
     var gwRows   = _gwRows(sq.links, sq.gws, groups);
     var centrali = _centrali(item.route, isUni);
-    var keyNodes = _keyNodes(centrali, sq.links, groups);
+    var keyNodes = _keyNodes(centrali.filter(function(c){ return !c.racc; }),
+                            sq.links.filter(function(l){ return l.rete !== 'RACC'; }), groups);
     return {
       label: item.label, tipo: item.tipo, route: item.route,
       links: sq.links, gws: sq.gws, groups: groups, gwRows: gwRows,
@@ -320067,6 +320389,7 @@ window._buildUnifiedCostBlock = function(opts) {
     if (kind === 'START'){ f.bold = true; f.color = { argb: C_START }; }
     else if (kind === 'END'){ f.bold = true; f.color = { argb: C_END }; }
     else if (kind === 'GW'){ f.bold = true; f.color = { argb: C_GW_TX }; }
+    else if (kind === 'RACC'){ f.bold = true; f.color = { argb: C_RACC_TX }; }
     return f;
   }
 
@@ -320118,8 +320441,33 @@ window._buildUnifiedCostBlock = function(opts) {
     return { richText: runs };
   }
 
+  // L'icona del raccordo resta senza colore: colorandola Word ed Excel ne
+  // alterano la resa. Si estrae in un run a parte, il resto mantiene il colore.
+  var _ICO_RACC = '\u2194';
+  function _splitIcona(rt){
+    if (!rt || !rt.richText) return rt;
+    var out = [];
+    rt.richText.forEach(function(run){
+      var t = String(run.text || '');
+      if (t.indexOf(_ICO_RACC) === -1){ out.push(run); return; }
+      var parti = t.split(_ICO_RACC);
+      parti.forEach(function(p, i){
+        if (i > 0){
+          var fI = {}; for (var k in run.font) if (k !== 'color') fI[k] = run.font[k];
+          out.push({ font: fI, text: _ICO_RACC });
+        }
+        if (p) out.push({ font: run.font, text: p });
+      });
+    });
+    return { richText: out };
+  }
+
   function _idFont(l){
     var f = { name: 'Calibri', size: 10 };
+    if (l.rete === 'RACC'){
+      f.bold = true; f.color = { argb: C_RACC_TX };
+      return f;
+    }
     if (l.rete === 'RC'){
       f.bold = true;
       f.color = { argb: _rcArgb(l.stato) };
@@ -320188,6 +320536,8 @@ window._buildUnifiedCostBlock = function(opts) {
     // ══ Foglio 1: Riepilogo ═══════════════════════════════════════════════════
     var ws = wb.addWorksheet('Riepilogo', { properties: { tabColor: { argb: C_HDR_BG } } });
     var hasCosti = data.some(function(d){ return !!d.costi; });
+    // Larghezza di G, H e I calcolata sul solo contenuto della tabella
+    var _wG = 0, _wH = 0, _wI = 0;
     var H1 = ['Percorso', 'Tipo', 'Distanza (km)', 'Collegamenti', 'Centrali',
               'Rif. SdF', 'Percorso Centrali', 'Routing CLLI [C-FOS]', 'ID Collegamenti'];
     if (hasCosti) H1 = H1.concat(['Costo stimato (\u20ac)', 'Dettaglio Costi']);
@@ -320237,6 +320587,7 @@ window._buildUnifiedCostBlock = function(opts) {
     data.forEach(function(d){
       // Percorso Centrali: una centrale per riga, gateway fra parentesi quadre
       var cen = d.centrali.map(function(c){
+        if (c.racc) return _deco(c.nome);
         if (c.gw) return '[' + c.nome + ']';
         return c.nome + (c.clli ? ' (' + c.clli + ')' : '') + (c.tipo ? ' ' + c.tipo : '');
       });
@@ -320248,16 +320599,30 @@ window._buildUnifiedCostBlock = function(opts) {
       var kind = cen.map(function(){ return ''; });
       d.centrali.forEach(function(c, i){
         if (!c.gw) return;
+        if (c.racc){ kind[i] = 'RACC'; return; }
         kind[i] = 'GW';
         if (i > 0 && !d.centrali[i - 1].gw) kind[i - 1] = 'GW';
         if (i + 1 < cen.length && !d.centrali[i + 1].gw) kind[i + 1] = 'GW';
       });
       if (iFirst < cen.length) kind[iFirst] = 'START';
       if (iLast >= 0)          kind[iLast]  = 'END';
+      // La sede oltre il raccordo e' l'attestazione reale: prende lo stesso
+      // stile della sede di partenza (o di arrivo) che sta dall'altro lato.
+      d.centrali.forEach(function(c, i){
+        if (!c.racc) return;
+        if (i > 0 && i + 1 < cen.length){
+          if (kind[i - 1] === 'START' && !d.centrali[i + 1].gw) kind[i + 1] = 'START';
+          else if (kind[i + 1] === 'END' && !d.centrali[i - 1].gw) kind[i - 1] = 'END';
+          else {
+            if (!d.centrali[i - 1].gw && !kind[i - 1]) kind[i - 1] = 'RACC';
+            if (!d.centrali[i + 1].gw && !kind[i + 1]) kind[i + 1] = 'RACC';
+          }
+        }
+      });
 
-      var pathRt = _richLines(cen, kind,
+      var pathRt = _splitIcona(_richLines(cen, kind,
         { text: 'PARTENZA  \u2192  ', font: _rFont('START', 8) },
-        { text: '  \u2192  ARRIVO',   font: _rFont('END', 8) });
+        { text: '  \u2192  ARRIVO',   font: _rFont('END', 8) }));
 
       // ID Collegamenti: uno per riga, con i gateway al posto giusto
       var idsArr = [], idsFonts = [];
@@ -320300,6 +320665,7 @@ window._buildUnifiedCostBlock = function(opts) {
         var kRt  = cat.map(function(){ return ''; });
         var isGw = function(t){ return /^\[/.test(t) || t.indexOf('RTN') === 0 || t.indexOf('\uD83C\uDF10') === 0; };
         var isWn = function(t){ return t.indexOf('\u26a0') === 0; };
+        var isRc = function(t){ return t.indexOf('\u25CF\u2212[RACCORDO') === 0; };
         cat.forEach(function(t, i){
           if (isWn(t)){ kRt[i] = 'WARN'; return; }
           if (!isGw(t)) return;
@@ -320313,6 +320679,12 @@ window._buildUnifiedCostBlock = function(opts) {
         if (iP < cat.length) kRt[iP] = 'START';
         if (iA >= 0)         kRt[iA] = 'END';
 
+        cat.forEach(function(t, i){
+          if (!isRc(t)) return;
+          kRt[i] = 'RACC';
+          if (i > 0 && !isGw(cat[i - 1]) && !isWn(cat[i - 1])) kRt[i - 1] = 'RACC';
+          if (i + 1 < cat.length && !isGw(cat[i + 1]) && !isWn(cat[i + 1])) kRt[i + 1] = 'RACC';
+        });
         var fRt = kRt.map(function(k){
           if (k === 'WARN') return { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFF59E0B' } };
           return _rFont(k, 10);
@@ -320321,9 +320693,9 @@ window._buildUnifiedCostBlock = function(opts) {
           ? { font: { name: 'Calibri', size: 10, bold: true, color: { argb: 'FFF59E0B' } },
               text: '  \u2192  ARRIVO   \u26a0 catena C-FOS incompleta' }
           : { font: _rFont('END', 8), text: '  \u2192  ARRIVO' };
-        rtRt = _richJoin(cat, fRt, '  \u2192  ',
+        rtRt = _splitIcona(_richJoin(cat, fRt, '  \u2192  ',
                          { font: _rFont('START', 8), text: 'PARTENZA  \u2192  ' },
-                         postRt);
+                         postRt));
       } else {
         rtRt = '\u2014';
       }
@@ -320374,13 +320746,17 @@ window._buildUnifiedCostBlock = function(opts) {
       }
       if (d.tipo === 'Div') _fillRow(r, H1.length, C_DIV_BG);
       _borderRow(r, H1.length);
+      _wG = Math.max(_wG, Math.max.apply(null, cen.map(function(x){ return String(x).length; })));
+      _wH = Math.max(_wH, rc.catena.length ? (rc.catena.join('  \u2192  ').length + 22) : 0);
+      _wI = Math.max(_wI, Math.max.apply(null, idsArr.map(function(x){ return String(x).length; })));
       var rtLines = rc.catena.length
         ? Math.ceil((rc.catena.join('  \u2192  ').length + 24) / 58) : 1;
       r.height = Math.max(30, Math.max(idsArr.length, cen.length, collLines.length, rtLines) * 12.8);
     });
 
-    _widths(ws, hasCosti ? [15, 14, 13, 14, 10, 18, 62, 60, 34, 16, 30]
-                         : [15, 14, 13, 14, 10, 18, 62, 60, 34]);
+    var _cap = function(v, min, max){ return Math.min(Math.max(v + 2, min), max); };
+    _widths(ws, hasCosti ? [15, 14, 13, 14, 10, 18, _cap(_wG, 24, 70), _cap(_wH, 24, 90), _cap(_wI, 16, 45), 16, 30]
+                         : [15, 14, 13, 14, 10, 18, _cap(_wG, 24, 70), _cap(_wH, 24, 90), _cap(_wI, 16, 45)]);
     ws.views = [{ state: 'frozen', ySplit: hRow }];
     if (data.length){
       ws.autoFilter = { from: { row: hRow, column: 1 }, to: { row: hRow + data.length, column: H1.length } };
@@ -320394,6 +320770,14 @@ window._buildUnifiedCostBlock = function(opts) {
       var c = wsN.getCell(rn, 1);
       c.value = txt;
       c.font  = { bold: true, size: 11, color: { argb: txCol } };
+      c.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: bgCol } };
+      c.alignment = { vertical: 'middle', horizontal: 'left' };
+      wsN.getRow(rn).height = 18;
+      rn++;
+    }
+    function _noteTitoloRt(runs, bgCol){
+      var c = wsN.getCell(rn, 1);
+      c.value = { richText: runs };
       c.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: bgCol } };
       c.alignment = { vertical: 'middle', horizontal: 'left' };
       wsN.getRow(rn).height = 18;
@@ -320432,6 +320816,15 @@ window._buildUnifiedCostBlock = function(opts) {
         _noteTesto(d.notaFC, true);
         rn++;
       }
+      var _rac = (d.route && d.route._raccordoNota) ? d.route._raccordoNota : '';
+      if (_rac){
+        _noteTitoloRt([
+          { font: { name: 'Calibri', size: 11, bold: true, color: { argb: 'FF9A3412' } },
+            text: _deco('Raccordo in fibra \u2014 Diversificazione') }
+        ], 'FFFFEDD5');
+        _noteTesto(_rac, true);
+        rn++;
+      }
       if (d.costi && d.costi.note.length){
         var ci2 = d.costi;
         _noteTitolo('\uD83D\uDCB6 Note Costi \u2014 ' + ci2.capacity
@@ -320461,20 +320854,27 @@ window._buildUnifiedCostBlock = function(opts) {
     var H2 = ['Percorso', 'Tipo', '#', 'Rete', 'Centrale (GAT)', 'CLLI', 'Tipo Sede'];
     ws2.getRow(1).values = H2;
     _headerRow(ws2, 1, H2.length);
-    var n2 = 0;
+    var n2 = 0, _wCen = 0;
     data.forEach(function(d){
       var num = 0, rows = [];
       d.centrali.forEach(function(c){
         var label = c.gw ? '--' : _pad2(++num);
-        var r = ws2.addRow([d.label, _tipoLabel(d.tipo), label, c.gw ? 'GW' : (c.rete || (isUni ? '' : 'RC')),
-                            c.nome, c.clli, c.gw ? 'GATEWAY' : c.tipo]);
+        var _nomeC = c.racc ? _deco(c.nome) : c.nome;
+        _wCen = Math.max(_wCen, String(_nomeC).length);
+        var r = ws2.addRow([d.label, _tipoLabel(d.tipo), label, c.racc ? 'RACCORDO' : (c.gw ? 'GW' : (c.rete || (isUni ? '' : 'RC'))),
+                            _nomeC, c.clli, (c.gw && !c.racc) ? 'GATEWAY' : c.tipo]);
         r.font = { size: 10 };
         _borderRow(r, H2.length);
-        rows.push({ row: r, gw: c.gw });
+        rows.push({ row: r, gw: c.gw, racc: !!c.racc });
         n2++;
       });
       rows.forEach(function(x, i){
         if (!x.gw) return;
+        if (x.racc){
+          x.row.font = { size: 10, bold: true, color: { argb: C_RACC_TX } };
+          _fillRow(x.row, H2.length, C_RACC_BG);
+          return;
+        }
         x.row.font = { size: 10, bold: true, color: { argb: C_GW_TX } };
         _fillRow(x.row, H2.length, C_GW_BG);
         [i - 1, i + 1].forEach(function(j){
@@ -320492,8 +320892,21 @@ window._buildUnifiedCostBlock = function(opts) {
         ultima.row.font = { size: 10, bold: true, color: { argb: C_END } };
         _fillRow(ultima.row, H2.length, C_END_BG);
       }
+      // La sede oltre il raccordo replica lo stile di quella dall'altro lato
+      rows.forEach(function(x, i){
+        if (!x.racc || i === 0 || i + 1 >= rows.length) return;
+        var prev = rows[i - 1], next = rows[i + 1];
+        if (prev.gw || next.gw) return;
+        var src = (prev === reali[0]) ? prev : ((next === reali[reali.length - 1]) ? next : null);
+        var dst = (src === prev) ? next : ((src === next) ? prev : null);
+        if (!src || !dst) return;
+        var bg = (src === reali[0]) ? C_START_BG : C_END_BG;
+        var tx = (src === reali[0]) ? C_START : C_END;
+        dst.row.font = { size: 10, bold: true, color: { argb: tx } };
+        _fillRow(dst.row, H2.length, bg);
+      });
     });
-    _widths(ws2, [15, 14, 6, 8, 34, 14, 12]);
+    _widths(ws2, [15, 14, 6, 10, Math.min(Math.max(_wCen + 2, 30), 60), 14, 12]);
     ws2.views = [{ state: 'frozen', ySplit: 1 }];
     if (n2) ws2.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1 + n2, column: H2.length } };
 
@@ -320505,7 +320918,7 @@ window._buildUnifiedCostBlock = function(opts) {
               'Info Extra', 'Note'];
     ws3.getRow(1).values = H3;
     _headerRow(ws3, 1, H3.length);
-    var n3 = 0;
+    var n3 = 0, _wCol = 0;
     data.forEach(function(d){
       var num = 0;
       function gwRow(tipo){
@@ -320519,9 +320932,15 @@ window._buildUnifiedCostBlock = function(opts) {
       }
       d.links.forEach(function(l, i){
         if (d.gwRows[i]) gwRow(d.gwRows[i]);
-        var r = ws3.addRow([d.label, _tipoLabel(d.tipo), _pad2(++num), l.rete, l.id, l.km,
+        _wCol = Math.max(_wCol, String(l.id).length);
+        var r = ws3.addRow([d.label, _tipoLabel(d.tipo), _pad2(++num),
+                            l.rete === 'RACC' ? 'RACCORDO' : l.rete, l.id, l.km,
                             l.cavo, l.stato, l.tipo, l.a1, l.a2, l.ix, l.note]);
         r.font = { size: 10 };
+        if (l.rete === 'RACC'){
+          r.font = { size: 10, bold: true, color: { argb: C_RACC_TX } };
+          _fillRow(r, H3.length, C_RACC_BG);
+        }
         r.alignment = { vertical: 'top', wrapText: true };
         r.getCell(6).numFmt = '0.00';
         _borderRow(r, H3.length);
@@ -320529,7 +320948,7 @@ window._buildUnifiedCostBlock = function(opts) {
       });
       if (d.gwRows[d.links.length]) gwRow(d.gwRows[d.links.length]);
     });
-    _widths(ws3, [15, 14, 6, 8, 32, 13, 30, 20, 13, 40, 22, 18, 22]);
+    _widths(ws3, [15, 14, 6, 10, Math.min(Math.max(_wCol + 2, 24), 60), 13, 30, 20, 13, 40, 22, 18, 22]);
     ws3.views = [{ state: 'frozen', ySplit: 1 }];
     if (n3) ws3.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1 + n3, column: H3.length } };
 
@@ -320564,11 +320983,22 @@ window._buildUnifiedCostBlock = function(opts) {
       var num = 0, rows = [];
       d.centrali.forEach(function(c){
         if (c.gw){
-          put(rk, 1, c.nome, { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG);
-          for (var gc = 2; gc <= 4; gc++){
-            ws4.getCell(rk, gc).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_GW_BG } };
+          var _tx = c.racc ? C_RACC_TX : C_GW_TX;
+          var _bg = c.racc ? C_RACC_BG : C_GW_BG;
+          if (c.racc){
+            var cRc = ws4.getCell(rk, 1);
+            cRc.value = { richText: [
+              { font: { name: 'Calibri', size: 10, bold: true, color: { argb: _tx } },
+                text: _deco(c.nome + ' (DA REALIZZARE)') }
+            ] };
+            cRc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: _bg } };
+          } else {
+            put(rk, 1, c.nome, { bold: true, size: 10, color: { argb: _tx } }, _bg);
           }
-          rows.push({ r: rk, gw: true });
+          for (var gc = 2; gc <= 4; gc++){
+            ws4.getCell(rk, gc).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: _bg } };
+          }
+          rows.push({ r: rk, gw: true, racc: !!c.racc });
           rk++;
           return;
         }
@@ -320591,12 +321021,14 @@ window._buildUnifiedCostBlock = function(opts) {
       }
       rows.forEach(function(x, i){
         if (!x.gw) return;
+        var _tx2 = x.racc ? C_RACC_TX : C_GW_TX;
+        var _bg2 = x.racc ? C_RACC_BG : C_GWSIDE_BG;
         [i - 1, i + 1].forEach(function(j){
           if (j < 0 || j >= rows.length || rows[j].gw) return;
           for (var col = 1; col <= 4; col++){
             var cc = ws4.getCell(rows[j].r, col);
-            cc.font = { bold: true, size: 10, color: { argb: C_GW_TX } };
-            cc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_GWSIDE_BG } };
+            cc.font = { bold: true, size: 10, color: { argb: _tx2 } };
+            cc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: _bg2 } };
           }
         });
       });
@@ -320611,6 +321043,17 @@ window._buildUnifiedCostBlock = function(opts) {
           put(rk, 1, d.gwRows[i], { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG);
           ws4.getCell(rk, 2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_GW_BG } };
           rk += 2;
+        }
+        if (l.rete === 'RACC'){
+          var cRc2 = ws4.getCell(rk, 1);
+          cRc2.value = { richText: [
+            { font: { name: 'Calibri', size: 10, bold: true, color: { argb: C_RACC_TX } }, text: _deco('RACCORDO') }
+          ] };
+          cRc2.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_RACC_BG } };
+          put(rk, 2, _deco('Rilancio in fibra DA REALIZZARE fra ' + l.clliA + ' e ' + l.clliZ),
+              { bold: true, size: 10, color: { argb: C_RACC_TX } }, C_RACC_BG);
+          rk += 2;
+          return;
         }
         numL++;
         put(rk, 1, '.' + _pad2(numL) + '. [' + l.rete + ']', { size: 10 });
@@ -320676,6 +321119,149 @@ window._buildUnifiedCostBlock = function(opts) {
   };
 
   console.log('[EXPORT XLSX] Modulo caricato');
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// RACCORDO IN FIBRA — DC con una sola via IN/OUT
+// Alcuni Data Center hanno un unico SubPath di ingresso/uscita: una richiesta di
+// diversificazione al 100% su quella sede non e' soddisfabile. Se nello stesso
+// complesso esiste una seconda sede, il percorso Div si attesta su quella e si
+// prevede un rilancio in fibra fra le due.
+// ═══════════════════════════════════════════════════════════════════════════════
+(function(){
+  'use strict';
+
+  // Tabella: per aggiungere un caso basta una riga
+  window.DC_RACCORDO_FIBRA = window.DC_RACCORDO_FIBRA || [
+    {
+      clli:        'MLNOITAE',
+      gat:         'ROZZANO IDC V. TOSCANA',
+      viaUnica:    'CLO310',
+      gemelloClli: 'MILAITMA',
+      gemelloGat:  'ROZZANO TELECOM IT. PAL.H',
+      metri:       400
+    }
+  ];
+
+  function _up(v){ return (v == null ? '' : String(v)).trim().toUpperCase(); }
+
+  // Estrae il CLLI da etichette tipo "GAT (CLLI) [T1]" o "CLLI::RC"
+  function _clliOf(label){
+    var t = _up(label).replace(/::(RA|RC)$/, '');
+    var m = t.match(/\(([^()]+)\)/);
+    if (m) return m[1].trim();
+    m = t.match(/^([A-Z0-9]{6,10})$/);
+    return m ? m[1] : t;
+  }
+  window.croClliOf = _clliOf;
+
+  function _rowFor(clli){
+    var c = _up(clli);
+    var t = window.DC_RACCORDO_FIBRA || [];
+    for (var i = 0; i < t.length; i++){
+      if (_up(t[i].clli) === c) return t[i];
+    }
+    return null;
+  }
+
+  function _nota(row){
+    return 'Prevedere un rilancio in fibra ottica di circa ' + row.metri
+      + ' m fra le sedi [DC ' + row.gemelloGat + ' (' + row.gemelloClli + ')] e [DC '
+      + row.gat + ' (' + row.clli + ')], che insistono sullo stesso complesso. '
+      + 'Il rilancio \u00e8 necessario per garantire la piena diversificazione del '
+      + 'percorso (100%), poich\u00e9 la sede [DC ' + row.gat + ' (' + row.clli
+      + ')] dispone di un\'unica via di ingresso/uscita'
+      + (row.viaUnica ? ' (SubPath ' + row.viaUnica + ')' : '')
+      + ', gi\u00e0 impegnata dal percorso Standard.';
+  }
+
+  // Verifica se il percorso Div richiede il raccordo. Restituisce null oppure
+  // { row, suStart, suEnd, nota, km, label, gemelloLabel }
+  window.croRaccordoCheck = function(startLabel, endLabel){
+    var rs = _rowFor(_clliOf(startLabel));
+    var re = _rowFor(_clliOf(endLabel));
+    var row = rs || re;
+    if (!row) return null;
+    return {
+      row: row,
+      suStart: !!rs,
+      suEnd:   !rs && !!re,
+      nota:    _nota(row),
+      km:      Math.round(row.metri) / 1000,
+      label:         row.gat + ' (' + row.clli + ')',
+      gemelloLabel:  row.gemelloGat + ' (' + row.gemelloClli + ')'
+    };
+  };
+
+  // Chiede conferma prima di spostare la ricerca sulla sede gemella
+  window.croRaccordoConfirm = function(info){
+    var msg = 'La sede ' + info.label + ' ha una sola via di ingresso/uscita'
+      + (info.row.viaUnica ? ' (SubPath ' + info.row.viaUnica + ')' : '')
+      + ', gia\u0300 impegnata dal percorso Standard: una diversificazione al 100% '
+      + 'non \u00e8 possibile su questa sede.\n\n'
+      + 'Vuoi cercare il percorso Div sulla sede ' + info.gemelloLabel
+      + ', nello stesso complesso, prevedendo un rilancio in fibra di circa '
+      + info.row.metri + ' m fra le due sedi?';
+    if (typeof window.showConfirm === 'function'){
+      return window.showConfirm(msg, '\uD83D\uDD00 Raccordo in fibra per diversificazione');
+    }
+    return Promise.resolve(true);
+  };
+
+  // Aggiunge al percorso Div l'hop virtuale del raccordo e i suoi 0,4 km
+  window.croRaccordoApply = function(route, info, nodeSuffix){
+    if (!route || !info) return route;
+    if (route._raccordo) return route;
+
+    var lbl = info.label;
+    if (nodeSuffix) lbl = info.row.clli + nodeSuffix;
+
+    var edge = {
+      source: 'RACC',
+      id: 'RACCORDO FIBRA',
+      weight: info.km,
+      arco: '',
+      stato: 'DA REALIZZARE',
+      raw: {
+        IdCollegamento: 'RACCORDO FIBRA',
+        CLLI_A: info.row.clli,
+        CLLI_Z: info.row.gemelloClli,
+        Distanza_km: String(info.km),
+        Stato_IdCollegamento: 'DA REALIZZARE',
+        IdCavo: '',
+        Note: info.nota
+      }
+    };
+
+    route.nodes = (route.nodes || []).slice();
+    route.edges = (route.edges || []).slice();
+    if (info.suStart){ route.nodes.unshift(lbl); route.edges.unshift(edge); }
+    else             { route.nodes.push(lbl);    route.edges.push(edge); }
+
+    if (typeof route.distanceKm === 'number') route.distanceKm += info.km;
+    route._raccordo = info;
+    route._raccordoNota = info.nota;
+    return route;
+  };
+
+
+  // Righe della nota raccordo dentro il box del percorso (export TXT)
+  window._croRaccordoTxtLines = function(route, prefix){
+    var out = [];
+    if (!route || !route._raccordoNota) return out;
+    var p = prefix || '\u2502  ';
+    out.push(p + '\uD83D\uDD00 RACCORDO IN FIBRA:');
+    var testo = String(route._raccordoNota);
+    var parole = testo.split(/\s+/), riga = '';
+    parole.forEach(function(w){
+      if ((riga + ' ' + w).trim().length > 105){ out.push(p + '   ' + riga.trim()); riga = w; }
+      else riga = (riga ? riga + ' ' : '') + w;
+    });
+    if (riga.trim()) out.push(p + '   ' + riga.trim());
+    return out;
+  };
+
+  console.log('[RACCORDO FIBRA] Modulo caricato:', (window.DC_RACCORDO_FIBRA || []).length, 'sedi');
+})();
 })();
 
 </script>
