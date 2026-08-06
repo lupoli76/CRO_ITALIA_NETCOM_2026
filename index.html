@@ -22097,6 +22097,30 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     title="Riferimento fattibilità per i percorsi Diversificati (opzionale)">
                 </span>
               </span>
+              <span class="expsm-cost-sep"></span>
+              <label class="expsm-cost-toggle" title="Aggiunge il foglio Dati Servizio all'export Excel">
+                <input type="checkbox" id="rcSelBarDsChk" onchange="window.expsmToggleDs('rc')">
+                📋 Dati Servizio
+              </label>
+              <div id="rcSelBarDsRow" style="flex-basis:100%;display:none;flex-direction:column;gap:5px;padding-top:5px;margin-top:4px;border-top:1px dashed var(--border-default);">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:7px;">
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Profilo commerciale:<input type="text" id="rcSelBarDs_profilo" placeholder="ES. LONG DISTANCE" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Velocità<span style="color:#dc2626;">*</span>:<input type="text" id="rcSelBarDs_velocita" placeholder="ES. 100 GB/S" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Interfaccia:<input type="text" id="rcSelBarDs_interfaccia" placeholder="OPZIONALE" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">CAR richiesto:<input type="text" id="rcSelBarDs_car" placeholder="OPZIONALE" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
+                  <span class="expsm-cost-sep"></span>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Attivare MPLS:<select id="rcSelBarDs_mpls" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Attivare Alice Business:<select id="rcSelBarDs_alice" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:7px;">
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Drop diversificato:<select id="rcSelBarDs_drop" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Doppio apparato in sede cliente:<select id="rcSelBarDs_doppio" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Dual Homing:<select id="rcSelBarDs_dual" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <span class="expsm-cost-sep"></span>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Collegamento Protetto:<select id="rcSelBarDs_protetto" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Collegamento Diversificato:<select id="rcSelBarDs_divers" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                </div>
+              </div>
               <div style="flex:1"></div>
               <span class="expsm-actions">
                 <button class="expsm-inline-btn export" id="rcSelBarExportBtn" onclick="window.expsmInlineExport('rc','txt')" disabled title="Esporta i percorsi selezionati in formato testo (.txt)">📤 Esporta TXT<span class="expsm-exp-n"></span></button>
@@ -24387,6 +24411,30 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     title="Riferimento fattibilità per i percorsi Diversificati (opzionale)">
                 </span>
               </span>
+              <span class="expsm-cost-sep"></span>
+              <label class="expsm-cost-toggle" title="Aggiunge il foglio Dati Servizio all'export Excel">
+                <input type="checkbox" id="unifiedSelBarDsChk" onchange="window.expsmToggleDs('unified')">
+                📋 Dati Servizio
+              </label>
+              <div id="unifiedSelBarDsRow" style="flex-basis:100%;display:none;flex-direction:column;gap:5px;padding-top:5px;margin-top:4px;border-top:1px dashed var(--border-default);">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:7px;">
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Profilo commerciale:<input type="text" id="unifiedSelBarDs_profilo" placeholder="ES. LONG DISTANCE" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Velocità<span style="color:#dc2626;">*</span>:<input type="text" id="unifiedSelBarDs_velocita" placeholder="ES. 100 GB/S" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Interfaccia:<input type="text" id="unifiedSelBarDs_interfaccia" placeholder="OPZIONALE" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">CAR richiesto:<input type="text" id="unifiedSelBarDs_car" placeholder="OPZIONALE" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
+                  <span class="expsm-cost-sep"></span>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Attivare MPLS:<select id="unifiedSelBarDs_mpls" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Attivare Alice Business:<select id="unifiedSelBarDs_alice" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:7px;">
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Drop diversificato:<select id="unifiedSelBarDs_drop" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Doppio apparato in sede cliente:<select id="unifiedSelBarDs_doppio" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Dual Homing:<select id="unifiedSelBarDs_dual" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <span class="expsm-cost-sep"></span>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Collegamento Protetto:<select id="unifiedSelBarDs_protetto" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Collegamento Diversificato:<select id="unifiedSelBarDs_divers" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                </div>
+              </div>
               <div style="flex:1"></div>
               <span class="expsm-actions">
                 <button class="expsm-inline-btn export" id="unifiedSelBarExportBtn" onclick="window.expsmInlineExport('unified','txt')" disabled title="Esporta i percorsi selezionati in formato testo (.txt)">📤 Esporta TXT<span class="expsm-exp-n"></span></button>
@@ -319164,6 +319212,14 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
     // La selezione resta attiva: si puo' esportare piu' volte, anche in formati
     // diversi, senza doverla rifare. Si chiude con "Annulla".
 
+    window._exportDatiServizio = (typeof window._readDatiServizio === 'function')
+      ? window._readDatiServizio(barId) : null;
+    if (window._exportDatiServizio && window._exportDatiServizio.mancanti.length){
+      alert('Compila i campi obbligatori dei Dati Servizio: '
+        + window._exportDatiServizio.mancanti.join(', '));
+      return;
+    }
+
     if (savedFmt === 'xlsx') {
       if (typeof window._croExportXlsx === 'function') {
         window._croExportXlsx(savedMode, selStdIdx, selDivByBase);
@@ -319183,6 +319239,30 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
   window.expsmInlineSelectAll   = function(pfx) { _selectAll(pfx + 'SelBar'); };
   window.expsmInlineDeselectAll = function(pfx) { _deselectAll(pfx + 'SelBar'); };
   window.expsmInlineCancel      = function(pfx) { _cancelByBarId(pfx + 'SelBar'); };
+
+  // ── DATI SERVIZIO ───────────────────────────────────────────────────────────
+  window.expsmToggleDs = function(pfx){
+    var bar = pfx + 'SelBar';
+    var chk = document.getElementById(bar + 'DsChk');
+    var row = document.getElementById(bar + 'DsRow');
+    if (row) row.style.display = (chk && chk.checked) ? 'flex' : 'none';
+  };
+
+  window._readDatiServizio = function(barId){
+    var chk = document.getElementById(barId + 'DsChk');
+    if (!chk || !chk.checked) return null;
+    var campi = [{ key: 'profilo', label: 'Profilo commerciale', tipo: 'testo', card: 'Profilo Commerciale', obbligatorio: false }, { key: 'velocita', label: 'Velocità', tipo: 'testo', card: 'Velocità', obbligatorio: true }, { key: 'interfaccia', label: 'Interfaccia', tipo: 'testo', card: 'Interfaccia', obbligatorio: false }, { key: 'drop', label: 'Drop diversificato', tipo: 'sino', card: 'Drop Diversificato', obbligatorio: true }, { key: 'doppio', label: 'Doppio apparato in sede cliente', tipo: 'sino', card: 'Doppio Apparato in Sede', obbligatorio: true }, { key: 'dual', label: 'Dual Homing', tipo: 'sino', card: 'Dual Homing', obbligatorio: true }, { key: 'protetto', label: 'Collegamento Protetto', tipo: 'sino', card: 'Collegamento Protetto', obbligatorio: true }, { key: 'divers', label: 'Collegamento Diversificato', tipo: 'sino', card: 'Collegamento Diversificato', obbligatorio: true }, { key: 'mpls', label: 'Attivare MPLS', tipo: 'sino', card: 'Attivare MPLS', obbligatorio: true }, { key: 'alice', label: 'Attivare Alice Business', tipo: 'sino', card: 'Attivare Alice Business', obbligatorio: true }, { key: 'car', label: 'CAR richiesto', tipo: 'testo', card: 'CAR Richiesto', obbligatorio: false }];
+    var out = { campi: [] }, mancanti = [];
+    campi.forEach(function(c){
+      var el = document.getElementById(barId + 'Ds_' + c.key);
+      var v  = el ? String(el.value || '').trim() : '';
+      if (c.tipo === 'sino' && !v) v = 'NO';
+      if (c.obbligatorio && !v) mancanti.push(c.label);
+      out.campi.push({ key: c.key, label: c.label, tipo: c.tipo, card: c.card, valore: v });
+    });
+    out.mancanti = mancanti;
+    return out;
+  };
   window.expsmInlineExport      = function(pfx, fmt) { _doExport(pfx + 'SelBar', fmt); };
 
   window._expsmToggleCostOpts = function() {
@@ -320508,6 +320588,62 @@ window._buildUnifiedCostBlock = function(opts) {
     return _richLinesF(lines, fonts, null, null);
   }
 
+  // Descrizione del campo presa dalla sezione "Dati Servizio - Spiegazione dei
+  // Campi" del tab Analisi Fattibilita': una fonte sola, sempre allineata.
+  function _dsDescrizione(titolo){
+    try {
+      var t = _s(titolo).toUpperCase();
+      var strongs = document.getElementsByTagName('strong');
+      for (var i = 0; i < strongs.length; i++){
+        if (_s(strongs[i].textContent).toUpperCase() !== t) continue;
+        var card = strongs[i].parentNode ? strongs[i].parentNode.parentNode : null;
+        if (!card) continue;
+        // Testo completo della card: paragrafi, sottosezioni e requisiti.
+        // Lo schema topologico e' un disegno HTML e non e' riproducibile in
+        // cella: se ne conserva il contenuto testuale.
+        var righe = [];
+        var walk = function(nodo){
+          for (var k = 0; k < nodo.childNodes.length; k++){
+            var n = nodo.childNodes[k];
+            if (n.nodeType === 3){
+              var v = _s(n.nodeValue).replace(/\s+/g, ' ');
+              if (v) righe.push({ blocco: false, testo: v });
+            } else if (n.nodeType === 1){
+              var tg = (n.tagName || '').toUpperCase();
+              var display = '';
+              try { display = (window.getComputedStyle(n).display || ''); } catch(e2){}
+              var isBlocco = (tg === 'P' || tg === 'DIV' || tg === 'LI' || tg === 'TR'
+                              || display === 'block' || display === 'grid' || display === 'flex');
+              if (isBlocco) righe.push({ blocco: true, testo: '' });
+              walk(n);
+              if (isBlocco) righe.push({ blocco: true, testo: '' });
+            }
+          }
+        };
+        walk(card);
+        var out = [], cur = '';
+        righe.forEach(function(r){
+          if (r.blocco){ if (cur.trim()) out.push(cur.trim()); cur = ''; }
+          else cur += (cur ? ' ' : '') + r.testo;
+        });
+        if (cur.trim()) out.push(cur.trim());
+        // Rimuove il titolo iniziale e le righe duplicate consecutive
+        var pulite = [];
+        out.forEach(function(x){
+          if (_s(x).toUpperCase() === t) return;
+          if (pulite.length && pulite[pulite.length - 1] === x) return;
+          pulite.push(x);
+        });
+        return pulite.join('\n');
+      }
+    } catch(e){ /* la sezione potrebbe non essere nel DOM */ }
+    return '';
+  }
+
+
+  // Schede Dati Servizio: testo, colori e riquadri del modello approvato
+  var DS_CARD = {"profilo": [{"t": "Definisce il pacchetto contrattuale del servizio. Può includere SLA (Service Level Agreement — accordo sui livelli di servizio garantiti), finestre di intervento, penali e livelli di priorità sulla rete. Incide su come viene dimensionato e garantito il circuito, ma non sulla topologia fisica.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "📋 Valori tipici nelle fattibilità", "f": "C2E3EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Metro: Collegamento all'interno della stessa area metropolitana", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Long Distance: Collegamento tra aree geografiche distanti (interurbano)", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    — : Non specificato / non rilevante per la topologia", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "   📋   Non influenza drop, apparati o protezioni — ha impatto solo su SLA e pricing.", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": true, "c": "002060"}, "h": 12.9, "w": true}, {"t": "", "f": "C2E3EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": null, "w": true}], "velocita": [{"t": "Capacità trasmissiva del canale ottico. Nel contesto Lambda Wave i valori tipici sono 1G, 10G, 100G . Determina quale transponder/apparato DWDM viene utilizzato e su quale lambda (lunghezza d'onda) viene attestato il circuito sul mux ottico.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "⚡ Velocità → Transponder tipici", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    1G: ELOM OCH 8x1G", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    2.5G: LDX 1 CLIENT OCH 10G (con CAR ridotto)", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    10G: LDX / LDC OCH 10G — LTX OCH 100G→4x10G", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    100G: LTX / LDC OCH 200G→1x100G — WCC100", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "interfaccia": [{"t": "Tipo di interfaccia fisica consegnata al cliente. GbE (Gigabit Ethernet) indica che il segnale viene consegnato come flusso Ethernet, anche se il trasporto sottostante è ottico DWDM. Il tipo di interfaccia non cambia la topologia di rete, ma determina il modulo ottico (SFP/CFP) lato cliente.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🔌 Interfacce comuni nelle fattibilità", "f": "CCC1DA", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    GbE: Gigabit Ethernet — tipica per 1G e 10G", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    10GbE: 10 Gigabit Ethernet — monoservizio o IP/MPLS", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    100GbE: 100 Gigabit Ethernet — per Lambda 100G", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    FC: Fibre Channel — tipica per storage/SAN", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    STM-x: SDH — su reti legacy / circuiti PDH/SDH", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "CCC1DA", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "drop": [{"t": "Indica se il cavo di drop — il tratto finale di fibra tra la prima centrale/POP e la sede cliente — deve percorrere due vie fisiche indipendenti . Elimina il single point of failure sul tratto di accesso. I due drop devono entrare nell'edificio da punti distinti (cavedi o facciate separate).", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema Topologico", "f": "FFEDD5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 15.0, "w": true}, {"t": "              ┌---- [DROP 1 (Percorso Fisico 1)] ----┐", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [SEDE A] ---│                                      │---> [CENTRALE B] ---> [Trasporto DWDM] ---> [SEDE Z]", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   Cliente    └---- [DROP 2 (Percorso Fisico 2)] ----┘      1ª Centrale                              Destinazione", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   ⚠️  Il Drop Diversificato riguarda solo il Tratto A → B, non il Trasporto DWDM B → Z.", "f": "FFF7ED", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "   📋   Requisiti Pratici : I due cavi devono percorrere cavidotti fisicamente separati, devono entrare nell'edificio da due punti distinti (cavedi o facciate diverse)", "f": "FFF7ED", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "FFEDD5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": null, "w": true}], "doppio": [{"t": "Richiede l'installazione di due apparati distinti presso il cliente — uno per il percorso di lavoro, uno per il percorso di protezione/backup. Ogni apparato ha il proprio Client e Filtro. Garantisce ridondanza hardware lato cliente.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema installazione sede cliente", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "      Doppio Apparato in Sede: NO", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": true, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [SEDE A] ---> [DROP] ---> [Apparato + Client + Filtro] ---> [CENTRALE B] ---> [Trasporto DWDM] ---> [SEDE Z]", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   Cliente                 (1 Kit App. + Client + Filtro)      1ª Centrale                             Destinazione", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "🗺️ Schema installazione sede cliente", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "      Doppio Apparato in Sede: SI", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "              ┌---- [DROP 1 ---> [Apparato 1 + Client]] ----┐", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [SEDE A] ---│                      (2 Kit Diversi)        │---> [CENTRALE B] ---> [Trasporto DWDM] ---> [SEDE Z]", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   Cliente    └---- [DROP 2 ---> [Apparato 2 + Client]] ----┘      1ª Centrale                             Destinazione", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   📋   Ridondanza degli apparati in sede cliente, non del percorso.", "f": "FFFFCC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "dual": [{"t": "Il circuito viene attestato su due nodi di rete distinti (due centrali/POP diversi). Un guasto sull'intero nodo non abbatte il servizio. È una forma di ridondanza a livello di nodo, più spinta rispetto al semplice collegamento protetto su stesso nodo.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema Topologico", "f": "FFCCFF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "              ┌---- [DROP 1 (Percorso Fisico 1)] ---> [CENTRALE B1] ---> [Trasporto DWDM 1] ---> [SEDE Z (Destinazione)]", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [SEDE A] ---│                             ← Fisicamente Diverse →                        ", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   Cliente    └---- [DROP 2 (Percorso Fisico 2)] ---> [CENTRALE B2] ---> [Trasporto DWDM 2] ---> [SEDE Z (Destinazione)]", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   ⚠️  Le due centrali B1 e B2 sono fisicamente diverse — se cade B1 intera, B2 è intatta.", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   La Sede Z possono essere la stessa destinazione.", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   🔄   Dual Homing vs Collegamento Protetto", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Collegamento Protetto: 1+1 sullo stesso nodo B — protezione ottica automatica (<50ms)", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Dual Homing: Due nodi distinti B1/B2 — copertura anche da guasto totale di centrale", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "FFCCFF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "protetto": [{"t": "Attiva la protezione 1+1 a livello ottico DWDM. Due percorsi (working e protection) vengono riservati simultaneamente; il ricevitore seleziona il migliore. Lo switchover in caso di guasto è automatico e quasi istantaneo (< 50 ms, standard G.873). La protezione è gestita dalla rete stessa.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema 1+1 DWDM (stesso nodo)", "f": "D7E4BD", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "                                                         WORKING", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": true, "i": false, "c": "008000"}, "h": 12.9, "w": false}, {"t": "                             1ª Centrale   ┌---- [Trasporto DWDM Ottico W] ----┐      ", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [SEDE A] ---> [DROP] ---> [CENTRALE B]---│                                   │---> [SEDE Z]  riceve W o P (<50ms)", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   Cliente                   Stesso Nodo   └---- [Trasporto DWDM Ottico P] ----┘      Destinazione", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "                                                        PROTECTION", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": true, "i": false, "c": "008000"}, "h": 12.9, "w": false}, {"t": "", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   ⚠️  La rete seleziona automaticamente il percorso migliore — Centrale B è unica", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   🔄   Implicazioni sulla fattibilità", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Se abbinato a Collegamento Diversificato: working e protection percorrono tratte fisiche separate", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Se abbinato a Drop Diversificato: i due drop entrano da direzioni fisiche distinte in centrale", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "D7E4BD", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "divers": [{"t": "Richiede che i due percorsi (working e protection, o i due rami di un Dual Homing) siano fisicamente separati lungo tutta la tratta di rete — condotti, tratte e nodi intermedi differenti, senza condivisione di infrastruttura. È la garanzia più completa contro guasti infrastrutturali (es. rottura di un cavo interurbano).", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema Topologico", "f": "D2DBE5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 15.0, "w": true}, {"t": "  [SEDE A] ---> [DROP] ---> [CENTRALE B] ---> [Trasporto DWDM 1] ---> [SEDE Z (Destinazione)] Percorso W", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 24.0, "w": false}, {"t": "- - - - - - - - - - - - - - - - - - ⟵ Nessuna Infrastruttura in Comune ⟶ - - - - - - - - - - - - - - - - - -", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "C00000"}, "h": null, "w": false}, {"t": "  [SEDE A] ---> [DROP] ---> [CENTRALE B] ---> [Trasporto DWDM 2] ---> [SEDE Z (Destinazione)] Percorso P", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 15.0, "w": false}, {"t": "", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   🔄   Drop Diversificato vs Collegamento Diversificato", "f": "DAE7F6", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Drop Diversificato: Separazione fisica solo sul tratto A→B (ultimo miglio)", "f": "DAE7F6", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Collegamento Diversificato: Separazione fisica su tutta la tratta B→Z (Trasporto)", "f": "DAE7F6", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "D2DBE5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 15.0, "w": true}], "mpls": [{"t": "Abilita un layer MPLS (Multi Protocol Label Switching) sopra la Lambda Wave. Trasforma il circuito da puro trasporto ottico a servizio con instradamento a etichette — utile per VPN L3, traffic engineering e QoS differenziata.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "⚙️ Impatto operativo (SI): non modifica apparati ottici né drop. Aggiunge un vincolo sulla destinazione del trasporto : occorre identificare il nodo PE (Provider Edge — router di bordo rete MPLS) di attestazione e verificare disponibilità di porta. Nelle note lavorante va inserita la dicitura \"verificare accessi sul PE di [CLLI nodo]\" — tipicamente delegato al collega responsabile per assegnazione PE (es. @Felici). Il CAR richiesto definisce la banda garantita su questo layer.", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "7030A0"}, "h": 45.0, "w": true}], "alice": [{"t": "Abilita i servizi della piattaforma Alice Business (accesso internet, servizi voce, ecc.) in sovrapposizione al circuito. Layer di servizi commerciali aggiuntivi, gestiti su infrastruttura separata rispetto alla Lambda Wave pura.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "⚙️ Impatto operativo (SI): stessa logica di MPLS — non modifica la topologia ottica. Richiede di identificare il nodo PE/POP di terminazione del servizio Alice Business e verificare la disponibilità porta. Nelle note lavorante va indicato il nodo di raccolta e il riferimento al collega per la parte PE (es. \"x Felici, valutare accesso al PE di [CLLI nodo]\"). Può coesistere con MPLS: SI su entrambi può indicare servizi multipli sullo stesso accesso.", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "CC0066"}, "h": 45.0, "w": true}], "car": [{"t": "Committed Access Rate : banda garantita e impegnata contrattualmente. Se coincide con la Velocità (es. 100G su 100G), tutta la capacità è dedicata senza condivisione. In altri contesti il CAR può essere inferiore alla velocità nominale, indicando una quota garantita su circuito condiviso.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "📊 Esempi CAR vs Velocità", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 10G / CAR 10G: Banda dedicata al 100% — Lambda monoservizio", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 10G / CAR 2.5G: LDX 1 CLIENT OCH 10G (con CAR ridotto)", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 100G / CAR 50G: LDX / LDC OCH 10G — LTX OCH 100G→4x10G", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 100G / CAR 100G: LTX / LDC OCH 200G→1x100G — WCC100", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "⚙️ Relazione con MPLS", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "Quando Attivare MPLS = SI, il CAR definisce la banda garantita sul layer MPLS (SPC/MPLS), che può essere inferiore alla velocità ottica. Il nodo PE viene configurato per rispettare questa soglia di traffico garantito.", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}]};
+
   // ── Costruzione workbook ─────────────────────────────────────────────────────
   function _build(mode, items){
     var isUni = mode.indexOf('unified') === 0;
@@ -320848,6 +320984,88 @@ window._buildUnifiedCostBlock = function(opts) {
         rn++;
       }
     });
+
+
+
+
+    // ══ Foglio: Dati Servizio ═════════════════════════════════════════════════
+    var ds = window._exportDatiServizio;
+    if (ds && ds.campi && ds.campi.length){
+      var wsD = wb.addWorksheet('Dati Servizio', { properties: { tabColor: { argb: 'FF15803D' } } });
+      [1, 2, 3, 4].forEach(function(k){ wsD.getColumn(k).width = 30; });
+
+      var rD = 1;
+      wsD.mergeCells(rD, 1, rD, 4);
+      var tD = wsD.getCell(rD, 1);
+      tD.value = '\u2699\ufe0f Dati Servizio';
+      tD.font  = { bold: true, size: 14, color: { argb: 'FF1D4ED8' } };
+      tD.alignment = { horizontal: 'center', vertical: 'middle' };
+      tD.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFEFF6FF' } };
+      wsD.getRow(rD).height = 22;
+      rD += 2;
+
+      // ── Tabella riassuntiva ────────────────────────────────────────────────
+      wsD.getRow(rD).values = ['Campo', 'Valore'];
+      _headerRow(wsD, rD, 2);
+      var rTab = rD;
+      rD++;
+      ds.campi.forEach(function(cp){
+        var val = _s(cp.valore);
+        var attivo = (cp.tipo === 'sino') ? (val.toUpperCase() === 'SI') : !!val;
+        var r = wsD.getRow(rD);
+        r.getCell(1).value = cp.label;
+        r.getCell(1).font  = { size: 10, bold: true };
+        r.getCell(2).value = val || '\u2014';
+        r.getCell(2).font  = attivo
+          ? { size: 10, bold: true, color: { argb: 'FF166534' } }
+          : { size: 10, color: { argb: 'FF9CA3AF' } };
+        if (attivo){
+          [1, 2].forEach(function(k){
+            r.getCell(k).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF0FDF4' } };
+          });
+        }
+        r.height = 16;
+        rD++;
+      });
+      rD += 2;
+
+      // ── Schede: riprodotte con la formattazione del modello ────────────────
+      ds.campi.forEach(function(cp){
+        var val = _s(cp.valore);
+        var attivo = (cp.tipo === 'sino') ? (val.toUpperCase() === 'SI') : !!val;
+        if (!attivo) return;
+        var righe = DS_CARD[cp.key];
+        if (!righe || !righe.length) return;
+
+        wsD.mergeCells(rD, 1, rD, 4);
+        var h = wsD.getCell(rD, 1);
+        h.value = cp.label + '   \u2192   ' + val;
+        h.font  = { bold: true, size: 11, color: { argb: 'FFFFFFFF' } };
+        h.fill  = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1D4ED8' } };
+        h.alignment = { vertical: 'middle', horizontal: 'left' };
+        wsD.getRow(rD).height = 18;
+        rD++;
+
+        righe.forEach(function(it){
+          wsD.mergeCells(rD, 1, rD, 4);
+          var cc = wsD.getCell(rD, 1);
+          cc.value = it.t || '';
+          var f = it.o || {};
+          var fnt = { name: f.n || 'Calibri', size: f.s || 9 };
+          if (f.b) fnt.bold = true;
+          if (f.i) fnt.italic = true;
+          if (f.c) fnt.color = { argb: 'FF' + f.c };
+          cc.font = fnt;
+          cc.alignment = { vertical: 'top', horizontal: 'left', wrapText: !!it.w };
+          if (it.f) cc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF' + it.f } };
+          if (it.h) wsD.getRow(rD).height = it.h;
+          rD++;
+        });
+        rD += 2;
+      });
+
+      wsD.views = [{ state: 'frozen', ySplit: rTab }];
+    }
 
     // ══ Foglio 3: Centrali ════════════════════════════════════════════════════
     var ws2 = wb.addWorksheet('Centrali');
