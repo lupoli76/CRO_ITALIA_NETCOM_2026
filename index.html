@@ -4,7 +4,7 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 50.08.04  (rev. pubblicata: V50.08.06 | Ago 2026)                    ║
+║   Versione: 50.08.04  (rev. pubblicata: V50.08.07 | Ago 2026)                    ║
 ║   Data: 4 Agosto 2026                                                            ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
@@ -12,7 +12,7 @@
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
 ║                                                                                  ║
-║   CHANGELOG V50.08.06 | Ago 2026:                                                ║
+║   CHANGELOG V50.08.07 | Ago 2026:                                                ║
 ║   ─────────────────────────                                                      ║
 ║   • NUOVO vincolo "Raccordo in fibra" per i DC con una sola via IN/OUT.          ║
 ║     Se un estremo del percorso e' una sede in tabella DC_RACCORDO_FIBRA e si     ║
@@ -32,6 +32,9 @@
 ║     sola intestazione, perche' lo Std non selezionato faceva saltare il base     ║
 ║   • Colonna ID Collegamenti: 8 per riga nel tab Unificato (6 sulla riga che      ║
 ║     apre con il raccordo) e Top 4 allineata alla tabella Std in entrambi i tab   ║
+║   • Dati Servizio (export XLSX RC e Unificato): toggle SI/NO con checkbox al     ║
+║     posto dei menu a tendina. Mostra sempre le due opzioni, default sempre NO,   ║
+║     un clic sul checkbox per attivare/disattivare senza aprire menu              ║
 ║   ─────────────────────────                                                      ║
 ║                                                                                  ║
 ║   CHANGELOG V50.08.02 | Ago 2026:                                                ║
@@ -136,7 +139,7 @@
 ║                                                                                  ║
 ║   CHANGELOG v50.08.10:                                                           ║
 ║   ─────────────────────────                                                      ║
-║   • Testo badge accorciato ulteriormente: "⚠️ Verifica su NNI" -> "⚠️ Check      ║
+║   • Testo badge accorciato ulteriormente: "⚠️ Verifica su NNI" -> "⚠️ Check     ║
 ║     NNI"                                                                         ║
 ║   • FIX: rimosso l'a capo indesiderato sulla colonna ID (ora sempre su una       ║
 ║     riga sola, con ellissi solo in casi estremi) in TUTTI i rami del layout      ║
@@ -168,7 +171,7 @@
 ║                                                                                  ║
 ║   CHANGELOG v50.08.07:                                                           ║
 ║   ─────────────────────────                                                      ║
-║   • Testo badge accorciato da "⚠️ Da Verificare su NNI" a "⚠️ Verifica su        ║
+║   • Testo badge accorciato da "⚠️ Da Verificare su NNI" a "⚠️ Verifica su       ║
 ║     NNI" per risparmiare spazio                                                  ║
 ║   • FIX leggibilita': la colonna ID Collegamenti non tronca piu' il testo con    ║
 ║     i puntini di sospensione -- ora va a capo se necessario, così nessuna        ║
@@ -199,7 +202,7 @@
 ║                                                                                  ║
 ║   CHANGELOG v50.08.04:                                                           ║
 ║   ─────────────────────────                                                      ║
-║   • Testo badge alert corretto da "⚠️ Verifica NNI" a "⚠️ Da Verificare su       ║
+║   • Testo badge alert corretto da "⚠️ Verifica NNI" a "⚠️ Da Verificare su      ║
 ║     NNI", come richiesto -- confermato che compare nella colonna "ID             ║
 ║     Collegamenti" dei risultati percorso, accanto a ogni ID il cui campo Note    ║
 ║     nel DB RA vale esattamente "DA VERIFICARE SU NNI" (30 record)                ║
@@ -283,7 +286,7 @@
 ║   CHANGELOG v50.06.26:                                                           ║
 ║   ─────────────────────────                                                      ║
 ║   • Tab "Verifica PXM": nuova colonna Azioni con link diretto 🗺️ Google Maps     ║
-║     e 📍 NAT Italia per ogni centrale con coordinate disponibili                  ║
+║     e 📍 NAT Italia per ogni centrale con coordinate disponibili                 ║
 ║   • NAT Italia: nuovo deep-link (?clli=&lat=&lon=&label=) che centra la mappa    ║
 ║     sulla centrale richiesta — usa il nodo RC/RA se presente nel DB, altrimenti  ║
 ║     mostra un marker dedicato sulla coordinata da anagrafica sito                ║
@@ -323,7 +326,7 @@
 ║   • NUOVA FEATURE: Pannello "📊 Analisi Percorsi" nel tab Ricerca Percorso       ║
 ║     Unificato                                                                    ║
 ║     - Appare automaticamente sotto i bottoni (⚡ Calcola / ↩️ Undo / 🧼 Reset)   ║
-║     - Colonna sx "⭐ Percorso Consigliato": score migliore (#, Km, Link,          ║
+║     - Colonna sx "⭐ Percorso Consigliato": score migliore (#, Km, Link,         ║
 ║       Nodi, RA, RC, Non attivi, Transizioni) con griglia 2x4 compatta            ║
 ║     - Colonna dx "📈 Statistiche Std": min/max su Link, Non-att RC/RA/tot,       ║
 ║       Nodi, Hop, RC, RA, RA→RA, RA→RC, RC→RA                                     ║
@@ -333,7 +336,7 @@
 ║     - Valori zero mostrati come "--" per non indicare percorso fuorviante        ║
 ║     - Pill #N in grigio per identificare il percorso, valore in grassetto        ║
 ║   • FIX: Orologio data/ora ripristinato nella top bar                            ║
-║   • Card ⭐ Percorso Consigliato: Percorso/Rete/Stato con sfondo tinto,           ║
+║   • Card ⭐ Percorso Consigliato: Percorso/Rete/Stato con sfondo tinto,          ║
 ║       tooltip su metrica, "Link" → "Subpath", Attivi e Non Attivi separati       ║
 ║   • Card 📈 Statistiche Std: "Stato SubPath" con min(max) ATTIVI e               ║
 ║     min(max) NON-ATTIVI per RC, RA e tot; RA logici con fisici tra parentesi     ║
@@ -560,7 +563,7 @@
 ║       • Altezza fissa (330px ~ 10 righe) con scrollbar verticale                 ║
 ║       • Label corrette "(tutti, dal più usato)" invece di "più usati"            ║
 ║       • Aggiornamento dinamico in tempo reale con i filtri:                      ║
-║         👤 Lavorante, 📋 Tipo (RETAIL/WHOLESALE), 🔧 Servizio                    ║
+║         👤 Lavorante, 📋 Tipo (RETAIL/WHOLESALE), 🔧 Servizio                   ║
 ║     - Nuova funzione calcolaStatisticheFiltrate() per ricalcolo dinamico stats   ║
 ║   • Migliorata gestibilità e usabilità del tab Collegamenti Critici DWDM         ║
 ║                                                                                  ║
@@ -20660,7 +20663,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V50.08.06 | Ago 2026</div>
+<div class="version-tag">V50.08.07 | Ago 2026</div>
       </div>
     </div>
   </header>
@@ -21403,7 +21406,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                 </div>
 
-<!-- Feature: Novità V50 + Aggiornamenti V41 -->
+<!-- Feature 1: Raccordo in fibra -->
 <div class="feature-card" style="border-left: 3px solid #d1008f; background: linear-gradient(135deg,#fff 0%,#fdf2f8 100%);">
   <div class="feature-icon" style="color: #d1008f;">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -21411,27 +21414,68 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     </svg>
   </div>
   <div class="feature-header">
-    <h3 class="feature-title" style="color: #d1008f;">🆕 Novità V50.08.04 — Ago 2026 · Raccordo in fibra</h3>
+    <h3 class="feature-title" style="color: #d1008f;">🔀 Raccordo in fibra per DC con una sola via</h3>
     <span class="feature-badge" style="background:#fdf2f8;color:#d1008f;">Latest</span>
   </div>
   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
-    <li><strong>🔀 Raccordo in fibra per DC con una sola via</strong>: se un estremo del percorso è una sede con un unico SubPath di ingresso/uscita e chiedi la diversificazione, il tool avvisa che il 100% non è raggiungibile su quella sede e propone di cercare il Div sulla <strong>sede gemella dello stesso complesso</strong>, prevedendo un rilancio in fibra fra le due. Attivo nei tab <strong>RC</strong> e <strong>Unificato</strong>.</li>
-    <li><strong>📍 Hop virtuale e nota</strong>: il raccordo entra nel percorso con i suoi 0,4 km nel totale e compare nella tabella dei risultati, nell'export TXT dentro il box del percorso, nell'export XLSX (Riepilogo, Centrali, Collegamenti, KMZ e Note) e nel documento .docx del Generatore Info KMZ.</li>
-    <li><strong>📝 Note IRP automatiche</strong>: importando il TXT nel Generatore Note Standard IRP la nota del raccordo viene riconosciuta e aggiunta da sola alla <strong>Nota Lavorante</strong> e alla <strong>Nota File Condiviso</strong>.</li>
-    <li><strong>🔧 La selezione non si azzera dopo l'export</strong>: si può esportare più volte, anche in formati diversi, senza rifare le spunte. Si chiude con Annulla.</li>
-    <li><strong>🔧 FIX export TXT RC</strong>: selezionando il solo percorso Div il file usciva con la sola intestazione, perché lo Std non selezionato faceva saltare l'intero blocco.</li>
-    <li><strong>📊 Export Excel (.xlsx)</strong> nei tab <strong>RC</strong> e <strong>Unificato</strong>: i bottoni <strong>📄 Esporta TXT</strong> diventano <strong>📄 Esporta</strong> e nella barra di selezione compaiono due bottoni, <strong>📤 Esporta TXT (N)</strong> e <strong>📊 Esporta XLSX (N)</strong>, sulla stessa selezione di percorsi.</li>
-    <li><strong>📑 Cinque fogli</strong>: <strong>Riepilogo</strong> (una riga per percorso, Percorso Centrali e ID Collegamenti su più righe con gli stessi colori della tabella a video, Distanza ripartita per tratta RA/RC/RTN, Collegamenti con logici, fisici e ripartizione per tratta (RA1, RC1, RTN, RC2…) nell'ordine del percorso, una colonna <strong>Routing CLLI [C-FOS]</strong> con la catena dei CLLI ricostruita dalle tratte C-FOS, e in testata le <strong>ℹ️ Info Zona</strong> di partenza e arrivo con Vendor, Zona, Regione e Area), <strong>Note</strong>, <strong>Centrali</strong>, <strong>Collegamenti</strong> con le righe gateway in posizione, e <strong>KMZ</strong>, che replica il documento generato in Analisi Fattibilità.</li>
-    <li><strong>📝 Foglio Note</strong>: per ogni percorso la <strong>🌐 Nota Lavorante — campo Note trasporto</strong>, la <strong>📂 Nota File Condiviso</strong> e le <strong>💶 Note Costi</strong>, una per tratta (Rete RA1, Rete RC1, Rete RC2…), con HW da tariffario, elenco ID della tratta e la frase <em>"180 Giorni a causa del/dei Subpath…"</em> già compilata con i subpath non attivi.</li>
-    <li><strong>💶 Costi nel Riepilogo</strong>: con il toggle <strong>Includi Costi</strong> attivo compaiono le colonne <strong>Costo stimato (€)</strong> e <strong>Dettaglio Costi</strong>, con capacità, zona (Nord Ovest o Italia Std), importo RA e RC e avviso rigeneratore oltre soglia.</li>
+    <li>Se un estremo del percorso è una sede con un unico SubPath di ingresso/uscita e chiedi la diversificazione, il tool avvisa che il 100% non è raggiungibile su quella sede.</li>
+    <li>Propone di cercare il Div sulla <strong>sede gemella dello stesso complesso</strong>, prevedendo un rilancio in fibra fra le due.</li>
+    <li>Il raccordo entra nel percorso con i suoi 0,4 km nel totale e compare nella tabella, negli export TXT/XLSX e nel documento KMZ.</li>
+    <li>Importando il TXT nel Generatore Note Standard IRP, la nota del raccordo viene riconosciuta e aggiunta da sola alla <strong>Nota Lavorante</strong> e alla <strong>Nota File Condiviso</strong>.</li>
+    <li>Attivo nei tab <strong>RC</strong> e <strong>Unificato</strong>.</li>
   </ul>
-
   <div class="feature-specs">
-    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Export XLSX</span>
-    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">5 Fogli</span>
-    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Costi + Note Costi</span>
     <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Note IRP</span>
-    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Foglio KMZ</span>
+    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Hop Virtuale</span>
+    <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">RC + Unificato</span>
+  </div>
+</div>
+
+<!-- Feature 2: Export XLSX e Selezione -->
+<div class="feature-card" style="border-left: 3px solid #2563eb; background: linear-gradient(135deg,#fff 0%,#eff6ff 100%);">
+  <div class="feature-icon" style="color: #2563eb;">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    </svg>
+  </div>
+  <div class="feature-header">
+    <h3 class="feature-title" style="color: #2563eb;">📊 Export XLSX nei tab RC e Unificato</h3>
+  </div>
+  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>Nuovi bottoni</strong>: <strong>📤 Esporta TXT (N)</strong> e <strong>📊 Esporta XLSX (N)</strong> nella barra di selezione, sulla stessa selezione di percorsi.</li>
+    <li><strong>Cinque fogli</strong>: <strong>Riepilogo</strong> con intestazione (Vendor/Zona/Regione/Area), tabella percorsi con colori come a video, distanza ripartita per tratta e routing CLLI ricostruito dalle C-FOS. <strong>Note</strong>, <strong>Centrali</strong>, <strong>Collegamenti</strong> (con righe gateway in posizione) e <strong>KMZ</strong> (replica il documento generato).</li>
+    <li><strong>Foglio Note</strong>: per ogni percorso la Nota Lavorante, Nota File Condiviso e Note Costi con HW da tariffario e compilazione automatica dei subpath non attivi.</li>
+    <li><strong>Costi nel Riepilogo</strong>: con "Includi Costi" attivo compaiono Costo stimato (€), Dettaglio Costi per zona (Nord Ovest o Italia Std) e avviso rigeneratore.</li>
+    <li><strong>Selezione persistente</strong>: non si azzera dopo l'export. Esporta più volte in formati diversi senza rifare le spunte. Si chiude con Annulla.</li>
+  </ul>
+  <div class="feature-specs">
+    <span class="spec-tag" style="background:#eff6ff;color:#2563eb;">5 Fogli</span>
+    <span class="spec-tag" style="background:#eff6ff;color:#2563eb;">Costi</span>
+    <span class="spec-tag" style="background:#eff6ff;color:#2563eb;">Note Automatiche</span>
+    <span class="spec-tag" style="background:#eff6ff;color:#2563eb;">KMZ</span>
+  </div>
+</div>
+
+<!-- Feature 3: Toggle Dati Servizio -->
+<div class="feature-card" style="border-left: 3px solid #059669; background: linear-gradient(135deg,#fff 0%,#f0fdf4 100%);">
+  <div class="feature-icon" style="color: #059669;">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+  </div>
+  <div class="feature-header">
+    <h3 class="feature-title" style="color: #059669;">☑️ Toggle Dati Servizio — Checkbox con label SI/NO</h3>
+  </div>
+  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li>I menu a tendina SI/NO per <strong>Drop Diversificato</strong>, <strong>Doppio Apparato</strong>, <strong>Dual Homing</strong>, <strong>Collegamento Protetto</strong> e <strong>Collegamento Diversificato</strong> diventano checkbox.</li>
+    <li>Due label sempre visibili: <strong>SI</strong> | <strong>NO</strong>. Un clic attiva/disattiva senza aprire il menu.</li>
+    <li>Default sempre <strong>NO</strong>. Più veloce e intuitivo rispetto ai dropdown.</li>
+    <li>Disponibile negli export Excel nei tab <strong>RC</strong> e <strong>Unificato</strong> quando si attiva il toggle <strong>📋 Dati Servizio</strong>.</li>
+  </ul>
+  <div class="feature-specs">
+    <span class="spec-tag" style="background:#f0fdf4;color:#059669;">UI/UX</span>
+    <span class="spec-tag" style="background:#f0fdf4;color:#059669;">Checkbox</span>
+    <span class="spec-tag" style="background:#f0fdf4;color:#059669;">Default NO</span>
   </div>
 </div>
 
@@ -21443,7 +21487,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     </svg>
   </div>
   <div class="feature-header">
-    <h3 class="feature-title" style="color: #b45309;">🔧 Correzioni V50.08.04 — Ago 2026</h3>
+    <h3 class="feature-title" style="color: #b45309;">🔧 Correzioni V50.08.07 — Ago 2026</h3>
     <span class="feature-badge" style="background:#fffbeb;color:#b45309;">Fix</span>
   </div>
   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -22109,16 +22153,100 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Interfaccia:<input type="text" id="rcSelBarDs_interfaccia" placeholder="OPZIONALE" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
                   <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">CAR richiesto:<input type="text" id="rcSelBarDs_car" placeholder="OPZIONALE" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
                   <span class="expsm-cost-sep"></span>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Attivare MPLS:<select id="rcSelBarDs_mpls" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Attivare Alice Business:<select id="rcSelBarDs_alice" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #3b82f6;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Attivare MPLS:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_mpls" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_mpls" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #8b5cf6;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Attivare Alice Business:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_alice" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_alice" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
                 </div>
                 <div style="display:flex;flex-wrap:wrap;align-items:center;gap:7px;">
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Drop diversificato:<select id="rcSelBarDs_drop" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Doppio apparato in sede cliente:<select id="rcSelBarDs_doppio" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Dual Homing:<select id="rcSelBarDs_dual" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #f59e0b;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Drop diversificato:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_drop" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_drop" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #ec4899;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Doppio apparato in sede cliente:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_doppio" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_doppio" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #06b6d4;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Dual Homing:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_dual" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_dual" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
                   <span class="expsm-cost-sep"></span>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Collegamento Protetto:<select id="rcSelBarDs_protetto" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Collegamento Diversificato:<select id="rcSelBarDs_divers" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #10b981;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Collegamento Protetto:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_protetto" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_protetto" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #ef4444;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Collegamento Diversificato:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_divers" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="rcSelBarDs_divers" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
                 </div>
               </div>
               <div style="flex:1"></div>
@@ -24423,16 +24551,100 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Interfaccia:<input type="text" id="unifiedSelBarDs_interfaccia" placeholder="OPZIONALE" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
                   <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">CAR richiesto:<input type="text" id="unifiedSelBarDs_car" placeholder="OPZIONALE" style="width:118px;padding:1px 4px;border:1px solid var(--border-default);border-radius:4px;font-size:.73rem;font-family:inherit;"></label>
                   <span class="expsm-cost-sep"></span>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Attivare MPLS:<select id="unifiedSelBarDs_mpls" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Attivare Alice Business:<select id="unifiedSelBarDs_alice" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #3b82f6;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Attivare MPLS:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_mpls" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_mpls" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #8b5cf6;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Attivare Alice Business:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_alice" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_alice" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
                 </div>
                 <div style="display:flex;flex-wrap:wrap;align-items:center;gap:7px;">
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Drop diversificato:<select id="unifiedSelBarDs_drop" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Doppio apparato in sede cliente:<select id="unifiedSelBarDs_doppio" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Dual Homing:<select id="unifiedSelBarDs_dual" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #f59e0b;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Drop diversificato:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_drop" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_drop" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #ec4899;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Doppio apparato in sede cliente:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_doppio" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_doppio" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #06b6d4;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Dual Homing:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_dual" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_dual" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
                   <span class="expsm-cost-sep"></span>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Collegamento Protetto:<select id="unifiedSelBarDs_protetto" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
-                  <label style="display:flex;align-items:center;gap:3px;font-size:.74rem;color:var(--text-primary);white-space:nowrap;">Collegamento Diversificato:<select id="unifiedSelBarDs_divers" style="font-size:.73rem;padding:1px 3px;"><option value="NO">NO</option><option value="SI">SI</option></select></label>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #10b981;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Collegamento Protetto:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_protetto" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_protetto" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
+                  <div style="display:flex;align-items:center;gap:5px;padding:2px 6px;background:#f9fafb;border-radius:4px;border-left:3px solid #ef4444;">
+  <span style="font-size:.74rem;font-weight:500;color:#374151;white-space:nowrap;flex:0 0 auto;">Collegamento Diversificato:</span>
+  <div style="display:flex;align-items:center;gap:0;background:#f3f4f6;border-radius:6px;padding:2px;">
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_divers" value="SI" style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">SI</span>
+    </label>
+    <label style="display:flex;align-items:center;justify-content:center;cursor:pointer;width:38px;height:20px;border-radius:4px;transition:background 0.15s ease,color 0.15s ease;white-space:nowrap;user-select:none;">
+      <input type="radio" name="unifiedSelBarDs_divers" value="NO" checked style="display:none;">
+      <span style="color:#666;font-size:.73rem;line-height:1;font-weight:500;">NO</span>
+    </label>
+  </div>
+</div>
                 </div>
               </div>
               <div style="flex:1"></div>
@@ -34697,7 +34909,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               </p>
 
               <div class="docs-callout docs-callout-warning novita-box-current" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border-left: 4px solid #d1008f; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;">
-                <strong style="color: #be185d; font-size: 1.05rem;">📌 Novità V50.08.06 | Ago 2026 — Ultimo Aggiornamento</strong>
+                <strong style="color: #be185d; font-size: 1.05rem;">📌 Novità V50.08.07 | Ago 2026 — Ultimo Aggiornamento</strong>
                 <p style="margin: 0.75rem 0 0.5rem 0; color: #9d174d;">
                   Export Excel dei percorsi selezionati (RC e Unificato) con note IRP e foglio KMZ, più tre correzioni sull'import TXT
                 </p>
@@ -37555,7 +37767,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V50.08.04 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V50.08.07 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -37575,7 +37787,7 @@ PERCORSI ALTERNATIVI (Div):
 
         <details open style="border:1px solid #d1008f;border-radius:12px;overflow:hidden;background:#fdf2f8;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#831843;display:flex;align-items:center;gap:0.5rem;background:#fce7f3;">
-            🔀 V50.08.04 — Raccordo in fibra per DC con una sola via IN/OUT (RC e Unificato), note IRP e KMZ automatiche, fix export solo Div
+            🔀 V50.08.07 — Raccordo in fibra per DC con una sola via IN/OUT (RC e Unificato), note IRP e KMZ automatiche, fix export solo Div
           </summary>
           <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
             <ul style="margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:0.35rem;">
@@ -154349,18 +154561,18 @@ var RAW_DB_RA = [
   "TipoSedeA": "2",
   "Lat_GAT_A": "45.72556",
   "Lon_GAT_A": "8.634831",
-  "GAT_Z": "TAINO\nANGERA",
-  "CLLI_Z": "SECAITAE\nSECAITAF",
+  "GAT_Z": "ANGERA",
+  "CLLI_Z": "SECAITAF",
   "TipoSedeZ": "3",
-  "Lat_GAT_Z": "45.762616\n45.775019",
-  "Lon_GAT_Z": "8.613499\n8.57545",
-  "Distanza_km": "6,650\n20,890",
+  "Lat_GAT_Z": "45.775019",
+  "Lon_GAT_Z": "8.57545",
+  "Distanza_km": "20,890",
   "Zona": "MILO",
   "Regione": "Lombardia",
   "Area": "NORD",
   "TIPOCOSTITUZIONE": "S",
   "TIPOPORTANTE": "C-FOS",
-  "IdCavo": "SECAITAC/SECAITAE/C-FOS/00002\nSECAITAC/SECAITAF/C-FOS/00002",
+  "IdCavo": "SECAITAC/SECAITAF/C-FOS/00002",
   "SubPath": "ALO082",
   "Stato_IdCollegamento": "ATTIVO",
   "IdCollegamento (Ramo)": "MILO_355",
@@ -295673,20 +295885,17 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
   // Larghezze FISSE (non max-content) così tutte le righe si allineano tra loro,
   // dato che ogni riga è una griglia CSS indipendente.
   function buildRAIdGridRow(numText, idColoredHtml, statusBadgeHtml, alertHtml) {
-    // Griglia UNICA e identica per TUTTE le righe (con o senza alert): è l'unico
-    // modo per garantire che le colonne si allineino perfettamente una sotto
-    // l'altra. Usare due griglie diverse (una per riga con alert, una senza)
-    // sfasava la colonna Stato, perché le proporzioni "fr" si calcolano sul
-    // totale di CIASCUNA griglia, quindi differivano in pixel reali tra i due casi.
-    // Quando non c'è alert, la 4ª colonna resta semplicemente vuota.
-    // L'ID va A CAPO in modo pulito (solo agli spazi, es. dopo " | ", MAI a metà
-    // parola) quando non entra: così non perde MAI informazioni, qualunque sia
-    // la larghezza reale dello schermo. Stato e alert restano su una riga sola.
-    return '<div style="display:grid; grid-template-columns: 18px minmax(0,2.2fr) minmax(0,0.85fr) minmax(0,0.9fr); column-gap:4px; align-items:start; line-height:1.3; margin-bottom:2px; width:100%; max-width:100%; overflow:hidden; box-sizing:border-box; text-align:left;">'
+    // Griglia UNICA e identica per TUTTE le righe.
+    // ID, Stato e Alert sono concatenati nella stessa colonna con separatore viola •
+    // Nessun rischio di sovrapposizione o taglio perché tutto è in un flusso unico.
+    const separator = ' <span style="color:#7c3aed; font-weight:600; font-size:0.85em; margin:0 6px;">&nbsp;•&nbsp;</span> ';
+    let idStatoAlertConcat = idColoredHtml + separator + statusBadgeHtml;
+    if (alertHtml) {
+      idStatoAlertConcat += separator + alertHtml;
+    }
+    return '<div style="display:grid; grid-template-columns: 18px minmax(0,4fr); column-gap:4px; align-items:start; line-height:1.3; margin-bottom:2px; width:100%; max-width:100%; overflow:hidden; box-sizing:border-box; text-align:left;">'
       + '<span style="color:var(--gray-500); white-space:nowrap; overflow:hidden; text-align:left;">' + numText + '</span>'
-      + '<span style="min-width:0; white-space:nowrap; overflow-wrap:normal; text-align:left;">' + idColoredHtml + '</span>'
-      + '<span style="min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:left;">' + statusBadgeHtml + '</span>'
-      + '<span style="min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:left;">' + alertHtml + '</span>'
+      + '<span style="min-width:0; overflow-wrap:normal; text-align:left;">' + idStatoAlertConcat + '</span>'
       + '</div>';
   }
 
@@ -308256,6 +308465,84 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
   cursor: pointer !important;
 }
 
+
+/* ═══════════════════════════════════════════════════════════
+   TOGGLE BILANCIA — SI/NO Dati Servizio
+   ═══════════════════════════════════════════════════════════ */
+
+/* Container del toggle */
+div[style*="background:#f3f4f6"][style*="border-radius:6px"] {
+  gap: 0;
+}
+
+/* Label dentro toggle - layout fisso */
+div[style*="background:#f3f4f6"] label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SI label — verde pastello quando attivo */
+div[style*="background:#f3f4f6"] input[type="radio"][value="SI"]:checked + span {
+  background: #c6f6d5 !important;
+  color: #22543d !important;
+  font-weight: 600 !important;
+}
+
+/* NO label — rosso pastello quando attivo */
+div[style*="background:#f3f4f6"] input[type="radio"][value="NO"]:checked + span {
+  background: #fed7d7 !important;
+  color: #742a2a !important;
+  font-weight: 600 !important;
+}
+
+/* Span di default - garantisce dimensioni fisse */
+div[style*="background:#f3f4f6"] span[style*="color:#666"] {
+  padding: 3px 9px !important;
+  line-height: 1 !important;
+  font-size: .73rem !important;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Hover effect */
+div[style*="background:#f3f4f6"] label:hover:not(:has(input:checked)) span {
+  opacity: 0.7;
+}
+
+/* Label dentro toggle bilancia */
+div[style*="background:#f3f4f6"] label {
+  cursor: pointer;
+}
+
+div[style*="background:#f3f4f6"] input[type="radio"] {
+  display: none !important;
+}
+
+/* SI label — verde pastello quando attivo */
+div[style*="background:#f3f4f6"] input[type="radio"][value="SI"]:checked + span {
+  background: #c6f6d5;
+  color: #22543d;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* NO label — rosso pastello quando attivo */
+div[style*="background:#f3f4f6"] input[type="radio"][value="NO"]:checked + span {
+  background: #fed7d7;
+  color: #742a2a;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* Hover effect su label non selezionati */
+div[style*="background:#f3f4f6"] label:hover span {
+  opacity: 0.8;
+}
+
 </style>
 
 
@@ -310190,15 +310477,15 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
     // Helper per costruire una riga a 3 colonne allineate: ID | [Stato] | Alert
     // (senza colonna numero: qui gli ID RA compaiono dentro un percorso, non una lista numerata)
     function buildRAIdGridRow3(idColoredHtml, statusBadgeHtml, alertHtml) {
-      // Griglia UNICA e identica per TUTTE le righe (con o senza alert): è l'unico
-      // modo per garantire che le colonne si allineino perfettamente una sotto
-      // l'altra. Quando non c'è alert, la 3ª colonna resta semplicemente vuota.
-      // L'ID va A CAPO in modo pulito (solo agli spazi, MAI a metà parola) quando
-      // non entra: così non perde MAI informazioni. Stato e alert restano su una riga.
-      return '<div style="display:grid; grid-template-columns: minmax(0,2.2fr) minmax(0,0.85fr) minmax(0,0.9fr); column-gap:4px; align-items:start; line-height:1.3; margin-bottom:2px; width:100%; max-width:100%; overflow:hidden; box-sizing:border-box; text-align:left;">'
-        + '<span style="min-width:0; white-space:nowrap; overflow-wrap:normal; text-align:left;">' + idColoredHtml + '</span>'
-        + '<span style="min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:left;">' + statusBadgeHtml + '</span>'
-        + '<span style="min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:left;">' + alertHtml + '</span>'
+      // ID, Stato e Alert concatenati nella stessa colonna con separatore viola •
+      // Nessun rischio di sovrapposizione: tutto è in un flusso unico.
+      const separator = ' <span style="color:#7c3aed; font-weight:600; font-size:0.85em; margin:0 6px;">&nbsp;•&nbsp;</span> ';
+      let idStatoAlertConcat = idColoredHtml + separator + statusBadgeHtml;
+      if (alertHtml) {
+        idStatoAlertConcat += separator + alertHtml;
+      }
+      return '<div style="display:grid; grid-template-columns: minmax(0,4fr); column-gap:4px; align-items:start; line-height:1.3; margin-bottom:2px; width:100%; max-width:100%; overflow:hidden; box-sizing:border-box; text-align:left;">'
+        + '<span style="min-width:0; overflow-wrap:normal; text-align:left;">' + idStatoAlertConcat + '</span>'
         + '</div>';
     }
 
@@ -319255,7 +319542,20 @@ button, a, label, [role="button"], .nav-item, .scope-mini-btn,
     var out = { campi: [] }, mancanti = [];
     campi.forEach(function(c){
       var el = document.getElementById(barId + 'Ds_' + c.key);
-      var v  = el ? String(el.value || '').trim() : '';
+      var v = '';
+      if (el) {
+        if (el.type === 'checkbox') {
+          // Checkbox per campo SI/NO (compatibilità vecchi)
+          v = el.checked ? 'SI' : 'NO';
+        } else {
+          // Input text
+          v = String(el.value || '').trim();
+        }
+      } else if (c.tipo === 'sino') {
+        // Radio button per campo SI/NO (bilancia toggle)
+        var radioSel = document.querySelector('input[name="' + barId + 'Ds_' + c.key + '"]:checked');
+        v = radioSel ? radioSel.value : 'NO';
+      }
       if (c.tipo === 'sino' && !v) v = 'NO';
       if (c.obbligatorio && !v) mancanti.push(c.label);
       out.campi.push({ key: c.key, label: c.label, tipo: c.tipo, card: c.card, valore: v });
@@ -320642,7 +320942,7 @@ window._buildUnifiedCostBlock = function(opts) {
 
 
   // Schede Dati Servizio: testo, colori e riquadri del modello approvato
-  var DS_CARD = {"profilo": [{"t": "Definisce il pacchetto contrattuale del servizio. Può includere SLA (Service Level Agreement — accordo sui livelli di servizio garantiti), finestre di intervento, penali e livelli di priorità sulla rete. Incide su come viene dimensionato e garantito il circuito, ma non sulla topologia fisica.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "📋 Valori tipici nelle fattibilità", "f": "C2E3EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Metro: Collegamento all'interno della stessa area metropolitana", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Long Distance: Collegamento tra aree geografiche distanti (interurbano)", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    — : Non specificato / non rilevante per la topologia", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "   📋   Non influenza drop, apparati o protezioni — ha impatto solo su SLA e pricing.", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": true, "c": "002060"}, "h": 12.9, "w": true}, {"t": "", "f": "C2E3EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": null, "w": true}], "velocita": [{"t": "Capacità trasmissiva del canale ottico. Nel contesto Lambda Wave i valori tipici sono 1G, 10G, 100G . Determina quale transponder/apparato DWDM viene utilizzato e su quale lambda (lunghezza d'onda) viene attestato il circuito sul mux ottico.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "⚡ Velocità → Transponder tipici", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    1G: ELOM OCH 8x1G", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    2.5G: LDX 1 CLIENT OCH 10G (con CAR ridotto)", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    10G: LDX / LDC OCH 10G — LTX OCH 100G→4x10G", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    100G: LTX / LDC OCH 200G→1x100G — WCC100", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "interfaccia": [{"t": "Tipo di interfaccia fisica consegnata al cliente. GbE (Gigabit Ethernet) indica che il segnale viene consegnato come flusso Ethernet, anche se il trasporto sottostante è ottico DWDM. Il tipo di interfaccia non cambia la topologia di rete, ma determina il modulo ottico (SFP/CFP) lato cliente.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🔌 Interfacce comuni nelle fattibilità", "f": "CCC1DA", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    GbE: Gigabit Ethernet — tipica per 1G e 10G", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    10GbE: 10 Gigabit Ethernet — monoservizio o IP/MPLS", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    100GbE: 100 Gigabit Ethernet — per Lambda 100G", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    FC: Fibre Channel — tipica per storage/SAN", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    STM-x: SDH — su reti legacy / circuiti PDH/SDH", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "CCC1DA", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "drop": [{"t": "Indica se il cavo di drop — il tratto finale di fibra tra la prima centrale/POP e la sede cliente — deve percorrere due vie fisiche indipendenti . Elimina il single point of failure sul tratto di accesso. I due drop devono entrare nell'edificio da punti distinti (cavedi o facciate separate).", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema Topologico", "f": "FFEDD5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 15.0, "w": true}, {"t": "              ┌---- [DROP 1 (Percorso Fisico 1)] ----┐", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [SEDE A] ---│                                      │---> [CENTRALE B] ---> [Trasporto DWDM] ---> [SEDE Z]", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   Cliente    └---- [DROP 2 (Percorso Fisico 2)] ----┘      1ª Centrale                             Destinazione", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   ⚠️  Il Drop Diversificato riguarda solo il Tratto A → B, non il Trasporto DWDM B → Z.", "f": "FFF7ED", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "   📋   Requisiti Pratici : I due cavi devono percorrere cavidotti fisicamente separati, devono entrare nell'edificio da due punti distinti (cavedi o facciate diverse)", "f": "FFF7ED", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "FFEDD5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": null, "w": true}], "doppio": [{"t": "Richiede l'installazione di due apparati distinti presso il cliente — uno per il percorso di lavoro, uno per il percorso di protezione/backup. Ogni apparato ha il proprio Client e Filtro. Garantisce ridondanza hardware lato cliente.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema installazione sede cliente", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "      Doppio Apparato in Sede: NO", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": true, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [SEDE A] ---> [DROP] ---> [Apparato + Client + Filtro] ---> [CENTRALE B] ---> [Trasporto DWDM] ---> [SEDE Z]", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   Cliente                 (1 Kit App. + Client + Filtro)      1ª Centrale                             Destinazione", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "🗺️ Schema installazione sede cliente", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "      Doppio Apparato in Sede: SI", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": true, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "              ┌---- [DROP 1 ---> [Apparato 1 + Client]] ----┐", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [SEDE A] ---│                      (2 Kit Diversi)        │---> [CENTRALE B] ---> [Trasporto DWDM] ---> [SEDE Z]", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   Cliente    └---- [DROP 2 ---> [Apparato 2 + Client]] ----┘      1ª Centrale                             Destinazione", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   📋   Ridondanza degli apparati in sede cliente, non del percorso.", "f": "FFFFCC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "dual": [{"t": "Il circuito viene attestato su due nodi di rete distinti (due centrali/POP diversi). Un guasto sull'intero nodo non abbatte il servizio. È una forma di ridondanza a livello di nodo, più spinta rispetto al semplice collegamento protetto su stesso nodo.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema Topologico", "f": "FFCCFF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "              ┌---- [DROP 1 (Percorso Fisico 1)] ---> [CENTRALE B1] ---> [Trasporto DWDM 1] ---> [SEDE Z (Destinazione)]", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [SEDE A] ---│                             ← Fisicamente Diverse →                        ", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   Cliente    └---- [DROP 2 (Percorso Fisico 2)] ---> [CENTRALE B2] ---> [Trasporto DWDM 2] ---> [SEDE Z (Destinazione)]", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   ⚠️  Le due centrali B1 e B2 sono fisicamente diverse — se cade B1 intera, B2 è intatta.", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   La Sede Z possono essere la stessa destinazione.", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   🔄   Dual Homing vs Collegamento Protetto", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Collegamento Protetto: 1+1 sullo stesso nodo B — protezione ottica automatica (<50ms)", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Dual Homing: Due nodi distinti B1/B2 — copertura anche da guasto totale di centrale", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "FFCCFF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "protetto": [{"t": "Attiva la protezione 1+1 a livello ottico DWDM. Due percorsi (working e protection) vengono riservati simultaneamente; il ricevitore seleziona il migliore. Lo switchover in caso di guasto è automatico e quasi istantaneo (< 50 ms, standard G.873). La protezione è gestita dalla rete stessa.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema 1+1 DWDM (stesso nodo)", "f": "D7E4BD", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "                                                         WORKING", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": true, "i": false, "c": "008000"}, "h": 12.9, "w": false}, {"t": "                             1ª Centrale   ┌---- [Trasporto DWDM Ottico W] ----┐      ", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [SEDE A] ---> [DROP] ---> [CENTRALE B]---│                                   │---> [SEDE Z]  riceve W o P (<50ms)", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   Cliente                   Stesso Nodo   └---- [Trasporto DWDM Ottico P] ----┘      Destinazione", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "                                                        PROTECTION", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": true, "i": false, "c": "008000"}, "h": 12.9, "w": false}, {"t": "", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   ⚠️  La rete seleziona automaticamente il percorso migliore — Centrale B è unica", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   🔄   Implicazioni sulla fattibilità", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Se abbinato a Collegamento Diversificato: working e protection percorrono tratte fisiche separate", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Se abbinato a Drop Diversificato: i due drop entrano da direzioni fisiche distinte in centrale", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "D7E4BD", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "divers": [{"t": "Richiede che i due percorsi (working e protection, o i due rami di un Dual Homing) siano fisicamente separati lungo tutta la tratta di rete — condotti, tratte e nodi intermedi differenti, senza condivisione di infrastruttura. È la garanzia più completa contro guasti infrastrutturali (es. rottura di un cavo interurbano).", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema Topologico", "f": "D2DBE5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 15.0, "w": true}, {"t": "  [SEDE A] ---> [DROP] ---> [CENTRALE B] ---> [Trasporto DWDM 1] ---> [SEDE Z (Destinazione)] Percorso W", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 15.0, "w": false}, {"t": "- - - - - - - - - - - - - - - - ⟵ Nessuna Infrastruttura in Comune ⟶ - - - - - - - - - - - - - - - -", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "C00000"}, "h": null, "w": false}, {"t": "  [SEDE A] ---> [DROP] ---> [CENTRALE B] ---> [Trasporto DWDM 2] ---> [SEDE Z (Destinazione)] Percorso P", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 15.0, "w": false}, {"t": "", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "   🔄   Drop Diversificato vs Collegamento Diversificato", "f": "DAE7F6", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Drop Diversificato: Separazione fisica solo sul tratto A→B (ultimo miglio)", "f": "DAE7F6", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Collegamento Diversificato: Separazione fisica su tutta la tratta B→Z (Trasporto)", "f": "DAE7F6", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "D2DBE5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 15.0, "w": true}], "mpls": [{"t": "Abilita un layer MPLS (Multi Protocol Label Switching) sopra la Lambda Wave. Trasforma il circuito da puro trasporto ottico a servizio con instradamento a etichette — utile per VPN L3, traffic engineering e QoS differenziata.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "⚙️ Impatto operativo (SI): non modifica apparati ottici né drop. Aggiunge un vincolo sulla destinazione del trasporto : occorre identificare il nodo PE (Provider Edge — router di bordo rete MPLS) di attestazione e verificare disponibilità di porta. Nelle note lavorante va inserita la dicitura \"verificare accessi sul PE di [CLLI nodo]\" — tipicamente delegato al collega responsabile per assegnazione PE (es. @Felici). Il CAR richiesto definisce la banda garantita su questo layer.", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "7030A0"}, "h": 54.0, "w": true}], "alice": [{"t": "Abilita i servizi della piattaforma Alice Business (accesso internet, servizi voce, ecc.) in sovrapposizione al circuito. Layer di servizi commerciali aggiuntivi, gestiti su infrastruttura separata rispetto alla Lambda Wave pura.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "⚙️ Impatto operativo (SI): stessa logica di MPLS — non modifica la topologia ottica. Richiede di identificare il nodo PE/POP di terminazione del servizio Alice Business e verificare la disponibilità porta. Nelle note lavorante va indicato il nodo di raccolta e il riferimento al collega per la parte PE (es. \"x Felici, valutare accesso al PE di [CLLI nodo]\"). Può coesistere con MPLS: SI su entrambi può indicare servizi multipli sullo stesso accesso.", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "CC0066"}, "h": 45.0, "w": true}], "car": [{"t": "Committed Access Rate : banda garantita e impegnata contrattualmente. Se coincide con la Velocità (es. 100G su 100G), tutta la capacità è dedicata senza condivisione. In altri contesti il CAR può essere inferiore alla velocità nominale, indicando una quota garantita su circuito condiviso.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "📊 Esempi CAR vs Velocità", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 10G / CAR 10G: Banda dedicata al 100% — Lambda monoservizio", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 10G / CAR 2.5G: LDX 1 CLIENT OCH 10G (con CAR ridotto)", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 100G / CAR 50G: LDX / LDC OCH 10G — LTX OCH 100G→4x10G", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 100G / CAR 100G: LTX / LDC OCH 200G→1x100G — WCC100", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "⚙️ Relazione con MPLS", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "Quando Attivare MPLS = SI, il CAR definisce la banda garantita sul layer MPLS (SPC/MPLS), che può essere inferiore alla velocità ottica. Il nodo PE viene configurato per rispettare questa soglia di traffico garantito.", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}]};
+  var DS_CARD = {"profilo": [{"t": "Definisce il pacchetto contrattuale del servizio. Può includere SLA (Service Level Agreement — accordo sui livelli di servizio garantiti), finestre di intervento, penali e livelli di priorità sulla rete. Incide su come viene dimensionato e garantito il circuito, ma non sulla topologia fisica.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "📋 Valori tipici nelle fattibilità", "f": "C2E3EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Metro: Collegamento all'interno della stessa area metropolitana", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Long Distance: Collegamento tra aree geografiche distanti (interurbano)", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    — : Non specificato / non rilevante per la topologia", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.0, "w": true}, {"t": "", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 6.0, "w": true}, {"t": "   📋   Non influenza drop, apparati o protezioni — ha impatto solo su SLA e pricing.", "f": "DBEEF4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": true, "c": "002060"}, "h": 12.9, "w": true}, {"t": "", "f": "C2E3EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": null, "w": true}], "velocita": [{"t": "Capacità trasmissiva del canale ottico. Nel contesto Lambda Wave i valori tipici sono 1G, 10G, 100G . Determina quale transponder/apparato DWDM viene utilizzato e su quale lambda (lunghezza d'onda) viene attestato il circuito sul mux ottico.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "⚡ Velocità → Transponder tipici", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    1G: ELOM OCH 8x1G", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    2.5G: LDX 1 CLIENT OCH 10G (con CAR ridotto)", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    10G: LDX / LDC OCH 10G — LTX OCH 100G→4x10G", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    100G: LTX / LDC OCH 200G→1x100G — WCC100", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "interfaccia": [{"t": "Tipo di interfaccia fisica consegnata al cliente. GbE (Gigabit Ethernet) indica che il segnale viene consegnato come flusso Ethernet, anche se il trasporto sottostante è ottico DWDM. Il tipo di interfaccia non cambia la topologia di rete, ma determina il modulo ottico (SFP/CFP) lato cliente.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🔌 Interfacce comuni nelle fattibilità", "f": "CCC1DA", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    GbE: Gigabit Ethernet — tipica per 1G e 10G", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    10GbE: 10 Gigabit Ethernet — monoservizio o IP/MPLS", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    100GbE: 100 Gigabit Ethernet — per Lambda 100G", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    FC: Fibre Channel — tipica per storage/SAN", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    STM-x: SDH — su reti legacy / circuiti PDH/SDH", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "CCC1DA", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "drop": [{"t": "Indica se il cavo di drop — il tratto finale di fibra tra la prima centrale/POP e la sede cliente — deve percorrere due vie fisiche indipendenti . Elimina il single point of failure sul tratto di accesso. I due drop devono entrare nell'edificio da punti distinti (cavedi o facciate separate).", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema Topologico", "f": "FFEDD5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 15.0, "w": true}, {"t": "                  ┌─[🇩🇷🇴🇵¹(🇵🇪🇷🇨🇴🇷🇸🇴 🇫🇮🇸🇮🇨🇴¹)]─┐", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [🇸🇪🇩🇪 🇦 (🇨🇱🇮🇪🇳🇹🇪)]→│                       │→[🇨🇪🇳🇹🇷🇦🇱🇪 🇧]→[🇹🇷🇦🇸🇵🇴🇷🇹🇴 🇩🇼🇩🇲]→[🇸🇪🇩🇪 🇿 (🇩🇪🇸🇹🇮🇳🇦🇿🇮🇴🇳🇪)]", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "                  └─[🇩🇷🇴🇵²(🇵🇪🇷🇨🇴🇷🇸🇴 🇫🇮🇸🇮🇨🇴²)]─┘", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFF7ED", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 6.0, "w": false}, {"t": "   ⚠️  Il Drop Diversificato riguarda solo il Tratto A → B, non il Trasporto DWDM B → Z.", "f": "FFF7ED", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "   📋   Requisiti Pratici : I due cavi devono percorrere cavidotti fisicamente separati, devono entrare nell'edificio da due punti distinti (cavedi o facciate diverse)", "f": "FFF7ED", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "FFEDD5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": null, "w": true}], "doppio": [{"t": "Richiede l'installazione di due apparati distinti presso il cliente — uno per il percorso di lavoro, uno per il percorso di protezione/backup. Ogni apparato ha il proprio Client e Filtro. Garantisce ridondanza hardware lato cliente.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema installazione sede cliente", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "      Doppio Apparato in Sede: NO", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": true, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [🇸🇪🇩🇪 🇦 (🇨🇱🇮🇪🇳🇹🇪)]→[🇩🇷🇴🇵]→[🇨🇪🇳🇹🇷🇦🇱🇪 (🇦🇵🇵🇦🇷🇦🇹🇴+🇨🇱🇮🇪🇳🇹+🇫🇮🇱🇹🇷🇴)]→[🇨🇪🇳🇹🇷🇦🇱🇪 🇧]→[🇹🇷🇦🇸🇵🇴🇷🇹🇴 🇩🇼🇩🇲]→[🇸🇪🇩🇪 🇿 (🇩🇪🇸🇹🇮🇳🇦🇿🇮🇴🇳🇪)]", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "                                       (🇺🇳 🇰🇮🇹)", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 6.0, "w": false}, {"t": "", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "🗺️ Schema installazione sede cliente", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "      Doppio Apparato in Sede: SI", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": true, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "                  ┌─[🇩🇷🇴🇵¹]→[🇦🇵🇵🇦🇷🇦🇹🇴¹+🇨🇱🇮🇪🇳🇹]─┐", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [🇸🇪🇩🇪 🇦 (🇨🇱🇮🇪🇳🇹🇪)]→│           (🇰🇮🇹 🇩🇮🇻🇪🇷🇸🇮)   │→[🇨🇪🇳🇹🇷🇦🇱🇪 🇧]→[🇹🇷🇦🇸🇵🇴🇷🇹🇴 🇩🇼🇩🇲]→[🇸🇪🇩🇪 🇿 (🇩🇪🇸🇹🇮🇳🇦🇿🇮🇴🇳🇪)]", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "                  └─[🇩🇷🇴🇵²]→[🇦🇵🇵🇦🇷🇦🇹🇴²+🇨🇱🇮🇪🇳🇹]─┘", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFFFCC", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 6.0, "w": false}, {"t": "   📋   Ridondanza degli apparati in sede cliente, non del percorso.", "f": "FFFFCC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "FFFF99", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "dual": [{"t": "Il circuito viene attestato su due nodi di rete distinti (due centrali/POP diversi). Un guasto sull'intero nodo non abbatte il servizio. È una forma di ridondanza a livello di nodo, più spinta rispetto al semplice collegamento protetto su stesso nodo.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema Topologico", "f": "FFCCFF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "                  ┌─[🇩🇷🇴🇵¹(🇵🇪🇷🇨🇴🇷🇸🇴 🇫🇮🇸🇮🇨🇴¹)]→[🇨🇪🇳🇹🇷🇦🇱🇪 🇧¹]→[🇹🇷🇦🇸🇵🇴🇷🇹🇴 🇩🇼🇩🇲¹]→[🇸🇪🇩🇪 🇿 (🇩🇪🇸🇹🇮🇳🇦🇿🇮🇴🇳🇪)]", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [🇸🇪🇩🇪 🇦 (🇨🇱🇮🇪🇳🇹🇪)]→│                          ↑ 🇫🇮🇸🇮🇨🇦🇲🇪🇳🇹🇪 🇩🇮🇻🇪🇷🇸🇮 ↓", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "                  └─[🇩🇷🇴🇵²(🇵🇪🇷🇨🇴🇷🇸🇴 🇫🇮🇸🇮🇨🇴²)]→[🇨🇪🇳🇹🇷🇦🇱🇪 🇧²]→[🇹🇷🇦🇸🇵🇴🇷🇹🇴 🇩🇼🇩🇲²]→[🇸🇪🇩🇪 🇿 (🇩🇪🇸🇹🇮🇳🇦🇿🇮🇴🇳🇪)]", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "FFE5FF", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 6.0, "w": false}, {"t": "   ⚠️  Le due centrali B1 e B2 sono fisicamente diverse — se cade B1 intera, B2 è intatta.", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   La Sede Z possono essere la stessa destinazione.", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   🔄   Dual Homing vs Collegamento Protetto", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Collegamento Protetto: 1+1 sullo stesso nodo B — protezione ottica automatica (<50ms)", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Dual Homing: Due nodi distinti B1/B2 — copertura anche da guasto totale di centrale", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "FFCCFF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "protetto": [{"t": "Attiva la protezione 1+1 a livello ottico DWDM. Due percorsi (working e protection) vengono riservati simultaneamente; il ricevitore seleziona il migliore. Lo switchover in caso di guasto è automatico e quasi istantaneo (< 50 ms, standard G.873). La protezione è gestita dalla rete stessa.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema 1+1 DWDM (stesso nodo)", "f": "D7E4BD", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "                                               🇼🇴🇷🇰🇮🇳🇬", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": true, "i": false, "c": "008000"}, "h": 12.9, "w": false}, {"t": "                                   ┌─[🇹🇷🇦🇸🇵🇴🇷🇹🇴 🇩🇼🇩🇲 🇴🇹🇹🇮🇨🇴 🇼🇴]─┐", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "  [🇸🇪🇩🇪 🇦 (🇨🇱🇮🇪🇳🇹🇪)]→[🇩🇷🇴🇵]→[🇨🇪🇳🇹🇷🇦🇱🇪 🇧]→│                         │→[🇸🇪🇩🇪 🇿 (🇩🇪🇸🇹🇮🇳🇦🇿🇮🇴🇳🇪)] 🇷🇮🇨🇪🇻🇪 🇼🇴🇷🇰🇮🇳🇬 🇴🇵🇵🇺🇷🇪 🇵🇷🇴🇹🇪🇨🇹🇮🇴🇳 (<50ms)", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "                                   └─[🇹🇷🇦🇸🇵🇴🇷🇹🇴 🇩🇼🇩🇲 🇴🇹🇹🇮🇨🇴 🇵🇷🇴]─┘", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "                                              🇵🇷🇴🇹🇪🇨🇹🇮🇴🇳", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": true, "i": false, "c": "008000"}, "h": 12.9, "w": false}, {"t": "", "f": "EBF1DE", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 6.0, "w": false}, {"t": "   ⚠️  La rete seleziona automaticamente il percorso migliore — Centrale B è unica", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   🔄   Implicazioni sulla fattibilità", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Se abbinato a Collegamento Diversificato: working e protection percorrono tratte fisiche separate", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Se abbinato a Drop Diversificato: i due drop entrano da direzioni fisiche distinte in centrale", "f": "EBF1DE", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "D7E4BD", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}], "divers": [{"t": "Richiede che i due percorsi (working e protection, o i due rami di un Dual Homing) siano fisicamente separati lungo tutta la tratta di rete — condotti, tratte e nodi intermedi differenti, senza condivisione di infrastruttura. È la garanzia più completa contro guasti infrastrutturali (es. rottura di un cavo interurbano).", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "🗺️ Schema Topologico", "f": "D2DBE5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "  [🇸🇪🇩🇪 🇦 (🇨🇱🇮🇪🇳🇹🇪)]→[🇩🇷🇴🇵]→[🇨🇪🇳🇹🇷🇦🇱🇪 🇧]→[🇹🇷🇦🇸🇵🇴🇷🇹🇴 🇩🇼🇩🇲¹]→[🇸🇪🇩🇪 🇿 (🇩🇪🇸🇹🇮🇳🇦🇿🇮🇴🇳🇪)] 🇵🇪🇷🇨🇴🇷🇸🇴 🇼🇴🇷🇰🇮🇳🇬", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "                           ↑ 🇳🇪🇸🇸🇺🇳🇦 🇮🇳🇫🇷🇦🇸🇹🇷🇺🇹🇹🇺🇷🇦 🇮🇳 🇨🇴🇲🇺🇳🇪 ↓", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "C00000"}, "h": 12.9, "w": false}, {"t": "  [🇸🇪🇩🇪 🇦 (🇨🇱🇮🇪🇳🇹🇪)]→[🇩🇷🇴🇵]→[🇨🇪🇳🇹🇷🇦🇱🇪 🇧]→[🇹🇷🇦🇸🇵🇴🇷🇹🇴 🇩🇼🇩🇲²]→[🇸🇪🇩🇪 🇿 (🇩🇪🇸🇹🇮🇳🇦🇿🇮🇴🇳🇪)] 🇵🇪🇷🇨🇴🇷🇸🇴 🇵🇷🇴🇹🇪🇨🇹🇮🇴🇳", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 12.9, "w": false}, {"t": "", "f": "DAE7F6", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 6.0, "w": false}, {"t": "   🔄   Drop Diversificato vs Collegamento Diversificato", "f": "DAE7F6", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Drop Diversificato: Separazione fisica solo sul tratto A→B (ultimo miglio)", "f": "DAE7F6", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "   📋   Collegamento Diversificato: Separazione fisica su tutta la tratta B→Z (Trasporto)", "f": "DAE7F6", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": null}, "h": 12.9, "w": true}, {"t": "", "f": "D2DBE5", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 15.0, "w": true}], "mpls": [{"t": "Abilita un layer MPLS (Multi Protocol Label Switching) sopra la Lambda Wave. Trasforma il circuito da puro trasporto ottico a servizio con instradamento a etichette — utile per VPN L3, traffic engineering e QoS differenziata.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "⚙️ Impatto operativo (SI): non modifica apparati ottici né drop. Aggiunge un vincolo sulla destinazione del trasporto : occorre identificare il nodo PE (Provider Edge — router di bordo rete MPLS) di attestazione e verificare disponibilità di porta. Nelle note lavorante va inserita la dicitura \"verificare accessi sul PE di [CLLI nodo]\" — tipicamente delegato al collega responsabile per assegnazione PE (es. @Felici). Il CAR richiesto definisce la banda garantita su questo layer.", "f": "E6E0EC", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "7030A0"}, "h": 45.0, "w": true}], "alice": [{"t": "Abilita i servizi della piattaforma Alice Business (accesso internet, servizi voce, ecc.) in sovrapposizione al circuito. Layer di servizi commerciali aggiuntivi, gestiti su infrastruttura separata rispetto alla Lambda Wave pura.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "⚙️ Impatto operativo (SI): stessa logica di MPLS — non modifica la topologia ottica. Richiede di identificare il nodo PE/POP di terminazione del servizio Alice Business e verificare la disponibilità porta. Nelle note lavorante va indicato il nodo di raccolta e il riferimento al collega per la parte PE (es. \"x Felici, valutare accesso al PE di [CLLI nodo]\"). Può coesistere con MPLS: SI su entrambi può indicare servizi multipli sullo stesso accesso.", "f": "FFE5FF", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "CC0066"}, "h": 45.0, "w": true}], "car": [{"t": "Committed Access Rate : banda garantita e impegnata contrattualmente. Se coincide con la Velocità (es. 100G su 100G), tutta la capacità è dedicata senza condivisione. In altri contesti il CAR può essere inferiore alla velocità nominale, indicando una quota garantita su circuito condiviso.", "f": null, "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "📊 Esempi CAR vs Velocità", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 10G / CAR 10G: Banda dedicata al 100% — Lambda monoservizio", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 10G / CAR 2.5G: LDX 1 CLIENT OCH 10G (con CAR ridotto)", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 100G / CAR 50G: LDX / LDC OCH 10G — LTX OCH 100G→4x10G", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "    Vel. 100G / CAR 100G: LTX / LDC OCH 200G→1x100G — WCC100", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "", "f": "C9FFE4", "o": {"n": "Courier New", "s": 9.0, "b": false, "i": false, "c": "1F2937"}, "h": 6.0, "w": false}, {"t": "⚙️ Relazione con MPLS", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}, {"t": "Quando Attivare MPLS = SI, il CAR definisce la banda garantita sul layer MPLS (SPC/MPLS), che può essere inferiore alla velocità ottica. Il nodo PE viene configurato per rispettare questa soglia di traffico garantito.", "f": "C9FFE4", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 30.0, "w": true}, {"t": "", "f": "AFFFD7", "o": {"n": "Calibri", "s": 9.0, "b": false, "i": false, "c": "374151"}, "h": 12.9, "w": true}]};
 
   // ── Costruzione workbook ─────────────────────────────────────────────────────
   function _build(mode, items){
