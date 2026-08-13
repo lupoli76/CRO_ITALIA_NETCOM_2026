@@ -4,13 +4,42 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 50.08.04  (rev. pubblicata: V50.08.07 | Ago 2026)                    ║
-║   Data: 4 Agosto 2026                                                            ║
+║   Versione: 50.08.13  (rev. pubblicata: V50.08.13 | Ago 2026)                    ║
+║   Data: 13 Agosto 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V50.08.13 | Ago 2026:                                                ║
+║   ─────────────────────────                                                      ║
+║   • FOGLIO KMZ dell'export XLSX rifatto a tabelle su 4 colonne:                  ║
+║     - Blocco informativo in testa: Data export (data e ora locali), Fattibilita' ║
+║       Std (con "Fattibilita' Generica" se il campo Rif. e' vuoto), Fattibilita'   ║
+║       Div solo quando esiste un riferimento Div diverso, Nota introduttiva       ║
+║     - Tabella CENTRALI: # | Centrale | CLLI | Tipo Sede (RA)                     ║
+║     - Tabella COLLEGAMENTI: # | Rete di Trasporto | Subpath RC e/o Univoco RA |  ║
+║       C-FOS. La C-FOS non e' piu' su una riga sotto l'ID ma nella sua colonna,   ║
+║       quindi i collegamenti sono righe consecutive senza spazi in mezzo          ║
+║     - RA diventa "Rete Aggregation" e RC "Rete Core" nella colonna Rete di       ║
+║       Trasporto; i rimandi alle due note di coda sono in apice vero (Excel)      ║
+║     - Intestazioni blu con bordi come gli altri fogli; gateway e raccordi su     ║
+║       riga unita A:D per non far tagliare il testo dalla colonna #               ║
+║     - Larghezze colonne 15 / 27,57 / 38 / 43; riga del titolo alta 18,75         ║
+║   • TIMESTAMP NEI NOMI FILE: tutti gli export si chiudono con                    ║
+║     [gg_mm_aaaa-hh.mm.ss] al posto della sola data. L'orario e' quello locale    ║
+║     del PC e non piu' UTC, quindi gli export serali non riportano piu' la data   ║
+║     del giorno prima. Vale per TXT e XLSX di RC, RA e Unificato, per il .kmz,    ║
+║     per il .docx del Generatore Info KMZ e per gli export che prima avevano      ║
+║     nome fisso e si sovrascrivevano fra loro nella cartella Download             ║
+║     (Collegamenti_NON_ATTIVI, Analisi_Costi_Fattibilita, report_confronto_db,    ║
+║     db_nuovo_foglio1, correlazione_ra_rc, DB Enterprise RA/RC, memo, diario      ║
+║     SdF, NAT Percorso/Selezione, occupazione rete, analisi subpath)              ║
+║   • DATI SERVIZIO (tab Ricerca Percorso RC e Unificato): tolta la riga di        ║
+║     bottoni duplicata in cima al pannello. Restano i tre bottoni in basso        ║
+║     (Seleziona Tutto, Deseleziona Tutto, Reset), accanto ai bottoni di export    ║
+║   ─────────────────────────                                                      ║
 ║                                                                                  ║
 ║   CHANGELOG V50.08.07 | Ago 2026:                                                ║
 ║   ─────────────────────────                                                      ║
@@ -20684,7 +20713,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V50.08.07 | Ago 2026</div>
+<div class="version-tag">V50.08.13 | Ago 2026</div>
       </div>
     </div>
   </header>
@@ -21500,6 +21529,32 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                 </div>
 
+<!-- Feature: Novita V50.08.13 -->
+<div class="feature-card" style="border-left: 3px solid #15803d; background: linear-gradient(135deg,#fff 0%,#f0fdf4 100%);">
+  <div class="feature-icon" style="color: #15803d;">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    </svg>
+  </div>
+  <div class="feature-header">
+    <h3 class="feature-title" style="color: #15803d;">📗 Novità V50.08.13 — Ago 2026</h3>
+    <span class="feature-badge" style="background:#f0fdf4;color:#15803d;">Nuovo</span>
+  </div>
+  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🗺️ Foglio KMZ a tabelle</strong>: nell'export XLSX il foglio KMZ passa da testo incolonnato a due tabelle vere. In testa un blocco informativo con <strong>Data export</strong>, <strong>Fattibilità Std</strong> (o <em>Fattibilità Generica</em> se il campo Rif. è vuoto), <strong>Fattibilità Div</strong> quando esiste un riferimento Div diverso, e la nota introduttiva. Poi <strong>CENTRALI</strong> con <code># | Centrale | CLLI | Tipo Sede (RA)</code> e <strong>COLLEGAMENTI</strong> con <code># | Rete di Trasporto | Subpath RC e/o Univoco RA | C-FOS</code>.</li>
+    <li><strong>🔗 C-FOS in colonna</strong>: non più su una riga separata sotto l'ID, quindi i collegamenti sono righe consecutive. Nella colonna Rete di Trasporto RA diventa <strong>Rete Aggregation</strong> e RC <strong>Rete Core</strong>; i rimandi alle due note di coda usano l'apice vero di Excel.</li>
+    <li><strong>🕒 Timestamp nei nomi file</strong>: ogni export si chiude con <code>[gg_mm_aaaa-hh.mm.ss]</code> al posto della sola data. L'orario è quello locale del PC e non più UTC, così un export fatto in tarda serata non porta più la data del giorno prima. Riguarda anche i file che prima avevano nome fisso e si sovrascrivevano nella cartella Download.</li>
+    <li><strong>🔧 Dati Servizio</strong>: nei tab <strong>Ricerca Percorso RC</strong> e <strong>Unificato</strong> tolta la riga di bottoni duplicata in cima al pannello. Restano i tre in basso, accanto ai bottoni di export.</li>
+  </ul>
+
+  <div class="feature-specs">
+    <span class="spec-tag" style="background:#f0fdf4;color:#15803d;">Foglio KMZ</span>
+    <span class="spec-tag" style="background:#f0fdf4;color:#15803d;">C-FOS in colonna</span>
+    <span class="spec-tag" style="background:#f0fdf4;color:#15803d;">Timestamp file</span>
+    <span class="spec-tag" style="background:#f0fdf4;color:#15803d;">Dati Servizio</span>
+  </div>
+</div>
+
 <!-- Feature: Correzioni V50.08.02 -->
 <div class="feature-card" style="border-left: 3px solid #b45309; background: linear-gradient(135deg,#fff 0%,#fffbeb 100%);">
   <div class="feature-icon" style="color: #b45309;">
@@ -21532,7 +21587,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     </svg>
   </div>
   <div class="feature-header">
-    <h3 class="feature-title" style="color: #7c3aed;">📋 Aggiornamenti precedenti — V50.08.02 → V41.04.08</h3>
+    <h3 class="feature-title" style="color: #7c3aed;">📋 Aggiornamenti precedenti — V50.07.20 → V50.06.23</h3>
     <span class="feature-badge" style="background:#f5f3ff;color:#7c3aed;">Storico</span>
   </div>
   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.8rem; color:var(--gray-700); line-height:1.65;">
@@ -21541,16 +21596,38 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <li><strong>V50.07.10 — 🧩 Selezione multipla</strong>: checkbox per riga + "seleziona tutto", pannello Selezione con chip rimovibili, "Mostra solo selezionate"</li>
     <li><strong>V50.06.24-26 — 🧩 NUOVO TAB Verifica PXM</strong>: ricerca centrali PXM1/PXM3 (DWDM) per CLLI/Descrizione; 3.478 record; scheda richiesta automatica (4WCC+2FO / 4WCC+4CSM); georeferenziazione Nome Sede/Comune/Lat/Long (1.845 centrali)</li>
     <li><strong>V50.06.23 — 🏢 36 Nodi A1 RTN + Badge POP</strong>: +3 A1 standard, +1 A1_DIV; badge POP geografico su 2ª riga RC/RA/Unificato; priorità A1 standard su A1_DIV</li>
+  </ul>
+
+  <div class="feature-specs">
+    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Menu Riorganizzato</span>
+    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Analisi e Verifica PXM</span>
+    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Selezione Multipla</span>
+    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Badge POP</span>
+  </div>
+</div>
+
+<!-- Feature: Storico aggiornamenti (parte 2) -->
+<div class="feature-card" style="border-left: 3px solid #7c3aed; background: linear-gradient(135deg,#fff 0%,#f5f3ff 100%);">
+  <div class="feature-icon" style="color: #7c3aed;">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </svg>
+  </div>
+  <div class="feature-header">
+    <h3 class="feature-title" style="color: #7c3aed;">📋 Aggiornamenti precedenti — V50.06.15 → V41.04.08</h3>
+    <span class="feature-badge" style="background:#f5f3ff;color:#7c3aed;">Storico</span>
+  </div>
+  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.8rem; color:var(--gray-700); line-height:1.65;">
     <li><strong>V50.06.15 — 🌐 RTN Unificato</strong>: routing interregionale completo (3 segmenti Std + Div Zona A/B); 36 Nodi A1; fix rendering badge RTN; cache grafo RC-only</li>
     <li><strong>V50.06.01 — 🔄 DB RA Campo Altro1</strong>: 365 record aggiornati (archi CA/CB) su indicazioni A. Imperatori</li>
     <li><strong>V41.05.12 — 🔧 FIX Tab Unificato</strong>: eliminati percorsi RA "avanti e indietro" con controllo <em>hasIntermediateT12</em></li>
   </ul>
 
   <div class="feature-specs">
-    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Menu Riorganizzato</span>
-    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Analisi e Verifica PXM</span>
+    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">RTN Unificato</span>
     <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">36 Nodi A1</span>
-    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Badge POP</span>
+    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">DB RA Altro1</span>
+    <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">FIX Unificato</span>
   </div>
 </div>
 
@@ -34942,7 +35019,22 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               </p>
 
               <div class="docs-callout docs-callout-warning novita-box-current" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border-left: 4px solid #d1008f; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;">
-                <strong style="color: #be185d; font-size: 1.05rem;">📌 Novità V50.08.07 | Ago 2026 — Ultimo Aggiornamento</strong>
+                <strong style="color: #be185d; font-size: 1.05rem;">📌 Novità V50.08.13 | Ago 2026 — Ultimo Aggiornamento</strong>
+                <p style="margin: 0.75rem 0 0.5rem 0; color: #9d174d;">
+                  Foglio KMZ dell'export Excel rifatto a tabelle, timestamp con data e ora in tutti i nomi file, pannello Dati Servizio ripulito
+                </p>
+                <ul class="docs-list docs-list-bullets" style="margin: 0;">
+                  <li><strong>🗺️ Foglio KMZ a tabelle</strong>: il foglio non è più testo incolonnato ma due tabelle con intestazione. In testa un blocco informativo: <strong>Data export</strong> con data e ora, <strong>Fattibilità Std</strong> presa dal campo <strong>Rif. Std</strong> della barra di export (se è vuoto compare <em>Fattibilità Generica</em>), <strong>Fattibilità Div</strong> solo quando il <strong>Rif. Div</strong> esiste ed è diverso dallo Std, poi la nota introduttiva. Segue <strong>CENTRALI</strong> con <code>#</code>, <code>Centrale</code>, <code>CLLI</code> e <code>Tipo Sede (RA)</code>, e <strong>COLLEGAMENTI</strong> con <code>#</code>, <code>Rete di Trasporto</code>, <code>Subpath RC e/o Univoco RA</code> e <code>C-FOS</code>.</li>
+                  <li><strong>🔗 C-FOS in colonna</strong>: la C-FOS non sta più su una riga separata sotto l'ID del collegamento, quindi i collegamenti occupano righe consecutive senza spazi. Nella colonna Rete di Trasporto la rete è scritta per esteso: <strong>Rete Aggregation</strong> per RA, <strong>Rete Core</strong> per RC. Le due note di coda restano in calce e i rimandi <code>1</code> e <code>2</code> usano l'apice vero di Excel, non i caratteri unicode: aprendo il file con Google Sheets l'apice viene appiattito, con Excel e LibreOffice si vede correttamente.</li>
+                  <li><strong>🎨 Gateway e raccordi</strong>: le righe di gateway RA↔RC, 🌐 RTN e raccordo in fibra occupano una riga unita su tutte e quattro le colonne, altrimenti il testo veniva tagliato dalla colonna <code>#</code>. Restano le evidenziazioni di sempre: prima centrale in blu, ultima in verde, viola attorno ai gateway, arancio sui raccordi.</li>
+                  <li><strong>🕒 Timestamp nei nomi file</strong>: ogni file esportato si chiude con <code>[gg_mm_aaaa-hh.mm.ss]</code> invece della sola data, così due export dello stesso percorso non si sovrascrivono più. Esempio: <code>CRO_UNIFIED_Std_[13_08_2026-10.16.01].txt</code>. L'orario è quello locale del PC e non più UTC: prima un export fatto dopo le 22 in ora legale riportava la data del giorno precedente.</li>
+                  <li><strong>📂 Export con nome fisso</strong>: il timestamp è stato esteso anche ai file che prima si sovrascrivevano fra loro nella cartella Download, cioè Collegamenti_NON_ATTIVI, Analisi_Costi_Fattibilita, report_confronto_db, db_nuovo_foglio1, correlazione_ra_rc, l'export del DB Enterprise RA/RC, i memo, il diario SdF, NAT Percorso e Selezione, occupazione rete e analisi subpath. L'unico download rimasto senza timestamp è il manuale utente, che è un documento statico versionato.</li>
+                  <li><strong>🔧 Dati Servizio</strong>: nei tab <strong>Ricerca Percorso RC</strong> e <strong>Unificato</strong> il pannello mostrava due volte la stessa riga di bottoni, sopra e sotto i campi. Ora resta solo quella in basso, accanto a <strong>📤 Esporta TXT</strong> e <strong>📊 Esporta XLSX</strong>.</li>
+                </ul>
+              </div>
+
+              <div class="docs-callout docs-callout-warning novita-box-previous" style="background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%); border-left: 4px solid #d1008f; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;">
+                <strong style="color: #be185d; font-size: 1.05rem;">📋 Novità V50.08.07 | Ago 2026</strong>
                 <p style="margin: 0.75rem 0 0.5rem 0; color: #9d174d;">
                   Export Excel dei percorsi selezionati (RC e Unificato) con note IRP e foglio KMZ, più tre correzioni sull'import TXT
                 </p>
@@ -35499,6 +35591,7 @@ Pannello 📊 Analisi Percorsi: 4 card classificate 🏆🥇🥈🥉 + scoring o
               <h4 class="docs-section-title">5) Copia/Esportazione e Mappa</h4>
               <ul class="docs-list">
                 <li>Usa <strong>📋 Copia Percorso</strong>, <strong>🔗 Copia ID Collegamenti</strong> e <strong>🗺️ Maps</strong> per condivisione rapida.</li>
+                <li>Ogni file esportato (TXT, XLSX, KMZ, .docx) porta in coda al nome <code>[gg_mm_aaaa-hh.mm.ss]</code> con data e ora locali: due export della stessa fattibilità non si sovrascrivono e l'ordine cronologico è leggibile dal nome.</li>
                 <li>Apri la <strong>🗺️ Mappa Topografica</strong> per verificare visivamente il tracciato e (se disponibile) attivare/disattivare collegamenti.</li>
               </ul>
 
@@ -37331,7 +37424,7 @@ PERCORSI ALTERNATIVI (Div):
                 <li><strong>Calcolo percorsi Div</strong>: in modalità RTN usa <strong>▶ Div Zona A</strong> (A1 alternativo zona partenza) poi <strong>▶ Div Zona B</strong> su ogni Div A (A1 alternativo zona arrivo). I Div non condividono nessun collegamento fisico con il Std</li>
                 <li><strong>Visualizzazione mappa</strong>: click <strong>🗺️ Maps</strong> per analisi topografica; <strong>🌍 Mappa NAT</strong> per export su NAT Italia</li>
                 <li><strong>Selezione percorso ottimale</strong>: basati su distanza, composizione RA/RC, diversificazione geografica, badge 🏆🥇🥈🥉</li>
-                <li><strong>Export documentazione</strong>: <strong>📄 Esporta</strong> apre la selezione dei percorsi, poi <strong>📤 Esporta TXT</strong> per l'allegato tecnico NNI/IRP (include gateway RTN) oppure <strong>📊 Esporta XLSX</strong> per il foglio Excel con Riepilogo, Centrali, Collegamenti, KMZ e note IRP già pronte; copia formattata 📋 per inserimento rapido in pratiche</li>
+                <li><strong>Export documentazione</strong>: <strong>📄 Esporta</strong> apre la selezione dei percorsi, poi <strong>📤 Esporta TXT</strong> per l'allegato tecnico NNI/IRP (include gateway RTN) oppure <strong>📊 Esporta XLSX</strong> per il foglio Excel con Riepilogo, Centrali, Collegamenti, KMZ (blocco informativo in testa, poi le tabelle CENTRALI e COLLEGAMENTI) e note IRP già pronte; copia formattata 📋 per inserimento rapido in pratiche</li>
                 <li><strong>Archiviazione</strong>: allega export a ticket CR/GI, usa <strong>↩️ Undo</strong> per tornare alla ricerca precedente se necessario</li>
               </ol>
 
@@ -37800,7 +37893,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V50.08.07 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V50.08.13 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -37819,6 +37912,21 @@ PERCORSI ALTERNATIVI (Div):
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #d1008f;border-radius:12px;overflow:hidden;background:#fdf2f8;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#831843;display:flex;align-items:center;gap:0.5rem;background:#fce7f3;">
+            🗺️ V50.08.13 — Foglio KMZ dell'XLSX a tabelle, timestamp con data e ora nei nomi file, pannello Dati Servizio ripulito
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:0.35rem;">
+              <li><strong>Foglio KMZ</strong>: due tabelle con intestazione al posto del testo incolonnato. Blocco informativo in testa con Data export, Fattibilità Std (o <em>Fattibilità Generica</em> se il Rif. è vuoto), Fattibilità Div quando il Rif. Div esiste ed è diverso, nota introduttiva. Colonne <code># | Centrale | CLLI | Tipo Sede (RA)</code> e <code># | Rete di Trasporto | Subpath RC e/o Univoco RA | C-FOS</code>.</li>
+              <li><strong>C-FOS in colonna</strong>: niente più riga separata sotto l'ID, collegamenti su righe consecutive. RA e RC scritte per esteso come Rete Aggregation e Rete Core; rimandi alle note di coda in apice vero.</li>
+              <li><strong>Gateway e raccordi</strong>: riga unita sulle quattro colonne, con le stesse evidenziazioni di prima (blu partenza, verde arrivo, viola gateway, arancio raccordo).</li>
+              <li><strong>Timestamp nei nomi file</strong>: <code>[gg_mm_aaaa-hh.mm.ss]</code> in coda a ogni export, con ora locale al posto dell'UTC. Esteso anche ai file che prima avevano nome fisso e si sovrascrivevano nella cartella Download.</li>
+              <li><strong>Dati Servizio</strong>: rimossa la riga di bottoni duplicata in cima al pannello nei tab RC e Unificato.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #d1008f;border-radius:12px;overflow:hidden;background:#fdf2f8;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#831843;display:flex;align-items:center;gap:0.5rem;background:#fce7f3;">
             🔀 V50.08.07 — Raccordo in fibra per DC con una sola via IN/OUT (RC e Unificato), note IRP e KMZ automatiche, fix export solo Div
           </summary>
@@ -321584,7 +321692,9 @@ window._buildUnifiedCostBlock = function(opts) {
 
     // ══ Foglio 5: KMZ ═════════════════════════════════════════════════════════
     var ws4 = wb.addWorksheet('KMZ');
-    _widths(ws4, [15, 42, 14, 9]);
+    _widths(ws4, [15, 27.57, 38, 43]);
+    var KMZ_COLS = 4;
+    var KMZ_NOTE_TX = 'FF595959';
     var rk = 1;
     function put(row, col, val, font, fill){
       var c = ws4.getCell(row, col);
@@ -321593,22 +321703,94 @@ window._buildUnifiedCostBlock = function(opts) {
       if (fill) c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: fill } };
       return c;
     }
+    // Riga a tutta larghezza (gateway, raccordi, separatori percorso)
+    function putBand(row, val, font, fill, center){
+      ws4.mergeCells(row, 1, row, KMZ_COLS);
+      var c = put(row, 1, val, font, fill);
+      if (center) c.alignment = { horizontal: 'center', vertical: 'middle' };
+      if (fill){
+        for (var i = 2; i <= KMZ_COLS; i++){
+          ws4.getCell(row, i).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: fill } };
+        }
+      }
+      return c;
+    }
+    // Intestazione tabella (stile blu identico agli altri fogli, altezza automatica).
+    // Un'etichetta puo essere una stringa o { t: testo, sup: rimando in apice }.
+    function putHead(row, labels){
+      var fBase = { name: 'Calibri', size: 10, bold: true, color: { argb: C_HDR_TX } };
+      var fSup  = { name: 'Calibri', size: 10, bold: true, color: { argb: C_HDR_TX }, vertAlign: 'superscript' };
+      labels.forEach(function(h, i){
+        var c = ws4.getCell(row, i + 1);
+        if (h && typeof h === 'object' && h.sup){
+          c.value = { richText: [
+            { font: fBase, text: h.t },
+            { font: fSup,  text: h.sup }
+          ] };
+        } else {
+          c.value = (h && typeof h === 'object') ? h.t : h;
+        }
+        c.font = { bold: true, size: 10, color: { argb: C_HDR_TX } };
+        c.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+        c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_HDR_BG } };
+        c.border = THIN;
+      });
+    }
+    // Nota a pie di pagina con rimando numerico in apice
+    function putNote(row, sup, txt){
+      var fSup = { name: 'Calibri', size: 9, italic: true, color: { argb: KMZ_NOTE_TX }, vertAlign: 'superscript' };
+      var fTxt = { name: 'Calibri', size: 9, italic: true, color: { argb: KMZ_NOTE_TX } };
+      var c = ws4.getCell(row, 1);
+      c.value = { richText: [
+        { font: fSup, text: sup },
+        { font: fTxt, text: ' ' + txt }
+      ] };
+      return c;
+    }
+    function _reteLabel(r){
+      var t = _s(r).toUpperCase();
+      if (t === 'RA') return 'Rete Aggregation';
+      if (t === 'RC') return 'Rete Core';
+      return _s(r);
+    }
+
+    // ── Blocco informativo (righe 1-4) ────────────────────────────────────────
+    ws4.mergeCells(1, 1, 1, KMZ_COLS);
+    put(1, 1, 'Info KMZ', { bold: true, size: 14, color: { argb: C_HDR_BG } }, C_TITLE_BG)
+      .alignment = { horizontal: 'center', vertical: 'middle' };
+    for (var _ic = 2; _ic <= KMZ_COLS; _ic++){
+      ws4.getCell(1, _ic).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_TITLE_BG } };
+    }
+    ws4.getRow(1).height = 18.75;
+    rk = 2;
+    put(rk, 1, 'Data export', { bold: true, size: 10 });
+    put(rk, 2, new Date().toLocaleString('it-IT'), { size: 10 });
+    rk++;
+    put(rk, 1, 'Fattibilità Std', { bold: true, size: 10 });
+    put(rk, 2, sdfS || 'Fattibilità Generica', { bold: true, size: 10, color: { argb: C_KMZ_ID } });
+    rk++;
+    var _hasDiv = data.some(function(d){ return d.tipo === 'Div'; });
+    if (_hasDiv && sdfD && sdfD !== sdfS){
+      put(rk, 1, 'Fattibilità Div', { bold: true, size: 10 });
+      put(rk, 2, sdfD, { bold: true, size: 10, color: { argb: C_KMZ_ID } });
+      rk++;
+    }
+    put(rk, 1, 'Nota Introduttiva', { bold: true, size: 10 });
+    put(rk, 2, NOTA_KMZ_INTRO, { size: 10 });
+    rk += 2;
+
     data.forEach(function(d, di){
-      if (di > 0) rk += 2;
+      if (di > 0) rk += 1;
       if (data.length > 1){
-        put(rk, 1, '\u2014 PERCORSO ' + d.label + ' \u2014',
-            { bold: true, size: 11, color: { argb: C_GW_TX } }, C_GWSIDE_BG);
-        ws4.getCell(rk, 2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_GWSIDE_BG } };
+        putBand(rk, '\u2014 PERCORSO ' + d.label + ' \u2014',
+                { bold: true, size: 11, color: { argb: C_GW_TX } }, C_GWSIDE_BG, true);
         rk += 2;
       }
-      put(rk, 1, (d.tipo === 'Div' ? (sdfD || sdfS) : sdfS) || 'SF?????????/0',
-          { bold: true, size: 11 });
-      rk += 2;
-      put(rk, 1, NOTA_KMZ_INTRO, { size: 10 });
-      rk += 2;
 
-      // CENTRALI
-      put(rk, 1, 'CENTRALI:', { bold: true, size: 10, color: { argb: C_BLACK } }, C_YELLOW);
+      // ── CENTRALI ────────────────────────────────────────────────────────────
+      put(rk, 1, 'CENTRALI', { bold: true, size: 10, color: { argb: C_BLACK } }, C_YELLOW);
+      rk++;
+      putHead(rk, ['#', 'Centrale', 'CLLI', 'Tipo Sede (RA)']);
       rk++;
       var num = 0, rows = [];
       d.centrali.forEach(function(c){
@@ -321616,17 +321798,17 @@ window._buildUnifiedCostBlock = function(opts) {
           var _tx = c.racc ? C_RACC_TX : C_GW_TX;
           var _bg = c.racc ? C_RACC_BG : C_GW_BG;
           if (c.racc){
+            ws4.mergeCells(rk, 1, rk, KMZ_COLS);
             var cRc = ws4.getCell(rk, 1);
             cRc.value = { richText: [
               { font: { name: 'Calibri', size: 10, bold: true, color: { argb: _tx } },
                 text: _deco(c.nome + ' (DA REALIZZARE)') }
             ] };
-            cRc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: _bg } };
+            for (var rc2 = 1; rc2 <= KMZ_COLS; rc2++){
+              ws4.getCell(rk, rc2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: _bg } };
+            }
           } else {
-            put(rk, 1, c.nome, { bold: true, size: 10, color: { argb: _tx } }, _bg);
-          }
-          for (var gc = 2; gc <= 4; gc++){
-            ws4.getCell(rk, gc).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: _bg } };
+            putBand(rk, c.nome, { bold: true, size: 10, color: { argb: _tx } }, _bg, false);
           }
           rows.push({ r: rk, gw: true, racc: !!c.racc });
           rk++;
@@ -321644,7 +321826,7 @@ window._buildUnifiedCostBlock = function(opts) {
       var real = rows.filter(function(x){ return !x.gw; });
       if (real.length){
         [[real[0].r, C_START], [real[real.length - 1].r, C_END]].forEach(function(x){
-          for (var col = 1; col <= 4; col++){
+          for (var col = 1; col <= KMZ_COLS; col++){
             ws4.getCell(x[0], col).font = { bold: true, size: 10, color: { argb: x[1] } };
           }
         });
@@ -321655,7 +321837,7 @@ window._buildUnifiedCostBlock = function(opts) {
         var _bg2 = x.racc ? C_RACC_BG : C_GWSIDE_BG;
         [i - 1, i + 1].forEach(function(j){
           if (j < 0 || j >= rows.length || rows[j].gw) return;
-          for (var col = 1; col <= 4; col++){
+          for (var col = 1; col <= KMZ_COLS; col++){
             var cc = ws4.getCell(rows[j].r, col);
             cc.font = { bold: true, size: 10, color: { argb: _tx2 } };
             cc.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: _bg2 } };
@@ -321664,46 +321846,48 @@ window._buildUnifiedCostBlock = function(opts) {
       });
       rk += 2;
 
-      // COLLEGAMENTI
-      put(rk, 1, 'COLLEGAMENTI:', { bold: true, size: 10, color: { argb: C_BLACK } }, C_YELLOW);
+      // ── COLLEGAMENTI ────────────────────────────────────────────────────────
+      put(rk, 1, 'COLLEGAMENTI', { bold: true, size: 10, color: { argb: C_BLACK } }, C_YELLOW);
+      rk++;
+      putHead(rk, ['#', { t: 'Rete di Trasporto', sup: '1' }, { t: 'Subpath RC e/o Univoco RA', sup: '2' }, 'C-FOS']);
       rk++;
       var numL = 0;
       d.links.forEach(function(l, i){
         if (d.gwRows[i]){
-          put(rk, 1, d.gwRows[i], { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG);
-          ws4.getCell(rk, 2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_GW_BG } };
-          rk += 2;
+          putBand(rk, d.gwRows[i], { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG, false);
+          rk++;
         }
         if (l.rete === 'RACC'){
+          ws4.mergeCells(rk, 1, rk, KMZ_COLS);
           var cRc2 = ws4.getCell(rk, 1);
           cRc2.value = { richText: [
-            { font: { name: 'Calibri', size: 10, bold: true, color: { argb: C_RACC_TX } }, text: _deco('RACCORDO') }
+            { font: { name: 'Calibri', size: 10, bold: true, color: { argb: C_RACC_TX } },
+              text: _deco('RACCORDO') + '  Rilancio in fibra DA REALIZZARE fra ' + l.clliA + ' e ' + l.clliZ }
           ] };
-          cRc2.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_RACC_BG } };
-          put(rk, 2, _deco('Rilancio in fibra DA REALIZZARE fra ' + l.clliA + ' e ' + l.clliZ),
-              { bold: true, size: 10, color: { argb: C_RACC_TX } }, C_RACC_BG);
-          rk += 2;
+          for (var rc3 = 1; rc3 <= KMZ_COLS; rc3++){
+            ws4.getCell(rk, rc3).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_RACC_BG } };
+          }
+          rk++;
           return;
         }
         numL++;
-        put(rk, 1, '.' + _pad2(numL) + '. [' + l.rete + ']', { size: 10 });
-        put(rk, 2, l.id, { bold: true, size: 10, color: { argb: C_KMZ_ID } });
-        rk++;
-        if (l.cfos){
-          var cLab = put(rk, 1, 'C-FOS > ', { bold: true, size: 10, color: { argb: C_KMZ_CFOS } });
-          cLab.alignment = { horizontal: 'right', vertical: 'middle' };
-          put(rk, 2, l.cfos, { size: 10 });
-          rk++;
-        }
+        put(rk, 1, '.' + _pad2(numL) + '.', { size: 10 });
+        put(rk, 2, _reteLabel(l.rete), { size: 10 });
+        put(rk, 3, l.id, { bold: true, size: 10, color: { argb: C_KMZ_ID } });
+        put(rk, 4, l.cfos || '', { size: 10 });
         rk++;
       });
       if (d.gwRows[d.links.length]){
-        put(rk, 1, d.gwRows[d.links.length], { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG);
-        ws4.getCell(rk, 2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: C_GW_BG } };
-        rk += 2;
+        putBand(rk, d.gwRows[d.links.length], { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG, false);
+        rk++;
       }
+      rk++;
     });
 
+    // ── Note a piè di pagina ──────────────────────────────────────────────────
+    putNote(rk, '1', 'La Rete di Trasporto Regionale (RTR) utilizzata è la Revolution e si divide in Rete CORE (RC) e Rete Aggregation (RA)');
+    rk++;
+    putNote(rk, '2', "L'Univoco RA è composto nel seguente modo: (Arco|Id Collegamento|Subpath|Progressivo Ramo dell'Arco)");
     return wb;
   }
 
