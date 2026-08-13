@@ -36,6 +36,14 @@
 ║     (Collegamenti_NON_ATTIVI, Analisi_Costi_Fattibilita, report_confronto_db,    ║
 ║     db_nuovo_foglio1, correlazione_ra_rc, DB Enterprise RA/RC, memo, diario      ║
 ║     SdF, NAT Percorso/Selezione, occupazione rete, analisi subpath)              ║
+║   • GATEWAY RTN nell'XLSX: palette dedicata al posto del viola dei gateway       ║
+║     RA<->RC. Testo RGB 8,145,178 sulle label RTN e sulle centrali/CLLI           ║
+║     adiacenti nelle colonne G e H del Riepilogo e sulla label [RTN] in           ║
+║     colonna I; nei fogli Centrali, Collegamenti e KMZ riga gateway con           ║
+║     riempimento RGB 184,204,228 e righe prima e dopo RGB 220,230,241             ║
+║   • FOGLIO KMZ: la label del gateway RTN diventa "Rete di Trasporto              ║
+║     Nazionale [RTN]" e le due note di coda sono ripetute sotto ogni              ║
+║     percorso esportato invece che una sola volta a fine foglio                   ║
 ║   • DATI SERVIZIO (tab Ricerca Percorso RC e Unificato): tolta la riga di        ║
 ║     bottoni duplicata in cima al pannello. Restano i tre bottoni in basso        ║
 ║     (Seleziona Tutto, Deseleziona Tutto, Reset), accanto ai bottoni di export    ║
@@ -21544,6 +21552,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <li><strong>🗺️ Foglio KMZ a tabelle</strong>: nell'export XLSX il foglio KMZ passa da testo incolonnato a due tabelle vere. In testa un blocco informativo con <strong>Data export</strong>, <strong>Fattibilità Std</strong> (o <em>Fattibilità Generica</em> se il campo Rif. è vuoto), <strong>Fattibilità Div</strong> quando esiste un riferimento Div diverso, e la nota introduttiva. Poi <strong>CENTRALI</strong> con <code># | Centrale | CLLI | Tipo Sede (RA)</code> e <strong>COLLEGAMENTI</strong> con <code># | Rete di Trasporto | Subpath RC e/o Univoco RA | C-FOS</code>.</li>
     <li><strong>🔗 C-FOS in colonna</strong>: non più su una riga separata sotto l'ID, quindi i collegamenti sono righe consecutive. Nella colonna Rete di Trasporto RA diventa <strong>Rete Aggregation</strong> e RC <strong>Rete Core</strong>; i rimandi alle due note di coda usano l'apice vero di Excel.</li>
     <li><strong>🕒 Timestamp nei nomi file</strong>: ogni export si chiude con <code>[gg_mm_aaaa-hh.mm.ss]</code> al posto della sola data. L'orario è quello locale del PC e non più UTC, così un export fatto in tarda serata non porta più la data del giorno prima. Riguarda anche i file che prima avevano nome fisso e si sovrascrivevano nella cartella Download.</li>
+    <li><strong>🌐 Gateway RTN con palette dedicata</strong>: nell'export Excel il gateway RTN non usa più il viola dei gateway RA↔RC. Nel Riepilogo le label RTN e le centrali/CLLI adiacenti delle colonne <strong>Percorso Centrali</strong> e <strong>Routing CLLI [C-FOS]</strong>, più la label <code>[RTN]</code> in <strong>ID Collegamenti</strong>, sono in azzurro. Nei fogli Centrali, Collegamenti e KMZ la riga del gateway ha sfondo azzurro pieno e, nelle Centrali e nel KMZ, le righe prima e dopo hanno lo sfondo azzurro chiaro.</li>
+    <li><strong>🏷️ Label RTN nel KMZ</strong>: al posto di <code>RTN</code> compare <strong>Rete di Trasporto Nazionale [RTN]</strong>. Le due note di coda sono ripetute sotto ogni percorso, non più una volta sola a fine foglio.</li>
     <li><strong>🔧 Dati Servizio</strong>: nei tab <strong>Ricerca Percorso RC</strong> e <strong>Unificato</strong> tolta la riga di bottoni duplicata in cima al pannello. Restano i tre in basso, accanto ai bottoni di export.</li>
   </ul>
 
@@ -35029,6 +35039,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <li><strong>🎨 Gateway e raccordi</strong>: le righe di gateway RA↔RC, 🌐 RTN e raccordo in fibra occupano una riga unita su tutte e quattro le colonne, altrimenti il testo veniva tagliato dalla colonna <code>#</code>. Restano le evidenziazioni di sempre: prima centrale in blu, ultima in verde, viola attorno ai gateway, arancio sui raccordi.</li>
                   <li><strong>🕒 Timestamp nei nomi file</strong>: ogni file esportato si chiude con <code>[gg_mm_aaaa-hh.mm.ss]</code> invece della sola data, così due export dello stesso percorso non si sovrascrivono più. Esempio: <code>CRO_UNIFIED_Std_[13_08_2026-10.16.01].txt</code>. L'orario è quello locale del PC e non più UTC: prima un export fatto dopo le 22 in ora legale riportava la data del giorno precedente.</li>
                   <li><strong>📂 Export con nome fisso</strong>: il timestamp è stato esteso anche ai file che prima si sovrascrivevano fra loro nella cartella Download, cioè Collegamenti_NON_ATTIVI, Analisi_Costi_Fattibilita, report_confronto_db, db_nuovo_foglio1, correlazione_ra_rc, l'export del DB Enterprise RA/RC, i memo, il diario SdF, NAT Percorso e Selezione, occupazione rete e analisi subpath. L'unico download rimasto senza timestamp è il manuale utente, che è un documento statico versionato.</li>
+                  <li><strong>🌐 Gateway RTN con palette dedicata</strong>: il gateway RTN non condivide più il viola dei gateway RA↔RC, così a colpo d'occhio si distingue un passaggio di rete regionale da un salto sulla dorsale nazionale. Nel <strong>Riepilogo</strong> passano in azzurro (RGB 8,145,178) le label RTN e le centrali con relativo CLLI immediatamente prima e dopo, nelle colonne <strong>Percorso Centrali</strong> e <strong>Routing CLLI [C-FOS]</strong>, insieme alla label <code>[RTN]</code> della colonna <strong>ID Collegamenti</strong>. Nei fogli <strong>Centrali</strong>, <strong>Collegamenti</strong> e <strong>KMZ</strong> la riga del gateway ha riempimento RGB 184,204,228; nelle Centrali e nel KMZ le righe prima e dopo hanno riempimento RGB 220,230,241. I gateway RA↔RC, i raccordi in fibra e le righe di partenza e arrivo restano con i colori di sempre.</li>
+                  <li><strong>🏷️ Label RTN nel foglio KMZ</strong>: dove prima compariva <code>RTN</code> ora si legge <strong>Rete di Trasporto Nazionale [RTN]</strong>, sia nel blocco CENTRALI sia in quello COLLEGAMENTI. Negli altri fogli la label resta <code>[RTN]</code>.</li>
+                  <li><strong>📄 Note ripetute per percorso</strong>: nel foglio KMZ le due note su RTR e composizione dell'Univoco RA si trovano sotto ciascun percorso esportato. Con Std e Div nello stesso file compaiono due volte, così ogni blocco è leggibile e stampabile da solo.</li>
                   <li><strong>🔧 Dati Servizio</strong>: nei tab <strong>Ricerca Percorso RC</strong> e <strong>Unificato</strong> il pannello mostrava due volte la stessa riga di bottoni, sopra e sotto i campi. Ora resta solo quella in basso, accanto a <strong>📤 Esporta TXT</strong> e <strong>📊 Esporta XLSX</strong>.</li>
                 </ul>
               </div>
@@ -37921,6 +37934,8 @@ PERCORSI ALTERNATIVI (Div):
               <li><strong>C-FOS in colonna</strong>: niente più riga separata sotto l'ID, collegamenti su righe consecutive. RA e RC scritte per esteso come Rete Aggregation e Rete Core; rimandi alle note di coda in apice vero.</li>
               <li><strong>Gateway e raccordi</strong>: riga unita sulle quattro colonne, con le stesse evidenziazioni di prima (blu partenza, verde arrivo, viola gateway, arancio raccordo).</li>
               <li><strong>Timestamp nei nomi file</strong>: <code>[gg_mm_aaaa-hh.mm.ss]</code> in coda a ogni export, con ora locale al posto dell'UTC. Esteso anche ai file che prima avevano nome fisso e si sovrascrivevano nella cartella Download.</li>
+              <li><strong>Gateway RTN</strong>: palette dedicata nell'XLSX al posto del viola dei gateway RA↔RC. Testo azzurro sulle label RTN e sulle centrali/CLLI adiacenti nelle colonne Percorso Centrali e Routing CLLI [C-FOS] del Riepilogo e sulla label <code>[RTN]</code> in ID Collegamenti; nei fogli Centrali, Collegamenti e KMZ riga gateway con riempimento pieno e, nelle Centrali e nel KMZ, righe prima e dopo con riempimento chiaro.</li>
+              <li><strong>Label e note KMZ</strong>: <code>RTN</code> diventa <strong>Rete di Trasporto Nazionale [RTN]</strong>; le due note di coda sono ripetute sotto ogni percorso.</li>
               <li><strong>Dati Servizio</strong>: rimossa la riga di bottoni duplicata in cima al pannello nei tab RC e Unificato.</li>
             </ul>
           </div>
@@ -320000,6 +320015,10 @@ window._buildUnifiedCostBlock = function(opts) {
   var C_KMZ_CFOS  = 'FF595959';
   var C_START_BG  = 'FFDCE6F1';
   var C_END_BG    = 'FFEBF1DE';
+  // Gateway RTN: palette dedicata, distinta dal viola dei gateway RA<->RC
+  var C_RTN_TX      = 'FF0891B2';   // testo        RGB 8,145,178
+  var C_RTN_BG      = 'FFB8CCE4';   // riga gateway RGB 184,204,228
+  var C_RTNSIDE_BG  = 'FFDCE6F1';   // riga prima e dopo RGB 220,230,241
   var C_BLACK     = 'FF000000';
   // Palette ID Collegamenti: stessi colori della colonna nel tab Ricerca Percorso
   var ID_COLORS = {
@@ -320989,6 +321008,7 @@ window._buildUnifiedCostBlock = function(opts) {
     if (kind === 'START'){ f.bold = true; f.color = { argb: C_START }; }
     else if (kind === 'END'){ f.bold = true; f.color = { argb: C_END }; }
     else if (kind === 'GW'){ f.bold = true; f.color = { argb: C_GW_TX }; }
+    else if (kind === 'GWRTN'){ f.bold = true; f.color = { argb: C_RTN_TX }; }
     else if (kind === 'RACC'){ f.bold = true; f.color = { argb: C_RACC_TX }; }
     return f;
   }
@@ -321256,9 +321276,10 @@ window._buildUnifiedCostBlock = function(opts) {
       d.centrali.forEach(function(c, i){
         if (!c.gw) return;
         if (c.racc){ kind[i] = 'RACC'; return; }
-        kind[i] = 'GW';
-        if (i > 0 && !d.centrali[i - 1].gw) kind[i - 1] = 'GW';
-        if (i + 1 < cen.length && !d.centrali[i + 1].gw) kind[i + 1] = 'GW';
+        var kGw = (_s(c.nome).toUpperCase() === 'RTN') ? 'GWRTN' : 'GW';
+        kind[i] = kGw;
+        if (i > 0 && !d.centrali[i - 1].gw) kind[i - 1] = kGw;
+        if (i + 1 < cen.length && !d.centrali[i + 1].gw) kind[i + 1] = kGw;
       });
       if (iFirst < cen.length) kind[iFirst] = 'START';
       if (iLast >= 0)          kind[iLast]  = 'END';
@@ -321283,11 +321304,15 @@ window._buildUnifiedCostBlock = function(opts) {
       // ID Collegamenti: uno per riga, con i gateway al posto giusto
       var idsArr = [], idsFonts = [];
       d.links.forEach(function(l, i){
-        if (d.gwRows[i]) { idsArr.push('[' + d.gwRows[i] + ']'); idsFonts.push(_rFont('GW', 10)); }
+        if (d.gwRows[i]) {
+          idsArr.push('[' + d.gwRows[i] + ']');
+          idsFonts.push(_rFont(_s(d.gwRows[i]).toUpperCase() === 'RTN' ? 'GWRTN' : 'GW', 10));
+        }
         idsArr.push(l.id); idsFonts.push(_idFont(l));
       });
       if (d.gwRows[d.links.length]) {
-        idsArr.push('[' + d.gwRows[d.links.length] + ']'); idsFonts.push(_rFont('GW', 10));
+        idsArr.push('[' + d.gwRows[d.links.length] + ']');
+        idsFonts.push(_rFont(_s(d.gwRows[d.links.length]).toUpperCase() === 'RTN' ? 'GWRTN' : 'GW', 10));
       }
       var idsRt = _richLinesF(idsArr, idsFonts, null, null);
 
@@ -321325,9 +321350,10 @@ window._buildUnifiedCostBlock = function(opts) {
         cat.forEach(function(t, i){
           if (isWn(t)){ kRt[i] = 'WARN'; return; }
           if (!isGw(t)) return;
-          kRt[i] = 'GW';
-          if (i > 0 && !isGw(cat[i - 1]) && !isWn(cat[i - 1])) kRt[i - 1] = 'GW';
-          if (i + 1 < cat.length && !isGw(cat[i + 1]) && !isWn(cat[i + 1])) kRt[i + 1] = 'GW';
+          var kG = (t.indexOf('RTN') === 0 || t.indexOf('\uD83C\uDF10') === 0) ? 'GWRTN' : 'GW';
+          kRt[i] = kG;
+          if (i > 0 && !isGw(cat[i - 1]) && !isWn(cat[i - 1])) kRt[i - 1] = kG;
+          if (i + 1 < cat.length && !isGw(cat[i + 1]) && !isWn(cat[i + 1])) kRt[i + 1] = kG;
         });
         var iP = 0, iA = cat.length - 1;
         while (iP < cat.length && (isGw(cat[iP]) || isWn(cat[iP]))) iP++;
@@ -321603,7 +321629,8 @@ window._buildUnifiedCostBlock = function(opts) {
                             _nomeC, c.clli, (c.gw && !c.racc) ? 'GATEWAY' : c.tipo]);
         r.font = { size: 10 };
         _borderRow(r, H2.length);
-        rows.push({ row: r, gw: c.gw, racc: !!c.racc });
+        rows.push({ row: r, gw: c.gw, racc: !!c.racc,
+                    rtn: !!(c.gw && !c.racc && _s(c.nome).toUpperCase() === 'RTN') });
         n2++;
       });
       rows.forEach(function(x, i){
@@ -321613,12 +321640,15 @@ window._buildUnifiedCostBlock = function(opts) {
           _fillRow(x.row, H2.length, C_RACC_BG);
           return;
         }
-        x.row.font = { size: 10, bold: true, color: { argb: C_GW_TX } };
-        _fillRow(x.row, H2.length, C_GW_BG);
+        var gTx   = x.rtn ? C_RTN_TX     : C_GW_TX;
+        var gBg   = x.rtn ? C_RTN_BG     : C_GW_BG;
+        var gSide = x.rtn ? C_RTNSIDE_BG : C_GWSIDE_BG;
+        x.row.font = { size: 10, bold: true, color: { argb: gTx } };
+        _fillRow(x.row, H2.length, gBg);
         [i - 1, i + 1].forEach(function(j){
           if (j < 0 || j >= rows.length || rows[j].gw) return;
-          rows[j].row.font = { size: 10, bold: true, color: { argb: C_GW_TX } };
-          _fillRow(rows[j].row, H2.length, C_GWSIDE_BG);
+          rows[j].row.font = { size: 10, bold: true, color: { argb: gTx } };
+          _fillRow(rows[j].row, H2.length, gSide);
         });
       });
       // Partenza e arrivo del percorso: hanno la precedenza sul viola dei gateway
@@ -321662,9 +321692,10 @@ window._buildUnifiedCostBlock = function(opts) {
       function gwRow(tipo){
         var r = ws3.addRow([d.label, _tipoLabel(d.tipo), '--', 'GW', 'GATEWAY', '--', '--', '--',
                             tipo, '--', '--', '--', '--']);
-        r.font = { size: 10, bold: true, color: { argb: C_GW_TX } };
+        var _isRtn = _s(tipo).toUpperCase() === 'RTN';
+        r.font = { size: 10, bold: true, color: { argb: _isRtn ? C_RTN_TX : C_GW_TX } };
         r.alignment = { vertical: 'middle', horizontal: 'left' };
-        _fillRow(r, H3.length, C_GW_BG);
+        _fillRow(r, H3.length, _isRtn ? C_RTN_BG : C_GW_BG);
         _borderRow(r, H3.length);
         n3++;
       }
@@ -321747,6 +321778,9 @@ window._buildUnifiedCostBlock = function(opts) {
       ] };
       return c;
     }
+    var KMZ_RTN_LABEL = 'Rete di Trasporto Nazionale [RTN]';
+    function _isRtnGw(v){ return _s(v).toUpperCase() === 'RTN'; }
+    function _gwLabel(v){ return _isRtnGw(v) ? KMZ_RTN_LABEL : _s(v); }
     function _reteLabel(r){
       var t = _s(r).toUpperCase();
       if (t === 'RA') return 'Rete Aggregation';
@@ -321808,9 +321842,12 @@ window._buildUnifiedCostBlock = function(opts) {
               ws4.getCell(rk, rc2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: _bg } };
             }
           } else {
-            putBand(rk, c.nome, { bold: true, size: 10, color: { argb: _tx } }, _bg, false);
+            var _rtnC = _isRtnGw(c.nome);
+            putBand(rk, _gwLabel(c.nome),
+                    { bold: true, size: 10, color: { argb: _rtnC ? C_RTN_TX : _tx } },
+                    _rtnC ? C_RTN_BG : _bg, false);
           }
-          rows.push({ r: rk, gw: true, racc: !!c.racc });
+          rows.push({ r: rk, gw: true, racc: !!c.racc, rtn: _isRtnGw(c.nome) && !c.racc });
           rk++;
           return;
         }
@@ -321833,8 +321870,8 @@ window._buildUnifiedCostBlock = function(opts) {
       }
       rows.forEach(function(x, i){
         if (!x.gw) return;
-        var _tx2 = x.racc ? C_RACC_TX : C_GW_TX;
-        var _bg2 = x.racc ? C_RACC_BG : C_GWSIDE_BG;
+        var _tx2 = x.racc ? C_RACC_TX : (x.rtn ? C_RTN_TX : C_GW_TX);
+        var _bg2 = x.racc ? C_RACC_BG : (x.rtn ? C_RTNSIDE_BG : C_GWSIDE_BG);
         [i - 1, i + 1].forEach(function(j){
           if (j < 0 || j >= rows.length || rows[j].gw) return;
           for (var col = 1; col <= KMZ_COLS; col++){
@@ -321854,7 +321891,10 @@ window._buildUnifiedCostBlock = function(opts) {
       var numL = 0;
       d.links.forEach(function(l, i){
         if (d.gwRows[i]){
-          putBand(rk, d.gwRows[i], { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG, false);
+          var _rtnL = _isRtnGw(d.gwRows[i]);
+          putBand(rk, _gwLabel(d.gwRows[i]),
+                  { bold: true, size: 10, color: { argb: _rtnL ? C_RTN_TX : C_GW_TX } },
+                  _rtnL ? C_RTN_BG : C_GW_BG, false);
           rk++;
         }
         if (l.rete === 'RACC'){
@@ -321878,16 +321918,19 @@ window._buildUnifiedCostBlock = function(opts) {
         rk++;
       });
       if (d.gwRows[d.links.length]){
-        putBand(rk, d.gwRows[d.links.length], { bold: true, size: 10, color: { argb: C_GW_TX } }, C_GW_BG, false);
+        var _rtnE = _isRtnGw(d.gwRows[d.links.length]);
+        putBand(rk, _gwLabel(d.gwRows[d.links.length]),
+                { bold: true, size: 10, color: { argb: _rtnE ? C_RTN_TX : C_GW_TX } },
+                _rtnE ? C_RTN_BG : C_GW_BG, false);
         rk++;
       }
+      // Note a piè di percorso: ripetute sotto ogni percorso esportato
+      rk++;
+      putNote(rk, '1', 'La Rete di Trasporto Regionale (RTR) utilizzata è la Revolution e si divide in Rete CORE (RC) e Rete Aggregation (RA)');
+      rk++;
+      putNote(rk, '2', "L'Univoco RA è composto nel seguente modo: (Arco|Id Collegamento|Subpath|Progressivo Ramo dell'Arco)");
       rk++;
     });
-
-    // ── Note a piè di pagina ──────────────────────────────────────────────────
-    putNote(rk, '1', 'La Rete di Trasporto Regionale (RTR) utilizzata è la Revolution e si divide in Rete CORE (RC) e Rete Aggregation (RA)');
-    rk++;
-    putNote(rk, '2', "L'Univoco RA è composto nel seguente modo: (Arco|Id Collegamento|Subpath|Progressivo Ramo dell'Arco)");
     return wb;
   }
 
