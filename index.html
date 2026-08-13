@@ -26,12 +26,24 @@
 ║     Note) e nel documento .docx del Generatore Info KMZ                          ║
 ║   • Note IRP e documento KMZ: importando il TXT la nota del raccordo viene       ║
 ║     riconosciuta e aggiunta da sola a Nota Lavorante e Nota File Condiviso       ║
-║   • La selezione dei percorsi non si azzera piu' dopo un export: si puo'         ║
-║     esportare piu' volte, anche in formati diversi, senza rifarla                ║
-║   • FIX export TXT RC: selezionando il solo percorso Div il file usciva con la   ║
-║     sola intestazione, perche' lo Std non selezionato faceva saltare il base     ║
-║   • Colonna ID Collegamenti: 8 per riga nel tab Unificato (6 sulla riga che      ║
-║     apre con il raccordo) e Top 4 allineata alla tabella Std in entrambi i tab   ║
+║   • EXPORT XLSX (tab Ricerca Percorso RC e Unificato):                           ║
+║     - Bottoni: "Esporta TXT (N)" e "Esporta XLSX (N)" nella barra di selezione  ║
+║     - 5 Fogli: Riepilogo (intestazione + tabella percorsi con colori come       ║
+║       a video, distanza ripartita per tratta RA1/RA2/RC/RTN, logici fisici);     ║
+║       Note (Nota Lavorante, File Condiviso, Note Costi per tratta con HW         ║
+║       tariffario e compilazione automatica subpath non attivi); Centrali         ║
+║       (gateway e duplicate in viola); Collegamenti (con righe gateway in         ║
+║       posizione); KMZ (replica del documento Analisi Fattibilita')               ║
+║     - Costi nel Riepilogo: "Includi Costi" aggiunge "Costo stimato" e            ║
+║       "Dettaglio Costi" per zona con importi; HW da tariffario in Note           ║
+║     - Selezione persistente: non si azzera dopo l'export. Esporta piu' volte     ║
+║       anche in formati diversi senza rifare le spunte. Si chiude con Annulla    ║
+║   • Colonna ID Collegamenti (tab RA e Unificato):                               ║
+║     - Concatenazione: ID Collegamento • Stato • Alert nella stessa colonna       ║
+║     - Separatore viola • con spazi per chiarezza                                 ║
+║     - Elimina overlapping tra ID e Stato che compariva su schermi ristretti      ║
+║     - 8 per riga nel tab Unificato (6 sulla riga che apre con raccordo)          ║
+║     - Top 4 allineata alla tabella Std in entrambi i tab                         ║
 ║   • Dati Servizio (export XLSX RC e Unificato): toggle SI/NO con checkbox al     ║
 ║     posto dei menu a tendina. Mostra sempre le due opzioni, default sempre NO,   ║
 ║     un clic sul checkbox per attivare/disattivare senza aprire menu              ║
@@ -751,6 +763,15 @@
      ╚═══════════════════════════════════════════════════════════════════════════════╝ -->
 
 <script>
+  // *** TIMESTAMP GLOBALE PER NOMI FILE EXPORT -> [gg_mm_aaaa-hh.mm.ss] ***
+  window.getFormattedTimestamp = function() {
+    var d = new Date();
+    var p = function(n) { return (n < 10 ? '0' : '') + n; };
+    return p(d.getDate()) + '_' + p(d.getMonth() + 1) + '_' + d.getFullYear() +
+           '-' + p(d.getHours()) + '.' + p(d.getMinutes()) + '.' + p(d.getSeconds());
+  };
+  window.getFileStamp = function() { return '[' + window.getFormattedTimestamp() + ']'; };
+
   // *** SCROLL TO TOP - DISABILITA RIPRISTINO AUTOMATICO DEL BROWSER ***
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
@@ -19228,7 +19249,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
-    const timestamp = new Date().toISOString().slice(0, 10);
+    const timestamp = window.getFileStamp();
     
     link.setAttribute('href', url);
     link.setAttribute('download', 'CRO_Memo_' + timestamp + '.csv');
@@ -19535,7 +19556,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       // Download
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
-      const timestamp = new Date().toISOString().slice(0, 10);
+      const timestamp = window.getFileStamp();
       const filename = 'DIARIO_LAVORO_SdF_' + timestamp + '.xlsx';
       
       link.setAttribute('href', url);
@@ -21383,29 +21404,6 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
 </div>
 
-                <!-- Feature RTN: Routing Interregionale -->
-                <div class="feature-card" style="border-left: 3px solid #0891b2;">
-                    <div class="feature-icon" style="color: #0891b2;">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div class="feature-header">
-                        <h3 class="feature-title" style="color: #0891b2;">🌐 RTN — Routing Interregionale</h3>
-                        <span class="feature-badge" style="background: #f0f9ff; color: #0891b2;">Nuovo V50</span>
-                    </div>
-                    <div style="margin-top:0.35rem;"><span style="font-size:0.65rem;background:#f0f9ff;color:#0891b2;padding:2px 8px;border-radius:3px;font-weight:700;display:inline-block;">RETAIL &amp; WHOLESALE</span></div>
-                    <p class="feature-desc">Routing automatico interregionale via <strong>Rete di Trasporto Nazionale</strong>. Attivando il toggle <strong style="color:#0891b2;">🌐 RTN</strong> nel Tab Unificato, il sistema costruisce il percorso in 3 segmenti: ① <strong>Zona A</strong> — dalla centrale di partenza al Nodo A1 della propria area (routing RC-first); ② <strong>Backbone RTN</strong> — salto virtuale tra i due Nodi A1 interregionali; ③ <strong>Zona B</strong> — dal Nodo A1 dell'area di arrivo alla centrale di destinazione. I <strong>36 Nodi A1</strong> coprono tutte le aree geografiche italiane (CB, LA, LO, NE, ER, TO, LI, PV, PU, MU, AM, CA, SA, SI, FV, TA). Di questi, <strong>29 sono A1 standard</strong> (interconnessione RTN + accesso PE abilitato) e <strong>8 sono A1_DIV</strong> — utilizzabili esclusivamente come centrali RTN di diversificazione in caso di estrema necessità di Area/Zona, con accesso PE <strong>non abilitato</strong> (BERGAMO CAMPAGNOLA, BRESCIA KENNEDY, COMO DANTE, LAMEZIA/A, MODENA, PIACENZA /A, RIMINI, SASSARI). La diversificazione avviene per zone separate: <strong>▶ Div Zona A</strong> usa il Nodo A1 alternativo della zona di partenza; <strong>▶ Div Zona B</strong> (disponibile su ogni riga Div A) usa il Nodo A1 alternativo della zona di arrivo. I Div non condividono nessun collegamento fisico con il percorso Std. Il bottone <strong>🌐 Cambia interconnessione RTN</strong> permette di scegliere manualmente i Nodi A1 di interconnessione del backbone tra le alternative della stessa area/macro-regione e ricalcolare il percorso.</p>
-                    <div class="feature-specs">
-                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">36 Nodi A1</span>
-                        <span class="spec-tag" style="background: #fff7ed; color: #b45309;">8 A1_DIV</span>
-                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">3 Segmenti</span>
-                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">Div Zona A+B</span>
-                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">RC-First</span>
-                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">Cambio Interconnessione</span>
-                    </div>
-                </div>
-
 <!-- Feature 1: Raccordo in fibra -->
 <div class="feature-card" style="border-left: 3px solid #d1008f; background: linear-gradient(135deg,#fff 0%,#fdf2f8 100%);">
   <div class="feature-icon" style="color: #d1008f;">
@@ -21478,6 +21476,29 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <span class="spec-tag" style="background:#f0fdf4;color:#059669;">Default NO</span>
   </div>
 </div>
+
+                <!-- Feature RTN: Routing Interregionale -->
+                <div class="feature-card" style="border-left: 3px solid #0891b2;">
+                    <div class="feature-icon" style="color: #0891b2;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="feature-header">
+                        <h3 class="feature-title" style="color: #0891b2;">🌐 RTN — Routing Interregionale</h3>
+                        <span class="feature-badge" style="background: #f0f9ff; color: #0891b2;">Nuovo V50</span>
+                    </div>
+                    <div style="margin-top:0.35rem;"><span style="font-size:0.65rem;background:#f0f9ff;color:#0891b2;padding:2px 8px;border-radius:3px;font-weight:700;display:inline-block;">RETAIL &amp; WHOLESALE</span></div>
+                    <p class="feature-desc">Routing automatico interregionale via <strong>Rete di Trasporto Nazionale</strong>. Attivando il toggle <strong style="color:#0891b2;">🌐 RTN</strong> nel Tab Unificato, il sistema costruisce il percorso in 3 segmenti: ① <strong>Zona A</strong> — dalla centrale di partenza al Nodo A1 della propria area (routing RC-first); ② <strong>Backbone RTN</strong> — salto virtuale tra i due Nodi A1 interregionali; ③ <strong>Zona B</strong> — dal Nodo A1 dell'area di arrivo alla centrale di destinazione. I <strong>36 Nodi A1</strong> coprono tutte le aree geografiche italiane (CB, LA, LO, NE, ER, TO, LI, PV, PU, MU, AM, CA, SA, SI, FV, TA). Di questi, <strong>29 sono A1 standard</strong> (interconnessione RTN + accesso PE abilitato) e <strong>8 sono A1_DIV</strong> — utilizzabili esclusivamente come centrali RTN di diversificazione in caso di estrema necessità di Area/Zona, con accesso PE <strong>non abilitato</strong> (BERGAMO CAMPAGNOLA, BRESCIA KENNEDY, COMO DANTE, LAMEZIA/A, MODENA, PIACENZA /A, RIMINI, SASSARI). La diversificazione avviene per zone separate: <strong>▶ Div Zona A</strong> usa il Nodo A1 alternativo della zona di partenza; <strong>▶ Div Zona B</strong> (disponibile su ogni riga Div A) usa il Nodo A1 alternativo della zona di arrivo. I Div non condividono nessun collegamento fisico con il percorso Std. Il bottone <strong>🌐 Cambia interconnessione RTN</strong> permette di scegliere manualmente i Nodi A1 di interconnessione del backbone tra le alternative della stessa area/macro-regione e ricalcolare il percorso.</p>
+                    <div class="feature-specs">
+                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">36 Nodi A1</span>
+                        <span class="spec-tag" style="background: #fff7ed; color: #b45309;">8 A1_DIV</span>
+                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">3 Segmenti</span>
+                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">Div Zona A+B</span>
+                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">RC-First</span>
+                        <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">Cambio Interconnessione</span>
+                    </div>
+                </div>
 
 <!-- Feature: Correzioni V50.08.02 -->
 <div class="feature-card" style="border-left: 3px solid #b45309; background: linear-gradient(135deg,#fff 0%,#fffbeb 100%);">
@@ -22248,6 +22269,12 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
 </div>
                 </div>
+              </div>
+              <!-- Bottoni controllo Dati Servizio (nascosti per default, visibili quando Dati Servizio è attivo) -->
+              <div style="display:flex;align-items:center;gap:5px;padding:0;display:none;" id="rcDsControlButtons">
+                <button class="expsm-inline-btn" onclick="window.expsmDsSelectAll('rc')" title="Mette tutti i campi SI/NO a SI">✅ Seleziona Tutto</button>
+                <button class="expsm-inline-btn" onclick="window.expsmDsDeselectAll('rc')" title="Mette tutti i campi SI/NO a NO">⭕ Deseleziona Tutto</button>
+                <button class="expsm-inline-btn" onclick="window.expsmDsReset('rc')" title="Mette tutto a NO e pulisce i campi di testo">🔄 Reset</button>
               </div>
               <div style="flex:1"></div>
               <span class="expsm-actions">
@@ -24646,6 +24673,12 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
 </div>
                 </div>
+              </div>
+              <!-- Bottoni controllo Dati Servizio (nascosti per default, visibili quando Dati Servizio è attivo) -->
+              <div style="display:flex;align-items:center;gap:5px;padding:0;display:none;" id="unifiedDsControlButtons">
+                <button class="expsm-inline-btn" onclick="window.expsmDsSelectAll('unified')" title="Mette tutti i campi SI/NO a SI">✅ Seleziona Tutto</button>
+                <button class="expsm-inline-btn" onclick="window.expsmDsDeselectAll('unified')" title="Mette tutti i campi SI/NO a NO">⭕ Deseleziona Tutto</button>
+                <button class="expsm-inline-btn" onclick="window.expsmDsReset('unified')" title="Mette tutto a NO e pulisce i campi di testo">🔄 Reset</button>
               </div>
               <div style="flex:1"></div>
               <span class="expsm-actions">
@@ -31427,7 +31460,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.google-earth.kmz' })
           .then(function(blob) {
             var sfFirst = kmzBlocks[0] ? (kmzBlocks[0].sf_num || 'KMZ') : 'KMZ';
-            var filename = 'Tracciato_' + sfFirst.replace(/[^a-zA-Z0-9]/g,'_') + '.kmz';
+            var filename = 'Tracciato_' + sfFirst.replace(/[^a-zA-Z0-9]/g,'_') + '_' + window.getFileStamp() + '.kmz';
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url; a.download = filename; a.click();
@@ -31503,7 +31536,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         zip.generateAsync({ type:'blob', mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
           .then(function(blob){
             var sfFirst = kmzBlocks[0] ? (kmzBlocks[0].sf_num||'KMZ') : 'KMZ';
-            var filename = 'Info_per_Kmz__' + sfFirst.replace(/[^a-zA-Z0-9]/g,'_') + '.docx';
+            var filename = 'Info_per_Kmz__' + sfFirst.replace(/[^a-zA-Z0-9]/g,'_') + '_' + window.getFileStamp() + '.docx';
             if (window.saveAs) {
               saveAs(blob, filename);
             } else {
@@ -34329,7 +34362,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 
   function pxmDownloadCSV(csv, filenamePrefix) {
     const now = new Date();
-    const fileName = filenamePrefix + '_' + now.toISOString().slice(0, 10) + '.csv';
+    const fileName = filenamePrefix + '_' + window.getFileStamp() + '.csv';
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -287837,7 +287870,7 @@ window.natExportSelectionCSV = function() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'NAT_Percorso_' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.download = 'NAT_Percorso_' + window.getFileStamp() + '.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -287875,7 +287908,7 @@ window.natExportSelectionCSV = function() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'NAT_Selezione_' + new Date().toISOString().slice(0, 10) + '.csv';
+    a.download = 'NAT_Selezione_' + window.getFileStamp() + '.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -289488,7 +289521,7 @@ let dbState = null;
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = (typeof currentDbScope !== 'undefined' && currentDbScope === 'RA') ? 'CRO_Enterprise_DB_RA_Italia.csv' : 'CRO_Enterprise_DB_RC_Italia.csv';
+    a.download = ((typeof currentDbScope !== 'undefined' && currentDbScope === 'RA') ? 'CRO_Enterprise_DB_RA_Italia_' : 'CRO_Enterprise_DB_RC_Italia_') + window.getFileStamp() + '.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -292334,7 +292367,7 @@ function getRouteVendor(route) {
 
     const now = new Date();
     const dateStr = now.toLocaleString('it-IT');
-    const datePart = now.toISOString().slice(0, 10);
+    const datePart = window.getFileStamp();
 
     const firstRoute = baseRoutes[0] || {};
     const nodes = firstRoute.nodes || [];
@@ -292451,7 +292484,7 @@ function getRouteVendor(route) {
 
     const now = new Date();
     const dateStr = now.toLocaleString('it-IT');
-    const datePart = now.toISOString().slice(0, 10);
+    const datePart = window.getFileStamp();
 
     const firstRoute = baseRoutes[0] || {};
     const nodes = firstRoute.nodes || [];
@@ -297544,7 +297577,7 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
 
     const now = new Date();
     const dateStr = now.toLocaleString('it-IT');
-    const datePart = now.toISOString().slice(0, 10);
+    const datePart = window.getFileStamp();
 
     const firstRoute = baseRoutesRA[0] || {};
     const nodes = firstRoute.nodes || [];
@@ -297644,7 +297677,7 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
 
     const now = new Date();
     const dateStr = now.toLocaleString('it-IT');
-    const datePart = now.toISOString().slice(0, 10);
+    const datePart = window.getFileStamp();
 
     const firstRoute = baseRoutesRA[0] || {};
     const nodes = firstRoute.nodes || [];
@@ -298449,7 +298482,7 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
         if (_d)       return '[' + _san(_d) + '] ';
         return '';
       })();
-      const fileName = _sdfPfxUnStd + 'CRO_UNIFIED_Std_' + new Date().toISOString().slice(0, 10) + '.txt';
+      const fileName = _sdfPfxUnStd + 'CRO_UNIFIED_Std_' + window.getFileStamp() + '.txt';
       const blob = new Blob([txt], { type: 'text/plain;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -298817,7 +298850,7 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
         if (_d)       return '[' + _san(_d) + '] ';
         return '';
       })();
-      const fileName = _sdfPfxUnDiv + 'CRO_UNIFIED_StdDiv_' + new Date().toISOString().slice(0, 10) + '.txt';
+      const fileName = _sdfPfxUnDiv + 'CRO_UNIFIED_StdDiv_' + window.getFileStamp() + '.txt';
       const blob = new Blob([txt], { type: 'text/plain;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -299272,7 +299305,7 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
     
     const now = new Date();
     const dateStr = now.toLocaleString('it-IT');
-    const datePart = now.toISOString().slice(0, 10);
+    const datePart = window.getFileStamp();
     
     const firstRoute = multiArcoRoutesRA[0];
     const startLabel = firstRoute.startLabel || '';
@@ -302232,7 +302265,7 @@ window.exportDbCsvNA = function() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'Collegamenti_NON_ATTIVI.csv';
+  a.download = 'Collegamenti_NON_ATTIVI_' + window.getFileStamp() + '.csv';
   a.click();
 };
 
@@ -304592,7 +304625,7 @@ function exportCostSelection(button) {
 
     var a = document.createElement('a');
     a.href = url;
-    a.download = 'Analisi_Costi_Fattibilita.txt';
+    a.download = 'Analisi_Costi_Fattibilita_' + window.getFileStamp() + '.txt';
     document.body.appendChild(a);
     a.click();
     setTimeout(function() {
@@ -305231,7 +305264,7 @@ window.copyLinkRow = function(scope, field, button) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'report_confronto_db.txt';
+    a.download = 'report_confronto_db_' + window.getFileStamp() + '.txt';
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -305245,7 +305278,7 @@ window.copyLinkRow = function(scope, field, button) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'db_nuovo_foglio1.json';
+    a.download = 'db_nuovo_foglio1_' + window.getFileStamp() + '.json';
     a.click();
     URL.revokeObjectURL(url);
     
@@ -316877,7 +316910,7 @@ div[style*="background:#f3f4f6"] label:hover span {
     
     // Download
     const now = new Date();
-    const fileName = 'CRO_OccupazioneRete_' + now.toISOString().slice(0, 10) + '.csv';
+    const fileName = 'CRO_OccupazioneRete_' + window.getFileStamp() + '.csv';
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -317740,7 +317773,7 @@ div[style*="background:#f3f4f6"] label:hover span {
     }
     txt += '\n════════════════════════════════════════════════════════════════════════════\n';
     
-    const fileName = 'CRO_AnalisiSubpath_' + analisiSubpathData.searchTerm.replace(/[^a-zA-Z0-9]/g, '_') + '_' + now.toISOString().slice(0, 10) + '.txt';
+    const fileName = 'CRO_AnalisiSubpath_' + analisiSubpathData.searchTerm.replace(/[^a-zA-Z0-9]/g, '_') + '_' + window.getFileStamp() + '.txt';
     const blob = new Blob([txt], { type: 'text/plain;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -319532,7 +319565,86 @@ div[style*="background:#f3f4f6"] label:hover span {
     var bar = pfx + 'SelBar';
     var chk = document.getElementById(bar + 'DsChk');
     var row = document.getElementById(bar + 'DsRow');
-    if (row) row.style.display = (chk && chk.checked) ? 'flex' : 'none';
+    var btns = document.getElementById(pfx + 'DsControlButtons');
+    var isChecked = chk && chk.checked;
+    if (row) row.style.display = isChecked ? 'flex' : 'none';
+    if (btns) btns.style.display = isChecked ? 'flex' : 'none';
+  };
+
+  // ── Bottoni controllo Dati Servizio ──────────────────────────────────────
+  window.expsmDsSelectAll = function(pfx) {
+    var barId = pfx + 'SelBar';
+    // Metti tutti i radio button a SI
+    var siRadios = document.querySelectorAll('input[name^="' + barId + 'Ds_"][value="SI"]');
+    siRadios.forEach(function(radio) {
+      radio.checked = true;
+      // Aggiorna styling se presente
+      var labels = radio.closest('label').parentElement.querySelectorAll('label');
+      labels.forEach(function(lbl) {
+        var inp = lbl.querySelector('input[type="radio"]');
+        if (inp && inp.value === 'SI') {
+          lbl.style.background = '#c6f6d5';
+          lbl.style.color = '#22543d';
+          lbl.style.fontWeight = '600';
+        } else if (inp) {
+          lbl.style.background = '';
+          lbl.style.color = '';
+          lbl.style.fontWeight = '';
+        }
+      });
+    });
+  };
+
+  window.expsmDsDeselectAll = function(pfx) {
+    var barId = pfx + 'SelBar';
+    // Metti tutti i radio button a NO
+    var noRadios = document.querySelectorAll('input[name^="' + barId + 'Ds_"][value="NO"]');
+    noRadios.forEach(function(radio) {
+      radio.checked = true;
+      // Aggiorna styling se presente
+      var labels = radio.closest('label').parentElement.querySelectorAll('label');
+      labels.forEach(function(lbl) {
+        var inp = lbl.querySelector('input[type="radio"]');
+        if (inp && inp.value === 'NO') {
+          lbl.style.background = '#fed7d7';
+          lbl.style.color = '#742a2a';
+          lbl.style.fontWeight = '600';
+        } else if (inp) {
+          lbl.style.background = '';
+          lbl.style.color = '';
+          lbl.style.fontWeight = '';
+        }
+      });
+    });
+  };
+
+  window.expsmDsReset = function(pfx) {
+    var barId = pfx + 'SelBar';
+    // Metti tutti i radio button a NO
+    var noRadios = document.querySelectorAll('input[name^="' + barId + 'Ds_"][value="NO"]');
+    noRadios.forEach(function(radio) {
+      radio.checked = true;
+      // Aggiorna styling
+      var labels = radio.closest('label').parentElement.querySelectorAll('label');
+      labels.forEach(function(lbl) {
+        var inp = lbl.querySelector('input[type="radio"]');
+        if (inp && inp.value === 'NO') {
+          lbl.style.background = '#fed7d7';
+          lbl.style.color = '#742a2a';
+          lbl.style.fontWeight = '600';
+        } else if (inp) {
+          lbl.style.background = '';
+          lbl.style.color = '';
+          lbl.style.fontWeight = '';
+        }
+      });
+    });
+    // Pulisci i campi di testo: profilo, velocita, interfaccia, car
+    var textFields = ['profilo', 'velocita', 'interfaccia', 'car'];
+    textFields.forEach(function(field) {
+      var el = document.getElementById(barId + 'Ds_' + field);
+      if (el) el.value = '';
+    });
   };
 
   window._readDatiServizio = function(barId){
@@ -321613,7 +321725,7 @@ window._buildUnifiedCostBlock = function(opts) {
       var hasD  = items.some(function(i){ return i.tipo === 'Div'; });
       var name  = _sdfPrefix() + 'CRO_' + (isUni ? 'UNIFIED' : 'RC') + '_' +
                   (hasD ? 'StdDiv' : 'Std') + '_' +
-                  new Date().toISOString().slice(0, 10) + '.xlsx';
+                  window.getFileStamp() + '.xlsx';
 
       wb.xlsx.writeBuffer().then(function(buf){
         var blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -322146,7 +322258,7 @@ window.exportCorrelazione=function(){
     var blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
     var url=URL.createObjectURL(blob);
     var a=document.createElement('a');
-    a.href=url; a.download='correlazione_ra_rc.xlsx';
+    a.href=url; a.download='correlazione_ra_rc_' + window.getFileStamp() + '.xlsx';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function(){URL.revokeObjectURL(url);},2000);
   });
