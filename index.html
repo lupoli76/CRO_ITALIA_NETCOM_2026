@@ -296,6 +296,14 @@
 ║     e il bottone diventa Riduci quando e' aperta. I tre bottoni della            ║
 ║     colonna Azioni stanno incolonnati e non vanno piu' a capo a meta'            ║
 ║     parola: Percorso Div, Espandi e Maps, uno per riga                           ║
+║   • NOME DELLA CENTRALE nella sezione CENTRALI dell'export TXT del tab           ║
+║     Unificato: si leggeva solo il CLLI. Li' i nodi del percorso sono             ║
+║     identificati dal CLLI con il suffisso della rete (MILAITBZ::RC), e           ║
+║     quando il percorso non attraversa un gateway RA/RC ne' il backbone RTN       ║
+║     il generatore non passa dalla funzione che costruisce le etichette e         ║
+║     stampa il nodo cosi' com'e'. Ora il nome viene recuperato dai due            ║
+║     database con una mappa costruita una volta sola, e la riga diventa           ║
+║     NOME (CLLI) come nei tab RA e RC, che erano gia' corretti                    ║
 ║                                                                                  ║
 ║   CHANGELOG V50.08.13 | Ago 2026:                                                ║
 ║   ─────────────────────────                                                      ║
@@ -21885,6 +21893,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🏷️ Export TXT dell'Unificato</strong>: nella sezione CENTRALI si leggeva solo il CLLI, ora c'è anche il nome della centrale come nei tab RA e RC</li>
     <li><strong>📊 Tabelle e blocchi diversificati</strong>: griglia verticale, righe alternate calcolate via JavaScript, mini colonna per i bottoni di copia e palette dedicata a Div, Zona A e Zona B</li>
     <li><strong>📋 Tab di ricerca RA, RC e Unificato</strong>: note in un pannello laterale, layout a due colonne, sfondo per tipo di sezione, caselle squadrate, distanza dal cliente sotto il campo e archi ricalcolati dopo Trova Centrale Vicina</li>
     <li><strong>🏢 Area, zona e regione delle centrali</strong>: seconda riga con area, zona e regione in tutte le tendine dei campi centrale e sotto il valore scelto nella casella, con i Nodi A1 in blu, quelli di sola diversificazione in ambra e i Data Center in rosa</li>
@@ -39423,6 +39432,7 @@ PERCORSI ALTERNATIVI (Div):
             🗺️ V60.09.01 — Restyling di tabelle, tab di ricerca, Database, Costi, Analisi Fattibilità e Guida; schemi delle card ridisegnati ed etichette sulle mappe
           </summary>
           <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+              <li><strong>🏷️ Nome della centrale nell'export TXT</strong>: Nella sezione <em>CENTRALI</em> dell'export TXT del tab Unificato si leggeva solo il CLLI. Lì i nodi del percorso sono identificati dal CLLI con il suffisso della rete, per esempio <code>MILAITBZ::RC</code>, e quando il percorso non attraversa un gateway RA/RC né il backbone RTN il generatore non passa dalla funzione che costruisce le etichette e stampa il nodo così com'è. Ora il nome viene recuperato dai due database, con una mappa costruita una volta sola alla prima chiamata, e la riga diventa <em>NOME (CLLI)</em>. I tab RA e RC erano già corretti, perché lì il nodo porta già il nome.</li>
             <div class="cro-cronologia">
               <div class="cro-cron-tit">🗓️ Cronologia della lavorazione</div>
               <div class="cro-cron-nota">Revisione lavorata dal 16 al 30 agosto 2026, con rilascio previsto il 1 settembre 2026. Il 21 agosto non ci sono state lavorazioni. Le date sono indicative: sono state ricavate dall'orologio durante i collaudi, quindi una voce lavorata a tarda sera può essere registrata sul giorno successivo. Clicca una giornata per aprirne le note.</div>
@@ -330286,6 +330296,36 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
     }).join(' \u2022 ');
   }
 
+  /* Nome della centrale a partire dal nodo del percorso. Nel tab Unificato il
+     nodo e' il solo CLLI con il suffisso della rete (MILAITBZ::RC) e il nome
+     va recuperato dai due database; negli altri tab il nodo e' gia'
+     "NOME (CLLI)" e viene restituito com'e'. La mappa si costruisce una volta
+     sola alla prima chiamata. */
+  var _croMappaCentrali = null;
+
+  function croMappaCentrali() {
+    if (_croMappaCentrali) return _croMappaCentrali;
+    var m = {};
+    [window.RAW_DB, window.RAW_DB_RA].forEach(function (db) {
+      if (!Array.isArray(db)) return;
+      db.forEach(function (r) {
+        var ca = String(r.CLLI_A || '').trim().toUpperCase();
+        var cz = String(r.CLLI_Z || '').trim().toUpperCase();
+        if (ca && !m[ca]) m[ca] = String(r.GAT_A || '').trim();
+        if (cz && !m[cz]) m[cz] = String(r.GAT_Z || '').trim();
+      });
+    });
+    _croMappaCentrali = m;
+    return m;
+  }
+
+  function croEtichettaCentrale(nd) {
+    var t = String(nd == null ? '' : nd).replace(/::(RA|RC)$/, '').trim();
+    if (!t || t.indexOf('(') > -1) return t;
+    var nome = croMappaCentrali()[t.toUpperCase()];
+    return nome ? (nome + ' (' + t + ')') : t;
+  }
+
   window.croTxtBlocco = function (label, route, rete) {
     var edges = (route.edges || []).slice();
     /* nei tab RA e RC gli archi non portano il campo source: lo si deduce */
@@ -330337,7 +330377,7 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
       });
     } else {
       nodes.forEach(function (nd, i) {
-        out.push(' .' + n2(i + 1) + '. ' + String(nd).replace(/::(RA|RC)$/, ''));
+        out.push(' .' + n2(i + 1) + '. ' + croEtichettaCentrale(nd));
         var er = edges[i];
         if (er && er.source === 'RACC') out.push(' .--. [RACCORDO IN FIBRA] DA REALIZZARE');
       });
@@ -330624,6 +330664,36 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
     }).join(' \u2022 ');
   }
 
+  /* Nome della centrale a partire dal nodo del percorso. Nel tab Unificato il
+     nodo e' il solo CLLI con il suffisso della rete (MILAITBZ::RC) e il nome
+     va recuperato dai due database; negli altri tab il nodo e' gia'
+     "NOME (CLLI)" e viene restituito com'e'. La mappa si costruisce una volta
+     sola alla prima chiamata. */
+  var _croMappaCentrali = null;
+
+  function croMappaCentrali() {
+    if (_croMappaCentrali) return _croMappaCentrali;
+    var m = {};
+    [window.RAW_DB, window.RAW_DB_RA].forEach(function (db) {
+      if (!Array.isArray(db)) return;
+      db.forEach(function (r) {
+        var ca = String(r.CLLI_A || '').trim().toUpperCase();
+        var cz = String(r.CLLI_Z || '').trim().toUpperCase();
+        if (ca && !m[ca]) m[ca] = String(r.GAT_A || '').trim();
+        if (cz && !m[cz]) m[cz] = String(r.GAT_Z || '').trim();
+      });
+    });
+    _croMappaCentrali = m;
+    return m;
+  }
+
+  function croEtichettaCentrale(nd) {
+    var t = String(nd == null ? '' : nd).replace(/::(RA|RC)$/, '').trim();
+    if (!t || t.indexOf('(') > -1) return t;
+    var nome = croMappaCentrali()[t.toUpperCase()];
+    return nome ? (nome + ' (' + t + ')') : t;
+  }
+
   window.croTxtBlocco = function (label, route, rete) {
     var edges = (route.edges || []).slice();
     /* nei tab RA e RC gli archi non portano il campo source: lo si deduce */
@@ -330675,7 +330745,7 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
       });
     } else {
       nodes.forEach(function (nd, i) {
-        out.push(' .' + n2(i + 1) + '. ' + String(nd).replace(/::(RA|RC)$/, ''));
+        out.push(' .' + n2(i + 1) + '. ' + croEtichettaCentrale(nd));
         var er = edges[i];
         if (er && er.source === 'RACC') out.push(' .--. [RACCORDO IN FIBRA] DA REALIZZARE');
       });
