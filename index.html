@@ -378,6 +378,19 @@
 ║   • RESET TAB riporta i tre interruttori allo stato di partenza: DC              ║
 ║     acceso, cioe' Data Center esclusi dal routing, Solo RC e RTN                 ║
 ║     spenti. Vale per RC e Unificato                                              ║
+║   • ANIMAZIONE AL PASSAGGIO DEL MOUSE sui bottoni che avevano fondo,             ║
+║     testo e cornice scritti nello stile in linea: lo stile in linea              ║
+║     vince sulle regole del foglio, quindi non succedeva niente. Ora              ║
+║     l'animazione e' riscritta con !important tenendo il colore che ogni          ║
+║     bottone ha gia'. Come gli altri bottoni cambia solo il fondo,                ║
+║     senza spostamenti ne' ombre. Riguarda Mappa NAT nei tre tab, il              ║
+║     bottone DC di                                                                ║
+║     RC e Unificato, e Inserisci Partenza/Arrivo, Solo RC e RTN                   ║
+║     nell'Unificato. Da spenti i tre della riga di calcolo hanno il               ║
+║     fondo bianco, quindi al posto della luminosita' schiariscono verso           ║
+║     il grigio chiaro. Da accesi il fondo tenue passa dal 12 al 24 per            ║
+║     cento del loro colore, perche' schiarire un fondo gia' tenue non si          ║
+║     vedeva. Stesso trattamento per Mappa NAT e Inserisci                         ║
 ║   • FASCIA, SCELTA DEL TAB: prendeva il primo tab-content senza la               ║
 ║     classe hidden, ma dentro gli altri tab ce ne sono di annidati e la           ║
 ║     scelta poteva sbagliare, lasciando la fascia spenta. Ora guarda              ║
@@ -39525,6 +39538,7 @@ PERCORSI ALTERNATIVI (Div):
               <li><strong>⬜ Fascia sotto la navigazione</strong>: Fra il fondo della barra dei tab e la quota dove si fermano la barra di export e l'intestazione restavano dodici pixel scoperti, e le righe della tabella si vedevano scorrere in quella striscia. Ora è coperta con il fondo della card, larga quanto la card e ancorata al fondo della barra dei tab. La striscia a parte però lasciava scoperto un filo in cui si vedeva ancora scorrere il testo, quindi è stata sostituita: barra di export e intestazione si fermano ora a 156 px, quattordici sotto la barra dei tab, e lo spazio è coperto da un riquadro alto 16 px disegnato sopra di loro con uno pseudo-elemento. Il riquadro si muove insieme all'elemento, quindi non può disallinearsi come faceva la striscia fissa e non resta nessuna cucitura.</li>
               <li><strong>↩️ Undo completo</strong>: Nei tab RA, RC e Unificato <em>Ripristina Parametri</em> e <em>Ripristina ed Esegui</em> riportavano solo una parte dei campi, quindi la cronologia serviva a poco. Ora la voce porta con sé tutto lo stato del tab: ogni casella e ogni tendina, le spunte dei filtri di stato, le liste scelte con <em>Sel. Multipla</em> e gli interruttori <em>RTN</em>, <em>Solo RC</em>, <em>DC</em> e <em>POP</em>. Gli interruttori non hanno una classe di stato, quindi l'accensione si legge dal colore di fondo che il tool scrive sul bottone, e il ripristino li riporta a posto con un clic invece che a mano: così gira anche la logica che il tool ci appende, per esempio lo svuotamento della cache del grafo quando cambia la modalità RTN. Il ripristino avviene subito e non con un rinvio: <em>Ripristina ed Esegui</em> lancia la ricerca appena finito, e con il rinvio la ricerca partiva con gli interruttori ancora vecchi.</li>
               <li><strong>⚡ DC, Solo RC e RTN nella riga di calcolo</strong>: Nel tab Unificato i tre interruttori non filtrano, cambiano il calcolo, e stavano fra i filtri con la misura dei bottoni piccoli. Ora stanno in coda a <em>Calcola Percorsi UNIFICATI</em>, <em>Undo</em> e <em>Reset Tab</em>, alti 50 px come loro, con un divisore prima del gruppo come nella barra di export. Il bottone <em>DC</em> sparisce da accanto a <em>Centrale da Evitare nel Routing</em>. I bottoni sono gli stessi di prima, spostati e rivestiti: i colori di acceso e spento restano quelli che il tool scrive da sé, rosso per Solo RC e ciano per RTN, con la cornice dello stesso colore, mentre da spenti hanno la cornice azzurra della famiglia. Il bottone <em>DC</em> prende l'icona del palazzo: il tool ne riscrive il contenuto a ogni clic e l'icona spariva per un istante facendo ballare la larghezza, quindi viene rimessa dentro la stessa chiamata, prima che il browser ridisegni, e il bottone ha una larghezza minima fissa; lo stesso vale per il <em>DC</em> del tab RC. Da accesi <em>Solo RC</em> e <em>RTN</em> hanno ora fondo tenue, testo e cornice del colore della modalità, perché il riempimento pieno scritto dal tool stonava con il resto della riga. L'ordine dei bottoni è ora fissato tab per tab: RA con <em>Calcola</em>, <em>Multi-Path</em>, <em>Undo</em>, divisore, <em>Reset Tab</em>; RC con <em>Calcola</em>, <em>Undo</em>, <em>DC</em>, divisore, <em>Reset Tab</em>; Unificato con <em>Calcola</em>, <em>Undo</em>, divisore, <em>DC</em>, <em>Solo RC</em>, <em>RTN</em>, divisore, <em>Reset Tab</em>. <em>Reset Tab</em> riporta i tre interruttori allo stato di partenza, <em>DC</em> acceso, cioè Data Center esclusi dal routing, <em>Solo RC</em> e <em>RTN</em> spenti, mentre prima li lasciava nell'ultimo stato.</li>
+              <li><strong>🖱️ Animazione al passaggio del mouse</strong>: Alcuni bottoni portano fondo, testo e cornice scritti nello stile in linea, e lo stile in linea vince sulle regole del foglio: al passaggio del mouse non succedeva niente. Ora l'animazione è riscritta con <code>!important</code> tenendo il colore che ogni bottone ha già, e si comporta come gli altri bottoni: cambia solo il fondo, che si scurisce appena, senza spostamenti né ombre. Riguarda <em>Mappa NAT</em> nei tre tab, il bottone <em>DC</em> di RC e Unificato, e <em>Inserisci Partenza/Arrivo</em>, <em>Solo RC</em> e <em>RTN</em> nell'Unificato. Da spenti i tre della riga di calcolo hanno il fondo bianco, quindi al posto della luminosità schiariscono verso il grigio chiaro; da accesi il fondo tenue passa dal 12 al 24 per cento del loro colore, perché schiarire un fondo già tenue non si vedeva. Stesso trattamento per <em>Mappa NAT</em> e <em>Inserisci Partenza/Arrivo</em>.</li>
               <li><strong>📂 Tendine aperte dopo il ripristino</strong>: Riapplicando lo stato veniva mandato l'evento <code>input</code> su ogni casella, e sui campi con completamento questo apre la tendina: dopo un ripristino restavano aperte tutte insieme. Ora l'evento va solo dove non c'è una tendina agganciata, e alla fine le tendine vengono nascoste, non svuotate: svuotarle rompeva il completamento delle ricerche successive. I nomi delle tendine non seguono una regola sola, per esempio <code>uRouteStartInput</code> ha <code>uRouteStartDropdown</code>, quindi si cerca anche togliendo la coda <code>Input</code>. La fascia sotto la navigazione, inoltre, prendeva il primo <code>tab-content</code> senza la classe <code>hidden</code>, ma dentro gli altri tab ce ne sono di annidati e la scelta poteva sbagliare lasciandola spenta: ora guarda solo i due tab che hanno la barra ferma.</li>
             <div class="cro-cronologia">
               <div class="cro-cron-tit">🗓️ Cronologia della lavorazione</div>
@@ -333513,6 +333527,95 @@ body.intro-complete { overflow: visible !important; }
     });
   } else {
     setTimeout(function () { passata(); setInterval(passata, 500); }, 900);
+  }
+})();
+</script>
+
+<style id="croHoverBottoni">
+/* ===========================================================================
+   Alcuni bottoni portano fondo, testo e cornice scritti nello stile in linea,
+   e lo stile in linea vince sulle regole del foglio: al passaggio del mouse
+   non succedeva niente. Qui l'animazione viene riscritta con !important
+   tenendo il colore che ogni bottone ha gia', e si comporta come gli altri
+   bottoni: cambia solo il fondo, senza spostamenti ne' ombre.
+   Riguarda Mappa NAT nei tre tab, il bottone DC di RC e Unificato, e
+   Inserisci Partenza/Arrivo, Solo RC e RTN nell'Unificato.
+   =========================================================================== */
+/* Come gli altri bottoni: cambia solo il fondo, niente spostamento e niente
+   ombra. Sui bottoni colorati il fondo si scurisce di poco, perche' ognuno ha
+   il suo colore e non si puo' usare un grigio fisso. */
+.cro-hover-anim {
+  transition: background 0.18s, color 0.18s, border-color 0.18s,
+              filter 0.18s !important;
+}
+.cro-hover-anim:hover {
+  filter: brightness(0.95) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Su un fondo tenue il solo schiarimento non si vede: quando i bottoni sono
+   accesi il fondo passa da 12 a 24 per cento del loro colore. */
+.cro-modo-calcolo.cro-spento:hover {
+  background: var(--gray-50, #f3f5f9) !important;
+  filter: none !important;
+}
+.cro-modo-calcolo.cro-acceso-dc:hover {
+  background: rgba(209, 0, 143, 0.24) !important;
+  filter: none !important;
+}
+.cro-modo-calcolo.cro-acceso-rc:hover {
+  background: rgba(220, 38, 38, 0.24) !important;
+  filter: none !important;
+}
+.cro-modo-calcolo.cro-acceso-rtn:hover {
+  background: rgba(8, 145, 178, 0.24) !important;
+  filter: none !important;
+}
+/* Mappa NAT e Inserisci Partenza/Arrivo hanno un fondo tenue scritto in linea */
+.cro-hover-nat:hover {
+  background: #c7f0dd !important;
+  border-color: #059669 !important;
+  filter: none !important;
+}
+.cro-hover-blu:hover {
+  background: rgba(0, 102, 204, 0.24) !important;
+  border-color: #0066CC !important;
+  filter: none !important;
+}
+</style>
+
+<script>
+/* Mette la classe dell'animazione sui bottoni che hanno i colori in linea. */
+(function () {
+  'use strict';
+
+  var IDS = ['excludeDCToggleUNIFIED', 'excludeDCToggleRC', 'uRcOnlyBtn',
+             'uRtnModeBtn', 'uNearestTargetBtn'];
+
+  function segna() {
+    var i, b;
+    for (i = 0; i < IDS.length; i++) {
+      b = document.getElementById(IDS[i]);
+      if (b) b.classList.add('cro-hover-anim');
+    }
+    /* Mappa NAT: tre bottoni uguali, uno per tab, senza id */
+    var tutti = document.querySelectorAll('.btn-export-mini');
+    for (i = 0; i < tutti.length; i++) {
+      if ((tutti[i].textContent || '').indexOf('Mappa NAT') > -1) {
+        tutti[i].classList.add('cro-hover-anim', 'cro-hover-nat');
+      }
+    }
+    b = document.getElementById('uNearestTargetBtn');
+    if (b) b.classList.add('cro-hover-blu');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () { segna(); setInterval(segna, 1200); }, 800);
+    });
+  } else {
+    setTimeout(function () { segna(); setInterval(segna, 1200); }, 800);
   }
 })();
 </script>
