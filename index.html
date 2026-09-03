@@ -304,6 +304,90 @@
 ║     stampa il nodo cosi' com'e'. Ora il nome viene recuperato dai due            ║
 ║     database con una mappa costruita una volta sola, e la riga diventa           ║
 ║     NOME (CLLI) come nei tab RA e RC, che erano gia' corretti                    ║
+║   • BARRA DI EXPORT E INTESTAZIONE FERME nei tab RC e Unificato: con             ║
+║     l'elenco dei percorsi lungo bisognava risalire ogni volta fino alla          ║
+║     barra per selezionare una riga da esportare. Ora la barra resta              ║
+║     ferma sotto le due barre fisse in cima, a 154 px, e l'intestazione           ║
+║     della tabella si ferma subito sotto di lei; il testo delle righe             ║
+║     scorre sotto entrambe. L'altezza della barra cambia quando si                ║
+║     accende Dati Servizio, quindi viene misurata e scritta in una                ║
+║     variabile che regola la quota dell'intestazione                              ║
+║     La quota e' 154 px, cioe' 88 piu' 54 delle due barre fisse piu' 12           ║
+║     di respiro, perche' il riquadro della barra non finisca appiccicato          ║
+║     sotto la navigazione. L'ombra sotto la barra e' appena accennata             ║
+║   • FASCIA SOTTO LA NAVIGAZIONE nei tab RC e Unificato: fra il fondo             ║
+║     della barra dei tab e la quota dove si fermano barra di export e             ║
+║     intestazione restavano dodici pixel scoperti, e le righe della               ║
+║     tabella si vedevano scorrere in quella striscia. Ora e' coperta con          ║
+║     il fondo della card, larga quanto la card e ancorata al fondo vero           ║
+║     della barra dei tab, con due pixel in piu' per non lasciare                  ║
+║     cuciture; sta sopra tutto tranne la barra dei tab stessa                     ║
+║   • UNDO COMPLETO nei tab RA, RC e Unificato: Ripristina Parametri e             ║
+║     Ripristina ed Esegui riportavano solo una parte dei campi. Ora la            ║
+║     voce di cronologia porta con se' tutto lo stato del tab: ogni                ║
+║     casella e ogni tendina, le spunte dei filtri di stato, le liste              ║
+║     scelte con Sel. Multipla e gli interruttori RTN, Solo RC, DC e POP.          ║
+║     Gli interruttori non hanno una classe di stato, quindi l'accensione          ║
+║     si legge dal colore di fondo che il tool scrive sul bottone, e il            ║
+║     ripristino li riporta a posto con un clic, cosi' gira anche la               ║
+║     logica che il tool ci appende. Il ripristino avviene subito e non            ║
+║     con un rinvio: Ripristina ed Esegui lancia la ricerca appena finito,         ║
+║     e con il rinvio la ricerca partiva con RTN e gli altri interruttori          ║
+║     ancora vecchi                                                                ║
+║   • DC, SOLO RC E RTN nella riga di calcolo del tab Unificato: non               ║
+║     filtrano, cambiano il calcolo, e stavano fra i filtri con la                 ║
+║     misura dei bottoni piccoli. Ora stanno in coda a Calcola, Undo e             ║
+║     Reset Tab, alti 50 px come loro, con un divisore prima del gruppo            ║
+║     come nella barra di export. Il bottone DC sparisce da accanto a              ║
+║     Centrale da Evitare nel Routing, e prende l'icona del palazzo.               ║
+║     Da spenti i tre bottoni hanno la cornice azzurra della famiglia, da          ║
+║     accesi i colori del tool, rosa per DC, rosso per Solo RC e ciano             ║
+║     per RTN, con la cornice dello stesso colore                                  ║
+║   • TENDINE APERTE DOPO IL RIPRISTINO: riapplicando lo stato veniva              ║
+║     mandato l'evento input su ogni casella, e sui campi con                      ║
+║     completamento questo apre la tendina. Ora l'evento va solo dove non          ║
+║     c'e' una tendina agganciata, e alla fine le tendine vengono chiuse           ║
+║     e nascoste, non svuotate: svuotarle rompeva il completamento delle           ║
+║     ricerche successive. I nomi delle tendine non seguono una regola             ║
+║     sola, per esempio uRouteStartInput ha uRouteStartDropdown, quindi            ║
+║     si cerca anche togliendo la coda Input                                       ║
+║   • BOTTONE DC: il tool riscrive il contenuto a ogni clic e l'icona              ║
+║     spariva per un istante facendo ballare la larghezza. Ora viene               ║
+║     rimessa dentro la stessa chiamata, prima che il browser ridisegni,           ║
+║     e il bottone ha una larghezza minima fissa. Vale per RC e Unificato          ║
+║   • SOLO RC E RTN ACCESI: il riempimento pieno scritto dal tool                  ║
+║     stonava con il resto della riga. Ora hanno fondo tenue, testo e              ║
+║     cornice del colore della modalita', come il bottone DC                       ║
+║   • ORDINE DEI BOTTONI nelle righe di calcolo dei tre tab: RA con                ║
+║     Calcola, Multi-Path, Undo, divisore, Reset Tab; RC con Calcola,              ║
+║     Undo, DC, divisore, Reset Tab; Unificato con Calcola, Undo,                  ║
+║     divisore, DC, Solo RC, RTN, divisore, Reset Tab. Il bottone DC del           ║
+║     tab RC entra nella riga come quello dell'Unificato                           ║
+║   • RESET TAB ripristina anche il bottone DC, che restava                        ║
+║     nell'ultimo stato: torna a com'era all'apertura della pagina                 ║
+║   • RIPARO SOPRA LA BARRA FERMA rifatto: la striscia a parte                     ║
+║     lasciava scoperto un filo in cui si vedeva scorrere il testo della           ║
+║     tabella. Ora barra di export e intestazione si agganciano a 142 px,          ║
+║     attaccate alla navigazione, e il respiro di quattordici pixel lo fa          ║
+║   • SPAZIO SOTTO LA NAVIGAZIONE: barra di export e intestazione si               ║
+║     fermano a 156 px, quattordici sotto la barra dei tab, e il riquadro          ║
+║     alto 16 px disegnato sopra di loro copre quello spazio mentre                ║
+║     scorre il testo della tabella. Il riquadro si muove insieme                  ║
+║     all'elemento, quindi non puo' disallinearsi come faceva la                   ║
+║     striscia fissa di prima                                                      ║
+║   • RESET TAB riporta i tre interruttori allo stato di partenza: DC              ║
+║     acceso, cioe' Data Center esclusi dal routing, Solo RC e RTN                 ║
+║     spenti. Vale per RC e Unificato                                              ║
+║   • FASCIA, SCELTA DEL TAB: prendeva il primo tab-content senza la               ║
+║     classe hidden, ma dentro gli altri tab ce ne sono di annidati e la           ║
+║     scelta poteva sbagliare, lasciando la fascia spenta. Ora guarda              ║
+║     solo i due tab che hanno la barra ferma                                      ║
+║   • SCORRIMENTO DELLA PAGINA: a fine introduzione html e body                    ║
+║     passavano da overflow hidden ad auto, e cosi' body diventava un              ║
+║     riquadro di scorrimento suo: le posizioni appiccicate al suo interno         ║
+║     si agganciavano a lui invece che alla finestra e non si fermavano            ║
+║     mai. Ora passano a visible, lo scorrimento torna quello della                ║
+║     pagina e la barra si aggancia                                                ║
 ║                                                                                  ║
 ║   CHANGELOG V50.08.13 | Ago 2026:                                                ║
 ║   ─────────────────────────                                                      ║
@@ -21894,6 +21978,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
     <li><strong>🏷️ Export TXT dell'Unificato</strong>: nella sezione CENTRALI si leggeva solo il CLLI, ora c'è anche il nome della centrale come nei tab RA e RC</li>
+    <li><strong>📌 Barra di export ferma</strong>: nei tab RC e Unificato la barra di export e l'intestazione della tabella restano ferme in cima mentre si scorre l'elenco dei percorsi</li>
+    <li><strong>↩️ Undo completo</strong>: nei tre tab di ricerca la cronologia salva e ripristina tutto lo stato, vincoli, limiti numerici, filtri di stato e interruttori RTN, Solo RC, DC e POP</li>
+    <li><strong>⚡ Modalità di calcolo</strong>: nel tab Unificato DC, Solo RC e RTN sono passati in coda alla riga di Calcola, con la misura degli altri bottoni</li>
     <li><strong>📊 Tabelle e blocchi diversificati</strong>: griglia verticale, righe alternate calcolate via JavaScript, mini colonna per i bottoni di copia e palette dedicata a Div, Zona A e Zona B</li>
     <li><strong>📋 Tab di ricerca RA, RC e Unificato</strong>: note in un pannello laterale, layout a due colonne, sfondo per tipo di sezione, caselle squadrate, distanza dal cliente sotto il campo e archi ricalcolati dopo Trova Centrale Vicina</li>
     <li><strong>🏢 Area, zona e regione delle centrali</strong>: seconda riga con area, zona e regione in tutte le tendine dei campi centrale e sotto il valore scelto nella casella, con i Nodi A1 in blu, quelli di sola diversificazione in ambra e i Data Center in rosa</li>
@@ -39433,6 +39520,12 @@ PERCORSI ALTERNATIVI (Div):
           </summary>
           <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
               <li><strong>🏷️ Nome della centrale nell'export TXT</strong>: Nella sezione <em>CENTRALI</em> dell'export TXT del tab Unificato si leggeva solo il CLLI. Lì i nodi del percorso sono identificati dal CLLI con il suffisso della rete, per esempio <code>MILAITBZ::RC</code>, e quando il percorso non attraversa un gateway RA/RC né il backbone RTN il generatore non passa dalla funzione che costruisce le etichette e stampa il nodo così com'è. Ora il nome viene recuperato dai due database, con una mappa costruita una volta sola alla prima chiamata, e la riga diventa <em>NOME (CLLI)</em>. I tab RA e RC erano già corretti, perché lì il nodo porta già il nome.</li>
+              <li><strong>📌 Barra di export e intestazione ferme</strong>: Nei tab RC e Unificato, con l'elenco dei percorsi lungo, per selezionare una riga da esportare bisognava risalire ogni volta fino alla barra. Ora la barra resta ferma sotto le due barre fisse in cima, a 154 px, e l'intestazione della tabella si ferma subito sotto di lei: il testo delle righe scorre sotto entrambe. L'altezza della barra cambia quando si accende <em>Dati Servizio</em>, quindi viene misurata e scritta in una variabile che regola la quota dell'intestazione. La quota è 154 px, cioè 88 più 54 delle due barre fisse più 12 di respiro, perché il riquadro della barra non finisca appiccicato sotto la navigazione, e l'ombra sotto la barra è appena accennata. Nel tab Unificato la barra stava fuori dal contenitore della tabella e sarebbe rimasta ferma per pochi pixel: viene spostata dentro, come nel tab RC. La tabella aveva inoltre <code>overflow: hidden</code> per gli angoli arrotondati, e questo la rendeva il riquadro di riferimento: il ritaglio è passato al contenitore.</li>
+              <li><strong>🖥️ Scorrimento della pagina</strong>: A fine introduzione <code>html</code> e <code>body</code> passavano da <code>overflow: hidden</code> ad <code>auto</code>, e così <code>body</code> diventava un riquadro di scorrimento suo: le posizioni appiccicate al suo interno si agganciavano a lui invece che alla finestra e non si fermavano mai. Ora passano a <code>visible</code>: lo scorrimento torna quello della pagina, la barra di scorrimento resta la stessa e le posizioni appiccicate funzionano.</li>
+              <li><strong>⬜ Fascia sotto la navigazione</strong>: Fra il fondo della barra dei tab e la quota dove si fermano la barra di export e l'intestazione restavano dodici pixel scoperti, e le righe della tabella si vedevano scorrere in quella striscia. Ora è coperta con il fondo della card, larga quanto la card e ancorata al fondo della barra dei tab. La striscia a parte però lasciava scoperto un filo in cui si vedeva ancora scorrere il testo, quindi è stata sostituita: barra di export e intestazione si fermano ora a 156 px, quattordici sotto la barra dei tab, e lo spazio è coperto da un riquadro alto 16 px disegnato sopra di loro con uno pseudo-elemento. Il riquadro si muove insieme all'elemento, quindi non può disallinearsi come faceva la striscia fissa e non resta nessuna cucitura.</li>
+              <li><strong>↩️ Undo completo</strong>: Nei tab RA, RC e Unificato <em>Ripristina Parametri</em> e <em>Ripristina ed Esegui</em> riportavano solo una parte dei campi, quindi la cronologia serviva a poco. Ora la voce porta con sé tutto lo stato del tab: ogni casella e ogni tendina, le spunte dei filtri di stato, le liste scelte con <em>Sel. Multipla</em> e gli interruttori <em>RTN</em>, <em>Solo RC</em>, <em>DC</em> e <em>POP</em>. Gli interruttori non hanno una classe di stato, quindi l'accensione si legge dal colore di fondo che il tool scrive sul bottone, e il ripristino li riporta a posto con un clic invece che a mano: così gira anche la logica che il tool ci appende, per esempio lo svuotamento della cache del grafo quando cambia la modalità RTN. Il ripristino avviene subito e non con un rinvio: <em>Ripristina ed Esegui</em> lancia la ricerca appena finito, e con il rinvio la ricerca partiva con gli interruttori ancora vecchi.</li>
+              <li><strong>⚡ DC, Solo RC e RTN nella riga di calcolo</strong>: Nel tab Unificato i tre interruttori non filtrano, cambiano il calcolo, e stavano fra i filtri con la misura dei bottoni piccoli. Ora stanno in coda a <em>Calcola Percorsi UNIFICATI</em>, <em>Undo</em> e <em>Reset Tab</em>, alti 50 px come loro, con un divisore prima del gruppo come nella barra di export. Il bottone <em>DC</em> sparisce da accanto a <em>Centrale da Evitare nel Routing</em>. I bottoni sono gli stessi di prima, spostati e rivestiti: i colori di acceso e spento restano quelli che il tool scrive da sé, rosso per Solo RC e ciano per RTN, con la cornice dello stesso colore, mentre da spenti hanno la cornice azzurra della famiglia. Il bottone <em>DC</em> prende l'icona del palazzo: il tool ne riscrive il contenuto a ogni clic e l'icona spariva per un istante facendo ballare la larghezza, quindi viene rimessa dentro la stessa chiamata, prima che il browser ridisegni, e il bottone ha una larghezza minima fissa; lo stesso vale per il <em>DC</em> del tab RC. Da accesi <em>Solo RC</em> e <em>RTN</em> hanno ora fondo tenue, testo e cornice del colore della modalità, perché il riempimento pieno scritto dal tool stonava con il resto della riga. L'ordine dei bottoni è ora fissato tab per tab: RA con <em>Calcola</em>, <em>Multi-Path</em>, <em>Undo</em>, divisore, <em>Reset Tab</em>; RC con <em>Calcola</em>, <em>Undo</em>, <em>DC</em>, divisore, <em>Reset Tab</em>; Unificato con <em>Calcola</em>, <em>Undo</em>, divisore, <em>DC</em>, <em>Solo RC</em>, <em>RTN</em>, divisore, <em>Reset Tab</em>. <em>Reset Tab</em> riporta i tre interruttori allo stato di partenza, <em>DC</em> acceso, cioè Data Center esclusi dal routing, <em>Solo RC</em> e <em>RTN</em> spenti, mentre prima li lasciava nell'ultimo stato.</li>
+              <li><strong>📂 Tendine aperte dopo il ripristino</strong>: Riapplicando lo stato veniva mandato l'evento <code>input</code> su ogni casella, e sui campi con completamento questo apre la tendina: dopo un ripristino restavano aperte tutte insieme. Ora l'evento va solo dove non c'è una tendina agganciata, e alla fine le tendine vengono nascoste, non svuotate: svuotarle rompeva il completamento delle ricerche successive. I nomi delle tendine non seguono una regola sola, per esempio <code>uRouteStartInput</code> ha <code>uRouteStartDropdown</code>, quindi si cerca anche togliendo la coda <code>Input</code>. La fascia sotto la navigazione, inoltre, prendeva il primo <code>tab-content</code> senza la classe <code>hidden</code>, ma dentro gli altri tab ce ne sono di annidati e la scelta poteva sbagliare lasciandola spenta: ora guarda solo i due tab che hanno la barra ferma.</li>
             <div class="cro-cronologia">
               <div class="cro-cron-tit">🗓️ Cronologia della lavorazione</div>
               <div class="cro-cron-nota">Revisione lavorata dal 16 al 30 agosto 2026, con rilascio previsto il 1 settembre 2026. Il 21 agosto non ci sono state lavorazioni. Le date sono indicative: sono state ricavate dall'orologio durante i collaudi, quindi una voce lavorata a tarda sera può essere registrata sul giorno successivo. Clicca una giornata per aprirne le note.</div>
@@ -332808,6 +332901,618 @@ body.dark-mode .route-limits-row > .route-field + .route-field::before {
     });
   } else {
     setTimeout(function () { passata(); setInterval(passata, 1500); }, 800);
+  }
+})();
+</script>
+
+<style id="croBarraFerma">
+/* ===========================================================================
+   Tab RC e Unificato. Con l'elenco dei percorsi lungo, per selezionare una
+   riga da esportare bisognava risalire ogni volta fino alla barra di export.
+   Ora la barra resta ferma sotto le due barre fisse in cima e l'intestazione
+   della tabella si ferma subito sotto di lei: il testo delle righe scorre
+   sotto entrambe.
+   La quota e' 156 px: 88 della barra del titolo, 54 di quella dei tab, tutte
+   e due fisse, piu' 14 px di respiro. Quei 14 px non restano scoperti: sopra
+   l'elemento appiccicato c'e' un riquadro alto 16 px, disegnato con uno
+   pseudo-elemento, che si muove insieme a lui e copre il testo della tabella
+   che scorre. Una striscia a parte, fissa, lasciava sempre un filo scoperto. L'altezza della barra di export
+   cambia quando si accende Dati Servizio, quindi la misura il JavaScript e la
+   scrive nella variabile che regola la quota dell'intestazione.
+   =========================================================================== */
+/* Durante l'introduzione html e body hanno overflow hidden e a fine intro
+   passano ad auto: cosi' body diventa un riquadro di scorrimento suo, e le
+   posizioni appiccicate al suo interno si agganciano a lui invece che alla
+   finestra, quindi non si fermano mai. Con overflow visible su html e body
+   lo scorrimento torna quello della pagina; la scrollbar resta la stessa. */
+html.intro-complete,
+body.intro-complete { overflow: visible !important; }
+
+/* La barra si ferma a 156 px, quattordici sotto la navigazione, e il riquadro
+   sopra di lei copre quello spazio mentre scorre il testo della tabella. */
+#rcSelBar.active,
+#unifiedSelBar.active {
+  position: sticky;
+  top: 156px;
+  z-index: 40;
+  background: var(--bg-secondary);
+  background-image: linear-gradient(90deg, var(--tim-blue-50, #eff6ff), var(--bg-secondary));
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+#rcSelBar.active::before,
+#unifiedSelBar.active::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  top: -16px;
+  height: 16px;
+  background: var(--white, #f7f9fc);
+}
+
+#tab-search table.route-table-v2 > thead > tr > th,
+#tab-search-unified table.route-table-v2 > thead > tr > th {
+  position: sticky;
+  top: var(--cro-top-testata, 156px);
+  z-index: 30;
+  background-color: var(--rt-head-bg, #e8eef7);
+}
+/* senza barra di export il riparo sta sopra l'intestazione */
+#tab-search:not(.cro-barra-on) table.route-table-v2 > thead > tr > th::before,
+#tab-search-unified:not(.cro-barra-on) table.route-table-v2 > thead > tr > th::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -16px;
+  height: 16px;
+  background: var(--white, #f7f9fc);
+}
+#tab-search .top4-section table.route-table-v2 > thead > tr > th::before,
+#tab-search-unified .top4-section table.route-table-v2 > thead > tr > th::before {
+  content: none;
+}
+
+/* La tabella ha overflow hidden per gli angoli arrotondati, e questo la rende
+   il riquadro di riferimento della posizione appiccicata: l'intestazione si
+   fermerebbe dentro la tabella invece che sotto la barra. Il ritaglio passa
+   quindi al contenitore. */
+#tab-search .db-table-wrapper > table.route-table-v2,
+#tab-search-unified .db-table-wrapper > table.route-table-v2 { overflow: visible; }
+
+/* le tabelle Top 4 hanno la loro intestazione: resta dov'e' */
+#tab-search .top4-section table.route-table-v2 > thead > tr > th,
+#tab-search-unified .top4-section table.route-table-v2 > thead > tr > th {
+  position: static;
+}
+</style>
+
+<script>
+/* Quota dell'intestazione della tabella: sta sotto la barra di export quando
+   e' accesa, altrimenti sotto le due barre fisse in cima. */
+(function () {
+  'use strict';
+
+  var CIMA = 156;
+  var COPPIE = [
+    { tab: 'tab-search',         barra: 'rcSelBar' },
+    { tab: 'tab-search-unified', barra: 'unifiedSelBar' }
+  ];
+
+  function aggiorna() {
+    for (var i = 0; i < COPPIE.length; i++) {
+      var tab = document.getElementById(COPPIE[i].tab);
+      var barra = document.getElementById(COPPIE[i].barra);
+      if (!tab) continue;
+      var h = (barra && barra.classList.contains('active'))
+        ? Math.round(barra.getBoundingClientRect().height)
+        : 0;
+      var quota = (CIMA + h) + 'px';
+      if (tab.style.getPropertyValue('--cro-top-testata') !== quota) {
+        tab.style.setProperty('--cro-top-testata', quota);
+      }
+      tab.classList.toggle('cro-barra-on', h > 0);
+    }
+  }
+
+  /* Nel tab Unificato la barra sta fuori dal contenitore della tabella, quindi
+     resterebbe ferma per pochi pixel: viene spostata dentro, come nel tab RC. */
+  function sposta() {
+    var barra = document.getElementById('unifiedSelBar');
+    if (!barra || barra.dataset.croDentro === '1') return;
+    var cont = barra.nextElementSibling;
+    while (cont && !(cont.classList && cont.classList.contains('db-table-wrapper'))) {
+      cont = cont.nextElementSibling;
+    }
+    if (!cont) return;
+    cont.insertBefore(barra, cont.firstChild);
+    barra.dataset.croDentro = '1';
+  }
+
+  function avvia() {
+    sposta();
+    aggiorna();
+    setInterval(function () { sposta(); aggiorna(); }, 700);
+    window.addEventListener('resize', aggiorna);
+    if (window.ResizeObserver) {
+      COPPIE.forEach(function (c) {
+        var b = document.getElementById(c.barra);
+        if (b) { try { new ResizeObserver(aggiorna).observe(b); } catch (e) {} }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(avvia, 800); });
+  } else {
+    setTimeout(avvia, 800);
+  }
+})();
+</script>
+
+<style id="croUndoStile">
+/* niente qui: il riparo sopra la barra ferma sta nel foglio della barra */
+</style>
+
+<script>
+/* 1. Fascia sotto la navigazione, larga quanto la card dei risultati.
+   2. Undo completo: la voce di cronologia porta con se' tutto lo stato del
+      tab e il ripristino lo riapplica. */
+(function () {
+  'use strict';
+
+  /* ============================================================ undo pieno */
+  var CTX = {
+    RC:      { tab: 'tab-search',         chiave: 'cro_rc_search_history',
+               salva: 'saveSearchState',    ripristina: 'restoreSearchState' },
+    RA:      { tab: 'tab-search-ra',      chiave: 'cro_ra_search_history',
+               salva: 'saveSearchStateRA',  ripristina: 'restoreSearchStateRA' },
+    UNIFIED: { tab: 'tab-search-unified', chiave: 'CRO_SEARCH_HISTORY_UNIFIED_V1',
+               avvio: 'runUnifiedRouteSearch', ripristina: 'restoreSearchStateUNIFIED' }
+  };
+
+  /* liste scelte con Sel. Multipla e interruttori con memoria globale */
+  var LISTE = ['selectedMustPass', 'selectedAvoid', 'selectedLinkMustPass', 'selectedLinkAvoid'];
+  var SPIE  = ['mustPassMultiActive', 'avoidMultiActive', 'linkMustPassMultiActive',
+               'linkAvoidMultiActive', '_onlyPOPFilterRC', '_onlyPOPFilterRA',
+               '_onlyPOPFilterUNIFIED'];
+
+  /* Interruttori senza classe di stato: l'accensione si legge dal colore di
+     fondo scritto dal tool sul bottone. Vengono riportati allo stato giusto
+     con un clic, cosi' gira anche la logica che il tool ci appende. */
+  var TASTI = ['onlyPOPToggle', 'onlyPOPToggleRA', 'onlyPOPToggleUNIFIED',
+               'excludeDCToggleRC', 'excludeDCToggleUNIFIED',
+               'uRcOnlyBtn', 'uRtnModeBtn', 'routeOnlyActiveBtn'];
+
+  function acceso(b) {
+    if (!b) return false;
+    if (b.classList.contains('active')) return true;
+    var f = (b.style.background || b.style.backgroundColor || '').trim().toLowerCase();
+    return !!f && f !== 'white' && f !== '#fff' && f !== '#ffffff' && f !== 'transparent';
+  }
+
+  function statoTab(tabId) {
+    var tab = document.getElementById(tabId);
+    if (!tab) return null;
+    var s = { campi: {}, spunte: {}, liste: {}, spie: {}, tasti: {} };
+
+    var campi = tab.querySelectorAll('input[id], select[id], textarea[id]');
+    Array.prototype.forEach.call(campi, function (e) {
+      if (e.type === 'checkbox' || e.type === 'radio') {
+        s.spunte[e.id] = !!e.checked;
+      } else if (e.tagName === 'SELECT' && e.multiple) {
+        s.campi[e.id] = Array.prototype.map.call(e.selectedOptions || [], function (o) { return o.value; });
+      } else {
+        s.campi[e.id] = e.value;
+      }
+    });
+
+    LISTE.forEach(function (k) {
+      if (Array.isArray(window[k])) s.liste[k] = window[k].slice();
+    });
+    SPIE.forEach(function (k) {
+      if (typeof window[k] !== 'undefined') s.spie[k] = window[k];
+    });
+    TASTI.forEach(function (id) {
+      var b = document.getElementById(id);
+      if (b && tab.contains(b)) s.tasti[id] = acceso(b);
+    });
+    return s;
+  }
+
+  function applicaStato(tabId, s) {
+    if (!s) return;
+    var tab = document.getElementById(tabId);
+    if (!tab) return;
+
+    Object.keys(s.campi || {}).forEach(function (id) {
+      var e = document.getElementById(id);
+      if (!e || !tab.contains(e)) return;
+      if (e.tagName === 'SELECT' && e.multiple) {
+        var val = s.campi[id] || [];
+        Array.prototype.forEach.call(e.options, function (o) { o.selected = val.indexOf(o.value) > -1; });
+      } else {
+        e.value = s.campi[id];
+      }
+      /* l'evento input su un campo con tendina la fa aprire: si manda solo
+         dove non c'e' una tendina agganciata. I nomi delle tendine non seguono
+         una regola sola, per esempio uRouteStartInput ha uRouteStartDropdown,
+         quindi si cerca anche togliendo la coda Input. */
+      if (!conTendina(e)) {
+        e.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+      e.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    Object.keys(s.spunte || {}).forEach(function (id) {
+      var e = document.getElementById(id);
+      if (!e || !tab.contains(e)) return;
+      if (e.checked !== s.spunte[id]) {
+        e.checked = s.spunte[id];
+        e.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+
+    Object.keys(s.liste || {}).forEach(function (k) {
+      if (Array.isArray(window[k])) {
+        window[k].length = 0;
+        Array.prototype.push.apply(window[k], s.liste[k]);
+      }
+    });
+    Object.keys(s.spie || {}).forEach(function (k) {
+      if (typeof window[k] !== 'undefined') window[k] = s.spie[k];
+    });
+
+    /* le tendine di completamento non devono restare aperte */
+    chiudiTendine(tab);
+
+    /* gli interruttori si riportano allo stato giusto con un clic */
+    Object.keys(s.tasti || {}).forEach(function (id) {
+      var b = document.getElementById(id);
+      if (!b || !tab.contains(b)) return;
+      if (acceso(b) !== s.tasti[id]) b.click();
+    });
+  }
+
+  function conTendina(e) {
+    var id = e.id || '';
+    if (document.getElementById(id + 'Dropdown')) return true;
+    if (/Input$/.test(id) && document.getElementById(id.replace(/Input$/, '') + 'Dropdown')) return true;
+    var w = e.parentElement;
+    return !!(w && w.querySelector('.custom-autocomplete-dropdown'));
+  }
+
+  function chiudiTendine(tab) {
+    var d = tab.querySelectorAll('.custom-autocomplete-dropdown');
+    for (var i = 0; i < d.length; i++) {
+      /* solo nascoste: svuotarle rompeva il completamento successivo */
+      d[i].style.display = 'none';
+    }
+    if (document.activeElement && tab.contains(document.activeElement)) {
+      try { document.activeElement.blur(); } catch (e) {}
+    }
+  }
+
+  function leggi(chiave) {
+    try { return JSON.parse(localStorage.getItem(chiave) || '[]'); } catch (e) { return []; }
+  }
+  function scrivi(chiave, v) {
+    try { localStorage.setItem(chiave, JSON.stringify(v)); } catch (e) {}
+  }
+
+  function attacca(ctx) {
+    var conf = CTX[ctx];
+    var s = statoTab(conf.tab);
+    if (!s) return;
+    var hist = leggi(conf.chiave);
+    if (!hist.length || hist[0]._croPieno) return;
+    hist[0]._croPieno = s;
+    scrivi(conf.chiave, hist);
+  }
+
+  function avvolgiSalva(ctx) {
+    var conf = CTX[ctx];
+    var nome = conf.salva || conf.avvio;
+    var orig = window[nome];
+    if (typeof orig !== 'function' || orig._croPieno) return;
+    var nuova = function () {
+      var res = orig.apply(this, arguments);
+      [60, 400, 1200].forEach(function (t) {
+        setTimeout(function () { try { attacca(ctx); } catch (e) {} }, t);
+      });
+      return res;
+    };
+    nuova._croPieno = true;
+    window[nome] = nuova;
+  }
+
+  function avvolgiRipristina(ctx) {
+    var conf = CTX[ctx];
+    var orig = window[conf.ripristina];
+    if (typeof orig !== 'function' || orig._croPieno) return;
+    var nuova = function (index) {
+      var res = orig.apply(this, arguments);
+      try {
+        var hist = leggi(conf.chiave);
+        var voce = hist[index];
+        if (voce && voce._croPieno) {
+          /* subito, non dopo: Ripristina ed Esegui lancia la ricerca appena
+             finito il ripristino, e con un rinvio la ricerca partiva con la
+             modalita' RTN e gli altri interruttori ancora vecchi */
+          applicaStato(conf.tab, voce._croPieno);
+          setTimeout(function () {
+            applicaStato(conf.tab, voce._croPieno);
+            var t = document.getElementById(conf.tab);
+            if (t) chiudiTendine(t);
+          }, 60);
+          setTimeout(function () {
+            var t = document.getElementById(conf.tab);
+            if (t) chiudiTendine(t);
+          }, 300);
+        }
+      } catch (e) {}
+      return res;
+    };
+    nuova._croPieno = true;
+    window[conf.ripristina] = nuova;
+  }
+
+  function passata() {
+    ['RC', 'RA', 'UNIFIED'].forEach(function (c) {
+      avvolgiSalva(c);
+      avvolgiRipristina(c);
+    });
+  }
+
+  function avvia() {
+    passata();
+    setInterval(passata, 900);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(avvia, 900); });
+  } else {
+    setTimeout(avvia, 900);
+  }
+})();
+</script>
+
+<style id="croModiCalcolo">
+/* ===========================================================================
+   Righe di calcolo dei tab RA, RC e Unificato. I bottoni che cambiano il
+   calcolo (DC, Solo RC, RTN) non filtrano: stanno in quella riga, con la
+   stessa cornice e la stessa misura degli altri, e i divisori separano i
+   gruppi. L'ordine e' fissato tab per tab.
+   =========================================================================== */
+.cro-modo-calcolo {
+  min-height: 50px;
+  padding: 14px 22px !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
+  border-radius: 6px !important;
+  white-space: nowrap;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+[id^="excludeDCToggle"].cro-modo-calcolo { min-width: 108px; }
+
+/* spento: cornice e colori della famiglia, come Calcola e Reset Tab */
+.cro-modo-calcolo.cro-spento {
+  background: #ffffff !important;
+  color: var(--tim-blue, #0066CC) !important;
+  border: 2px solid var(--tim-blue, #0066CC) !important;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s,
+              transform 0.2s !important;
+}
+/* Acceso: fondo tenue e testo del colore della modalita'. Il riempimento
+   pieno che scriveva il tool stonava con il resto della riga. */
+.cro-modo-calcolo:not(.cro-spento) {
+  border-width: 2px !important;
+  border-style: solid !important;
+}
+.cro-modo-calcolo.cro-acceso-rc {
+  background: rgba(220, 38, 38, 0.12) !important;
+  color: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+.cro-modo-calcolo.cro-acceso-rtn {
+  background: rgba(8, 145, 178, 0.12) !important;
+  color: #0891b2 !important;
+  border-color: #0891b2 !important;
+}
+.cro-modo-calcolo.cro-acceso-dc {
+  background: rgba(209, 0, 143, 0.12) !important;
+  color: #d1008f !important;
+  border-color: #d1008f !important;
+}
+
+.cro-sep-calcolo {
+  color: var(--gray-400, #9aa6b8);
+  margin: 0 4px;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  line-height: 1;
+}
+</style>
+
+<script>
+/* Ordine dei bottoni nelle righe di calcolo, aspetto dei tre interruttori e
+   ripristino del bottone DC con Reset Tab. */
+(function () {
+  'use strict';
+
+  /* '|' e' il divisore, gli altri sono pezzi di testo da cercare nei bottoni
+     della riga oppure id di bottoni da portare dentro */
+  var ORDINE = {
+    'tab-search-ra': ['Calcola', 'Multi-Path', 'Undo', '|', 'Reset Tab'],
+    'tab-search': ['Calcola', 'Undo', '#excludeDCToggleRC', '|', 'Reset Tab'],
+    'tab-search-unified': ['Calcola', 'Undo', '|', '#excludeDCToggleUNIFIED',
+                           '#uRcOnlyBtn', '#uRtnModeBtn', '|', 'Reset Tab']
+  };
+
+  var MODI = ['excludeDCToggleUNIFIED', 'excludeDCToggleRC', 'uRcOnlyBtn', 'uRtnModeBtn'];
+  var DC = ['excludeDCToggleUNIFIED', 'excludeDCToggleRC'];
+
+  function rigaCalcola(tabId) {
+    var tab = document.getElementById(tabId);
+    if (!tab) return null;
+    var righe = tab.querySelectorAll('.route-options-row');
+    for (var i = 0; i < righe.length; i++) {
+      if ((righe[i].textContent || '').indexOf('Calcola') > -1) return righe[i];
+    }
+    return null;
+  }
+
+  function perTesto(riga, testo) {
+    var b = riga.querySelectorAll('button');
+    for (var i = 0; i < b.length; i++) {
+      if ((b[i].textContent || '').indexOf(testo) > -1) return b[i];
+    }
+    return null;
+  }
+
+  function divisore() {
+    var s = document.createElement('span');
+    s.className = 'cro-sep-calcolo';
+    s.textContent = '\u2502';
+    return s;
+  }
+
+  function ordina(tabId) {
+    var riga = rigaCalcola(tabId);
+    if (!riga || riga.dataset.croOrdine === '1') return;
+
+    var voci = ORDINE[tabId], pezzi = [], i;
+    for (i = 0; i < voci.length; i++) {
+      var v = voci[i];
+      if (v === '|') { pezzi.push('|'); continue; }
+      var el = (v.charAt(0) === '#') ? document.getElementById(v.slice(1)) : perTesto(riga, v);
+      if (!el) return;                     /* aspetta che ci siano tutti */
+      pezzi.push(el);
+    }
+
+    /* via i divisori vecchi, poi si riattacca tutto nell'ordine chiesto */
+    var vecchi = riga.querySelectorAll('.cro-sep-calcolo');
+    for (i = 0; i < vecchi.length; i++) vecchi[i].parentNode.removeChild(vecchi[i]);
+
+    for (i = 0; i < pezzi.length; i++) {
+      if (pezzi[i] === '|') { riga.appendChild(divisore()); continue; }
+      var b = pezzi[i];
+      b.classList.remove('btn-chip');
+      if (MODI.indexOf(b.id) > -1) {
+        b.classList.add('btn', 'btn-secondary', 'cro-modo-calcolo');
+        ['padding', 'font-size', 'border-radius'].forEach(function (k) {
+          b.style.removeProperty(k);
+        });
+      }
+      riga.appendChild(b);
+    }
+
+    riga.dataset.croOrdine = '1';
+  }
+
+  /* ------------------------------------------------------ acceso e spento */
+  function acceso(b) {
+    var f = (b.style.background || b.style.backgroundColor || '').trim().toLowerCase();
+    return !!f && f !== 'white' && f !== '#fff' && f !== '#ffffff' && f !== 'transparent';
+  }
+
+  function vestiti() {
+    for (var i = 0; i < MODI.length; i++) {
+      var b = document.getElementById(MODI[i]);
+      if (!b || !b.classList.contains('cro-modo-calcolo')) continue;
+      var on = acceso(b);
+      if (!on) {
+        ['background', 'background-color', 'color', 'border-color'].forEach(function (k) {
+          b.style.removeProperty(k);
+        });
+      }
+      b.classList.toggle('cro-spento', !on);
+      b.classList.toggle('cro-acceso-dc',  on && DC.indexOf(MODI[i]) > -1);
+      b.classList.toggle('cro-acceso-rc',  on && MODI[i] === 'uRcOnlyBtn');
+      b.classList.toggle('cro-acceso-rtn', on && MODI[i] === 'uRtnModeBtn');
+    }
+  }
+
+  /* Il tool riscrive il contenuto del bottone DC a ogni clic e l'icona
+     spariva per un istante, facendo anche ballare la larghezza: la si rimette
+     dentro la stessa chiamata, prima che il browser ridisegni. */
+  function icona() {
+    for (var i = 0; i < DC.length; i++) {
+      var b = document.getElementById(DC[i]);
+      if (b && b.textContent.trim() === 'DC') b.innerHTML = '\uD83C\uDFE2 DC';
+    }
+  }
+
+  /* Stato di partenza dei tre interruttori: DC acceso, cioe' Data Center
+     esclusi dal routing, Solo RC e RTN spenti. Reset Tab ci riporta qui. */
+  var DEFAULT = {
+    excludeDCToggleUNIFIED: true,
+    excludeDCToggleRC: true,
+    uRcOnlyBtn: false,
+    uRtnModeBtn: false
+  };
+
+  function avvolgiDC() {
+    var orig = window.toggleExcludeDC;
+    if (typeof orig !== 'function' || orig._croDC) return;
+    var nuova = function () {
+      var res = orig.apply(this, arguments);
+      icona();
+      vestiti();
+      return res;
+    };
+    nuova._croDC = true;
+    window.toggleExcludeDC = nuova;
+  }
+
+  /* Reset Tab lasciava i tre interruttori nell'ultimo stato: li riporta allo
+     stato di partenza, DC acceso e gli altri due spenti. */
+  function avvolgiReset() {
+    ['resetSearchTabRC', 'resetSearchTabRA', 'resetSearchTabUNIFIED'].forEach(function (nome) {
+      var orig = window[nome];
+      if (typeof orig !== 'function' || orig._croReset) return;
+      var nuova = function () {
+        var res = orig.apply(this, arguments);
+        [60, 300].forEach(function (t) {
+          setTimeout(function () {
+            for (var i = 0; i < MODI.length; i++) {
+              var b = document.getElementById(MODI[i]);
+              if (!b || !(MODI[i] in DEFAULT)) continue;
+              if (acceso(b) !== DEFAULT[MODI[i]]) b.click();
+            }
+            icona();
+            vestiti();
+          }, t);
+        });
+        return res;
+      };
+      nuova._croReset = true;
+      window[nome] = nuova;
+    });
+  }
+
+  function passata() {
+    ordina('tab-search-ra');
+    ordina('tab-search');
+    ordina('tab-search-unified');
+    avvolgiDC();
+    avvolgiReset();
+    icona();
+    vestiti();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () { passata(); setInterval(passata, 500); }, 900);
+    });
+  } else {
+    setTimeout(function () { passata(); setInterval(passata, 500); }, 900);
   }
 })();
 </script>
