@@ -4,7 +4,7 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 60.09.01  (rev. pubblicata: V60.09.01 | Set 2026)                    ║
+║   Versione: 60.09.04  (rev. pubblicata: V60.09.04 | Set 2026)                    ║
 ║   Data: 01 Settembre 2026                                                        ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
@@ -12,8 +12,18 @@
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
 ║                                                                                  ║
-║   CHANGELOG V60.09.01 | Set 2026:                                                ║
+║   CHANGELOG V60.09.04 | Set 2026:                                                ║
 ║   ─────────────────────────                                                      ║
+║   • COLONNA AZIONI delle tabelle percorsi nei tab RA, RC e Unificato: i          ║
+║     bottoni erano incolonnati a sinistra e larghi quanto il loro testo,          ║
+║     quindi di misure diverse, e Percorso Div andava a capo su due righe.         ║
+║     Ora il gruppo sta a destra, i bottoni sono larghi uguali quanto il           ║
+║     piu' largo e il testo non va a capo. Nell'Unificato Maps e la puntina        ║
+║     stanno sulla stessa riga: da soli si prendevano due righe di altezza         ║
+║     per niente                                                                   ║
+║   • BOTTONE ESPANDI delle tabelle Top 4 di RC e Unificato: da aperto             ║
+║     diceva Chiudi invece di Riduci, come dice ovunque nelle altre                ║
+║     tabelle. Corretto nei due punti                                              ║
 ║   • TAB DATABASE, ANIMAZIONE DEI BOTTONI: diversi bottoni non davano             ║
 ║     riscontro al passaggio del mouse. RA Italia e RC Italia, quando sono         ║
 ║     accesi, hanno il fondo pieno e la regola cambiava solo cornice e             ║
@@ -27,12 +37,160 @@
 ║     dai due DB, ogni vendor ha il suo colore, lo stesso nelle due                ║
 ║     colonne, e per ogni regione c'e' la barra della composizione per             ║
 ║     vendor con i conteggi accanto. In testa a ogni colonna tre riquadri          ║
-║     con collegamenti, centrali e numero di regioni; la tabella degli             ║
-║     stati resta completa. Le regioni sono in ordine alfabetico, la               ║
-║     parola Vendor sta sulla stessa riga delle pastiglie e le righe di            ║
-║     titolo sono sparite: la finestra ci sta senza barra di scorrimento.          ║
-║     La colonna Coll. si chiama ora Collegamenti. Si chiude anche                 ║
-║     cliccando fuori                                                              ║
+║     con collegamenti, centrali e numero di regioni. Le regioni sono in           ║
+║     ordine alfabetico e la colonna Coll. si chiama ora Collegamenti              ║
+║   • PERCORSI DIV DEL TAB RC che si fermavano con un errore: la funzione          ║
+║     che misura la sovrapposizione fra due percorsi e' dichiarata dentro          ║
+║     il blocco di script dell'Unificato e non era visibile al codice del          ║
+║     RC, che sta in un altro blocco. Ora e' esposta sull'oggetto globale          ║
+║   • RIQUADRO DI RIPARO sopra la barra ferma acceso solo quando                   ║
+║     l'elemento e' davvero fermo: disegnato sempre, copriva i sedici              ║
+║     pixel sopra la tabella, dove stanno Pulisci Tabella nel RC e la riga         ║
+║     Nessun percorso calcolato nell'Unificato                                     ║
+║   • BOTTONI DELLA COLONNA AZIONI tutti con lo stesso carattere e la              ║
+║     stessa altezza, icone comprese: cambia solo il colore fra bottone            ║
+║     acceso e bottone normale                                                     ║
+║   • BOTTONE DEI DIVERSIFICATI: da aperto diceva Nascondi Div A+B e il            ║
+║     testo piu' lungo faceva crescere il bottone fuori dalla colonna. La          ║
+║     parola Nascondi sparisce, resta la freccia che gira verso il basso           ║
+║   • VERIFICA DIV: animazione al passaggio del mouse, che mancava perche'         ║
+║     i colori sono scritti nello stile in linea, e divisore prima di              ║
+║     Pulisci Tabella                                                              ║
+║   • BOTTONI DELLE COLONNE AZIONI a misura fissa, 138 per 28 px: prima            ║
+║     si adattavano al testo, quindi cambiavano fra tabella standard,              ║
+║     Top 4, Multi-Path e righe dei diversificati, e cambiavano anche              ║
+║     quando il bottone si accendeva. Ora sono identici ovunque e in ogni          ║
+║     stato: cambia solo il colore                                                 ║
+║     Le tabelle Top 4 posizionavano il gruppo a 4 px dal bordo della              ║
+║     cella invece che a 10 come le altre, e i bottoni risultavano                 ║
+║     spostati di sei pixel: ora sono allineati alla stessa quota                  ║
+║   • DIVERSIFICATO ASSENTE: quando il calcolo non trova un Div al 100%            ║
+║     il tool colorava il bottone di arancione, e sembrava un successo.            ║
+║     Ora diventa rosso con il divieto davanti, cosi' si capisce che un            ║
+║     Div vero non c'e' e quelli proposti sono parziali. Vale nei tre tab          ║
+║   • DIV DEL TAB RC che non venivano trovati: la ricerca guardava dentro          ║
+║     i primi 50 percorsi piu' brevi, e se quello completamente disgiunto          ║
+║     stava oltre quella soglia restavano solo i Div parziali. L'Unificato,        ║
+║     che parte da un insieme molto piu' grande, lo trovava. La soglia sale        ║
+║     a trecento percorsi, che bastano senza far durare troppo la ricerca          ║
+║   • PULISCI TABELLA DELL'UNIFICATO spostato nella riga informativa               ║
+║     sopra la tabella, dov'e' nel tab RC: stava nella barra di export, a          ║
+║     una distanza diversa dalla tabella. Il divisore che gli stava                ║
+║     davanti non serve piu'. Verifica Div scende con lui sulla riga di            ║
+║     Cambia interconnessione RTN, quella con il conteggio dei percorsi,           ║
+║     con il divisore della barra di export fra i due; il divisore si vede         ║
+║     solo quando Verifica Div e' a schermo                                        ║
+║     Verifica Div e il divisore sono incolonnati con Maps e il divisore           ║
+║     della riga sopra: le due righe stanno in contenitori diversi, quindi         ║
+║     l'allineamento si ottiene misurando a video e spostando con il               ║
+║     margine destro. Il divisore prende lo stesso grigio degli altri              ║
+║   • MAPPE DEI PERCORSI, TRATTE SEPARATE: la mappa disegnava una                  ║
+║     polilinea sola con tutti i punti delle tratte accese, quindi                 ║
+║     spegnendo quelle in mezzo restava un segmento diretto fra la prima e         ║
+║     l'ultima, che non corrisponde a nessun collegamento reale. Ora ogni          ║
+║     tratta ha la sua polilinea: si vede solo quello che e' acceso. Vale          ║
+║     per le mappe di RC e Unificato                                               ║
+║   • TRATTA RTN SULLA MAPPA disegnata con il ciano della sua etichetta e          ║
+║     con il tratteggio, per distinguerla dalle tratte in fibra; resta             ║
+║     accesa e spenta dalla sua casella come le altre                              ║
+║   • TOOLTIP PER TRATTA: stava sulla polilinea unica e con le tratte              ║
+║     separate era sparito. Ora ogni tratta ha il suo, con i nomi delle due        ║
+║     centrali, l'identificativo del collegamento, la distanza e lo stato.         ║
+║     Dove la tratta non porta una distanza, come l'RTN che dichiarava             ║
+║     0.00 km, viene calcolata quella in linea d'aria dalle coordinate dei         ║
+║     due estremi e mostrata come circa *** km                                     ║
+║   • INQUADRATURA DELLA MAPPA all'apertura: restava quella del tab                ║
+║     precedente, per esempio Padova aprendo dalla RA e poi ancora Padova          ║
+║     aprendo dal RC con i percorsi su Roma. Ora la mappa si reinquadra sui        ║
+║     percorsi appena caricati                                                     ║
+║   • STATO DEL COLLEGAMENTO nell'elenco della mappa anche per RA e                ║
+║     Unificato: c'era solo nel RC. ATTIVO comprende ATTIVO, ATTIVO >              ║
+║     SATURO, IN REINSTRADAMENTO e IN VARIAZIONE; tutto il resto e' NON            ║
+║     ATTIVO. Verde per gli attivi, rosso per gli altri                            ║
+║     Nell'elenco della mappa Unificata lo stato mancava del tutto,                ║
+║     perche' quell'elenco lo costruisce una funzione sua: aggiunto anche          ║
+║     li', sulle righe RA e RC                                                     ║
+║   • RIGA RA DELL'ELENCO UNIFICATO senza l'arco: diceva RA, arco e                ║
+║     IdCollegamento, ma l'arco e' gia' dentro l'IdCollegamento e la riga          ║
+║     andava a capo per la lunghezza. Ora c'e' solo l'IdCollegamento               ║
+║   • INQUADRATURA PIU' STRETTA: quella del tool lasciava molto margine e          ║
+║     i percorsi restavano piccolissimi. I limiti vengono ricalcolati sulle        ║
+║     sole polilinee a schermo, con 24 px di margine                               ║
+║   • STATO NELL'ELENCO DELLA MAPPA RA: restava ND e veniva mostrato               ║
+║     come NON ATTIVO anche su collegamenti attivi, perche' il campo dello         ║
+║     stato ha nomi diversi fra RA e RC. Ora si leggono tutte le varianti          ║
+║     e, se davvero non c'e', non viene scritto niente                             ║
+║   • ID CAVO tolto dagli elenchi delle mappe: non serve e allungava la            ║
+║     riga su piu' capi                                                            ║
+║   • TABELLA STANDARD DEL TAB RA con le stesse colonne della Multi-Path           ║
+║     da ID Collegamenti in poi: le calcolava da sola e i bottoni della            ║
+║     colonna Azioni finivano fuori                                                ║
+║   • UNDO CHE BLOCCAVA LE CELLE nei tab RC e Unificato: il ripristino             ║
+║     riscriveva anche le caselle con il completamento e mandava i loro            ║
+║     eventi. Le riempie gia' la funzione del tool, quindi ora vengono             ║
+║     saltate del tutto                                                            ║
+║   • STATO DEL COLLEGAMENTO RA cercato nel DB RA per IdCollegamento: nel          ║
+║     RA non sta sul collegamento della mappa, ed e' un campo diverso dal          ║
+║   • STATO TOLTO DA TUTTI GLI ELENCHI DELLE MAPPE, RA, RC e Unificato:            ║
+║     nel RA usciva sbagliato perche' due inserimenti diversi si                   ║
+║     sovrapponevano, uno da un modulo precedente e uno nuovo. Tolto               ║
+║     anche l'Id Cavo, che non serviva                                             ║
+║   • UNDO CHE BLOCCAVA IL COMPLETAMENTO: oltre a saltare le caselle con           ║
+║     la tendina, il ripristino non le nasconde piu' e non toglie il fuoco         ║
+║     dai campi. Era quella la parte che le lasciava morte                         ║
+║   • ETICHETTA RTN nell'elenco della mappa Unificata accorciata a Rete            ║
+║     RTN [Rete di Trasporto Nazionale] e GW, su una riga sola: la                 ║
+║     versione lunga andava a capo                                                 ║
+║   • COLONNA AZIONI DELLA TABELLA STANDARD RA: una regola precedente la           ║
+║     fissava a 130 px con la stessa forza della mia, e i bottoni da 138           ║
+║     uscivano. Ora la regola porta una classe in piu' e vince: la colonna         ║
+║     e' 158 px come nella Multi-Path, e Percorso Centrali scende al 45            ║
+║     per cento                                                                    ║
+║   • INQUADRATURA azzerata prima di reinquadrare, cosi' i limiti nuovi            ║
+║     non si mescolano con quelli del tab precedente. I limiti si                  ║
+║     raccolgono scendendo anche dentro i gruppi di livelli: senza,                ║
+║     nel tab RA venivano calcolati su pochi punti e la vista restava              ║
+║     troppo stretta. Il passo dello zoom scende a mezzo livello, cosi'            ║
+║     non si salta da una vista troppo larga a una troppo vicina                   ║
+║     Le funzioni che aprono una mappa sono piu' di quelle elencate a              ║
+║     mano: oltre alle show ci sono le open dei bottoni Maps, per                  ║
+║     esempio quella dei Percorsi Std del RC, che restava fuori e apriva           ║
+║     la mappa con lo zoom del tab precedente. Ora si cercano tutte per            ║
+║     nome                                                                         ║
+║   • PREVISTO SENZA DATA: quando la nota vale il solo trattino usciva             ║
+║     per esempio [IN REINSTRADAMENTO • Previsto -]. Ora la parte                  ║
+║     Previsto compare solo se c'e' davvero una data, altrimenti resta             ║
+║     il solo stato                                                                ║
+║   • COLONNA STATO delle tabelle di dettaglio, in tutti i tab e nelle             ║
+║     Top 4: andava a capo con IN REINSTRADAMENTO. Ora ha una larghezza            ║
+║     sua da 168 px e un carattere appena piu' piccolo, e lo spazio                ║
+║     arriva da ID Collegamenti, che puo' andare a capo                            ║
+║   • COLONNA AZIONI DEL TAB RA: la sua larghezza era al 10 per cento con          ║
+║     un minimo di 90 px, e il gruppo da 138 px non ci stava: i bottoni            ║
+║     uscivano tagliati. Ora la colonna e' larga 158 px come negli altri           ║
+║   • INQUADRATURA DELLA MAPPA rifatta a ogni apertura: aprendo la mappa           ║
+║     RA su Padova e poi quella RC su Roma si restava su Padova, perche'           ║
+║     l'adattamento ai percorsi girava solo alla prima apertura                    ║
+║   • STATO DEL COLLEGAMENTO nell'elenco della Mappa Topografica anche per         ║
+║     RA e Unificato: c'era solo nel tab RC. ATTIVO comprende ATTIVO,              ║
+║     ATTIVO > SATURO, IN REINSTRADAMENTO e IN VARIAZIONE; tutto il resto          ║
+║     e' NON ATTIVO, in rosso                                                      ║
+║   • COLONNA AZIONI DEL TAB RA allargata a 158 px: le sue tabelle hanno           ║
+║     impaginazione fissa e la colonna era larga 130, quindi i bottoni da          ║
+║     138 uscivano e venivano tagliati                                             ║
+║   • GIRO INFINITO EVITATO: spostare quei bottoni a ogni passata faceva           ║
+║     scattare l'osservatore, che richiamava la passata all'infinito e             ║
+║     bloccava la pagina. Ora il DOM si tocca solo se l'ordine non e' gia'         ║
+║     quello giusto, e le modifiche fatte da noi non fanno ripartire il            ║
+║     giro                                                                         ║
+║   • BOTTONI DEI DIVERSIFICATI che comparivano storti e si sistemavano            ║
+║     dopo un istante: le regole aspettavano che un giro periodico                 ║
+║     assegnasse la classe alla cella. Ora il codice reagisce alle                 ║
+║     modifiche delle tabelle invece di ripassare ogni 700 millesimi, e            ║
+║     la classe arriva nello stesso giro di eventi. Restano fuori le               ║
+║     righe di dettaglio, che usano anche loro l'ultima cella ma con               ║
+║     dentro una tabella: prendevano le misure dei bottoni e si                    ║
+║     schiacciavano a una lettera per riga                                         ║
 ║   • TABELLE PERCORSI (RC, RA, Unificato, Multi-Path): griglia verticale, righe   ║
 ║     alternate assegnate via JavaScript, celle centrate in altezza e mini colonna ║
 ║     per i bottoni Copia percorso e Copia ID; riga di dettaglio agganciata al suo ║
@@ -173,7 +331,7 @@
 ║   • GUIDA: le voci del changelog nascono chiuse; i tredici riquadri dello        ║
 ║     Storico dettagliato per versione si aprono e si chiudono cliccando il        ║
 ║     titolo e alla partenza sono chiusi                                           ║
-║   • CRONOLOGIA DELLA LAVORAZIONE nella voce V60.09.01 del changelog: una         ║
+║   • CRONOLOGIA DELLA LAVORAZIONE nella voce V60.09.04 del changelog: una         ║
 ║     riga per giornata dal 16 al 25 agosto 2026, le note estese si aprono sotto   ║
 ║     la data. Scritta in un punto solo, nello storico versioni resta il           ║
 ║     rimando. Le date sono indicative, ricavate dall'orologio nei collaudi        ║
@@ -3767,7 +3925,7 @@ window.updateRoutesList = function (routes) {
                       '<span style="word-break:break-all; font-weight:500;">' + id + '</span>' +
                       '<span style="color:#6b7280; font-size:10px; white-space:nowrap; margin-left:12px;">' + distLabel + '</span>' +
                     '</div>' +
-                    '' + (showIdCavo ? '<div style="color:#6b7280; font-size:10px; margin-top:2px;">Id Cavo: ' + idCavo + '</div>' : '') + '' +
+                    '' +
                   '</div>' +
                 '</div>';
               }
@@ -3793,7 +3951,7 @@ window.updateRoutesList = function (routes) {
               return '<div style="display:flex; gap:6px; align-items:center; width:100%; margin-bottom:4px;">' +
                 '<input type="checkbox" style="flex-shrink:0;" data-route-link="' + idx + '-' + linkIdx + '" onchange="window.toggleLink(' + idx + ',' + linkIdx + ')" checked>' +
                 '<span style="word-break:break-all;">' + id + '</span>' +
-                '<span style="margin-left:auto; color:#6b7280; font-size:10px; white-space:nowrap;">' + distLabel + ' • ' + stato + '</span>' +
+                '<span style="margin-left:auto; color:#6b7280; font-size:10px; white-space:nowrap;">' + distLabel + '</span>' +
               '</div>';
             })
             .join('')}
@@ -3836,6 +3994,7 @@ window.drawRoute = function(routeIdx, show) {
   if (!links.length) return;
 
   const latlngs = [];
+  const tratte = [];   /* una polilinea per collegamento acceso */
   const markers = [];
   const addedCentrals = new Set(); // Per evitare duplicati
 
@@ -3850,6 +4009,7 @@ window.drawRoute = function(routeIdx, show) {
   links.forEach((link, linkIdx) => {
     const cb = document.querySelector(`input[data-route-link="${routeIdx}-${linkIdx}"]`);
     if (cb && !cb.checked) return;
+    tratte.push(link);
 
     // Centrale A
     if (link.LatGATA && link.LonGATA) {
@@ -3890,11 +4050,10 @@ window.drawRoute = function(routeIdx, show) {
   }
 
   if (latlngs.length > 0) {
-    const poly = L.polyline(latlngs, {
-      color: window.getRouteColor(routeIdx),
-      weight: 3,
-      opacity: 0.8
-    }).addTo(window.routesMapInstance);
+    /* una polilinea per tratta: con la polilinea unica, spegnendo le tratte
+       in mezzo restava un segmento diretto fra la prima e l'ultima */
+    const poly = window.croDisegnaTratte(latlngs, tratte, routeIdx,
+                                         window.routesMapInstance);
 
     // Tooltip con info come nella Mappa Topografica Nazionale
     try {
@@ -4137,9 +4296,8 @@ window.updateRoutesListUnified = function (routes) {
           if (source === 'RTN') {
             return '<div style="display:flex; gap:6px; align-items:center; width:100%; margin-bottom:4px; padding:4px 0; border-top:2px dashed #0891b2; border-bottom:2px dashed #0891b2; background:#f0f9ff;">' +
               '<input type="checkbox" style="flex-shrink:0;" data-route-link-unified="' + idx + '-' + linkIdx + '" onchange="window.toggleLinkUnified(' + idx + ',' + linkIdx + ')" checked>' +
-              '<span style="color:#0891b2; font-weight:700;">🌐 RTN</span>' +
-              '<span style="color:#0891b2; font-size:10px; margin-left:4px;">[Rete di Trasporto Nazionale — backbone interregionale]</span>' +
-              '<span style="margin-left:auto; color:#0891b2; font-size:10px;">GW • RTN</span>' +
+              '<span style="color:#0891b2; font-size:10px; white-space:nowrap;">🌐 RTN [Rete di Trasporto Nazionale]</span>' +
+              '<span style="margin-left:auto; color:#0891b2; font-size:10px;">GW</span>' +
             '</div>';
           }
           // XFER (transizione RA↔RC)
@@ -4159,10 +4317,11 @@ window.updateRoutesListUnified = function (routes) {
               '<input type="checkbox" style="margin-top:3px; flex-shrink:0;" data-route-link-unified="' + idx + '-' + linkIdx + '" onchange="window.toggleLinkUnified(' + idx + ',' + linkIdx + ')" checked>' +
               '<div style="flex:1; min-width:0;">' +
                 '<div style="display:flex; justify-content:space-between; align-items:baseline;">' +
-                  '<span><span style="color:#0066CC; font-weight:600;">RA</span>' + arcoLabel + ' • ' + id + '</span>' +
+                  /* l'arco non si ripete: e' gia' dentro l'IdCollegamento */
+                  '<span><span style="color:#0066CC; font-weight:600;">RA</span> • ' + id + '</span>' +
                   '<span style="color:#6b7280; font-size:10px; white-space:nowrap; margin-left:12px;">' + distLabel + '</span>' +
                 '</div>' +
-                (showIdCavo ? '<div style="color:#6b7280; font-size:10px; margin-top:2px;">Id Cavo: ' + idCavo + '</div>' : '') +
+                '' +
               '</div>' +
             '</div>';
           }
@@ -4220,6 +4379,7 @@ window.drawRouteUnified = function(routeIdx, show) {
   if (!links.length) return;
 
   const latlngs = [];
+  const tratte = [];   /* una polilinea per collegamento acceso */
   const markers = [];
   const addedCentrals = new Set();
 
@@ -4234,6 +4394,7 @@ window.drawRouteUnified = function(routeIdx, show) {
   links.forEach((link, linkIdx) => {
     const cb = document.querySelector('input[data-route-link-unified="' + routeIdx + '-' + linkIdx + '"]');
     if (cb && !cb.checked) return;
+    tratte.push(link);
 
     // Centrale A
     if (link.LatGATA && link.LonGATA) {
@@ -4274,11 +4435,10 @@ window.drawRouteUnified = function(routeIdx, show) {
   }
 
   if (latlngs.length > 0) {
-    const poly = L.polyline(latlngs, {
-      color: window.getRouteColor(routeIdx),
-      weight: 3,
-      opacity: 0.8
-    }).addTo(window.routesMapInstanceUnified);
+    /* una polilinea per tratta: con la polilinea unica, spegnendo le tratte
+       in mezzo restava un segmento diretto fra la prima e l'ultima */
+    const poly = window.croDisegnaTratte(latlngs, tratte, routeIdx,
+                                         window.routesMapInstanceUnified);
 
     // Tooltip con info percorso
     try {
@@ -21138,7 +21298,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V60.09.01 | Set 2026</div>
+<div class="version-tag">V60.09.04 | Set 2026</div>
       </div>
     </div>
   </header>
@@ -21889,7 +22049,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #7c3aed;">🧩 Analisi e Verifica PXM</h3>
-    <span class="feature-badge" style="background:#f5f3ff;color:#7c3aed;">NUOVO V60.09.01</span>
+    <span class="feature-badge" style="background:#f5f3ff;color:#7c3aed;">NUOVO V60.09.04</span>
   </div>
   <p class="feature-desc">Verifica se la centrale d'accesso ha già un DWDM attivo (<strong>PXM1</strong> o <strong>PXM3</strong>) prima di prevedere un apparato nuovo in Studio di Fattibilità: su PXM1 bastano <strong>4WCC + 2 FO</strong>, su PXM3 <strong>4WCC + 4CSM</strong>. Da coordinate o indirizzo trova la <strong>centrale RC</strong> e la <strong>centrale RA</strong> più vicine e le <strong>dieci centrali PXM1/PXM3</strong> più vicine, in due tabelle con righe alternate e copia della singola riga; sopra le tabelle restano le ultime due ricerche fatte. La ricerca per <em>CLLI Sito</em> o <em>Descrizione Sito</em> lavora sull'intero archivio con filtro per tipo, selezione multipla ed export CSV. Le note del tab stanno nel pannello laterale a scomparsa.</p>
   <div class="feature-specs">
@@ -22012,11 +22172,12 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #4f46e5;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🗺️ Novità V60.09.01 — Set 2026</span>
+                  <span class="cl-ver">🗺️ Novità V60.09.04 — Set 2026</span>
                   <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📐 Colonna Azioni</strong>: nelle tabelle percorsi dei tre tab i bottoni stanno a destra e sono larghi uguali, e nell'Unificato Maps e la puntina condividono la riga</li>
     <li><strong>📊 Tab Database</strong>: tutti i bottoni rispondono al passaggio del mouse e le Statistiche mostrano tutte le regioni e tutti i vendor, con un colore per vendor e la composizione di ogni regione</li>
     <li><strong>🏷️ Export TXT dell'Unificato</strong>: nella sezione CENTRALI si leggeva solo il CLLI, ora c'è anche il nome della centrale come nei tab RA e RC</li>
     <li><strong>📌 Barra di export ferma</strong>: nei tab RC e Unificato la barra di export e l'intestazione della tabella restano ferme in cima mentre si scorre l'elenco dei percorsi</li>
@@ -39547,7 +39708,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V60.09.01 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V60.09.04 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -39567,11 +39728,27 @@ PERCORSI ALTERNATIVI (Div):
 
         <details style="border:1px solid #6366f1;border-radius:12px;overflow:hidden;background:#eef2ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#3730a3;display:flex;align-items:center;gap:0.5rem;background:#e0e7ff;">
-            🗺️ V60.09.01 — Restyling di tabelle, tab di ricerca, Database, Costi, Analisi Fattibilità e Guida; schemi delle card ridisegnati ed etichette sulle mappe
+            🗺️ V60.09.04 — Restyling di tabelle, tab di ricerca, Database, Costi, Analisi Fattibilità e Guida; schemi delle card ridisegnati ed etichette sulle mappe
           </summary>
           <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+              <li><strong>📐 Colonna Azioni delle tabelle percorsi</strong>: Nei tab RA, RC e Unificato i bottoni erano incolonnati a sinistra e larghi quanto il loro testo, quindi di misure diverse, e <em>Percorso Div</em> andava a capo su due righe. Ora il gruppo sta a destra, i bottoni sono larghi uguali quanto il più largo e il testo non va a capo. Nel tab Unificato <em>Maps</em> e la puntina stanno sulla stessa riga: da soli si prendevano due righe di altezza per niente.</li>
+              <li><strong>➕ Bottone Espandi</strong>: Nelle tabelle Top 4 di RC e Unificato, da aperto, diceva <em>Chiudi</em> invece di <em>Riduci</em>, che è la parola usata in tutte le altre tabelle. Corretto nei due punti.</li>
               <li><strong>🖱️ Tab Database, animazione dei bottoni</strong>: Diversi bottoni non davano riscontro al passaggio del mouse. <em>RA Italia</em> e <em>RC Italia</em>, quando sono accesi, hanno il fondo pieno e la regola di hover cambiava solo cornice e testo, quindi non si vedeva niente: ora il fondo si scurisce. <em>Statistiche</em> e i due bottoni del <em>Filtro rapido</em> hanno i colori scritti nello stile in linea, che vince sul foglio, quindi la loro animazione è riscritta con <code>!important</code>. Le spunte dei <em>Filtra stati (RA)</em> e <em>(RC)</em> non avevano nulla e ora la riga si accende in azzurro.</li>
-              <li><strong>📊 Statistiche Database rifatte</strong>: La finestra mostrava solo le prime otto regioni e i primi cinque vendor. Ora ci sono tutte le regioni e tutti i vendor letti dai due database, ogni vendor ha il suo colore, lo stesso nella colonna RA e in quella RC, e per ogni regione c'è la barra della composizione per vendor con i conteggi accanto: si vede a colpo d'occhio quale vendor copre quale regione. In testa a ogni colonna tre riquadri con collegamenti, centrali e numero di regioni; la tabella degli stati resta completa con i suoi colori. La finestra si chiude con la X o cliccando fuori.</li>
+              <li><strong>📊 Statistiche Database rifatte</strong>: La finestra mostrava solo le prime otto regioni e i primi cinque vendor. Ora ci sono tutte le regioni e tutti i vendor letti dai due database, ogni vendor ha il suo colore, lo stesso nella colonna RA e in quella RC, e per ogni regione c'è la barra della composizione per vendor con i conteggi accanto: si vede a colpo d'occhio quale vendor copre quale regione. In testa a ogni colonna tre riquadri con collegamenti, centrali e numero di regioni; la tabella degli stati resta completa con i suoi colori. Le regioni sono in ordine alfabetico, la parola <em>Vendor</em> sta sulla stessa riga delle pastiglie e la colonna <em>Coll.</em> si chiama ora <em>Collegamenti</em>. La finestra si chiude con la X o cliccando fuori.</li>
+              <li><strong>🐛 Percorsi Div del tab RC</strong>: Si fermavano con un errore. La funzione che misura la sovrapposizione fra due percorsi è dichiarata dentro il blocco di script dell'Unificato e non era visibile al codice del RC, che sta in un altro blocco: ora è esposta sull'oggetto globale.</li>
+              <li><strong>🛡️ Riquadro di riparo</strong>: Il riquadro sopra la barra ferma era disegnato sempre, anche a pagina non scorsa, e copriva i sedici pixel sopra la tabella: lì stanno <em>Pulisci Tabella</em> nel tab RC e la riga <em>Nessun percorso calcolato</em> nell'Unificato, che risultavano tagliati. Ora si accende solo quando l'elemento ha davvero raggiunto la sua quota.</li>
+              <li><strong>🔘 Bottoni della colonna Azioni</strong>: Tutti con lo stesso carattere e la stessa altezza, icone comprese: fra bottone acceso e bottone normale cambia solo il colore. Il bottone dei diversificati, da aperto, diceva <em>Nascondi Div A+B</em> e il testo più lungo lo faceva crescere fuori dalla colonna: la parola <em>Nascondi</em> sparisce e resta la freccia che gira verso il basso. <em>Verifica Div</em> ha ora l'animazione al passaggio del mouse, che mancava perché i suoi colori sono scritti nello stile in linea.</li>
+              <li><strong>📏 Bottoni delle colonne Azioni a misura fissa</strong>: 138 per 28 px. Prima si adattavano al testo, quindi cambiavano fra tabella standard, Top 4, Multi-Path e righe dei diversificati, e cambiavano anche quando il bottone si accendeva: ora sono identici ovunque e in ogni stato, cambia solo il colore. Le tabelle Top 4 posizionavano il gruppo a 4 px dal bordo della cella invece che a 10 come le altre, e i bottoni risultavano spostati di sei pixel: ora sono allineati alla stessa quota.</li>
+              <li><strong>🚫 Diversificato assente</strong>: Quando il calcolo non trova un Div al 100% il tool colorava il bottone di arancione, e sembrava un successo. Ora diventa rosso con il divieto davanti, così si capisce che un Div vero non c'è e che quelli proposti sono parziali. Vale nei tre tab.</li>
+              <li><strong>🔍 Div del tab RC che non venivano trovati</strong>: La ricerca guardava dentro i primi 50 percorsi più brevi: se quello completamente disgiunto stava oltre quella soglia non veniva trovato e restavano solo i Div parziali, mentre l'Unificato, che parte da un insieme molto più grande, lo trovava. La soglia sale a trecento percorsi, che bastano a trovarlo senza far durare troppo la ricerca.</li>
+              <li><strong>🧹 Pulisci Tabella dell'Unificato</strong>: Stava nella barra di export, a una distanza dalla tabella diversa da quella del tab RC. Ora sta nella riga informativa sopra la tabella, insieme a <em>Verifica Div</em> e al divisore della barra di export, sulla stessa riga di <em>Cambia interconnessione RTN</em> e del conteggio dei percorsi. Il divisore si vede solo quando <em>Verifica Div</em> è a schermo, prende lo stesso grigio degli altri divisori, ed è incolonnato con quello della riga sopra mentre <em>Verifica Div</em> lo è con <em>Maps</em>: le due righe stanno in contenitori diversi, quindi l'allineamento si ottiene misurando a video e spostando con il margine destro. Spostare quei bottoni a ogni passata faceva però scattare l'osservatore, che richiamava la passata all'infinito e bloccava la pagina: ora il DOM si tocca solo se l'ordine non è già quello giusto, e ogni passo è protetto per conto suo, così se uno inciampa gli altri lavorano lo stesso.</li>
+              <li><strong>🗺️ Mappe dei percorsi, tratte separate</strong>: La mappa disegnava una polilinea sola con tutti i punti delle tratte accese, quindi spegnendo quelle in mezzo restava un segmento diretto fra la prima e l'ultima, che non corrisponde a nessun collegamento reale. Ora ogni tratta ha la sua polilinea e si vede solo quello che è acceso. La tratta di backbone <em>RTN</em> è disegnata con il ciano della sua etichetta e con il tratteggio, per distinguerla dalle tratte in fibra, e resta accesa e spenta dalla sua casella come le altre. Il tooltip stava sulla polilinea unica e con le tratte separate era sparito: ora ogni tratta ha il suo, con i nomi delle due centrali, l'identificativo del collegamento, la distanza e lo stato. Dove la tratta non porta una distanza, come l'RTN che dichiarava <code>0.00 km</code>, viene calcolata quella in linea d'aria dalle coordinate dei due estremi con la formula dell'emisenoverso e mostrata come <em>circa *** km in linea d'aria</em>.</li>
+              <li><strong>🔎 Inquadratura della mappa</strong>: All'apertura restava quella del tab precedente, per esempio Padova aprendo dalla RA e poi ancora Padova aprendo dal RC con i percorsi su Roma. Ora la mappa si reinquadra sui percorsi appena caricati. Nell'elenco dei collegamenti compare anche lo stato per RA e Unificato, che prima c'era solo nel RC: <em>ATTIVO</em> comprende <em>ATTIVO</em>, <em>ATTIVO &gt; SATURO</em>, <em>IN REINSTRADAMENTO</em> e <em>IN VARIAZIONE</em>, tutto il resto è <em>NON ATTIVO</em>, in verde i primi e in rosso gli altri. Nell'elenco della mappa Unificata lo stato mancava del tutto, perché quell'elenco lo costruisce una funzione sua: aggiunto anche lì, sulle righe RA e RC. La riga RA di quell'elenco diceva <em>RA</em>, arco e IdCollegamento, ma l'arco è già dentro l'IdCollegamento e la riga andava a capo: ora c'è solo l'IdCollegamento. L'inquadratura, infine, lasciava molto margine e i percorsi restavano piccolissimi: i limiti vengono ora ricalcolati sulle sole polilinee a schermo, con 24 px di margine. Lo stato nell'elenco della mappa RA restava <em>ND</em> e veniva mostrato come <em>NON ATTIVO</em> anche su collegamenti attivi, perché il campo ha nomi diversi fra RA e RC: ora si leggono tutte le varianti e, se davvero non c'è, non viene scritto niente. L'<em>Id Cavo</em> è stato tolto dagli elenchi delle mappe, e la tabella standard del tab RA ha ora le stesse colonne della Multi-Path da <em>ID Collegamenti</em> in poi, così i bottoni della colonna Azioni non finiscono più fuori.</li>
+              <li><strong>📏 Colonna Azioni del tab RA</strong>: La sua larghezza era al 10 per cento con un minimo di 90 px, e il gruppo da 138 px non ci stava: i bottoni uscivano tagliati nella tabella standard e nella Multi-Path. Ora la colonna è larga 158 px come negli altri tab.</li>
+              <li><strong>🔍 Inquadratura della mappa</strong>: Aprendo la <em>Mappa Topografica</em> del RA su Padova e poi quella del RC su Roma si restava su Padova, perché l'adattamento ai percorsi girava solo alla prima apertura. Ora ogni apertura lo richiama, così l'inquadratura è sempre quella dei percorsi del tab.</li>
+              <li><strong>📶 Stato del collegamento nell'elenco della mappa</strong>: C'era solo nel tab RC. Ora c'è anche in RA e Unificato: <em>ATTIVO</em> comprende ATTIVO, ATTIVO &gt; SATURO, IN REINSTRADAMENTO e IN VARIAZIONE, tutto il resto è <em>NON ATTIVO</em> in rosso.</li>
+              <li><strong>📏 Colonna Azioni del tab RA</strong>: Le sue tabelle hanno impaginazione fissa e la colonna era larga 130 px, quindi i bottoni da 138 uscivano e venivano tagliati: la colonna sale a 158 px come negli altri tab.</li>
+              <li><strong>⚡ Bottoni dei diversificati</strong>: Comparivano storti e si sistemavano dopo un istante, perché le regole aspettavano che un giro periodico assegnasse la classe alla cella. Ora il codice reagisce alle modifiche delle tabelle invece di ripassare a intervalli, quindi la classe arriva nello stesso giro di eventi. Restano fuori le righe di dettaglio, che usano anche loro l'ultima cella ma con dentro una tabella: prendevano le misure dei bottoni e si schiacciavano a una lettera per riga.</li>
               <li><strong>🏷️ Nome della centrale nell'export TXT</strong>: Nella sezione <em>CENTRALI</em> dell'export TXT del tab Unificato si leggeva solo il CLLI. Lì i nodi del percorso sono identificati dal CLLI con il suffisso della rete, per esempio <code>MILAITBZ::RC</code>, e quando il percorso non attraversa un gateway RA/RC né il backbone RTN il generatore non passa dalla funzione che costruisce le etichette e stampa il nodo così com'è. Ora il nome viene recuperato dai due database, con una mappa costruita una volta sola alla prima chiamata, e la riga diventa <em>NOME (CLLI)</em>. I tab RA e RC erano già corretti, perché lì il nodo porta già il nome.</li>
               <li><strong>📌 Barra di export e intestazione ferme</strong>: Nei tab RC e Unificato, con l'elenco dei percorsi lungo, per selezionare una riga da esportare bisognava risalire ogni volta fino alla barra. Ora la barra resta ferma sotto le due barre fisse in cima, a 154 px, e l'intestazione della tabella si ferma subito sotto di lei: il testo delle righe scorre sotto entrambe. L'altezza della barra cambia quando si accende <em>Dati Servizio</em>, quindi viene misurata e scritta in una variabile che regola la quota dell'intestazione. La quota è 154 px, cioè 88 più 54 delle due barre fisse più 12 di respiro, perché il riquadro della barra non finisca appiccicato sotto la navigazione, e l'ombra sotto la barra è appena accennata. Nel tab Unificato la barra stava fuori dal contenitore della tabella e sarebbe rimasta ferma per pochi pixel: viene spostata dentro, come nel tab RC. La tabella aveva inoltre <code>overflow: hidden</code> per gli angoli arrotondati, e questo la rendeva il riquadro di riferimento: il ritaglio è passato al contenitore.</li>
               <li><strong>🖥️ Scorrimento della pagina</strong>: A fine introduzione <code>html</code> e <code>body</code> passavano da <code>overflow: hidden</code> ad <code>auto</code>, e così <code>body</code> diventava un riquadro di scorrimento suo: le posizioni appiccicate al suo interno si agganciavano a lui invece che alla finestra e non si fermavano mai. Ora passano a <code>visible</code>: lo scorrimento torna quello della pagina, la barra di scorrimento resta la stessa e le posizioni appiccicate funzionano.</li>
@@ -41116,11 +41293,11 @@ PERCORSI ALTERNATIVI (Div):
               <h4 class="docs-section-title" id="docs-storico-intro">Storico dettagliato per versione</h4>
               <p style="margin-bottom:1rem;">Le note di rilascio che stavano in coda all'Introduzione, raccolte qui insieme al resto del changelog.</p>
 <div class="docs-callout docs-callout-warning novita-box-current" style="background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); border-left: 4px solid #6366f1; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;">
-                <strong style="color: #3730a3; font-size: 1.05rem;">📌 Novità V60.09.01 | Set 2026 — Ultimo Aggiornamento</strong>
+                <strong style="color: #3730a3; font-size: 1.05rem;">📌 Novità V60.09.04 | Set 2026 — Ultimo Aggiornamento</strong>
                 <p style="margin: 0.75rem 0 0.5rem 0; color: #3730a3;">
                   Revisione dedicata alla resa grafica: tabelle dei percorsi, tab di ricerca, Overview, Database, Analisi Costi, Analisi Fattibilità, Calcolo Attenuazione e Guida, con gli schemi delle card ridisegnati e le etichette sulle mappe dei percorsi.
                 </p>
-                <div class="cro-cron-rimando">🗓️ La cronologia della lavorazione, giornata per giornata, sta nella voce V60.09.01 del changelog qui sopra: non è ripetuta qui per non avere lo stesso testo due volte nella stessa pagina.</div>
+                <div class="cro-cron-rimando">🗓️ La cronologia della lavorazione, giornata per giornata, sta nella voce V60.09.04 del changelog qui sopra: non è ripetuta qui per non avere lo stesso testo due volte nella stessa pagina.</div>
                 <ul class="docs-list docs-list-bullets" style="margin: 0;">
                   <li><strong>🔧 Regola Coda Cliente e scioglimento di RA e RC</strong>: Nel tab Analisi Fattibilità la riga <em>Lambda su MOC / FO Nuda</em> diceva che la gestione è a carico di FOL + RTN: ora dice FOL. RA e RC sono i due tronconi della Revolution di trasporto, quindi <em>Rete Aggregation</em> e <em>Rete Core</em> e non Rete di Accesso e Rete di Consegna, che sono un'altra cosa: la rete di accesso è la coda cliente. La correzione vale nelle schede <em>Regola Coda Cliente</em>, <em>Wholesale vs Retail</em> e <em>Processo IRP</em>, nella nota generata per la coda sede, nel prompt dell'analisi AI e nel testo delle tempistiche costruito lato JavaScript.</li>
                   <li><strong>🗂️ Tabelle Dettaglio S.d.F. e Verifica PXM</strong>: Sulle righe alternate scure la riga sotto il mouse sembrava uguale alle altre, perché il velo era sul <code>tr</code> mentre la zebra colora le celle, che quindi lo coprivano. Le due tabelle usano ora la stessa soluzione delle tabelle di ricerca percorso: zebra su <code>background-color</code> e velo su <code>background-image</code>, che sono due proprietà diverse. Hanno anche la griglia verticale fra le colonne e l'intestazione con il bordo doppio. Vale in tema chiaro e in tema scuro.</li>
@@ -296309,7 +296486,10 @@ window.runBaseRoutesSearch = function() {
     const graph = buildGraph(onlyActive, avoidListDiv);
     const blockedNodes = new Set(avoidListDiv);
 
-    const rawPaths = yenKShortest(graph, startAlt, endAlt, 50, blockedNodes);
+    /* 50 candidati erano pochi: se il percorso completamente disgiunto sta
+       oltre la cinquantesima posizione non veniva trovato e restavano solo
+       i Div parziali. Si allarga a trecento. */
+    const rawPaths = yenKShortest(graph, startAlt, endAlt, 300, blockedNodes);
     if (!rawPaths.length) {
       if (altInfo) {
         altInfo.textContent = 'Nessun percorso Div trovato con i parametri impostati.';
@@ -296434,7 +296614,7 @@ window.runBaseRoutesSearch = function() {
         inlineAltBaseIndex = idx;
         renderAltTable();
         if (altInfo) altInfo.textContent = partialEnriched.length + ' percorsi Div parziali trovati.';
-        if (altBtn) { altBtn.innerHTML = '▼ Nascondi Div'; altBtn.style.background = '#f59e0b'; altBtn.style.color = 'white'; altBtn.style.borderColor = '#f59e0b'; }
+        if (altBtn) { altBtn.innerHTML = '▼ Div'; altBtn.style.background = '#f59e0b'; altBtn.style.color = 'white'; altBtn.style.borderColor = '#f59e0b'; }
         return;
       }
 
@@ -298267,9 +298447,12 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
         // DA VERIFICARE SU NNI o NON ATTIVO [DA VERIFICARE SU NNI]
         statusBadge = '<span style="color: var(--gray-700); font-size:0.85em; font-weight:600;">[' + stato + ']</span>';
       } else if (stato === 'IN ATTIVAZIONE' || stato === 'IN VARIAZIONE' || stato === 'IN REINSTRADAMENTO') {
-        // Stati con previsto
-        const previsto = note ? note : '-';
-        statusBadge = '<span style="color: var(--gray-700); font-size:0.85em; font-weight:600;">[' + stato + ' • Previsto ' + previsto + ']</span>';
+        /* la parte Previsto solo con una data vera: con il solo trattino
+           usciva [IN REINSTRADAMENTO - Previsto -] */
+        const previsto = (note && String(note).trim() !== '' && String(note).trim() !== '-')
+          ? String(note).trim() : '';
+        statusBadge = '<span style="color: var(--gray-700); font-size:0.85em; font-weight:600;">[' + stato +
+          (previsto ? ' • Previsto ' + previsto : '') + ']</span>';
       } else if (stato === 'ATTIVO' || stato === 'NON ATTIVO') {
         // Stati senza previsto
         statusBadge = '<span style="color: var(--gray-700); font-size:0.85em; font-weight:600;">[' + stato + ']</span>';
@@ -312533,8 +312716,11 @@ div[style*="background:#f3f4f6"] label:hover span {
       if (stato.includes('DA VERIFICARE SU NNI')) {
         statusBadge = '<span style="color: var(--gray-700); font-size:0.85em; font-weight:600;">[' + escapeHtml(stato) + ']</span>';
       } else if (stato === 'IN ATTIVAZIONE' || stato === 'IN VARIAZIONE' || stato === 'IN REINSTRADAMENTO') {
-        const previsto = note ? note : '-';
-        statusBadge = '<span style="color: var(--gray-700); font-size:0.85em; font-weight:600;">[' + escapeHtml(stato) + ' • Previsto ' + escapeHtml(previsto) + ']</span>';
+        /* la parte Previsto solo con una data vera */
+        const previsto = (note && String(note).trim() !== '' && String(note).trim() !== '-')
+          ? String(note).trim() : '';
+        statusBadge = '<span style="color: var(--gray-700); font-size:0.85em; font-weight:600;">[' + escapeHtml(stato) +
+          (previsto ? ' • Previsto ' + escapeHtml(previsto) : '') + ']</span>';
       } else if (stato === 'ATTIVO' || stato === 'NON ATTIVO') {
         statusBadge = '<span style="color: var(--gray-700); font-size:0.85em; font-weight:600;">[' + escapeHtml(stato) + ']</span>';
       }
@@ -313878,6 +314064,9 @@ div[style*="background:#f3f4f6"] label:hover span {
     const totalA = (edgesA||[]).filter(e => e.source !== 'XFER' && e.source !== 'RTN').length;
     return totalA === 0 ? 0 : Math.round(sharedA.length / totalA * 100);
   }
+  /* la funzione sta dentro questo blocco di script: il tab RC la chiama dal
+     suo, quindi va messa sull'oggetto globale */
+  window._calcOverlapPct = _calcOverlapPct;
 
   function _uBuildStatBlock(route, idx, isBest, medal) {
     if(!route) return '<span style="color:#9ca3af;font-size:0.7rem;">\u2014</span>';
@@ -316418,12 +316607,12 @@ div[style*="background:#f3f4f6"] label:hover span {
           const btnActive = document.getElementById(btnId);
           if (btnActive) {
             if (rtnZona === 'AB') {
-              btnActive.innerHTML = '▼ Nascondi Div A+B';
+              btnActive.innerHTML = '▼ Div A+B';
               btnActive.style.background = 'linear-gradient(135deg,#0066CC,#0052a3)';
               btnActive.style.color = 'white';
               btnActive.style.borderColor = '#004fa3';
             } else {
-              btnActive.innerHTML = '▼ Nascondi Div ' + rtnZona;
+              btnActive.innerHTML = '▼ Div ' + rtnZona;
               btnActive.style.background = 'linear-gradient(135deg,#7c3aed,#6d28d9)';
               btnActive.style.color = 'white';
               btnActive.style.borderColor = '#7c3aed';
@@ -316511,7 +316700,7 @@ div[style*="background:#f3f4f6"] label:hover span {
             renderInlineAltRoutesUNIFIED(baseIndex);
             const btnFb = document.getElementById(btnId);
             if (btnFb) {
-              btnFb.innerHTML = '▼ Nascondi Div ' + rtnZona;
+              btnFb.innerHTML = '▼ Div ' + rtnZona;
               btnFb.style.background = '#f59e0b';
               btnFb.style.color = 'white';
               btnFb.style.borderColor = '#f59e0b';
@@ -316610,7 +316799,7 @@ div[style*="background:#f3f4f6"] label:hover span {
           renderInlineAltRoutesUNIFIED(baseIndex);
           const altBtnP = document.getElementById('uRouteAltBtn_' + baseIndex);
           if (altBtnP) {
-            altBtnP.innerHTML = '▼ Nascondi Div';
+            altBtnP.innerHTML = '▼ Div';
             altBtnP.style.background = '#f59e0b';
             altBtnP.style.color = 'white';
             altBtnP.style.borderColor = '#f59e0b';
@@ -316664,7 +316853,7 @@ div[style*="background:#f3f4f6"] label:hover span {
     // Attiva il bottone
     const altBtn = document.getElementById('uRouteAltBtn_' + baseIndex);
     if (altBtn) {
-      altBtn.innerHTML = '▼ Nascondi Div';
+      altBtn.innerHTML = '▼ Div';
       altBtn.style.background = '#7c3aed';
       altBtn.style.color = 'white';
       altBtn.style.borderColor = '#7c3aed';
@@ -316687,7 +316876,7 @@ div[style*="background:#f3f4f6"] label:hover span {
     // Usa ID specifico del bottone Espandi — non querySelector che prende il primo bottone
     var btn = document.getElementById('rcTop4ExpandBtn_'+idx);
     if (btn) {
-      btn.textContent = isOpen ? '➕ Espandi' : '➖ Chiudi';
+      btn.textContent = isOpen ? '➕ Espandi' : '➖ Riduci';
       btn.style.background   = isOpen ? '' : '#dbeafe';
       btn.style.color        = isOpen ? '' : '#1e40af';
       btn.style.borderColor  = isOpen ? '' : '#60a5fa';
@@ -316973,7 +317162,7 @@ div[style*="background:#f3f4f6"] label:hover span {
     det.style.display = isOpen ? 'none' : 'table-row';
     var btn = document.getElementById('uTop4ExpandBtn_'+idx);
     if (btn) {
-      btn.textContent = isOpen ? '➕ Espandi' : '➖ Chiudi';
+      btn.textContent = isOpen ? '➕ Espandi' : '➖ Riduci';
       btn.style.background   = isOpen ? '' : '#dbeafe';
       btn.style.color        = isOpen ? '' : '#1e40af';
       btn.style.borderColor  = isOpen ? '' : '#60a5fa';
@@ -333196,8 +333385,8 @@ body.intro-complete { overflow: visible !important; }
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
 }
 
-#rcSelBar.active::before,
-#unifiedSelBar.active::before {
+#rcSelBar.active.cro-fermo::before,
+#unifiedSelBar.active.cro-fermo::before {
   content: '';
   position: absolute;
   left: -3px;
@@ -333215,8 +333404,8 @@ body.intro-complete { overflow: visible !important; }
   background-color: var(--rt-head-bg, #e8eef7);
 }
 /* senza barra di export il riparo sta sopra l'intestazione */
-#tab-search:not(.cro-barra-on) table.route-table-v2 > thead > tr > th::before,
-#tab-search-unified:not(.cro-barra-on) table.route-table-v2 > thead > tr > th::before {
+#tab-search:not(.cro-barra-on) table.route-table-v2.cro-fermo > thead > tr > th::before,
+#tab-search-unified:not(.cro-barra-on) table.route-table-v2.cro-fermo > thead > tr > th::before {
   content: '';
   position: absolute;
   left: 0;
@@ -333286,9 +333475,28 @@ body.intro-complete { overflow: visible !important; }
     barra.dataset.croDentro = '1';
   }
 
+  /* Il riquadro di riparo va acceso solo quando l'elemento ha davvero
+     raggiunto la sua quota: disegnato sempre, copriva i sedici pixel sopra la
+     tabella, dove stanno Pulisci Tabella e la riga Nessun percorso calcolato. */
+  function fermi() {
+    var el = document.querySelectorAll('#rcSelBar, #unifiedSelBar, ' +
+      '#tab-search table.route-table-v2, #tab-search-unified table.route-table-v2');
+    for (var i = 0; i < el.length; i++) {
+      var e = el[i];
+      if (e.closest && e.closest('.top4-section')) { e.classList.remove('cro-fermo'); continue; }
+      var rif = e.tagName === 'TABLE'
+        ? (e.tHead ? e.tHead.getBoundingClientRect().top : 9999)
+        : e.getBoundingClientRect().top;
+      e.classList.toggle('cro-fermo', rif <= 157 && rif > 0);
+    }
+  }
+
   function avvia() {
     sposta();
     aggiorna();
+    fermi();
+    window.addEventListener('scroll', fermi, { passive: true });
+    window.addEventListener('resize', fermi);
     setInterval(function () { sposta(); aggiorna(); }, 700);
     window.addEventListener('resize', aggiorna);
     if (window.ResizeObserver) {
@@ -333385,19 +333593,17 @@ body.intro-complete { overflow: visible !important; }
     Object.keys(s.campi || {}).forEach(function (id) {
       var e = document.getElementById(id);
       if (!e || !tab.contains(e)) return;
+      /* Le caselle con il completamento le riempie gia' la funzione del tool:
+         riscriverle qui e mandare i loro eventi lasciava le celle bloccate
+         dopo un Undo nei tab RC e Unificato. Si saltano del tutto. */
+      if (conTendina(e)) return;
       if (e.tagName === 'SELECT' && e.multiple) {
         var val = s.campi[id] || [];
         Array.prototype.forEach.call(e.options, function (o) { o.selected = val.indexOf(o.value) > -1; });
       } else {
         e.value = s.campi[id];
       }
-      /* l'evento input su un campo con tendina la fa aprire: si manda solo
-         dove non c'e' una tendina agganciata. I nomi delle tendine non seguono
-         una regola sola, per esempio uRouteStartInput ha uRouteStartDropdown,
-         quindi si cerca anche togliendo la coda Input. */
-      if (!conTendina(e)) {
-        e.dispatchEvent(new Event('input', { bubbles: true }));
-      }
+      e.dispatchEvent(new Event('input', { bubbles: true }));
       e.dispatchEvent(new Event('change', { bubbles: true }));
     });
 
@@ -333420,8 +333626,8 @@ body.intro-complete { overflow: visible !important; }
       if (typeof window[k] !== 'undefined') window[k] = s.spie[k];
     });
 
-    /* le tendine di completamento non devono restare aperte */
-    chiudiTendine(tab);
+    /* Le tendine non vengono piu' toccate: nasconderle e togliere il fuoco
+       dai campi lasciava il completamento bloccato dopo un Undo. */
 
     /* gli interruttori si riportano allo stato giusto con un clic */
     Object.keys(s.tasti || {}).forEach(function (id) {
@@ -333499,13 +333705,7 @@ body.intro-complete { overflow: visible !important; }
           applicaStato(conf.tab, voce._croPieno);
           setTimeout(function () {
             applicaStato(conf.tab, voce._croPieno);
-            var t = document.getElementById(conf.tab);
-            if (t) chiudiTendine(t);
           }, 60);
-          setTimeout(function () {
-            var t = document.getElementById(conf.tab);
-            if (t) chiudiTendine(t);
-          }, 300);
         }
       } catch (e) {}
       return res;
@@ -334109,6 +334309,634 @@ body.intro-complete { overflow: visible !important; }
   };
 })();
 </script>
+
+<style id="croColonnaAzioni">
+/* ===========================================================================
+   Colonna Azioni delle tabelle percorsi nei tab RA, RC e Unificato. I bottoni
+   erano incolonnati a sinistra e larghi quanto il loro testo, quindi di
+   misure diverse; Percorso Div andava a capo. Ora il gruppo sta a destra, i
+   bottoni sono larghi uguali quanto il piu' largo e il testo non va a capo.
+   =========================================================================== */
+#tab-search .route-actions,
+#tab-search-ra .route-actions,
+#tab-search-unified .route-actions {
+  align-items: flex-end;
+  width: 138px;
+  min-width: 138px;
+  margin-left: auto;
+  gap: 4px;
+  box-sizing: border-box;
+}
+/* la cella deve poter contenere il gruppo senza farlo sbordare */
+/* Nelle tabelle Top 4 il gruppo e' posizionato in assoluto a 4 px dal bordo
+   della cella, mentre altrove segue il margine interno da 10: risultava
+   spostato di sei pixel rispetto alle altre tabelle. Si allinea alla stessa
+   quota. */
+#tab-search .route-actions.cro-btn-wrap,
+#tab-search-ra .route-actions.cro-btn-wrap,
+#tab-search-unified .route-actions.cro-btn-wrap { right: 10px !important; }
+
+/* la colonna deve essere larga abbastanza da contenere il gruppo */
+/* solo le celle che contengono davvero il gruppo dei bottoni: la riga di
+   dettaglio usa anche lei l'ultima cella, ma con dentro una tabella */
+#tab-search .route-table td:last-child:has(> .route-actions),
+#tab-search-ra .route-table td:last-child:has(> .route-actions),
+#tab-search-unified .route-table td:last-child:has(> .route-actions) {
+  padding-right: 10px !important;
+  min-width: 158px !important;
+  box-sizing: border-box;
+}
+#tab-search .route-table th:last-child,
+#tab-search-ra .route-table th:last-child,
+#tab-search-unified .route-table th:last-child { width: 158px !important; }
+/* Nelle tabelle del tab RA la colonna Azioni ha una larghezza sua, al 10 per
+   cento con un minimo di 90 px: il gruppo da 138 px non ci stava e i bottoni
+   uscivano tagliati. */
+#tab-search-ra .multi-arco-table .col-azioni,
+#tab-search-ra .route-table .col-azioni {
+  width: 158px !important;
+  min-width: 158px !important;
+}
+/* Nel tab RA la tabella standard e quella Multi-Path devono avere le stesse
+   colonne da ID Collegamenti in poi: la standard le calcolava da sola e i
+   bottoni finivano fuori. */
+#tab-search-ra .route-table:not(.multi-arco-table) { table-layout: fixed; }
+#tab-search-ra .route-table:not(.multi-arco-table) .col-id { width: 520px !important; }
+#tab-search-ra .route-table:not(.multi-arco-table) .col-link { width: 96px !important; }
+#tab-search-ra .route-table:not(.multi-arco-table) .col-dist { width: 120px !important; }
+/* Le tabelle del tab RA hanno impaginazione fissa e la colonna Azioni era
+   larga 130 px: i bottoni da 138 uscivano dalla colonna e venivano tagliati. */
+#tab-search-ra .route-table .col-azioni,
+#tab-search-ra .multi-arco-table .col-azioni,
+#tab-search-ra .route-table col.col-azioni {
+  width: 158px !important;
+  min-width: 158px !important;
+  max-width: 158px !important;
+}
+/* stessa misura e stesso carattere ovunque, icone comprese: cambia solo il
+   colore fra bottone acceso e bottone normale */
+#tab-search .route-actions .btn,
+#tab-search-ra .route-actions .btn,
+#tab-search-unified .route-actions .btn {
+  justify-content: center !important;
+  white-space: nowrap !important;
+  width: 100%;
+  box-sizing: border-box;
+  /* misura fissa: cosi' i bottoni sono identici fra tabella standard, Top 4,
+     Multi-Path e righe dei diversificati, e non cambiano quando si accendono */
+  width: 138px !important;
+  min-width: 138px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  padding: 0 8px !important;
+  font-size: 0.72rem !important;
+  line-height: 1 !important;
+  font-weight: 600 !important;
+  border-width: 1px !important;
+}
+#tab-search .route-actions .btn *,
+#tab-search-ra .route-actions .btn *,
+#tab-search-unified .route-actions .btn * {
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+#tab-search .route-table td:last-child,
+#tab-search-ra .route-table td:last-child,
+#tab-search-unified .route-table td:last-child,
+#tab-search-ra .multi-arco-table .col-azioni { text-align: right; }
+
+/* Quando il calcolo non trova un diversificato al 100% il tool colora il
+   bottone di arancione: lo si rende rosso e gli si mette il divieto davanti,
+   cosi' si capisce che un Div vero non c'e'. */
+.route-actions .btn.cro-div-assente {
+  background: #fee2e2 !important;
+  color: #b91c1c !important;
+  border-color: #dc2626 !important;
+}
+
+/* coda della riga informativa: Verifica Div, divisore, Pulisci Tabella */
+.cro-coda-tabella .cro-sep-coda {
+  /* stesso grigio dei divisori della barra di export */
+  color: #c4ccda !important;
+  font-weight: 400 !important;
+}
+.cro-coda-tabella {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+/* Verifica Div: i colori sono scritti nello stile in linea, quindi al
+   passaggio del mouse non succedeva niente */
+#tab-search-unified .cro-hover-verifica,
+#tab-search .cro-hover-verifica,
+#tab-search-ra .cro-hover-verifica {
+  transition: background 0.18s, border-color 0.18s, color 0.18s !important;
+}
+#tab-search-unified .cro-hover-verifica:hover,
+#tab-search .cro-hover-verifica:hover,
+#tab-search-ra .cro-hover-verifica:hover {
+  background: #d6f5e3 !important;
+  border-color: #059669 !important;
+  color: #047857 !important;
+}
+/* Maps e la puntina stanno sulla stessa riga: da soli si prendevano due
+   righe di altezza per niente */
+.cro-azioni-riga { display: flex; gap: 4px; }
+/* La riga con Maps e la puntina vale 138 px in totale, come un bottone solo:
+   la regola generale che impone 138 a ogni bottone qui non deve valere, quindi
+   questi due selettori portano l'id davanti per vincere su quella. */
+#tab-search-unified .route-actions .cro-azioni-riga,
+#tab-search .route-actions .cro-azioni-riga,
+#tab-search-ra .route-actions .cro-azioni-riga {
+  width: 138px;
+  min-width: 138px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 4px;
+}
+#tab-search-unified .route-actions .cro-azioni-riga > .btn,
+#tab-search .route-actions .cro-azioni-riga > .btn,
+#tab-search-ra .route-actions .cro-azioni-riga > .btn {
+  flex: 1 1 auto;
+  width: auto !important;
+  min-width: 0 !important;
+}
+#tab-search-unified .route-actions .cro-azioni-riga > .btn.cro-azioni-pin,
+#tab-search .route-actions .cro-azioni-riga > .btn.cro-azioni-pin,
+#tab-search-ra .route-actions .cro-azioni-riga > .btn.cro-azioni-pin {
+  flex: 0 0 38px;
+  width: 38px !important;
+  min-width: 38px !important;
+  padding: 0 !important;
+}
+</style>
+
+<script>
+/* Nel tab Unificato Maps e la puntina finiscono sulla stessa riga. */
+(function () {
+  'use strict';
+
+  /* Verifica Div: i colori sono scritti nello stile in linea, quindi al
+     passaggio del mouse non succedeva niente. */
+  function verificaDiv() {
+    var b = document.querySelectorAll('button');
+    for (var i = 0; i < b.length; i++) {
+      if ((b[i].textContent || '').indexOf('Verifica Div') === -1) continue;
+      b[i].classList.add('cro-hover-verifica');
+    }
+  }
+
+  /* Verifica Div e Pulisci Tabella scendono sulla riga di Cambia
+     interconnessione RTN, quella con il conteggio dei percorsi, con un
+     divisore fra i due. Il DOM viene toccato solo se l'ordine non e' gia'
+     quello voluto: spostare a ogni passata faceva scattare l'osservatore, che
+     richiamava la passata all'infinito. */
+  function codaTabella() {
+    var tab = document.getElementById('tab-search-unified');
+    if (!tab) return;
+    var info = tab.querySelector('.db-table-info');
+    if (!info) return;
+
+    var ver = document.getElementById('uVerifyDivBtn');
+    var pl = null, b = tab.querySelectorAll('button');
+    for (var i = 0; i < b.length; i++) {
+      if ((b[i].textContent || '').indexOf('Pulisci Tabella') > -1) pl = b[i];
+    }
+    if (!pl) return;
+
+    var coda = info.querySelector('.cro-coda-tabella');
+    if (!coda) {
+      coda = document.createElement('div');
+      coda.className = 'cro-coda-tabella';
+      info.appendChild(coda);
+    }
+
+    var sep = coda.querySelector('.cro-sep-coda');
+    if (!sep) {
+      sep = document.createElement('span');
+      sep.className = 'cro-sep-export cro-sep-coda';
+      sep.textContent = '\u2502';
+    }
+
+    var voluto = [];
+    if (ver) voluto.push(ver);
+    if (ver) voluto.push(sep);
+    voluto.push(pl);
+
+    var uguale = coda.children.length === voluto.length;
+    for (var k = 0; uguale && k < voluto.length; k++) {
+      if (coda.children[k] !== voluto[k]) uguale = false;
+    }
+    if (!uguale) {
+      for (var m = 0; m < voluto.length; m++) coda.appendChild(voluto[m]);
+    }
+
+    /* il divisore si vede solo quando Verifica Div e' davvero a schermo */
+    if (ver) {
+      var visibile = ver.getBoundingClientRect().width > 0;
+      var atteso = visibile ? 'flex' : 'none';
+      if (sep.style.display !== atteso) sep.style.display = atteso;
+    }
+  }
+
+  /* Nell'Unificato Maps e la puntina finiscono sulla stessa riga: da soli si
+     prendevano due righe di altezza per niente. */
+  function accoppia() {
+    var celle = document.querySelectorAll('#tab-search-unified .route-actions');
+    for (var i = 0; i < celle.length; i++) {
+      var c = celle[i];
+      if (c.dataset.croAzioni === '1') continue;
+      var b = c.querySelectorAll(':scope > .btn'), maps = null, pin = null;
+      for (var k = 0; k < b.length; k++) {
+        var t = (b[k].textContent || '').trim();
+        if (t.indexOf('Maps') > -1) maps = b[k];
+        else if (t === '\uD83D\uDCCC') pin = b[k];
+      }
+      if (maps && pin) {
+        var riga = document.createElement('div');
+        riga.className = 'cro-azioni-riga';
+        c.insertBefore(riga, maps);
+        riga.appendChild(maps);
+        pin.classList.add('cro-azioni-pin');
+        riga.appendChild(pin);
+      }
+      c.dataset.croAzioni = '1';
+    }
+  }
+
+  /* Le righe dei diversificati costruiscono la cella Azioni con un div senza
+     classe, quindi le regole della colonna non le raggiungevano e i bottoni
+     restavano stretti e allineati a sinistra: gli si mette la stessa classe
+     delle altre celle. */
+  function marcaCelle() {
+    var td = document.querySelectorAll(
+      '#tab-search table.route-table-v2 tbody td:last-child, ' +
+      '#tab-search-ra table.route-table-v2 tbody td:last-child, ' +
+      '#tab-search-unified table.route-table-v2 tbody td:last-child');
+    for (var i = 0; i < td.length; i++) {
+      var d = td[i].firstElementChild;
+      if (!d || d.tagName !== 'DIV') continue;
+      if (d.classList.contains('route-actions')) continue;
+      if (d.classList.contains('route-detail')) continue;
+      if (d.querySelector('table')) continue;      /* riga di dettaglio */
+      if (!d.querySelector(':scope > button')) continue;
+      d.classList.add('route-actions');
+    }
+  }
+
+  /* ogni passo e' indipendente: se uno inciampa gli altri devono comunque
+     fare il loro lavoro */
+  /* Quando il calcolo non trova un diversificato al 100% il tool colora il
+     bottone di arancione: lo si rende rosso con il divieto davanti, cosi' si
+     capisce che un Div vero non c'e'. */
+  var ARANCIO = ['rgb(245, 158, 11)', '#f59e0b'];
+
+  function divAssente() {
+    var b = document.querySelectorAll('.route-actions .btn');
+    for (var i = 0; i < b.length; i++) {
+      var e = b[i];
+      var t = (e.textContent || '');
+      if (t.indexOf('Div') === -1) continue;
+      var f = (e.style.background || e.style.backgroundColor || '').trim().toLowerCase();
+      var arancio = ARANCIO.indexOf(f) > -1;
+      e.classList.toggle('cro-div-assente', arancio);
+      if (arancio && t.indexOf('\uD83D\uDEAB') === -1) {
+        e.innerHTML = '\uD83D\uDEAB ' + e.innerHTML;
+      }
+    }
+  }
+
+  /* Verifica Div e il suo divisore vanno incolonnati con Maps e il divisore
+     della riga sopra. Le due righe stanno in contenitori diversi, quindi
+     l'allineamento si ottiene misurando a video e spostando con il margine
+     destro: aumentarlo sposta l'elemento verso sinistra, mentre Pulisci
+     Tabella resta agganciato al bordo. */
+  function allinea() {
+    var tab = document.getElementById('tab-search-unified');
+    if (!tab) return;
+    var coda = tab.querySelector('.cro-coda-tabella');
+    var ver = document.getElementById('uVerifyDivBtn');
+    var sep = coda ? coda.querySelector('.cro-sep-coda') : null;
+    if (!coda || !ver || !sep) return;
+    if (!ver.getBoundingClientRect().width) return;
+    if (getComputedStyle(sep).display === 'none') return;
+
+    /* la riga sopra: il secondo Maps, quello dei Percorsi Std + Div, e il
+       divisore che lo segue */
+    var maps = [], b = tab.querySelectorAll('.btn-export-mini');
+    for (var i = 0; i < b.length; i++) {
+      if ((b[i].textContent || '').indexOf('Maps') > -1) maps.push(b[i]);
+    }
+    if (maps.length < 2) return;
+    var sopra = maps[1];
+    var sepSopra = sopra.parentElement.parentElement.nextElementSibling;
+    while (sepSopra && !sepSopra.classList.contains('cro-sep-export')) {
+      sepSopra = sepSopra.nextElementSibling;
+    }
+    if (!sepSopra) return;
+
+    function sposta(el, rif) {
+      var d = el.getBoundingClientRect().left - rif.getBoundingClientRect().left;
+      if (Math.abs(d) < 0.6) return;
+      var m = parseFloat(el.style.marginRight || '0') || 0;
+      el.style.marginRight = (m + d) + 'px';
+    }
+
+    sposta(sep, sepSopra);
+    sposta(ver, sopra);
+  }
+
+  function passo(f) {
+    try { f(); } catch (e) { if (window.console) console.warn('CRO azioni:', e); }
+  }
+
+  var inCorso = false;
+
+  function avvia2() {
+    if (inCorso) return;
+    inCorso = true;
+    try {
+    window._croAzioniVivo = (window._croAzioniVivo || 0) + 1;
+    passo(marcaCelle);
+    passo(accoppia);
+    passo(verificaDiv);
+    passo(codaTabella);
+      passo(divAssente);
+      passo(allinea);
+    } finally {
+      inCorso = false;
+    }
+  }
+
+  /* Il giro periodico faceva comparire i bottoni sbagliati per qualche
+     istante e poi li correggeva: ora si reagisce alle modifiche delle tabelle
+     nello stesso giro di eventi, e il giro periodico resta solo come rete di
+     sicurezza, molto piu' rado. */
+  function sorveglia() {
+    if (!window.MutationObserver) return;
+    var atteso = null;
+    var o = new MutationObserver(function () {
+      /* le modifiche fatte da noi non devono richiamare un altro giro */
+      if (inCorso) return;
+      if (atteso) return;
+      atteso = setTimeout(function () { atteso = null; avvia2(); }, 60);
+    });
+    ['tab-search', 'tab-search-ra', 'tab-search-unified'].forEach(function (id) {
+      var t = document.getElementById(id);
+      if (t) { try { o.observe(t, { childList: true, subtree: true }); } catch (e) {} }
+    });
+  }
+
+  function partenza() {
+    passo(avvia2);
+    passo(sorveglia);
+    setInterval(avvia2, 2500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(partenza, 900); });
+  } else {
+    setTimeout(partenza, 900);
+  }
+})();
+</script>
+
+<script>
+/* Disegno delle tratte sulle mappe dei percorsi. */
+(function () {
+  'use strict';
+
+  var TINTA_RTN = '#0891b2';   /* lo stesso ciano dell'etichetta RTN */
+
+  function eRtn(l) {
+    if (!l) return false;
+    if (l.source === 'RTN' || l.tipo === 'RTN' || l.isRTN) return true;
+    var s = [l.IdCollegamento, l.id, l.Id, l.ID_Collegamento, l.tipoTratta]
+      .map(function (x) { return String(x == null ? '' : x); }).join(' ').toUpperCase();
+    return s.indexOf('RTN') > -1;
+  }
+
+  /* latlngs contiene, per ogni tratta accesa, il punto A e il punto Z in
+     sequenza: le coppie sono quindi le tratte. Ognuna diventa una polilinea
+     sua, cosi' non compare piu' il collegamento diretto fra tratte lontane. */
+  function testo(v) { return String(v == null ? '' : v); }
+
+  function primo() {
+    for (var i = 0; i < arguments.length; i++) {
+      var v = arguments[i];
+      if (v !== undefined && v !== null && testo(v) !== '') return v;
+    }
+    return '';
+  }
+
+  /* distanza in linea d'aria fra i due estremi, formula dell'emisenoverso */
+  function kmAria(a, b) {
+    if (!a || !b) return 0;
+    var R = 6371;
+    var g = Math.PI / 180;
+    var dLat = (b[0] - a[0]) * g, dLon = (b[1] - a[1]) * g;
+    var s = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(a[0] * g) * Math.cos(b[0] * g) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return R * 2 * Math.atan2(Math.sqrt(s), Math.sqrt(1 - s));
+  }
+
+  function etichetta(l, a, b, rtn) {
+    var da = testo(primo(l && l.GAT_A, l && l.GATA, l && l.NomeA));
+    var ad = testo(primo(l && l.GAT_Z, l && l.GATZ, l && l.NomeZ));
+    var id = testo(primo(l && l.IdCollegamento, l && l.Id_Collegamento, l && l.id, l && l.ID));
+    var stato = testo(primo(l && l.Stato_IdCollegamento, l && l.Stato, l && l.stato));
+    var km = Number(primo(l && l.Distanzakm, l && l.DistanzaKm, l && l.Distanza_km,
+                          l && l.Km, l && l.km, 0));
+    if (isNaN(km)) km = 0;
+
+    var righe = [];
+    righe.push('<strong>' + (da || '?') + ' \u2192 ' + (ad || '?') + '</strong>');
+    if (rtn) {
+      righe.push('\uD83C\uDF10 RTN \u2014 backbone interregionale');
+    } else if (id) {
+      righe.push(id);
+    }
+    if (km > 0) {
+      righe.push('\uD83D\uDCCF ' + km.toFixed(2) + ' km');
+    } else {
+      /* la tratta non porta una distanza: si mostra quella in linea d'aria
+         calcolata dalle coordinate dei due estremi, com'e' per l'RTN */
+      righe.push('\uD83D\uDCCF circa ' + kmAria(a, b).toFixed(1) +
+                 ' km in linea d\'aria');
+    }
+    if (stato) righe.push('\uD83D\uDCF6 ' + stato);
+    return righe.join('<br>');
+  }
+
+  window.croDisegnaTratte = function (latlngs, tratte, routeIdx, mappa) {
+    var tinta = window.getRouteColor(routeIdx);
+    var pezzi = [];
+    for (var i = 0; i + 1 < latlngs.length; i += 2) {
+      var l = tratte[i / 2];
+      var rtn = eRtn(l);
+      var a = latlngs[i], b = latlngs[i + 1];
+      var seg = L.polyline([a, b], {
+        color: rtn ? TINTA_RTN : tinta,
+        weight: rtn ? 4 : 3,
+        opacity: 0.85,
+        dashArray: rtn ? '10, 6' : null
+      }).addTo(mappa);
+      /* il tooltip stava sulla polilinea unica: ora ogni tratta ha il suo,
+         con i nomi, l'identificativo, la distanza e lo stato */
+      try { seg.bindTooltip(etichetta(l, a, b, rtn), { sticky: true }); } catch (e) {}
+      pezzi.push(seg);
+    }
+    /* il chiamante si aspetta un oggetto solo da togliere dalla mappa */
+    var gruppo = L.layerGroup(pezzi).addTo(mappa);
+    /* il chiamante ci attacca il tooltip del percorso intero: senza questo
+       finirebbe su un gruppo che non lo mostra e cancellerebbe i nostri */
+    gruppo.bindTooltip = function () { return gruppo; };
+    return gruppo;
+  };
+})();
+</script>
+
+<script>
+/* All'apertura della mappa l'inquadratura torna sui percorsi appena caricati:
+   restava quella del tab precedente, per esempio Padova aprendo dal RA e poi
+   Roma dal RC. */
+(function () {
+  'use strict';
+
+  function inquadra(nome) {
+    var f = window[nome];
+    if (typeof f !== 'function') return;
+    [250, 700, 1400].forEach(function (t) {
+      setTimeout(function () { try { f(); stringi(); } catch (e) {} }, t);
+    });
+  }
+
+  /* Il fitBounds del tool lascia molto margine e i percorsi restano
+     piccolissimi. Qui si ricalcolano i limiti sulle sole polilinee a schermo e
+     si stringe la vista su quelli. */
+  /* Passando da un tab all'altro la mappa conserva la vista di prima: prima di
+     reinquadrare si azzera, cosi' i limiti nuovi non vengono mescolati con
+     quelli vecchi. */
+  function azzera() {
+    ['routesMapInstance', 'routesMapInstanceUnified'].forEach(function (nome) {
+      var m = window[nome];
+      if (!m || typeof m.setView !== 'function') return;
+      try { m.setView([41.9, 12.5], 6, { animate: false }); } catch (e) {}
+    });
+  }
+
+  function stringi() {
+    ['routesMapInstance', 'routesMapInstanceUnified'].forEach(function (nome) {
+      var m = window[nome];
+      if (!m || typeof m.eachLayer !== 'function') return;
+      var punti = [];
+      /* le tratte possono stare dentro un gruppo di livelli: senza scendere
+         nei gruppi i limiti venivano calcolati su pochi punti e la vista
+         restava troppo stretta, come nel tab RA */
+      function raccogli(l) {
+        if (!l) return;
+        if (typeof l.getLatLngs === 'function') {
+          var p = l.getLatLngs();
+          (Array.isArray(p) ? p : [p]).forEach(function (x) {
+            if (x && x.lat != null) punti.push([x.lat, x.lng]);
+          });
+        }
+        if (typeof l.getLatLng === 'function') {
+          var q = l.getLatLng();
+          if (q && q.lat != null) punti.push([q.lat, q.lng]);
+        }
+        if (typeof l.eachLayer === 'function') l.eachLayer(raccogli);
+      }
+      m.eachLayer(raccogli);
+      if (punti.length < 2) return;
+      /* passi di zoom da mezzo livello: con il passo intero si saltava da una
+         vista troppo larga a una troppo stretta */
+      try {
+        m.options.zoomSnap = 0.5;
+        m.options.zoomDelta = 0.5;
+      } catch (e) {}
+      try { m.fitBounds(L.latLngBounds(punti), { padding: [40, 40] }); } catch (e) {}
+    });
+  }
+
+  function avvolgi(nome, fit) {
+    var orig = window[nome];
+    if (typeof orig !== 'function' || orig._croZoom) return;
+    var nuova = function () {
+      var r = orig.apply(this, arguments);
+      try { azzera(); } catch (e) {}
+      inquadra(fit);
+      return r;
+    };
+    nuova._croZoom = true;
+    window[nome] = nuova;
+  }
+
+  /* Le funzioni che aprono una mappa sono piu' di quelle che avevo elencato:
+     oltre alle show ci sono le open dei bottoni Maps, per esempio
+     openRoutesMapTabRC_StdOnly, che restava fuori e apriva la mappa con lo
+     zoom del tab precedente. Si cercano tutte per nome a ogni passata. */
+  function passata() {
+    for (var k in window) {
+      if (!/^(show|open)Routes(Map)?Tab/.test(k)) continue;
+      if (typeof window[k] !== 'function') continue;
+      var fit = /UNIFIED|Unified/.test(k) ? 'fitRoutesMapBoundsUnified'
+                                          : 'fitRoutesMapBounds';
+      avvolgi(k, fit);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () { passata(); setInterval(passata, 2000); }, 800);
+    });
+  } else {
+    setTimeout(function () { passata(); setInterval(passata, 2000); }, 800);
+  }
+})();
+</script>
+
+<style id="croFinitureRA">
+/* La colonna Percorso Centrali della tabella standard del tab RA era larga
+   quanto serviva al testo e spingeva fuori la colonna Azioni: le si toglie il
+   5 per cento, che va alle Azioni. */
+/* Le colonne della tabella standard non portano le classi usate dalla
+   Multi-Path, quindi si indicano per posizione: la seconda e' Percorso
+   Centrali, l'ultima e' Azioni, che restava a 130 px e faceva uscire i
+   bottoni. */
+/* Una regola precedente fissa la sesta colonna a 130 px con la stessa forza:
+   questi selettori portano una classe in piu' per avere la meglio. */
+#tab-search-ra table.db-table.route-table-v2:not(.multi-arco-table) > thead > tr > th:nth-child(2) {
+  width: 45% !important;
+}
+#tab-search-ra table.db-table.route-table-v2:not(.multi-arco-table) > thead > tr > th:nth-child(6),
+#tab-search-ra table.db-table.route-table-v2:not(.multi-arco-table) > tbody > tr > td:nth-child(6) {
+  width: 158px !important;
+  min-width: 158px !important;
+}
+
+/* Tabelle di dettaglio delle sezioni Espandi, in tutti i tab e anche nelle
+   Top 4: la colonna Stato andava a capo con IN REINSTRADAMENTO. Le si da' una
+   larghezza sua e un carattere appena piu' piccolo, e lo spazio arriva da ID
+   Collegamenti, che puo' andare a capo. */
+/* le regole della tabella grande hanno la meglio su queste: servono il
+   marcatore e un selettore piu' preciso */
+table.route-detail-table > thead > tr > th:last-child,
+table.route-detail-table > tbody > tr > td.col-stato {
+  width: 168px !important;
+  min-width: 168px !important;
+  white-space: nowrap !important;
+  font-size: 0.72rem !important;
+}
+table.route-detail-table > tbody > tr > td.col-id {
+  white-space: normal !important;
+  word-break: break-word;
+  max-width: 300px;
+}
+</style>
 
 </body>
 </html>
