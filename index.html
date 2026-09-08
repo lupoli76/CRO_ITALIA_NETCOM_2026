@@ -191,6 +191,21 @@
 ║     righe di dettaglio, che usano anche loro l'ultima cella ma con               ║
 ║     dentro una tabella: prendevano le misure dei bottoni e si                    ║
 ║     schiacciavano a una lettera per riga                                         ║
+║   • MODELLO KMZ negli export dei tab RA, RC e Unificato: un                      ║
+║     interruttore KMZ nella barra di export fa scaricare, insieme al TXT          ║
+║     o all'XLSX, il modello Tracciati KMZ per archi DWDM gia' compilato.          ║
+║     Una riga per collegamento con Arco DWDM dal SubPath, C-FOS                   ║
+║     dall'IdCavo e le due centrali, senza ripetizioni. Per la RA i due            ║
+║     valori si cercano nel database per IdCollegamento e non per                  ║
+║     SubPath: li' lo stesso SubPath torna su piu' collegamenti con C-FOS          ║
+║     diverse. Con piu' percorsi il foglio li tiene separati da una riga           ║
+║     con il progressivo e i due estremi. Il nome del file porta la                ║
+║     fattibilita' fra parentesi quadre, se compilata, e la data con ora,          ║
+║     minuti e secondi; titolo giallo, intestazione verde e larghezze              ║
+║     delle colonne come nel modello ricevuto                                      ║
+║                                                                                  ║
+║   CHANGELOG V60.09.01 | Set 2026:                                                ║
+║   ─────────────────────────                                                      ║
 ║   • TABELLE PERCORSI (RC, RA, Unificato, Multi-Path): griglia verticale, righe   ║
 ║     alternate assegnate via JavaScript, celle centrate in altezza e mini colonna ║
 ║     per i bottoni Copia percorso e Copia ID; riga di dettaglio agganciata al suo ║
@@ -22049,7 +22064,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #7c3aed;">🧩 Analisi e Verifica PXM</h3>
-    <span class="feature-badge" style="background:#f5f3ff;color:#7c3aed;">NUOVO V60.09.04</span>
+    <span class="feature-badge" style="background:#f5f3ff;color:#7c3aed;">NUOVO V60.09.01</span>
   </div>
   <p class="feature-desc">Verifica se la centrale d'accesso ha già un DWDM attivo (<strong>PXM1</strong> o <strong>PXM3</strong>) prima di prevedere un apparato nuovo in Studio di Fattibilità: su PXM1 bastano <strong>4WCC + 2 FO</strong>, su PXM3 <strong>4WCC + 4CSM</strong>. Da coordinate o indirizzo trova la <strong>centrale RC</strong> e la <strong>centrale RA</strong> più vicine e le <strong>dieci centrali PXM1/PXM3</strong> più vicine, in due tabelle con righe alternate e copia della singola riga; sopra le tabelle restano le ultime due ricerche fatte. La ricerca per <em>CLLI Sito</em> o <em>Descrizione Sito</em> lavora sull'intero archivio con filtro per tipo, selezione multipla ed export CSV. Le note del tab stanno nel pannello laterale a scomparsa.</p>
   <div class="feature-specs">
@@ -22170,15 +22185,33 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #4f46e5;">
+              <details class="cl-item" open style="--cl-accent: #0891b2;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🗺️ Novità V60.09.04 — Set 2026</span>
                   <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
-    <li><strong>📐 Colonna Azioni</strong>: nelle tabelle percorsi dei tre tab i bottoni stanno a destra e sono larghi uguali, e nell'Unificato Maps e la puntina condividono la riga</li>
+    <li><strong>📐 Colonna Azioni</strong>: nelle tabelle percorsi dei tre tab i bottoni stanno a destra, hanno tutti la stessa misura, 138 per 28 px, e nell'Unificato Maps e la puntina condividono la riga</li>
+    <li><strong>🗺️ Mappe dei percorsi</strong>: ogni tratta è una linea a sé, quindi spegnendo quelle intermedie non compaiono più collegamenti diretti inventati; la tratta RTN è in ciano tratteggiato e il tooltip riporta anche la distanza in linea d'aria</li>
+    <li><strong>🔎 Inquadratura delle mappe</strong>: si adatta ai percorsi appena caricati invece di restare su quelli del tab precedente</li>
+    <li><strong>🔍 Div del tab RC</strong>: la ricerca guarda dentro trecento percorsi invece di cinquanta, così i diversificati che prima sfuggivano vengono trovati; quando un Div al 100% non esiste il bottone diventa rosso con il divieto</li>
+    <li><strong>💶 Costi</strong>: la Liguria passa al tariffario standard, il Nord Ovest resta a Piemonte e Lombardia</li>
+    <li><strong>🏷️ Export TXT dell'Unificato</strong>: nella sezione CENTRALI compare anche il nome della centrale, non più il solo CLLI</li>
+    <li><strong>📌 Barra di export ferma</strong>: nei tab RC e Unificato la barra e l'intestazione della tabella restano in cima mentre si scorre l'elenco</li>
+    <li><strong>↩️ Undo completo</strong>: la cronologia salva e ripristina tutto lo stato, vincoli, limiti, filtri e interruttori RTN, Solo RC, DC e POP</li>
+    <li><strong>📄 Modello KMZ</strong>: negli export dei tre tab un interruttore <em>KMZ</em> fa scaricare anche il modello <em>Tracciati KMZ per archi DWDM</em> già compilato, una riga per collegamento e i percorsi separati</li>
     <li><strong>📊 Tab Database</strong>: tutti i bottoni rispondono al passaggio del mouse e le Statistiche mostrano tutte le regioni e tutti i vendor, con un colore per vendor e la composizione di ogni regione</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" open style="--cl-accent: #4f46e5;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🗺️ Novità V60.09.01 — Set 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
     <li><strong>🏷️ Export TXT dell'Unificato</strong>: nella sezione CENTRALI si leggeva solo il CLLI, ora c'è anche il nome della centrale come nei tab RA e RC</li>
     <li><strong>📌 Barra di export ferma</strong>: nei tab RC e Unificato la barra di export e l'intestazione della tabella restano ferme in cima mentre si scorre l'elenco dei percorsi</li>
     <li><strong>↩️ Undo completo</strong>: nei tre tab di ricerca la cronologia salva e ripristina tutto lo stato, vincoli, limiti numerici, filtri di stato e interruttori RTN, Solo RC, DC e POP</li>
@@ -39726,9 +39759,9 @@ PERCORSI ALTERNATIVI (Div):
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details style="border:1px solid #6366f1;border-radius:12px;overflow:hidden;background:#eef2ff;">
-          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#3730a3;display:flex;align-items:center;gap:0.5rem;background:#e0e7ff;">
-            🗺️ V60.09.04 — Restyling di tabelle, tab di ricerca, Database, Costi, Analisi Fattibilità e Guida; schemi delle card ridisegnati ed etichette sulle mappe
+        <details open style="border:1px solid #0891b2;border-radius:12px;overflow:hidden;background:#ecfeff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0e7490;display:flex;align-items:center;gap:0.5rem;background:#cffafe;">
+            🗺️ V60.09.04 — Colonne Azioni, mappe dei percorsi, Statistiche del Database, Div del RC e Liguria a tariffario standard
           </summary>
           <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
               <li><strong>📐 Colonna Azioni delle tabelle percorsi</strong>: Nei tab RA, RC e Unificato i bottoni erano incolonnati a sinistra e larghi quanto il loro testo, quindi di misure diverse, e <em>Percorso Div</em> andava a capo su due righe. Ora il gruppo sta a destra, i bottoni sono larghi uguali quanto il più largo e il testo non va a capo. Nel tab Unificato <em>Maps</em> e la puntina stanno sulla stessa riga: da soli si prendevano due righe di altezza per niente.</li>
@@ -39738,6 +39771,7 @@ PERCORSI ALTERNATIVI (Div):
               <li><strong>🐛 Percorsi Div del tab RC</strong>: Si fermavano con un errore. La funzione che misura la sovrapposizione fra due percorsi è dichiarata dentro il blocco di script dell'Unificato e non era visibile al codice del RC, che sta in un altro blocco: ora è esposta sull'oggetto globale.</li>
               <li><strong>🛡️ Riquadro di riparo</strong>: Il riquadro sopra la barra ferma era disegnato sempre, anche a pagina non scorsa, e copriva i sedici pixel sopra la tabella: lì stanno <em>Pulisci Tabella</em> nel tab RC e la riga <em>Nessun percorso calcolato</em> nell'Unificato, che risultavano tagliati. Ora si accende solo quando l'elemento ha davvero raggiunto la sua quota.</li>
               <li><strong>🔘 Bottoni della colonna Azioni</strong>: Tutti con lo stesso carattere e la stessa altezza, icone comprese: fra bottone acceso e bottone normale cambia solo il colore. Il bottone dei diversificati, da aperto, diceva <em>Nascondi Div A+B</em> e il testo più lungo lo faceva crescere fuori dalla colonna: la parola <em>Nascondi</em> sparisce e resta la freccia che gira verso il basso. <em>Verifica Div</em> ha ora l'animazione al passaggio del mouse, che mancava perché i suoi colori sono scritti nello stile in linea.</li>
+              <li><strong>📄 Modello KMZ negli export</strong>: Nei tab RA, RC e Unificato la barra di export ha un interruttore <em>KMZ</em>: quando è acceso, insieme al TXT o all'XLSX viene scaricato anche il modello <em>Tracciati KMZ per archi DWDM</em> già compilato. Una riga per collegamento, senza ripetizioni, con <em>Arco DWDM</em> preso dal <code>SubPath</code>, <em>Cavo interessato</em> dall'<code>IdCavo</code> e le due centrali da <code>GAT_A</code> e <code>GAT_Z</code>. Il file si chiama <em>Tracciati KMZ per archi DWDM</em> con la fattibilità fra parentesi quadre davanti, se compilata, e la data con ora, minuti e secondi in fondo; titolo giallo unito, intestazione verde e larghezze delle colonne sono quelli del modello ricevuto. Per la RA il <code>SubPath</code> e l'<code>IdCavo</code> si cercano nel database per <code>IdCollegamento</code> e non per SubPath: nel DB RA lo stesso SubPath torna su più collegamenti con C-FOS diverse, e cercando per SubPath se ne perderebbero. Con più percorsi selezionati il foglio li tiene separati da una riga azzurra con il progressivo del percorso e i suoi due estremi.</li>
               <li><strong>📏 Bottoni delle colonne Azioni a misura fissa</strong>: 138 per 28 px. Prima si adattavano al testo, quindi cambiavano fra tabella standard, Top 4, Multi-Path e righe dei diversificati, e cambiavano anche quando il bottone si accendeva: ora sono identici ovunque e in ogni stato, cambia solo il colore. Le tabelle Top 4 posizionavano il gruppo a 4 px dal bordo della cella invece che a 10 come le altre, e i bottoni risultavano spostati di sei pixel: ora sono allineati alla stessa quota.</li>
               <li><strong>🚫 Diversificato assente</strong>: Quando il calcolo non trova un Div al 100% il tool colorava il bottone di arancione, e sembrava un successo. Ora diventa rosso con il divieto davanti, così si capisce che un Div vero non c'è e che quelli proposti sono parziali. Vale nei tre tab.</li>
               <li><strong>🔍 Div del tab RC che non venivano trovati</strong>: La ricerca guardava dentro i primi 50 percorsi più brevi: se quello completamente disgiunto stava oltre quella soglia non veniva trovato e restavano solo i Div parziali, mentre l'Unificato, che parte da un insieme molto più grande, lo trovava. La soglia sale a trecento percorsi, che bastano a trovarlo senza far durare troppo la ricerca.</li>
@@ -39749,6 +39783,14 @@ PERCORSI ALTERNATIVI (Div):
               <li><strong>📶 Stato del collegamento nell'elenco della mappa</strong>: C'era solo nel tab RC. Ora c'è anche in RA e Unificato: <em>ATTIVO</em> comprende ATTIVO, ATTIVO &gt; SATURO, IN REINSTRADAMENTO e IN VARIAZIONE, tutto il resto è <em>NON ATTIVO</em> in rosso.</li>
               <li><strong>📏 Colonna Azioni del tab RA</strong>: Le sue tabelle hanno impaginazione fissa e la colonna era larga 130 px, quindi i bottoni da 138 uscivano e venivano tagliati: la colonna sale a 158 px come negli altri tab.</li>
               <li><strong>⚡ Bottoni dei diversificati</strong>: Comparivano storti e si sistemavano dopo un istante, perché le regole aspettavano che un giro periodico assegnasse la classe alla cella. Ora il codice reagisce alle modifiche delle tabelle invece di ripassare a intervalli, quindi la classe arriva nello stesso giro di eventi. Restano fuori le righe di dettaglio, che usano anche loro l'ultima cella ma con dentro una tabella: prendevano le misure dei bottoni e si schiacciavano a una lettera per riga.</li>
+          </div>
+        </details>
+
+        <details style="border:1px solid #6366f1;border-radius:12px;overflow:hidden;background:#eef2ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#3730a3;display:flex;align-items:center;gap:0.5rem;background:#e0e7ff;">
+            🗺️ V60.09.01 — Restyling di tabelle, tab di ricerca, Database, Costi, Analisi Fattibilità e Guida; schemi delle card ridisegnati ed etichette sulle mappe
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
               <li><strong>🏷️ Nome della centrale nell'export TXT</strong>: Nella sezione <em>CENTRALI</em> dell'export TXT del tab Unificato si leggeva solo il CLLI. Lì i nodi del percorso sono identificati dal CLLI con il suffisso della rete, per esempio <code>MILAITBZ::RC</code>, e quando il percorso non attraversa un gateway RA/RC né il backbone RTN il generatore non passa dalla funzione che costruisce le etichette e stampa il nodo così com'è. Ora il nome viene recuperato dai due database, con una mappa costruita una volta sola alla prima chiamata, e la riga diventa <em>NOME (CLLI)</em>. I tab RA e RC erano già corretti, perché lì il nodo porta già il nome.</li>
               <li><strong>📌 Barra di export e intestazione ferme</strong>: Nei tab RC e Unificato, con l'elenco dei percorsi lungo, per selezionare una riga da esportare bisognava risalire ogni volta fino alla barra. Ora la barra resta ferma sotto le due barre fisse in cima, a 154 px, e l'intestazione della tabella si ferma subito sotto di lei: il testo delle righe scorre sotto entrambe. L'altezza della barra cambia quando si accende <em>Dati Servizio</em>, quindi viene misurata e scritta in una variabile che regola la quota dell'intestazione. La quota è 154 px, cioè 88 più 54 delle due barre fisse più 12 di respiro, perché il riquadro della barra non finisca appiccicato sotto la navigazione, e l'ombra sotto la barra è appena accennata. Nel tab Unificato la barra stava fuori dal contenitore della tabella e sarebbe rimasta ferma per pochi pixel: viene spostata dentro, come nel tab RC. La tabella aveva inoltre <code>overflow: hidden</code> per gli angoli arrotondati, e questo la rendeva il riquadro di riferimento: il ritaglio è passato al contenitore.</li>
               <li><strong>🖥️ Scorrimento della pagina</strong>: A fine introduzione <code>html</code> e <code>body</code> passavano da <code>overflow: hidden</code> ad <code>auto</code>, e così <code>body</code> diventava un riquadro di scorrimento suo: le posizioni appiccicate al suo interno si agganciavano a lui invece che alla finestra e non si fermavano mai. Ora passano a <code>visible</code>: lo scorrimento torna quello della pagina, la barra di scorrimento resta la stessa e le posizioni appiccicate funzionano.</li>
@@ -41293,7 +41335,7 @@ PERCORSI ALTERNATIVI (Div):
               <h4 class="docs-section-title" id="docs-storico-intro">Storico dettagliato per versione</h4>
               <p style="margin-bottom:1rem;">Le note di rilascio che stavano in coda all'Introduzione, raccolte qui insieme al resto del changelog.</p>
 <div class="docs-callout docs-callout-warning novita-box-current" style="background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); border-left: 4px solid #6366f1; padding: 1.25rem; border-radius: 8px; margin: 1.5rem 0;">
-                <strong style="color: #3730a3; font-size: 1.05rem;">📌 Novità V60.09.04 | Set 2026 — Ultimo Aggiornamento</strong>
+                <strong style="color: #3730a3; font-size: 1.05rem;">📌 Novità V60.09.01 | Set 2026 — Ultimo Aggiornamento</strong>
                 <p style="margin: 0.75rem 0 0.5rem 0; color: #3730a3;">
                   Revisione dedicata alla resa grafica: tabelle dei percorsi, tab di ricerca, Overview, Database, Analisi Costi, Analisi Fattibilità, Calcolo Attenuazione e Guida, con gli schemi delle card ridisegnati e le etichette sulle mappe dei percorsi.
                 </p>
@@ -334937,6 +334979,364 @@ table.route-detail-table > tbody > tr > td.col-id {
   max-width: 300px;
 }
 </style>
+
+<style id="croModelloKmz">
+.expsm-kmz-toggle { white-space: nowrap; }
+</style>
+
+<script>
+/* Modello "Tracciati KMZ per archi DWDM".
+   Un interruttore nella barra di export dei tab RA, RC e Unificato: quando e'
+   acceso, insieme al TXT o all'XLSX viene scaricato anche il modello gia'
+   compilato con una riga per collegamento. */
+(function () {
+  'use strict';
+
+  var BARRE = [
+    { barra: 'rcSelBar',      spia: 'croKmzRC',      ambito: 'RC' },
+    { barra: 'raSelBar',      spia: 'croKmzRA',      ambito: 'RA' },
+    { barra: 'unifiedSelBar', spia: 'croKmzUNIFIED', ambito: 'UNIFIED' }
+  ];
+
+  /* ------------------------------------------------------------ utilita' */
+  function testo(v) { return String(v == null ? '' : v).trim(); }
+
+  function quando() {
+    var d = new Date(), z = function (n) { return String(n).padStart(2, '0'); };
+    return z(d.getDate()) + '_' + z(d.getMonth() + 1) + '_' + d.getFullYear() +
+           '-' + z(d.getHours()) + '.' + z(d.getMinutes()) + '.' + z(d.getSeconds());
+  }
+
+  function fattibilita(ambito) {
+    var id = ambito === 'RA' ? 'raSdfRefStd'
+           : (ambito === 'UNIFIED' ? 'uSdfRefStd' : 'rcSdfRefStd');
+    var e = document.getElementById(id);
+    return e ? testo(e.value) : '';
+  }
+
+  function nomeFile(ambito) {
+    /* la barra e le altre insidie dei nomi di file diventano trattini */
+    var f = fattibilita(ambito).replace(/[\\/:*?"<>|]/g, '-');
+    return (f ? '[' + f + '] ' : '') +
+           'Tracciati KMZ per archi DWDM [' + quando() + '].xlsx';
+  }
+
+  /* ------------------------------------------------- righe da esportare */
+  /* I due database hanno gli stessi nomi di campo: SubPath per l'arco DWDM,
+     IdCavo per la C-FOS completa, GAT_A e GAT_Z per le due centrali. */
+  function daCollegamento(l) {
+    if (!l) return null;
+    /* il collegamento del percorso porta il record del database in "raw":
+       li' stanno SubPath, IdCavo e le due centrali */
+    var r = l.raw || l;
+    var arco = testo(r.SubPath || r.Subpath || r.subPath);
+    var cavo = testo(r.IdCavo || r.IDCavo || r.Id_Cavo);
+    if (!arco && !cavo) return null;
+    return {
+      arco: arco,
+      cavo: cavo,
+      a: testo(r.GAT_A || r.GATA || l.from),
+      z: testo(r.GAT_Z || r.GATZ || l.to)
+    };
+  }
+
+  function percorsi(ambito) {
+    if (ambito === 'RA') {
+      return window._baseRoutesRA || window.baseRoutesRA ||
+             window._multiArcoRoutesRA || window.multiArcoRoutesRA || [];
+    }
+    if (ambito === 'UNIFIED') {
+      return window._baseRoutesUNIFIED || [];
+    }
+    return window._baseRoutesRC || [];
+  }
+
+  /* Ripiego per il tab RA, che non tiene i percorsi su una variabile
+     raggiungibile: gli identificativi si leggono dalla tabella a video e si
+     cercano nel database. */
+  function daTabella(ambito) {
+    var tab = ambito === 'RA' ? 'tab-search-ra'
+            : (ambito === 'UNIFIED' ? 'tab-search-unified' : 'tab-search');
+    var db = ambito === 'RA' ? (window.RAW_DB_RA || []) : (window.RAW_DB || []);
+    if (!db.length) return [];
+    var perId = {};
+    db.forEach(function (r) {
+      var k = testo(r.IdCollegamento);
+      if (k && !perId[k]) perId[k] = r;
+    });
+    var out = [], visti = {};
+    var celle = document.querySelectorAll('#' + tab + ' table.route-table-v2 tbody td');
+    for (var i = 0; i < celle.length; i++) {
+      var span = celle[i].querySelectorAll('span, a');
+      for (var k = 0; k < span.length; k++) {
+        var rec = perId[testo(span[k].textContent)];
+        if (!rec) continue;
+        var r = daCollegamento(rec);
+        if (!r) continue;
+        var chiave = r.arco + '|' + r.cavo;
+        if (visti[chiave]) continue;
+        visti[chiave] = 1;
+        out.push(r);
+      }
+    }
+    return out;
+  }
+
+  /* solo i percorsi con la spunta, se la selezione esiste */
+  function selezionati(ambito) {
+    var tutti = percorsi(ambito);
+    var attr = ambito === 'UNIFIED' ? 'data-route-unified'
+             : (ambito === 'RA' ? 'data-route-ra' : 'data-route');
+    var caselle = document.querySelectorAll('input[' + attr + ']');
+    if (!caselle.length) return tutti;
+    var scelti = [];
+    for (var i = 0; i < caselle.length; i++) {
+      if (!caselle[i].checked) continue;
+      var idx = parseInt(caselle[i].getAttribute(attr), 10);
+      if (!isNaN(idx) && tutti[idx]) scelti.push(tutti[idx]);
+    }
+    return scelti.length ? scelti : tutti;
+  }
+
+  /* Indice dei due database per IdCollegamento. Nel DB RA lo stesso SubPath
+     torna su piu' collegamenti, quindi SubPath e IdCavo vanno presi dal
+     record del singolo IdCollegamento e non dal SubPath. */
+  var indice = null;
+
+  function perId(id) {
+    if (!indice) {
+      indice = {};
+      [window.RAW_DB_RA, window.RAW_DB].forEach(function (db) {
+        if (!Array.isArray(db)) return;
+        db.forEach(function (r) {
+          var k = testo(r.IdCollegamento);
+          if (k && !indice[k]) indice[k] = r;
+        });
+      });
+    }
+    return indice[testo(id)] || null;
+  }
+
+  function daCollegamentoRisolto(l) {
+    if (!l) return null;
+    var id = testo((l.raw && l.raw.IdCollegamento) || l.IdCollegamento || l.id);
+    var rec = id ? perId(id) : null;
+    return daCollegamento(rec || l.raw || l);
+  }
+
+  /* un gruppo per percorso, cosi' nel foglio restano separati */
+  function gruppi(ambito) {
+    var out = [];
+    selezionati(ambito).forEach(function (p, i) {
+      var elenco = (p && p.links) ? p.links : ((p && p.edges) ? p.edges : []);
+      var righe = [], visti = {};
+      elenco.forEach(function (l) {
+        var r = daCollegamentoRisolto(l);
+        if (!r) return;
+        var chiave = r.arco + '|' + r.cavo;
+        if (visti[chiave]) return;
+        visti[chiave] = 1;
+        righe.push(r);
+      });
+      if (!righe.length) return;
+      var nodi = (p && p.nodes) ? p.nodes : [];
+      var da = testo(nodi[0]).replace(/::(RA|RC)$/, '');
+      var ad = testo(nodi[nodi.length - 1]).replace(/::(RA|RC)$/, '');
+      out.push({
+        titolo: 'Percorso ' + (i + 1) + (da && ad ? '  \u2014  ' + da + ' \u2192 ' + ad : ''),
+        righe: righe
+      });
+    });
+    if (out.length) return out;
+    var ripiego = daTabella(ambito);
+    return ripiego.length ? [{ titolo: 'Percorso 1', righe: ripiego }] : [];
+  }
+
+  /* ------------------------------------------------------ il file Excel */
+  function scrivi(ambito) {
+    if (typeof ExcelJS === 'undefined') {
+      if (window.showAlert) {
+        window.showAlert('Il modello KMZ ha bisogno della libreria Excel, che non risulta caricata.');
+      }
+      return;
+    }
+    var dati = gruppi(ambito);
+    if (!dati.length) {
+      if (window.showAlert) {
+        window.showAlert('Nessun collegamento da riportare nel modello KMZ: calcola prima i percorsi.');
+      }
+      return;
+    }
+
+    var wb = new ExcelJS.Workbook();
+    var ws = wb.addWorksheet('Foglio1');
+
+    /* stessa forma del modello ricevuto: titolo giallo unito su A1:E1,
+       intestazione verde sulla riga 3, dati dalla riga 4 */
+    ws.mergeCells('A1:E1');
+    var t = ws.getCell('A1');
+    t.value = 'Modello richiesta tracciati KMZ per archi DWDM';
+    t.font = { name: 'Aptos Narrow', size: 14, bold: true };
+    t.alignment = { horizontal: 'center', vertical: 'middle' };
+    t.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } };
+    ws.getRow(1).height = 18.75;
+    ws.getRow(2).height = 5.45;
+
+    var intest = ['N.\u00b0', 'Arco DWDM', 'Cavo interessato (C-FOS completa)',
+                  'Nome C.le sede (A)', 'Nome C.le sede (Z)'];
+    var r3 = ws.getRow(3);
+    intest.forEach(function (v, i) {
+      var c = r3.getCell(i + 1);
+      c.value = v;
+      c.font = { size: 12, bold: true };
+      c.alignment = { horizontal: 'center', vertical: 'middle' };
+      c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF92D050' } };
+      c.border = { top: { style: 'thin' }, left: { style: 'thin' },
+                   bottom: { style: 'thin' }, right: { style: 'thin' } };
+    });
+    r3.height = 23.45;
+
+    var riga = 4, n = 0;
+    dati.forEach(function (g, gi) {
+      /* con piu' percorsi ognuno ha la sua riga di separazione */
+      if (dati.length > 1 || gi > 0) {
+        ws.mergeCells('A' + riga + ':E' + riga);
+        var s = ws.getCell('A' + riga);
+        s.value = g.titolo;
+        s.font = { size: 11, bold: true, color: { argb: 'FF1F3864' } };
+        s.alignment = { horizontal: 'left', vertical: 'middle' };
+        s.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFDCE6F1' } };
+        for (var k = 1; k <= 5; k++) {
+          ws.getRow(riga).getCell(k).border = {
+            top: { style: 'thin' }, left: { style: 'thin' },
+            bottom: { style: 'thin' }, right: { style: 'thin' } };
+        }
+        ws.getRow(riga).height = 18;
+        riga++;
+      }
+      g.righe.forEach(function (d) {
+        n++;
+        var r = ws.getRow(riga);
+        [n, d.arco, d.cavo, d.a, d.z].forEach(function (x, k) {
+          var c = r.getCell(k + 1);
+          c.value = x;
+          c.border = { top: { style: 'thin' }, left: { style: 'thin' },
+                       bottom: { style: 'thin' }, right: { style: 'thin' } };
+          if (k === 0) c.alignment = { horizontal: 'center' };
+        });
+        riga++;
+      });
+    });
+
+    ws.getColumn(1).width = 6;
+    ws.getColumn(2).width = 12.43;
+    ws.getColumn(3).width = 47.71;
+    ws.getColumn(4).width = 20.29;
+    ws.getColumn(5).width = 20.29;
+
+    wb.xlsx.writeBuffer().then(function (buf) {
+      var b = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(b);
+      a.download = nomeFile(ambito);
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    });
+  }
+
+  /* ------------------------------------------------------ interruttore */
+  function acceso(ambito) {
+    var c = document.getElementById('croKmz' + ambito);
+    return !!(c && c.checked);
+  }
+
+  /* Il tab RA non ha la barra di selezione degli altri due: l'interruttore
+     entra nella barra di export, accanto ai bottoni Esporta. */
+  function mettiRA() {
+    if (document.getElementById('croKmzRA')) return;
+    var tab = document.getElementById('tab-search-ra');
+    if (!tab) return;
+    var sep = tab.querySelector('.cro-sep-export');
+    var barra = sep ? sep.parentNode : null;
+    if (!barra) return;
+    var gruppo = document.createElement('div');
+    gruppo.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:6px;';
+    gruppo.innerHTML =
+      '<div style="font-size:0.75rem; font-weight:600; color:var(--gray-700); ' +
+      'line-height:1;">Modello</div>' +
+      '<label class="expsm-cost-toggle expsm-kmz-toggle" ' +
+      'title="Scarica anche il modello Tracciati KMZ per archi DWDM">' +
+      '<input type="checkbox" id="croKmzRA"> \uD83D\uDCC4 KMZ</label>';
+    var s = document.createElement('span');
+    s.className = 'cro-sep-export';
+    s.textContent = '\u2502';
+    barra.insertBefore(s, barra.firstChild);
+    barra.insertBefore(gruppo, barra.firstChild);
+  }
+
+  function metti() {
+    mettiRA();
+    BARRE.forEach(function (b) {
+      var barra = document.getElementById(b.barra);
+      if (!barra || document.getElementById(b.spia)) return;
+      var sep = document.createElement('span');
+      sep.className = 'expsm-cost-sep';
+      var lab = document.createElement('label');
+      lab.className = 'expsm-cost-toggle expsm-kmz-toggle';
+      lab.title = 'Scarica anche il modello "Tracciati KMZ per archi DWDM" gia\' compilato';
+      lab.innerHTML = '<input type="checkbox" id="' + b.spia + '"> \uD83D\uDCC4 KMZ';
+      var conteggio = barra.querySelector('.expsm-inline-count');
+      if (conteggio && conteggio.nextSibling) {
+        barra.insertBefore(sep, conteggio.nextSibling);
+        barra.insertBefore(lab, sep.nextSibling);
+      } else {
+        barra.appendChild(sep);
+        barra.appendChild(lab);
+      }
+    });
+  }
+
+  /* ------------------------------------------- aggancio agli export */
+  var EXPORT = [
+    ['exportRoutesTxtBase', 'RC'], ['exportRoutesTxtWithAlt', 'RC'],
+    ['exportRoutesTxtBaseRA', 'RA'], ['exportRoutesTxtWithAltRA', 'RA'],
+    ['safeExportRoutesTxtBaseRA', 'RA'], ['safeExportRoutesTxtWithAltRA', 'RA'],
+    ['exportMultiArcoTxtRA', 'RA'],
+    ['exportRoutesTxtBaseUNIFIED', 'UNIFIED'], ['exportRoutesTxtWithAltUNIFIED', 'UNIFIED'],
+    ['_croExportXlsx', 'RC']
+  ];
+
+  function avvolgi(nome, ambito) {
+    var orig = window[nome];
+    if (typeof orig !== 'function' || orig._croKmz) return;
+    var nuova = function () {
+      var r = orig.apply(this, arguments);
+      if (acceso(ambito)) {
+        setTimeout(function () { try { scrivi(ambito); } catch (e) {} }, 400);
+      }
+      return r;
+    };
+    nuova._croKmz = true;
+    window[nome] = nuova;
+  }
+
+  function passata() {
+    metti();
+    EXPORT.forEach(function (e) { avvolgi(e[0], e[1]); });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(function () { passata(); setInterval(passata, 1200); }, 900);
+    });
+  } else {
+    setTimeout(function () { passata(); setInterval(passata, 1200); }, 900);
+  }
+
+  window.croEsportaModelloKmz = scrivi;
+})();
+</script>
 
 </body>
 </html>
