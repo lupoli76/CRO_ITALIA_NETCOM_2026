@@ -333635,16 +333635,19 @@ body.intro-complete { overflow: visible !important; }
     Object.keys(s.campi || {}).forEach(function (id) {
       var e = document.getElementById(id);
       if (!e || !tab.contains(e)) return;
-      /* Le caselle con il completamento le riempie gia' la funzione del tool:
-         riscriverle qui e mandare i loro eventi lasciava le celle bloccate
-         dopo un Undo nei tab RC e Unificato. Si saltano del tutto. */
-      if (conTendina(e)) return;
+      /* Sulle caselle con il completamento il valore si riscrive, ma senza
+         mandare gli eventi: erano gli eventi a lasciare le celle bloccate
+         dopo un Undo. La funzione del tool riempie solo Partenza e Arrivo
+         principali, quindi senza questo le due dei Percorsi Div restavano
+         vuote. */
+      var tendina = conTendina(e);
       if (e.tagName === 'SELECT' && e.multiple) {
         var val = s.campi[id] || [];
         Array.prototype.forEach.call(e.options, function (o) { o.selected = val.indexOf(o.value) > -1; });
       } else {
         e.value = s.campi[id];
       }
+      if (tendina) return;
       e.dispatchEvent(new Event('input', { bubbles: true }));
       e.dispatchEvent(new Event('change', { bubbles: true }));
     });
@@ -335008,15 +335011,21 @@ table.route-detail-table > tbody > tr > td.col-id {
   }
 
   function fattibilita(ambito) {
-    var id = ambito === 'RA' ? 'raSdfRefStd'
-           : (ambito === 'UNIFIED' ? 'uSdfRefStd' : 'rcSdfRefStd');
-    var e = document.getElementById(id);
-    return e ? testo(e.value) : '';
+    /* le due caselle Rif. Std e Rif. Div della barra di export: nel tab
+       Unificato si chiamano unified..., non u... */
+    var pref = ambito === 'RA' ? 'ra' : (ambito === 'UNIFIED' ? 'unified' : 'rc');
+    var std = document.getElementById(pref + 'SdfRefStd');
+    var div = document.getElementById(pref + 'SdfRefDiv');
+    var v = std ? testo(std.value) : '';
+    if (!v && div) v = testo(div.value);
+    return v;
   }
 
   function nomeFile(ambito) {
     /* la barra e le altre insidie dei nomi di file diventano trattini */
-    var f = fattibilita(ambito).replace(/[\\/:*?"<>|]/g, '-');
+    /* la barra non e' ammessa nei nomi di file: diventa un trattino basso,
+       come negli altri export */
+    var f = fattibilita(ambito).replace(/[\\/:*?"<>|]/g, '_');
     return (f ? '[' + f + '] ' : '') +
            'Tracciati KMZ per archi DWDM [' + quando() + '].xlsx';
   }
@@ -335085,15 +335094,51 @@ table.route-detail-table > tbody > tr > td.col-id {
   /* solo i percorsi con la spunta, se la selezione esiste */
   function selezionati(ambito) {
     var tutti = percorsi(ambito);
-    var attr = ambito === 'UNIFIED' ? 'data-route-unified'
-             : (ambito === 'RA' ? 'data-route-ra' : 'data-route');
-    var caselle = document.querySelectorAll('input[' + attr + ']');
+    var tab = ambito === 'RA' ? 'tab-search-ra'
+            : (ambito === 'UNIFIED' ? 'tab-search-unified' : 'tab-search');
+    /* Le caselle della barra di export sono quelle usate dal TXT e
+       dall'XLSX: classe expsm-row-cb, con l'indice del percorso in
+       data-ridx, il tipo in data-type e, per i diversificati, il percorso
+       base in data-baseidx. Prima ne cercavo altre che non esistono, e cosi'
+       il modello riportava sempre tutto. */
+    var caselle = document.querySelectorAll('#' + tab + ' input.expsm-row-cb');
     if (!caselle.length) return tutti;
-    var scelti = [];
+
+    var scelti = [], visti = {};
     for (var i = 0; i < caselle.length; i++) {
-      if (!caselle[i].checked) continue;
-      var idx = parseInt(caselle[i].getAttribute(attr), 10);
-      if (!isNaN(idx) && tutti[idx]) scelti.push(tutti[idx]);
+      var cb = caselle[i];
+      if (!cb.checked) continue;
+      var idx = parseInt(cb.getAttribute('data-ridx'), 10);
+      var base = parseInt(cb.getAttribute('data-baseidx'), 10);
+      var tipo = testo(cb.getAttribute('data-type'));
+      var p = null;
+
+      if (tipo === 'div') {
+        /* il diversificato sta nel deposito del suo percorso base */
+        var dep = (window._uDivAStoreByBase && window._uDivAStoreByBase[base]) ||
+                  window._altRoutesUNIFIED || window._altRoutes ||
+                  window._altRoutesRC || null;
+        if (dep && dep[idx]) p = dep[idx];
+        else if (!isNaN(base) && tutti[base]) p = tutti[base];
+      } else if (!isNaN(idx) && tutti[idx]) {
+        p = tutti[idx];
+      }
+      if (!p) continue;
+
+      /* lo stesso percorso puo' comparire su piu' righe */
+      var chiave = (p.pathLabel || '') + '|' + (p.idsLabel || '') + '|' +
+                   tipo + '|' + idx + '|' + base;
+      if (visti[chiave]) continue;
+      visti[chiave] = 1;
+      /* il tipo serve al titolo del gruppo: Std oppure Div, con il numero
+         del percorso base a cui il diversificato appartiene */
+      /* per gli standard l'indice del percorso e' in data-ridx, per i
+         diversificati lo standard di riferimento e' in data-baseidx */
+      scelti.push({ percorso: p, div: tipo === 'div',
+                    base: (tipo === 'div')
+                      ? (isNaN(base) ? null : base)
+                      : (isNaN(idx) ? null : idx),
+                    alt: isNaN(idx) ? null : idx });
     }
     return scelti.length ? scelti : tutti;
   }
@@ -335127,7 +335172,23 @@ table.route-detail-table > tbody > tr > td.col-id {
   /* un gruppo per percorso, cosi' nel foglio restano separati */
   function gruppi(ambito) {
     var out = [];
-    selezionati(ambito).forEach(function (p, i) {
+    var scelti = selezionati(ambito);
+
+    /* Numerazione del foglio: gli standard scelti diventano 1, 2, 3 nell'ordine
+       in cui compaiono, e ogni diversificato prende il numero del suo standard
+       con un progressivo, per esempio 1.1 e 1.2. Se lo standard di quel
+       diversificato non e' fra i selezionati si tiene il numero del tool. */
+    var numeroBase = {}, prossimo = 0;
+    scelti.forEach(function (v) {
+      if (v && v.div) return;
+      var b = (v && v.base != null) ? v.base : (v && v.alt != null ? v.alt : null);
+      var chiave = b != null ? b : ('std' + prossimo);
+      if (numeroBase[chiave] == null) numeroBase[chiave] = ++prossimo;
+    });
+    var contaDiv = {};
+
+    scelti.forEach(function (voce, i) {
+      var p = voce && voce.percorso ? voce.percorso : voce;
       var elenco = (p && p.links) ? p.links : ((p && p.edges) ? p.edges : []);
       var righe = [], visti = {};
       elenco.forEach(function (l) {
@@ -335140,10 +335201,38 @@ table.route-detail-table > tbody > tr > td.col-id {
       });
       if (!righe.length) return;
       var nodi = (p && p.nodes) ? p.nodes : [];
-      var da = testo(nodi[0]).replace(/::(RA|RC)$/, '');
-      var ad = testo(nodi[nodi.length - 1]).replace(/::(RA|RC)$/, '');
+      /* nel titolo del percorso il nome della centrale, non il CLLI nudo */
+      var nome = function (n) {
+        var clli = testo(n).replace(/::(RA|RC)$/, '');
+        var rec = null;
+        [window.RAW_DB_RA, window.RAW_DB].forEach(function (db) {
+          if (rec || !Array.isArray(db)) return;
+          for (var i = 0; i < db.length; i++) {
+            if (testo(db[i].CLLI_A) === clli) { rec = testo(db[i].GAT_A); return; }
+            if (testo(db[i].CLLI_Z) === clli) { rec = testo(db[i].GAT_Z); return; }
+          }
+        });
+        return rec ? rec + ' (' + clli + ')' : clli;
+      };
+      var da = nome(nodi[0]);
+      var ad = nome(nodi[nodi.length - 1]);
+      /* i diversificati si dichiarano, con il numero del loro standard */
+      var eDiv = !!(voce && voce.div);
+      var etichetta;
+      if (eDiv) {
+        var b = (voce.base != null) ? voce.base : null;
+        var n = (b != null && numeroBase[b] != null) ? numeroBase[b]
+              : (b != null ? b + 1 : (prossimo || 1));
+        contaDiv[n] = (contaDiv[n] || 0) + 1;
+        etichetta = 'Percorso Diversificato ' + n + '.' + contaDiv[n];
+      } else {
+        var bb = (voce && voce.base != null) ? voce.base : null;
+        var ns = (bb != null && numeroBase[bb] != null) ? numeroBase[bb]
+               : (numeroBase['std' + i] != null ? numeroBase['std' + i] : i + 1);
+        etichetta = 'Percorso Standard ' + ns;
+      }
       out.push({
-        titolo: 'Percorso ' + (i + 1) + (da && ad ? '  \u2014  ' + da + ' \u2192 ' + ad : ''),
+        titolo: etichetta + (da && ad ? '  \u2014  ' + da + ' \u2192 ' + ad : ''),
         righe: righe
       });
     });
@@ -335337,6 +335426,21 @@ table.route-detail-table > tbody > tr > td.col-id {
   window.croEsportaModelloKmz = scrivi;
 })();
 </script>
+
+<style id="croSiNoDatiServizio">
+/* ===========================================================================
+   Dati Servizio, comandi SI/NO. I bottoni "tutti a SI" e "tutti a NO"
+   scrivono lo sfondo dentro l'attributo di stile della targhetta, e quel
+   colore restava attaccato anche dopo aver scelto l'altra opzione: cosi'
+   scegliendo NO si continuava a vedere SI evidenziato. L'evidenziazione
+   torna a essere solo quella del foglio di stile, che segue la scelta vera.
+   =========================================================================== */
+div[style*="background:#f3f4f6"] label {
+  background: transparent !important;
+  color: inherit !important;
+  font-weight: 500 !important;
+}
+</style>
 
 </body>
 </html>
