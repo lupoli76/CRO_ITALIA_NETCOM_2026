@@ -4,13 +4,38 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 60.09.04  (rev. pubblicata: V60.09.04 | Set 2026)                    ║
-║   Data: 01 Settembre 2026                                                        ║
+║   Versione: 60.09.09  (rev. pubblicata: V60.09.09 | Set 2026)                    ║
+║   Data: 09 Settembre 2026                                                        ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V60.09.09 | Set 2026:                                                ║
+║   ─────────────────────────                                                      ║
+║   • EXPORT EXCEL DELLE STATISTICHE del tab Database rifatto: dai sei fogli       ║
+║     di sole tabelle si passa a tredici fogli, con RA e RC separati. La RA        ║
+║     e' blu #0066CC e la RC rossa #DC2626 su linguette, intestazioni e barre      ║
+║   • COPERTINA: cosa contiene il file, i due database a confronto, legenda        ║
+║     dei colori, indice dei fogli e cinque note su come leggere i numeri          ║
+║   • GLOSSARIO: trenta voci con termine, campo di origine nel database e          ║
+║     significato, divise per reti, sedi, collegamenti, territorio, stati e        ║
+║     tecnologie                                                                   ║
+║   • SINTESI RA-RC: venti indicatori con colonna RA blu, colonna RC rossa e       ║
+║     una colonna che spiega come si legge ogni riga; sotto, il confronto per      ║
+║     area e per categoria di stato                                                ║
+║   • CINQUE FOGLI PER RETE: Stati, Vendor, Regioni, Rete e distanze e             ║
+║     Regioni x Vendor. Ognuno ha il riquadro di spiegazione sotto al titolo,      ║
+║     righe alternate, riga totale, barre in cella, filtro e riga bloccata         ║
+║   • DATI NUOVI: attivi e non attivi per vendor e per regione, centrali e         ║
+║     chilometri per vendor e per regione, distanze totale, media, mediana,        ║
+║     minima e massima, classi di distanza, aree, zone, portanti, tipo sede        ║
+║     e tipo costituzione                                                          ║
+║   • QUALITA' DEL DATO: tratte senza distanza, tratte lunghe 0,0 km (58           ║
+║     nella RA) e tratte con estremi coincidenti (4 nella RC)                      ║
+║   • CONTEGGIO DEI RECORD RA: 6.651 e non 6.655, corretto nei due testi           ║
+║     storici dove era rimasto il numero vecchio                                   ║
 ║                                                                                  ║
 ║   CHANGELOG V60.09.04 | Set 2026:                                                ║
 ║   ─────────────────────────                                                      ║
@@ -1018,7 +1043,7 @@
 ║     - Fix: dedup post-espansione su firma edge-ID dopo expandRAT3InPath          ║
 ║   • FIX normalizzazione TipoSedeA/Z (v40.03.21):                                 ║
 ║     - DB RA aggiornato 03/03/26 usava TipoSede_A/Z (con underscore)              ║
-║     - Rinominati tutti i 6.655 record RA: TipoSede_A→TipoSedeA, etc.             ║
+║     - Rinominati tutti i 6.651 record RA: TipoSede_A→TipoSedeA, etc.             ║
 ║     - Rimossi fallback JS ?? r.TipoSede_A — ora formato unico in tutto il file   ║
 ║   ─────────────────────────────────────────────────────────────────────          ║
 ║   CHANGELOG v40.03.21:                                                           ║
@@ -1267,7 +1292,7 @@
 ║   • Export TXT: TipoSede coerente con sequenza centrali nel percorso             ║
 ║   • Uso di fromTipo/toTipo dalla direzione del routing con fallback a DB         ║
 ║                                                                                  ║
-║   • Database aggiornato il 24/01/2026: RC=1197 record, RA=6655 record  		   ║
+║   • Database aggiornato il 24/01/2026: RC=1197 record, RA=6651 record  		   ║
 ║                                                                                  ║
 ║   CHANGELOG v33.00.C:                                                            ║
 ║   ─────────────────                                                              ║
@@ -21313,7 +21338,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V60.09.04 | Set 2026</div>
+<div class="version-tag">V60.09.09 | Set 2026</div>
       </div>
     </div>
   </header>
@@ -22185,10 +22210,26 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #0891b2;">
+              <details class="cl-item" open style="--cl-accent: #0066CC;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📑 Novità V60.09.09 — Set 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📑 Export Excel delle Statistiche</strong>: dai sei fogli di sole tabelle si passa a tredici, con RA e RC separati: la RA in blu TIM e la RC in rosso su linguette, intestazioni e barre</li>
+    <li><strong>📖 Copertina e glossario</strong>: la copertina dice cosa contiene il file, mette i due database a confronto e spiega come leggere i numeri; il glossario ha trenta voci con termine, campo di origine nel database e significato</li>
+    <li><strong>📊 Sintesi RA-RC</strong>: venti indicatori con colonna RA blu e colonna RC rossa, una colonna che spiega come si legge ogni riga, poi il confronto per area e per categoria di stato</li>
+    <li><strong>🗂️ Cinque fogli per rete</strong>: Stati, Vendor, Regioni, Rete e distanze e Regioni x Vendor, ognuno con il riquadro di spiegazione sotto al titolo, righe alternate, riga totale, barre in cella, filtro e riga bloccata</li>
+    <li><strong>📏 Dati nuovi</strong>: attivi e non attivi per vendor e per regione, centrali e chilometri per vendor e per regione, distanze totale, media, mediana, minima e massima, classi di distanza, aree, zone, portanti, tipo sede e tipo costituzione</li>
+    <li><strong>🔎 Qualità del dato</strong>: il foglio Rete e distanze conta le tratte senza distanza, quelle lunghe 0,0 km (58 nella RA) e quelle con estremi coincidenti (4 nella RC)</li>
+    <li><strong>🔢 Record RA</strong>: il conteggio corretto è 6.651; nell'intestazione e in una voce del changelog era rimasto 6.655</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0891b2;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🗺️ Novità V60.09.04 — Set 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -22205,10 +22246,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   </ul>
                 </div>
               </details>
-              <details class="cl-item" open style="--cl-accent: #4f46e5;">
+              <details class="cl-item" style="--cl-accent: #4f46e5;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🗺️ Novità V60.09.01 — Set 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -39741,7 +39781,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V60.09.04 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V60.09.09 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -39758,6 +39798,24 @@ PERCORSI ALTERNATIVI (Div):
       </div>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+        <details open style="border:1px solid #0066CC;border-radius:12px;overflow:hidden;background:#eff6ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            📑 V60.09.09 — Export Excel delle Statistiche del Database, con RA e RC separati
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📑 Fascicolo riorganizzato</strong>: il bottone <em>Esporta Excel</em> della finestra Statistiche produceva sei fogli di sole tabelle, senza una riga che spiegasse cosa fossero. Ora i fogli sono tredici e ogni database ha i suoi: Stati, Vendor, Regioni, Rete e distanze e Regioni x Vendor per la RA, gli stessi cinque per la RC. La RA è blu #0066CC, la RC rossa #DC2626, e il colore vale per la linguetta del foglio, per le intestazioni, per le barre in cella e per la scala di colore delle matrici. I tre fogli che riguardano tutte e due le reti (Copertina, Glossario, Sintesi) sono grigi.</li>
+              <li><strong>📖 Copertina</strong>: primo foglio del fascicolo. Dice cosa contiene il file, mette i due database a confronto su collegamenti, attivi, non attivi, centrali e regioni, riporta la legenda dei colori, l'indice dei tredici fogli con una riga di descrizione ciascuno e cinque note su come leggere i numeri. Le note dicono in chiaro le cose che prima si potevano solo indovinare: che un collegamento è una tratta e non un percorso, che una tratta su più regioni viene contata in ognuna (nella RA la somma per regione fa 9.982 contro 6.651 collegamenti), che cosa conta come attivo, come sono contate le centrali e da dove vengono i chilometri. Chiude l'avvertenza sul valore non ufficiale del dato.</li>
+              <li><strong>📚 Glossario</strong>: trenta voci in tre colonne, termine, campo di origine nel database e significato, raggruppate in reti, sedi e nodi, collegamenti, territorio, stati e tecnologie. Serve a chi apre il file senza conoscere il tool: per ogni sigla c'è scritto da quale campo viene il dato, per esempio che le centrali sono i nomi distinti di <code>GAT_A</code> e <code>GAT_Z</code> e che i chilometri sono il campo <code>Distanza_km</code>, lo stesso peso usato per calcolare i percorsi.</li>
+              <li><strong>📊 Sintesi RA-RC</strong>: venti indicatori messi in riga con la colonna RA in blu e la colonna RC in rosso, più una colonna <em>Come si legge</em> che spiega ogni riga. Oltre ai conteggi ci sono i SubPath e i cavi distinti, gli archi della sola RA, i chilometri totali, la distanza media, la mediana e la massima, le righe regione e le tratte su più regioni. Sotto, il confronto per area e quello per categoria di stato, con la colonna che dice se quella categoria conta come attiva o no.</li>
+              <li><strong>🗂️ I cinque fogli di ogni rete</strong>: <em>Stati</em> ha stato, collegamenti, quota, categoria, se conta come attivo e una nota per gli stati che meritano attenzione, più il riepilogo per categoria. <em>Vendor</em> e <em>Regioni</em> aggiungono attivi, non attivi, quota attivi, centrali toccate e chilometri. <em>Rete e distanze</em> raccoglie gli indicatori sulle distanze, le classi di distanza con i relativi chilometri, aree, zone, portanti e, per la sola RA, tipo sede e tipo costituzione. <em>Regioni x Vendor</em> resta la matrice, ora con riga dei totali e sfumatura del colore della rete.</li>
+              <li><strong>🔎 Qualità del dato</strong>: nel foglio Rete e distanze tre righe segnalano le tratte senza distanza, quelle lunghe 0,0 km e quelle con estremi coincidenti. Nella RA le tratte a zero chilometri sono 58, per esempio CROTONE - STRONGOLI SCALO, dove il campo non è compilato. Nella RC sono 4 e coincidono con le quattro tratte che hanno la stessa centrale ai due estremi.</li>
+              <li><strong>🔢 Record RA</strong>: il database ne contiene 6.651. Nell'intestazione del file e in una voce vecchia del changelog era rimasto scritto 6.655: allineati tutti e due.</li>
+              <li><strong>Come si legge</strong>: barre in cella e scale di colore sono formattazione condizionale di Excel, non immagini, quindi si ridisegnano da sole se filtri o cambi i valori. Ogni foglio a tabella singola ha il filtro automatico e l'intestazione bloccata.</li>
+            </ul>
+          </div>
+        </details>
 
         <details open style="border:1px solid #0891b2;border-radius:12px;overflow:hidden;background:#ecfeff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0e7490;display:flex;align-items:center;gap:0.5rem;background:#cffafe;">
@@ -40156,7 +40214,7 @@ PERCORSI ALTERNATIVI (Div):
           <div style="padding:0 1rem 1rem 1rem;color:#374151;">
             <ul class="docs-list">
               <li><strong>🐛 FIX critico Tab Unificato</strong>: il DB RA aggiornato al 03/03/26 introduceva i campi <code>"TipoSede_A"</code> / <code>"TipoSede_Z"</code> (con underscore) per i record Sardegna, mentre il codice JS leggeva solo <code>TipoSedeA</code> / <code>TipoSedeZ</code>. Il tipo risultava <code>undefined</code> su quei nodi, impedendo il collasso dei T3 nel grafo Unificato — Yen trovava percorsi che, dopo l&#39;expand, apparivano visivamente identici (es. SORGONO → NUORO BISCOLLAI: 1° e 2° risultato uguali)</li>
-              <li><strong>🔧 Normalizzazione campo TipoSede</strong>: unificato il formato in tutto il file — DB RA, DB RC e JS usano ora esclusivamente <code>TipoSedeA</code> / <code>TipoSedeZ</code> (senza underscore). Tutti i 6.655 record RA aggiornati. Rimossi i fallback <code>?? r.TipoSede_A</code> dal JS. Funzione <code>normalizeRAW_DB_RA</code> semplificata: converte stringa→intero direttamente su <code>TipoSedeA</code>/<code>TipoSedeZ</code></li>
+              <li><strong>🔧 Normalizzazione campo TipoSede</strong>: unificato il formato in tutto il file — DB RA, DB RC e JS usano ora esclusivamente <code>TipoSedeA</code> / <code>TipoSedeZ</code> (senza underscore). Tutti i 6.651 record RA aggiornati. Rimossi i fallback <code>?? r.TipoSede_A</code> dal JS. Funzione <code>normalizeRAW_DB_RA</code> semplificata: converte stringa→intero direttamente su <code>TipoSedeA</code>/<code>TipoSedeZ</code></li>
             </ul>
           </div>
         </details>
@@ -335441,6 +335499,1124 @@ div[style*="background:#f3f4f6"] label {
   font-weight: 500 !important;
 }
 </style>
+
+<script>
+/* Export in Excel delle Statistiche del Database.
+   Il bottone nella finestra Statistiche produce un fascicolo con copertina,
+   glossario, sintesi di confronto e un gruppo di fogli per ogni database:
+   la RA in blu, la RC in rosso. I grafici nativi di Excel non sono
+   producibili con la libreria in uso, quindi al loro posto ci sono barre in
+   cella e scale di colore, che Excel disegna da solo. */
+(function () {
+  'use strict';
+
+  /* ---------------------------------------------------------- tinte
+     RA blu TIM, RC rosso, grigio per i fogli generali. */
+  var BLU = 'FF0066CC', BLU_SCURO = 'FF00519E', BLU_TENUE = 'FFEFF6FF';
+  var ROSSO = 'FFDC2626', ROSSO_SCURO = 'FF991B1B', ROSSO_TENUE = 'FFFEF2F2';
+  var GRIGIO = 'FF64748B', GRIGIO_TENUE = 'FFF1F5F9';
+  var VERDE = 'FF059669', NERO = 'FF334155', BIANCO = 'FFFFFFFF';
+  var BORDO = 'FFE2E8F0';
+
+  var CLASSI = [
+    ['fino a 5 km', 0, 5],
+    ['5 - 10 km', 5, 10],
+    ['10 - 25 km', 10, 25],
+    ['25 - 50 km', 25, 50],
+    ['50 - 100 km', 50, 100],
+    ['oltre 100 km', 100, 1e9]
+  ];
+
+  var REVISIONE = 'V60.09.09';
+
+  function t(v) { return String(v == null ? '' : v).trim(); }
+
+  function quando() {
+    var d = new Date(), z = function (n) { return String(n).padStart(2, '0'); };
+    return z(d.getDate()) + '_' + z(d.getMonth() + 1) + '_' + d.getFullYear() +
+           '-' + z(d.getHours()) + '.' + z(d.getMinutes()) + '.' + z(d.getSeconds());
+  }
+
+  function segna(mappa, v) {
+    v = t(v);
+    if (v && v !== '-') mappa[v] = 1;
+    return v && v !== '-' ? v : '';
+  }
+
+  function quanti(m) { return Object.keys(m).length; }
+
+  function perValore(m) {
+    return Object.keys(m).sort(function (a, b) {
+      return (m[b] - m[a]) || a.localeCompare(b, 'it');
+    });
+  }
+
+  function perValoreTot(m) {
+    return Object.keys(m).sort(function (a, b) {
+      return (m[b].tot - m[a].tot) || a.localeCompare(b, 'it');
+    });
+  }
+
+  function perNome(m) {
+    return Object.keys(m).sort(function (a, b) { return a.localeCompare(b, 'it'); });
+  }
+
+  function mediana(v) {
+    if (!v.length) return 0;
+    var m = Math.floor(v.length / 2);
+    return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2;
+  }
+
+  function arrotonda(n, dec) {
+    var p = Math.pow(10, dec == null ? 1 : dec);
+    return Math.round(n * p) / p;
+  }
+
+  /* stessa regola usata dai filtri di stato dei tab di ricerca */
+  function attivo(s) {
+    var u = String(s).toUpperCase();
+    if (u.indexOf('NON ATTIVO') > -1) return false;
+    return u.indexOf('ATTIVO') > -1 || u.indexOf('REINSTRADAMENTO') > -1 ||
+           u.indexOf('VARIAZIONE') > -1;
+  }
+
+  /* classificazione piu' fine: non cambia i totali, aggiunge una lettura */
+  function categoria(s) {
+    var u = String(s).toUpperCase();
+    if (u.indexOf('NON ATTIVO') > -1) return 'Non attivo';
+    if (u.indexOf('SATURO') > -1) return 'Attivo saturo';
+    if (u.indexOf('REINSTRADAMENTO') > -1) return 'In reinstradamento';
+    if (u.indexOf('VARIAZIONE') > -1) return 'In variazione';
+    if (u.indexOf('ATTIVAZIONE') > -1) return 'In attivazione';
+    if (u.indexOf('CESSAZIONE') > -1) return 'In cessazione';
+    if (u.indexOf('VERIFICARE') > -1) return 'Da verificare';
+    if (u.indexOf('MISTO') > -1) return 'Misto';
+    if (u.indexOf('ATTIVO') > -1) return 'Attivo';
+    return 'Altro';
+  }
+
+  function classeKm(k) {
+    for (var i = 0; i < CLASSI.length; i++) {
+      if (k >= CLASSI[i][1] && (k < CLASSI[i][2] || i === CLASSI.length - 1)) {
+        return CLASSI[i][0];
+      }
+    }
+    return CLASSI[CLASSI.length - 1][0];
+  }
+
+  /* ------------------------------------------------------ conteggi */
+  function conta(db, sigla, nome) {
+    var o = {
+      sigla: sigla, nome: nome, totale: 0,
+      stati: {}, categorie: {}, regioni: {}, vendor: {}, incrocio: {},
+      centrali: {}, aree: {}, zone: {}, portanti: {}, costituzione: {},
+      sedi: {}, archi: {}, subpath: {}, cavi: {}, classi: {}, classiKm: {},
+      regDett: {}, venDett: {},
+      attivi: 0, nonAttivi: 0, sommaRegioni: 0, multiRegione: 0, senzaRegione: 0,
+      km: [], kmTot: 0, senzaKm: 0, kmZero: 0, estremiUguali: 0
+    };
+    CLASSI.forEach(function (c) { o.classi[c[0]] = 0; o.classiKm[c[0]] = 0; });
+
+    (db || []).forEach(function (r) {
+      o.totale++;
+
+      var s = t(r.Stato_IdCollegamento) || 'Non indicato';
+      o.stati[s] = (o.stati[s] || 0) + 1;
+      var cat = categoria(s);
+      o.categorie[cat] = (o.categorie[cat] || 0) + 1;
+      var att = attivo(s);
+      if (att) o.attivi++; else o.nonAttivi++;
+
+      var v = t(r.Vendor) || 'Non indicato';
+      o.vendor[v] = (o.vendor[v] || 0) + 1;
+      if (!o.venDett[v]) o.venDett[v] = { tot: 0, attivi: 0, km: 0, centrali: {} };
+      o.venDett[v].tot++;
+      if (att) o.venDett[v].attivi++;
+
+      o.aree[t(r.Area) || 'Non indicata'] = (o.aree[t(r.Area) || 'Non indicata'] || 0) + 1;
+      o.zone[t(r.Zona) || 'Non indicata'] = (o.zone[t(r.Zona) || 'Non indicata'] || 0) + 1;
+
+      var por = t(r.TIPOPORTANTE) || t(r.TipoPortante) || 'Non indicato';
+      o.portanti[por] = (o.portanti[por] || 0) + 1;
+
+      var cos = t(r.TIPOCOSTITUZIONE);
+      if (cos) o.costituzione[cos] = (o.costituzione[cos] || 0) + 1;
+
+      [t(r.TipoSedeA), t(r.TipoSedeZ)].forEach(function (x) {
+        if (x && x !== '-') o.sedi[x] = (o.sedi[x] || 0) + 1;
+      });
+
+      var ca = segna(o.centrali, r.GAT_A), cz = segna(o.centrali, r.GAT_Z);
+      if (ca && cz && ca === cz) o.estremiUguali++;
+      if (ca) o.venDett[v].centrali[ca] = 1;
+      if (cz) o.venDett[v].centrali[cz] = 1;
+      segna(o.archi, r.Arco);
+      segna(o.subpath, r.SubPath);
+      segna(o.cavi, r.IdCavo);
+
+      var k = parseFloat(String(r.Distanza_km).replace(',', '.'));
+      var kmOk = isFinite(k) && k >= 0;
+      if (kmOk) {
+        o.km.push(k);
+        o.kmTot += k;
+        var cl = classeKm(k);
+        o.classi[cl] = (o.classi[cl] || 0) + 1;
+        o.classiKm[cl] = (o.classiKm[cl] || 0) + k;
+        o.venDett[v].km += k;
+        if (k === 0) o.kmZero++;
+      } else {
+        o.senzaKm++;
+      }
+
+      var parti = t(r.Regione).split('|').map(function (x) { return t(x); })
+        .filter(function (x) { return x && x !== '-'; });
+      if (!parti.length) o.senzaRegione++;
+      if (parti.length > 1) o.multiRegione++;
+      parti.forEach(function (reg) {
+        o.sommaRegioni++;
+        o.regioni[reg] = (o.regioni[reg] || 0) + 1;
+        if (!o.incrocio[reg]) o.incrocio[reg] = {};
+        o.incrocio[reg][v] = (o.incrocio[reg][v] || 0) + 1;
+        if (!o.regDett[reg]) o.regDett[reg] = { tot: 0, attivi: 0, km: 0, centrali: {} };
+        o.regDett[reg].tot++;
+        if (att) o.regDett[reg].attivi++;
+        if (kmOk) o.regDett[reg].km += k;
+        if (ca) o.regDett[reg].centrali[ca] = 1;
+        if (cz) o.regDett[reg].centrali[cz] = 1;
+      });
+    });
+
+    o.km.sort(function (a, b) { return a - b; });
+    o.kmMedia = o.km.length ? o.kmTot / o.km.length : 0;
+    o.kmMediana = mediana(o.km);
+    o.kmMin = o.km.length ? o.km[0] : 0;
+    o.kmMax = o.km.length ? o.km[o.km.length - 1] : 0;
+    return o;
+  }
+
+  /* --------------------------------------------- mattoni dei fogli */
+  function nuovoFoglio(wb, nome, tinta, congela) {
+    return wb.addWorksheet(nome, {
+      properties: { tabColor: { argb: tinta } },
+      pageSetup: {
+        orientation: 'portrait', fitToPage: true, fitToWidth: 1, fitToHeight: 0,
+        margins: { left: 0.4, right: 0.4, top: 0.5, bottom: 0.5, header: 0.2, footer: 0.2 }
+      },
+      views: [{
+        showGridLines: false,
+        state: congela ? 'frozen' : 'normal',
+        ySplit: congela || 0
+      }]
+    });
+  }
+
+  function larghezze(ws, arr) {
+    arr.forEach(function (w, i) { ws.getColumn(i + 1).width = w; });
+  }
+
+  function testata(ws, titolo, sotto, larghezza, tinta) {
+    ws.mergeCells(1, 1, 1, larghezza);
+    var c = ws.getCell(1, 1);
+    c.value = titolo;
+    c.font = { size: 14, bold: true, color: { argb: BIANCO } };
+    c.alignment = { horizontal: 'left', vertical: 'middle', indent: 1 };
+    c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: tinta } };
+    ws.getRow(1).height = 26;
+
+    ws.mergeCells(2, 1, 2, larghezza);
+    var s = ws.getCell(2, 1);
+    s.value = sotto;
+    s.font = { size: 9, italic: true, color: { argb: GRIGIO } };
+    s.alignment = { horizontal: 'left', vertical: 'middle', indent: 1 };
+    ws.getRow(2).height = 15;
+  }
+
+  /* banda di sezione dentro un foglio */
+  function sezione(ws, n, testo, larghezza, tinta) {
+    ws.mergeCells(n, 1, n, larghezza);
+    var c = ws.getCell(n, 1);
+    c.value = testo;
+    c.font = { size: 11, bold: true, color: { argb: tinta } };
+    c.alignment = { horizontal: 'left', vertical: 'middle', indent: 1 };
+    c.border = { bottom: { style: 'medium', color: { argb: tinta } } };
+    ws.getRow(n).height = 20;
+    return n + 1;
+  }
+
+  /* riquadro di spiegazione: sta sotto al titolo o sopra a una tabella */
+  function spiega(ws, n, testo, larghezza, tinta, tenue, linee) {
+    ws.mergeCells(n, 1, n, larghezza);
+    var c = ws.getCell(n, 1);
+    c.value = testo;
+    c.font = { size: 9, color: { argb: NERO } };
+    c.alignment = { horizontal: 'left', vertical: 'middle', wrapText: true, indent: 1 };
+    c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: tenue } };
+    c.border = { left: { style: 'thick', color: { argb: tinta } } };
+    ws.getRow(n).height = 13 * (linee || Math.ceil(testo.length / 120)) + 8;
+    return n + 1;
+  }
+
+  function testo(ws, n, valore, larghezza, opz) {
+    opz = opz || {};
+    ws.mergeCells(n, 1, n, larghezza);
+    var c = ws.getCell(n, 1);
+    c.value = valore;
+    c.font = { size: opz.size || 10, bold: !!opz.grassetto, italic: !!opz.corsivo,
+               color: { argb: opz.tinta || NERO } };
+    c.alignment = { horizontal: 'left', vertical: 'middle', wrapText: true, indent: 1 };
+    if (opz.fondo) c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: opz.fondo } };
+    ws.getRow(n).height = 13 * (opz.linee || Math.ceil(String(valore).length / 120)) + 6;
+    return n + 1;
+  }
+
+  function intestazione(ws, n, voci, tinta) {
+    var r = ws.getRow(n);
+    voci.forEach(function (v, i) {
+      var c = r.getCell(i + 1);
+      c.value = v;
+      c.font = { size: 10, bold: true, color: { argb: BIANCO } };
+      c.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
+      c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: tinta } };
+      c.border = { top: { style: 'thin', color: { argb: tinta } },
+                   left: { style: 'thin', color: { argb: BIANCO } },
+                   bottom: { style: 'thin', color: { argb: tinta } },
+                   right: { style: 'thin', color: { argb: BIANCO } } };
+    });
+    r.height = 24;
+    return n + 1;
+  }
+
+  function dati(ws, n, valori, opz) {
+    opz = opz || {};
+    var r = ws.getRow(n);
+    valori.forEach(function (v, i) {
+      var c = r.getCell(i + 1);
+      c.value = v;
+      c.font = { size: 10, bold: !!opz.grassetto,
+                 color: { argb: (opz.tinteCella && opz.tinteCella[i]) || opz.tinta || NERO } };
+      c.border = { top: { style: 'hair', color: { argb: BORDO } },
+                   left: { style: 'hair', color: { argb: BORDO } },
+                   bottom: { style: 'hair', color: { argb: BORDO } },
+                   right: { style: 'hair', color: { argb: BORDO } } };
+      c.alignment = { horizontal: typeof v === 'number' ? 'right' : 'left',
+                      vertical: 'middle', indent: typeof v === 'number' ? 0 : 1 };
+      if (opz.fondo) c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: opz.fondo } };
+    });
+    r.height = 16;
+    return r;
+  }
+
+  function totale(ws, n, valori, tinta, tenue) {
+    var r = dati(ws, n, valori, { grassetto: true, fondo: tenue, tinta: tinta });
+    valori.forEach(function (v, i) {
+      r.getCell(i + 1).border = {
+        top: { style: 'medium', color: { argb: tinta } },
+        left: { style: 'hair', color: { argb: BORDO } },
+        bottom: { style: 'hair', color: { argb: BORDO } },
+        right: { style: 'hair', color: { argb: BORDO } }
+      };
+    });
+    return r;
+  }
+
+  function pct(r, colonne) {
+    colonne.forEach(function (i) { r.getCell(i).numFmt = '0.0%'; });
+  }
+
+  function dec(r, colonne, formato) {
+    colonne.forEach(function (i) { r.getCell(i).numFmt = formato || '#,##0.0'; });
+  }
+
+  /* barre in cella: le disegna Excel sui valori della colonna */
+  function barre(ws, colonna, da, a, tinta) {
+    if (a < da) return;
+    try {
+      ws.addConditionalFormatting({
+        ref: colonna + da + ':' + colonna + a,
+        rules: [{
+          type: 'dataBar',
+          cfvo: [{ type: 'min' }, { type: 'max' }],
+          color: { argb: tinta },
+          minLength: 0, maxLength: 100, gradient: true
+        }]
+      });
+    } catch (e) {}
+  }
+
+  function scala(ws, rif, tinta) {
+    try {
+      ws.addConditionalFormatting({
+        ref: rif,
+        rules: [{ type: 'colorScale',
+                  cfvo: [{ type: 'min' }, { type: 'max' }],
+                  color: [{ argb: BIANCO }, { argb: tinta || BLU }] }]
+      });
+    } catch (e) {}
+  }
+
+  function colonnaExcel(n) {
+    var s = '';
+    while (n > 0) {
+      var m = (n - 1) % 26;
+      s = String.fromCharCode(65 + m) + s;
+      n = Math.floor((n - m) / 26);
+    }
+    return s;
+  }
+
+  function filtro(ws, riga, colonne, ultima) {
+    try {
+      ws.autoFilter = { from: { row: riga, column: 1 },
+                        to: { row: ultima, column: colonne } };
+    } catch (e) {}
+  }
+
+  /* ------------------------------------------------------ copertina */
+  function voceLegenda(ws, n, etichetta, tinta, descrizione, larghezza) {
+    var c = ws.getCell(n, 1);
+    c.value = etichetta;
+    c.font = { size: 10, bold: true, color: { argb: BIANCO } };
+    c.alignment = { horizontal: 'center', vertical: 'middle' };
+    c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: tinta } };
+    ws.mergeCells(n, 2, n, larghezza);
+    var d = ws.getCell(n, 2);
+    d.value = descrizione;
+    d.font = { size: 10, color: { argb: NERO } };
+    d.alignment = { horizontal: 'left', vertical: 'middle', indent: 1, wrapText: true };
+    ws.getRow(n).height = 18;
+    return n + 1;
+  }
+
+  function voceIndice(ws, n, foglio, db, desc, larghezza, tinta, tenue) {
+    var a = ws.getCell(n, 1);
+    a.value = foglio;
+    a.font = { size: 10, bold: true, color: { argb: tinta } };
+    a.alignment = { horizontal: 'left', vertical: 'middle', indent: 1 };
+    a.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: tenue } };
+    var b = ws.getCell(n, 2);
+    b.value = db;
+    b.font = { size: 10, color: { argb: GRIGIO } };
+    b.alignment = { horizontal: 'center', vertical: 'middle' };
+    ws.mergeCells(n, 3, n, larghezza);
+    var c = ws.getCell(n, 3);
+    c.value = desc;
+    c.font = { size: 10, color: { argb: NERO } };
+    c.alignment = { horizontal: 'left', vertical: 'middle', indent: 1, wrapText: true };
+    ws.getRow(n).height = 18;
+    return n + 1;
+  }
+
+  function copertina(wb, ra, rc, centraliUnione) {
+    var L = 6;
+    var ws = nuovoFoglio(wb, 'Copertina', GRIGIO);
+    larghezze(ws, [30, 15, 14, 14, 14, 56]);
+    testata(ws, 'Statistiche dei database di rete',
+            'CRO ITALIA ' + REVISIONE + ', estratto del ' +
+            new Date().toLocaleString('it-IT'), L, BLU);
+
+    var n = 4;
+    n = sezione(ws, n, 'Che cosa trovi in questo file', L, BLU);
+    n = testo(ws, n,
+      'Una fotografia dei due database di rete caricati nel tool: la RA (Rete Aggregation) ' +
+      'e la RC (Rete Core). I numeri sono gli stessi della finestra Statistiche del tab ' +
+      'Database, con in più il dettaglio per area, zona, portante e classe di distanza. ' +
+      'Ogni foglio riguarda un solo database: quelli della RA sono blu, quelli della RC rossi.',
+      L, { linee: 3 });
+    n++;
+
+    n = sezione(ws, n, 'I due database a colpo d\'occhio', L, BLU);
+    n = intestazione(ws, n, ['Database', 'Collegamenti', 'Attivi', 'Non attivi',
+                             'Centrali', 'Regioni coperte'], GRIGIO);
+    var rRA = dati(ws, n++, ['RA (Rete Aggregation)', ra.totale, ra.attivi, ra.nonAttivi,
+                             quanti(ra.centrali), quanti(ra.regioni)],
+                   { fondo: BLU_TENUE, tinta: BLU_SCURO, grassetto: true });
+    var rRC = dati(ws, n++, ['RC (Rete Core)', rc.totale, rc.attivi, rc.nonAttivi,
+                             quanti(rc.centrali), quanti(rc.regioni)],
+                   { fondo: ROSSO_TENUE, tinta: ROSSO_SCURO, grassetto: true });
+    totale(ws, n++, ['Totale', ra.totale + rc.totale, ra.attivi + rc.attivi,
+                     ra.nonAttivi + rc.nonAttivi, centraliUnione, ''], GRIGIO, GRIGIO_TENUE);
+    n = spiega(ws, n,
+      'Le centrali del totale sono i nomi distinti dei due database messi insieme: ' +
+      quanti(ra.centrali) + ' nella RA più ' + quanti(rc.centrali) + ' nella RC fanno ' +
+      centraliUnione + ' sedi diverse, perché ' +
+      (quanti(ra.centrali) + quanti(rc.centrali) - centraliUnione) +
+      ' compaiono in entrambe le reti. Per lo stesso motivo la colonna Centrali non si somma.',
+      L, GRIGIO, GRIGIO_TENUE, 2);
+    n++;
+
+    n = sezione(ws, n, 'Legenda dei colori', L, BLU);
+    n = voceLegenda(ws, n, 'RA', BLU,
+      'Blu TIM: schede, intestazioni e barre dei fogli della Rete Aggregation.', L);
+    n = voceLegenda(ws, n, 'RC', ROSSO,
+      'Rosso: schede, intestazioni e barre dei fogli della Rete Core.', L);
+    n = voceLegenda(ws, n, 'GEN', GRIGIO,
+      'Grigio: fogli che riguardano entrambe le reti (Copertina, Glossario, Sintesi).', L);
+    n = voceLegenda(ws, n, 'OK', VERDE,
+      'Verde: nei fogli Stati marca le voci che contano come collegamenti attivi.', L);
+    n = testo(ws, n,
+      'Le barre dentro le celle e le sfumature delle matrici sono formattazione ' +
+      'condizionale di Excel, non immagini: se filtri o cambi i valori si ridisegnano da sole.',
+      L, { size: 9, corsivo: true, tinta: GRIGIO, linee: 1 });
+    n++;
+
+    n = sezione(ws, n, 'Indice dei fogli', L, BLU);
+    n = intestazione(ws, n, ['Foglio', 'Rete', 'Contenuto', '', '', ''], GRIGIO);
+    var indice = [
+      ['Glossario', '-', 'Termini e campi del database, con il nome esatto del campo di origine.', GRIGIO, GRIGIO_TENUE],
+      ['Sintesi RA-RC', '-', 'Confronto fra le due reti su collegamenti, stati, centrali, distanze e aree.', GRIGIO, GRIGIO_TENUE],
+      ['RA - Stati', 'RA', 'Stati dei collegamenti, quota sul totale e categoria di appartenenza.', BLU, BLU_TENUE],
+      ['RA - Vendor', 'RA', 'Collegamenti per vendor, con attivi, centrali toccate e chilometri.', BLU, BLU_TENUE],
+      ['RA - Regioni', 'RA', 'Collegamenti per regione, con attivi, centrali e chilometri.', BLU, BLU_TENUE],
+      ['RA - Rete e distanze', 'RA', 'Aree, zone, portanti, tipo sede, tipo costituzione e classi di distanza.', BLU, BLU_TENUE],
+      ['RA - Regioni x Vendor', 'RA', 'Matrice regione per vendor con scala di colore sui valori.', BLU, BLU_TENUE],
+      ['RC - Stati', 'RC', 'Stati dei collegamenti, quota sul totale e categoria di appartenenza.', ROSSO, ROSSO_TENUE],
+      ['RC - Vendor', 'RC', 'Collegamenti per vendor, con attivi, centrali toccate e chilometri.', ROSSO, ROSSO_TENUE],
+      ['RC - Regioni', 'RC', 'Collegamenti per regione, con attivi, centrali e chilometri.', ROSSO, ROSSO_TENUE],
+      ['RC - Rete e distanze', 'RC', 'Aree, zone, portanti e classi di distanza.', ROSSO, ROSSO_TENUE],
+      ['RC - Regioni x Vendor', 'RC', 'Matrice regione per vendor con scala di colore sui valori.', ROSSO, ROSSO_TENUE]
+    ];
+    indice.forEach(function (v) {
+      n = voceIndice(ws, n, v[0], v[1], v[2], L, v[3], v[4]);
+    });
+    n++;
+
+    n = sezione(ws, n, 'Come leggere i numeri', L, BLU);
+    var note = [
+      'Un collegamento è una tratta fra due centrali adiacenti, cioè un record del database. ' +
+      'Non è un percorso: un percorso calcolato dal tool mette in fila più collegamenti.',
+
+      'Le regioni si sommano più volte. Il campo Regione può contenere più valori separati da ' +
+      '"|", e la tratta viene contata in ognuna: nella RA la somma per regione fa ' + ra.sommaRegioni +
+      ' contro ' + ra.totale + ' collegamenti (' + ra.multiRegione + ' stanno su più regioni), ' +
+      'nella RC fa ' + rc.sommaRegioni + ' contro ' + rc.totale + ' (' + rc.multiRegione + ' su più regioni). ' +
+      'Le quote per regione sono quindi calcolate sulla somma delle righe regione, non sul totale dei collegamenti.',
+
+      'Attivo qui vuol dire ATTIVO, ATTIVO > SATURO, IN REINSTRADAMENTO o IN VARIAZIONE: la stessa ' +
+      'regola dei filtri di stato dei tab di ricerca. Tutto il resto conta come non attivo, ' +
+      'DA VERIFICARE SU NNI e IN ATTIVAZIONE compresi. Il motore di calcolo scarta invece sempre ' +
+      'i SubPath con stato SATURO puro, che qui non figurano fra i non attivi.',
+
+      'Le centrali sono i nomi distinti che compaiono come estremo A o estremo Z (campi GAT_A e GAT_Z). ' +
+      'Una centrale toccata da venti tratte conta una volta sola.',
+
+      'I chilometri vengono dal campo Distanza_km, lo stesso peso usato per calcolare i percorsi. ' +
+      'Sommati per regione o per vendor contano ogni tratta una volta per riga, quindi la somma ' +
+      'per regione supera il totale di rete quando una tratta attraversa più regioni.'
+    ];
+    note.forEach(function (x) {
+      n = testo(ws, n, '\u2022  ' + x, L, { linee: Math.ceil(x.length / 118) });
+    });
+    n++;
+
+    n = sezione(ws, n, 'Avvertenza', L, ROSSO);
+    n = testo(ws, n,
+      'CRO ITALIA è uno strumento di supporto operativo, non una fonte ufficiale. I dati vengono ' +
+      'da estrazioni puntuali e possono non essere allineati ai sistemi di gestione. Stato dei ' +
+      'collegamenti e vincoli vanno sempre verificati sui sistemi ufficiali; la verifica su NNI è ' +
+      'obbligatoria per i SubPath non attivi.',
+      L, { fondo: ROSSO_TENUE, tinta: ROSSO_SCURO, linee: 3 });
+    return ws;
+  }
+
+  /* ------------------------------------------------------ glossario */
+  function glossario(wb) {
+    var L = 3;
+    var ws = nuovoFoglio(wb, 'Glossario', GRIGIO, 4);
+    larghezze(ws, [30, 30, 104]);
+    testata(ws, 'Glossario dei termini e dei campi',
+            'Sigle usate nei fogli e campi di origine nei due database', L, BLU);
+    var n = intestazione(ws, 4, ['Termine', 'Campo nel database', 'Significato'], GRIGIO);
+
+    var voci = [
+      ['@', 'Le reti', ''],
+      ['RA (Rete Aggregation)', 'RAW_DB_RA',
+       'Rete di aggregazione TIM: raccoglie il traffico delle centrali periferiche verso i nodi Core. Gerarchia Tipo 3 verso Tipo 2 verso Tipo 1.'],
+      ['RC (Rete Core)', 'RAW_DB',
+       'Backbone nazionale TIM su layer 0/1 (fibra e DWDM) che interconnette le centrali principali, inclusi i Nodi A1.'],
+      ['RTR', '-',
+       'Rete di Trasporto Regionale: RA e RC insieme, il perimetro del tab Ricerca Percorso Unificato.'],
+      ['RTN', '-',
+       'Rete di Trasporto Nazionale, il backbone interregionale usato per le tratte fra aree diverse.'],
+
+      ['@', 'Sedi e nodi', ''],
+      ['Centrale', 'GAT_A, GAT_Z',
+       'Sede fisica agli estremi della tratta. Il conteggio prende i nomi distinti che compaiono come estremo A o estremo Z.'],
+      ['CLLI', 'CLLI_A, CLLI_Z',
+       'Common Language Location Identifier: codice univoco della centrale, da 8 a 11 caratteri alfanumerici.'],
+      ['GAT', 'GAT_A, GAT_Z',
+       'Codice identificativo interno TIM per la gestione degli asset territoriali; nel database compare come nome della centrale.'],
+      ['Tipo sede', 'TipoSedeA, TipoSedeZ',
+       'Tipo 1: HUB RA+RC, il Nodo A1 interconnesso al Core. Tipo 2: HUB RA intermedio. Tipo 3: sede di passaggio. Nel database RC il campo non è valorizzato.'],
+
+      ['@', 'Collegamenti', ''],
+      ['Collegamento', 'IdCollegamento',
+       'Tratta fra due centrali adiacenti: un record del database, un hop del percorso.'],
+      ['SubPath', 'SubPath',
+       'Identificativo della sezione ottica cui appartiene la tratta. Nella RA lo stesso SubPath torna su più collegamenti.'],
+      ['Arco e Ramo', 'Arco, IdCollegamento (Ramo)',
+       'Raggruppamenti della sola RA: ordinano le tratte lungo la progressione (campo Prog).'],
+      ['C-FOS', 'IdCavo, TIPOPORTANTE',
+       'Identificativo del cavo in fibra fra due centrali, nel formato CLLI_A/CLLI_Z/C-FOS/progressivo. È il dato da allegare alla richiesta dei file KMZ.'],
+      ['OTS', 'OTS',
+       'Optical Transport Section: sezione di trasporto ottico fra due nodi, riportata negli export come Routing OTS.'],
+      ['Distanza', 'Distanza_km',
+       'Lunghezza della tratta in chilometri registrata nel database. È il peso che il tool usa per calcolare il percorso più corto.'],
+      ['Portante', 'TIPOPORTANTE (RA), TipoPortante (RC)',
+       'Mezzo che porta la tratta: nella RA in genere C-FOS, nella RC DWDM.'],
+      ['Tipo costituzione', 'TIPOCOSTITUZIONE',
+       'Codice di costituzione della tratta presente nella sola RA (S, O, L, X, N, I, C, U). Il valore "-" indica il dato non compilato.'],
+
+      ['@', 'Territorio', ''],
+      ['Regione', 'Regione',
+       'Regioni attraversate dalla tratta, separate da "|". Una tratta su più regioni viene contata in ognuna.'],
+      ['Area', 'Area',
+       'Ripartizione geografica del collegamento: NORD, CENTRO, SUD.'],
+      ['Zona', 'Zona',
+       'Sigla della zona di rete (MILO, NE, CB, TO, RMLA e simili), più fine dell\'area.'],
+      ['DR', 'DR',
+       'Direzione regionale di competenza, valorizzata su parte dei record RA e assente nella RC.'],
+
+      ['@', 'Stati', ''],
+      ['Stato', 'Stato_IdCollegamento',
+       'Stato della tratta così come scritto nel database, senza rimaneggiamenti.'],
+      ['Attivo (in questo file)', '-',
+       'ATTIVO, ATTIVO > SATURO, IN REINSTRADAMENTO, IN VARIAZIONE. Stessa regola dei filtri di stato dei tab di ricerca.'],
+      ['Non attivo (in questo file)', '-',
+       'Tutti gli altri stati: NON ATTIVO, DA VERIFICARE SU NNI, IN ATTIVAZIONE, IN CESSAZIONE e simili.'],
+      ['Categoria', '-',
+       'Etichetta più fine calcolata dallo stato (Attivo, Attivo saturo, In attivazione, Da verificare...). Non cambia i totali, serve a leggerli.'],
+
+      ['@', 'Tecnologie', ''],
+      ['DWDM', '-',
+       'Multiplazione ottica densa: 40-80 e più canali su una fibra, spaziatura 50 GHz secondo ITU-T G.694.1.'],
+      ['Nodo A1', '-',
+       'POP nazionale della RC, corrisponde a una centrale di Tipo 1 interconnessa al Core.'],
+      ['Vendor', 'Vendor',
+       'Costruttore degli apparati della tratta: nei due database compaiono HUAWEI, ADVA e ZTE.']
+    ];
+
+    voci.forEach(function (v) {
+      if (v[0] === '@') {
+        ws.mergeCells(n, 1, n, L);
+        var c = ws.getCell(n, 1);
+        c.value = v[1];
+        c.font = { size: 10, bold: true, color: { argb: BLU_SCURO } };
+        c.alignment = { horizontal: 'left', vertical: 'middle', indent: 1 };
+        c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: BLU_TENUE } };
+        ws.getRow(n).height = 18;
+        n++;
+        return;
+      }
+      var r = dati(ws, n, v, {});
+      r.getCell(1).font = { size: 10, bold: true, color: { argb: NERO } };
+      r.getCell(2).font = { size: 9, color: { argb: GRIGIO } };
+      r.getCell(3).alignment = { horizontal: 'left', vertical: 'middle',
+                                 wrapText: true, indent: 1 };
+      r.height = 13 * Math.ceil(v[2].length / 100) + 6;
+      n++;
+    });
+    return ws;
+  }
+
+  /* -------------------------------------------------------- sintesi */
+  function sintesi(wb, ra, rc, centraliUnione) {
+    var L = 5;
+    var ws = nuovoFoglio(wb, 'Sintesi RA-RC', GRIGIO, 4);
+    larghezze(ws, [34, 16, 16, 16, 78]);
+    testata(ws, 'Sintesi di confronto fra le due reti',
+            'RA in blu, RC in rosso. La colonna Come si legge spiega ogni indicatore.', L, BLU);
+
+    var n = intestazione(ws, 4, ['Indicatore', 'RA', 'RC', 'Totale', 'Come si legge'], GRIGIO);
+    var h = ws.getRow(4);
+    h.getCell(2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: BLU } };
+    h.getCell(3).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: ROSSO } };
+
+    var voci = [
+      ['Collegamenti censiti', ra.totale, rc.totale, ra.totale + rc.totale, null,
+       'Record del database, cioè tratte fra due centrali adiacenti.'],
+      ['Collegamenti attivi', ra.attivi, rc.attivi, ra.attivi + rc.attivi, null,
+       'ATTIVO, ATTIVO > SATURO, IN REINSTRADAMENTO, IN VARIAZIONE.'],
+      ['Collegamenti non attivi', ra.nonAttivi, rc.nonAttivi, ra.nonAttivi + rc.nonAttivi, null,
+       'Tutti gli altri stati, DA VERIFICARE SU NNI e IN ATTIVAZIONE compresi.'],
+      ['Quota attivi', ra.totale ? ra.attivi / ra.totale : 0, rc.totale ? rc.attivi / rc.totale : 0,
+       (ra.totale + rc.totale) ? (ra.attivi + rc.attivi) / (ra.totale + rc.totale) : 0, '0.0%',
+       'Attivi diviso collegamenti censiti della stessa rete.'],
+      ['Stati distinti', quanti(ra.stati), quanti(rc.stati), '', null,
+       'Quante diciture diverse compaiono nel campo Stato_IdCollegamento. Dettaglio nei fogli Stati.'],
+      ['Centrali distinte', quanti(ra.centrali), quanti(rc.centrali), centraliUnione, null,
+       'Nomi distinti fra GAT_A e GAT_Z. Il totale è l\'unione delle due reti, non la somma.'],
+      ['Regioni coperte', quanti(ra.regioni), quanti(rc.regioni), '', null,
+       'Regioni che compaiono almeno una volta nel campo Regione.'],
+      ['Aree', quanti(ra.aree), quanti(rc.aree), '', null,
+       'NORD, CENTRO, SUD. Dettaglio nei fogli Rete e distanze.'],
+      ['Zone', quanti(ra.zone), quanti(rc.zone), '', null,
+       'Sigle di zona presenti nel campo Zona.'],
+      ['Vendor', quanti(ra.vendor), quanti(rc.vendor), '', null,
+       'Costruttori presenti. Dettaglio nei fogli Vendor.'],
+      ['SubPath distinti', quanti(ra.subpath), quanti(rc.subpath), '', null,
+       'Nella RA lo stesso SubPath torna su più collegamenti, quindi il numero è minore delle tratte.'],
+      ['Cavi distinti (IdCavo)', quanti(ra.cavi), quanti(rc.cavi), '', null,
+       'Cavi fisici impegnati. È il dato che serve per la richiesta dei file KMZ.'],
+      ['Archi (solo RA)', quanti(ra.archi), '', '', null,
+       'Raggruppamenti della RA usati per ordinare le tratte lungo la progressione.'],
+      ['Chilometri totali', arrotonda(ra.kmTot, 1), arrotonda(rc.kmTot, 1),
+       arrotonda(ra.kmTot + rc.kmTot, 1), '#,##0.0',
+       'Somma del campo Distanza_km su tutte le tratte censite.'],
+      ['Distanza media', arrotonda(ra.kmMedia, 2), arrotonda(rc.kmMedia, 2), '', '#,##0.00',
+       'Chilometri totali diviso numero di tratte.'],
+      ['Distanza mediana', arrotonda(ra.kmMediana, 2), arrotonda(rc.kmMediana, 2), '', '#,##0.00',
+       'Metà delle tratte sta sotto questo valore. Nella RA è molto più bassa della media: poche tratte lunghe alzano la media.'],
+      ['Distanza massima', arrotonda(ra.kmMax, 2), arrotonda(rc.kmMax, 2), '', '#,##0.00',
+       'Tratta più lunga del database.'],
+      ['Tratte senza distanza', ra.senzaKm, rc.senzaKm, '', null,
+       'Record con Distanza_km vuota o non numerica: restano fuori dalle medie.'],
+      ['Righe regione', ra.sommaRegioni, rc.sommaRegioni, '', null,
+       'Somma dei collegamenti contati regione per regione. Supera i collegamenti censiti perché una tratta può stare su più regioni.'],
+      ['Tratte su più regioni', ra.multiRegione, rc.multiRegione, '', null,
+       'Record con più di un valore nel campo Regione.']
+    ];
+
+    voci.forEach(function (v, i) {
+      var r = dati(ws, n, [v[0], v[1], v[2], v[3], v[5]],
+                   { fondo: i % 2 ? GRIGIO_TENUE : null });
+      r.getCell(1).font = { size: 10, bold: true, color: { argb: NERO } };
+      r.getCell(2).font = { size: 10, bold: true, color: { argb: BLU_SCURO } };
+      r.getCell(3).font = { size: 10, bold: true, color: { argb: ROSSO_SCURO } };
+      r.getCell(5).font = { size: 9, color: { argb: GRIGIO } };
+      r.getCell(5).alignment = { horizontal: 'left', vertical: 'middle',
+                                 wrapText: true, indent: 1 };
+      if (v[4]) dec(r, [2, 3, 4], v[4]);
+      r.height = 13 * Math.ceil(String(v[5]).length / 76) + 6;
+      n++;
+    });
+    n++;
+
+    n = sezione(ws, n, 'Collegamenti per area', L, BLU);
+    n = intestazione(ws, n, ['Area', 'RA', 'RC', 'Totale', 'Quota sul totale'], GRIGIO);
+    var h2 = ws.getRow(n - 1);
+    h2.getCell(2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: BLU } };
+    h2.getCell(3).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: ROSSO } };
+    var aree = {};
+    Object.keys(ra.aree).forEach(function (k) { aree[k] = 1; });
+    Object.keys(rc.aree).forEach(function (k) { aree[k] = 1; });
+    var elencoAree = Object.keys(aree).sort(function (a, b) {
+      return ((ra.aree[b] || 0) + (rc.aree[b] || 0)) - ((ra.aree[a] || 0) + (rc.aree[a] || 0));
+    });
+    var totGen = ra.totale + rc.totale, primaArea = n;
+    elencoAree.forEach(function (k, i) {
+      var a = ra.aree[k] || 0, c = rc.aree[k] || 0;
+      var r = dati(ws, n, [k, a, c, a + c, totGen ? (a + c) / totGen : 0],
+                   { fondo: i % 2 ? GRIGIO_TENUE : null });
+      r.getCell(2).font = { size: 10, color: { argb: BLU_SCURO } };
+      r.getCell(3).font = { size: 10, color: { argb: ROSSO_SCURO } };
+      pct(r, [5]);
+      n++;
+    });
+    totale(ws, n, ['Totale', ra.totale, rc.totale, totGen, 1], GRIGIO, GRIGIO_TENUE);
+    pct(ws.getRow(n), [5]);
+    n++;
+    barre(ws, 'B', primaArea, n - 2, BLU);
+    barre(ws, 'C', primaArea, n - 2, ROSSO);
+    n++;
+
+    n = sezione(ws, n, 'Collegamenti per categoria di stato', L, BLU);
+    n = intestazione(ws, n, ['Categoria', 'RA', 'RC', 'Totale', 'Conta come'], GRIGIO);
+    var h3 = ws.getRow(n - 1);
+    h3.getCell(2).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: BLU } };
+    h3.getCell(3).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: ROSSO } };
+    var cat = {};
+    Object.keys(ra.categorie).forEach(function (k) { cat[k] = 1; });
+    Object.keys(rc.categorie).forEach(function (k) { cat[k] = 1; });
+    var elencoCat = Object.keys(cat).sort(function (a, b) {
+      return ((ra.categorie[b] || 0) + (rc.categorie[b] || 0)) -
+             ((ra.categorie[a] || 0) + (rc.categorie[a] || 0));
+    });
+    var primaCat = n;
+    elencoCat.forEach(function (k, i) {
+      var a = ra.categorie[k] || 0, c = rc.categorie[k] || 0;
+      var att = k === 'Attivo' || k === 'Attivo saturo' || k === 'In reinstradamento' ||
+                k === 'In variazione';
+      var r = dati(ws, n, [k, a, c, a + c, att ? 'Attivo' : 'Non attivo'],
+                   { fondo: i % 2 ? GRIGIO_TENUE : null });
+      r.getCell(2).font = { size: 10, color: { argb: BLU_SCURO } };
+      r.getCell(3).font = { size: 10, color: { argb: ROSSO_SCURO } };
+      r.getCell(5).font = { size: 10, bold: true, color: { argb: att ? VERDE : ROSSO } };
+      n++;
+    });
+    barre(ws, 'D', primaCat, n - 1, GRIGIO);
+    return ws;
+  }
+
+  /* --------------------------------------------- fogli di un database */
+  function fogliDb(wb, d, tinta, scuro, tenue) {
+    var sig = d.sigla;
+
+    /* ---- Stati ---- */
+    var ws = nuovoFoglio(wb, sig + ' - Stati', tinta, 6);
+    larghezze(ws, [36, 16, 14, 22, 16, 44]);
+    testata(ws, 'Stati dei collegamenti, ' + d.nome,
+            d.totale + ' collegamenti censiti, ' + quanti(d.stati) + ' stati distinti', 6, tinta);
+    var n = spiega(ws, 3,
+      'La colonna Stato riporta il campo Stato_IdCollegamento come sta nel database. ' +
+      'Conta come dice se quello stato rientra fra gli attivi (verde) o no (rosso): la regola ' +
+      'è la stessa dei filtri di stato dei tab di ricerca. La categoria è una lettura più ' +
+      'fine e non cambia i totali.', 6, tinta, tenue, 3);
+    n = intestazione(ws, n, ['Stato', 'Collegamenti', 'Quota', 'Categoria', 'Conta come',
+                             'Nota'], tinta);
+    var prima = n;
+    perValore(d.stati).forEach(function (k, i) {
+      var att = attivo(k);
+      var nota = '';
+      if (k.toUpperCase().indexOf('SATURO') > -1) {
+        nota = 'Saturo non vuol dire in realizzazione: conta fra gli attivi, ma il motore scarta i SubPath con stato SATURO puro.';
+      } else if (k.toUpperCase().indexOf('VERIFICARE') > -1) {
+        nota = 'Verifica su NNI obbligatoria prima di usare la tratta.';
+      } else if (k.toUpperCase().indexOf('ATTIVAZIONE') > -1) {
+        nota = 'Tratta in realizzazione: negli export compare la data prevista.';
+      }
+      var r = dati(ws, n, [k, d.stati[k], d.totale ? d.stati[k] / d.totale : 0,
+                           categoria(k), att ? 'Attivo' : 'Non attivo', nota],
+                   { fondo: i % 2 ? tenue : null });
+      pct(r, [3]);
+      r.getCell(5).font = { size: 10, bold: true, color: { argb: att ? VERDE : ROSSO } };
+      r.getCell(6).font = { size: 9, color: { argb: GRIGIO } };
+      r.getCell(6).alignment = { horizontal: 'left', vertical: 'middle', wrapText: true, indent: 1 };
+      if (nota) r.height = 13 * Math.ceil(nota.length / 44) + 6;
+      n++;
+    });
+    var rt = totale(ws, n, ['Totale', d.totale, 1, '', '', ''], tinta, tenue);
+    pct(rt, [3]);
+    barre(ws, 'B', prima, n - 1, tinta);
+    filtro(ws, prima - 1, 6, n - 1);
+    n += 2;
+    n = sezione(ws, n, 'Riepilogo per categoria', 6, tinta);
+    n = intestazione(ws, n, ['Categoria', 'Collegamenti', 'Quota', 'Conta come', '', ''], tinta);
+    var primaCat = n;
+    perValore(d.categorie).forEach(function (k, i) {
+      var att = k === 'Attivo' || k === 'Attivo saturo' || k === 'In reinstradamento' ||
+                k === 'In variazione';
+      var r = dati(ws, n, [k, d.categorie[k], d.totale ? d.categorie[k] / d.totale : 0,
+                           att ? 'Attivo' : 'Non attivo', '', ''],
+                   { fondo: i % 2 ? tenue : null });
+      pct(r, [3]);
+      r.getCell(4).font = { size: 10, bold: true, color: { argb: att ? VERDE : ROSSO } };
+      n++;
+    });
+    barre(ws, 'B', primaCat, n - 1, tinta);
+
+    /* ---- Vendor ---- */
+    ws = nuovoFoglio(wb, sig + ' - Vendor', tinta, 6);
+    larghezze(ws, [26, 16, 12, 14, 14, 14, 14, 16]);
+    testata(ws, 'Collegamenti per vendor, ' + d.nome,
+            quanti(d.vendor) + ' vendor sui ' + d.totale + ' collegamenti censiti', 8, tinta);
+    n = spiega(ws, 3,
+      'Vendor è il costruttore degli apparati della tratta. Le centrali sono i nomi distinti ' +
+      'toccati da almeno una tratta di quel vendor: la stessa centrale può comparire sotto ' +
+      'più vendor, quindi la colonna non si somma.', 8, tinta, tenue, 2);
+    n = intestazione(ws, n, ['Vendor', 'Collegamenti', 'Quota', 'Attivi', 'Non attivi',
+                             'Quota attivi', 'Centrali', 'Km totali'], tinta);
+    prima = n;
+    perValoreTot(d.venDett).forEach(function (k, i) {
+      var v = d.venDett[k];
+      var r = dati(ws, n, [k, v.tot, d.totale ? v.tot / d.totale : 0, v.attivi,
+                           v.tot - v.attivi, v.tot ? v.attivi / v.tot : 0,
+                           quanti(v.centrali), arrotonda(v.km, 1)],
+                   { fondo: i % 2 ? tenue : null });
+      pct(r, [3, 6]);
+      dec(r, [8], '#,##0.0');
+      n++;
+    });
+    rt = totale(ws, n, ['Totale', d.totale, 1, d.attivi, d.nonAttivi,
+                        d.totale ? d.attivi / d.totale : 0, quanti(d.centrali),
+                        arrotonda(d.kmTot, 1)], tinta, tenue);
+    pct(rt, [3, 6]);
+    dec(rt, [8], '#,##0.0');
+    barre(ws, 'B', prima, n - 1, tinta);
+    filtro(ws, prima - 1, 8, n - 1);
+
+    /* ---- Regioni ---- */
+    ws = nuovoFoglio(wb, sig + ' - Regioni', tinta, 6);
+    larghezze(ws, [28, 16, 12, 14, 14, 14, 14, 16]);
+    testata(ws, 'Collegamenti per regione, ' + d.nome,
+            quanti(d.regioni) + ' regioni, ' + d.sommaRegioni + ' righe regione su ' +
+            d.totale + ' collegamenti', 8, tinta);
+    n = spiega(ws, 3,
+      'Una tratta che attraversa più regioni viene contata in ognuna: la somma della colonna ' +
+      'Collegamenti fa ' + d.sommaRegioni + ' contro i ' + d.totale + ' collegamenti censiti, ' +
+      'perché ' + d.multiRegione + ' tratte stanno su più regioni. La quota è quindi calcolata ' +
+      'sulle righe regione, non sui collegamenti.', 8, tinta, tenue, 3);
+    n = intestazione(ws, n, ['Regione', 'Collegamenti', 'Quota', 'Attivi', 'Non attivi',
+                             'Quota attivi', 'Centrali', 'Km totali'], tinta);
+    prima = n;
+    perNome(d.regDett).forEach(function (k, i) {
+      var v = d.regDett[k];
+      var r = dati(ws, n, [k, v.tot, d.sommaRegioni ? v.tot / d.sommaRegioni : 0, v.attivi,
+                           v.tot - v.attivi, v.tot ? v.attivi / v.tot : 0,
+                           quanti(v.centrali), arrotonda(v.km, 1)],
+                   { fondo: i % 2 ? tenue : null });
+      pct(r, [3, 6]);
+      dec(r, [8], '#,##0.0');
+      n++;
+    });
+    rt = totale(ws, n, ['Somma delle righe regione', d.sommaRegioni, 1, '', '', '', '', ''],
+                tinta, tenue);
+    pct(rt, [3]);
+    barre(ws, 'B', prima, n - 1, tinta);
+    scala(ws, 'F' + prima + ':F' + (n - 1), tinta);
+    filtro(ws, prima - 1, 8, n - 1);
+
+    /* ---- Rete e distanze ---- */
+    ws = nuovoFoglio(wb, sig + ' - Rete e distanze', tinta, 3);
+    larghezze(ws, [32, 16, 14, 18, 44]);
+    testata(ws, 'Aree, zone, portanti e distanze, ' + d.nome,
+            'Chilometri dal campo Distanza_km, lo stesso peso usato per calcolare i percorsi',
+            5, tinta);
+    n = 3;
+
+    n = sezione(ws, n, 'Indicatori sulle distanze', 5, tinta);
+    n = intestazione(ws, n, ['Indicatore', 'Valore', '', 'Unità', 'Come si legge'], tinta);
+    [['Chilometri totali', arrotonda(d.kmTot, 1), 'km',
+      'Somma di tutte le tratte censite.'],
+     ['Distanza media', arrotonda(d.kmMedia, 2), 'km',
+      'Chilometri totali diviso numero di tratte con distanza valida.'],
+     ['Distanza mediana', arrotonda(d.kmMediana, 2), 'km',
+      'Metà delle tratte sta sotto questo valore.'],
+     ['Distanza minima', arrotonda(d.kmMin, 2), 'km', 'Tratta più corta del database.'],
+     ['Distanza massima', arrotonda(d.kmMax, 2), 'km', 'Tratta più lunga del database.'],
+     ['Tratte senza distanza', d.senzaKm, 'tratte',
+      'Record con Distanza_km vuota o non numerica: restano fuori dalle medie.'],
+     ['Tratte con distanza 0,0 km', d.kmZero, 'tratte',
+      'Dato da guardare: una tratta lunga zero o ha gli estremi nella stessa sede o ha il campo non compilato.'],
+     ['Tratte con estremi coincidenti', d.estremiUguali, 'tratte',
+      'GAT_A uguale a GAT_Z: collegamenti interni alla stessa centrale.']
+    ].forEach(function (v, i) {
+      var r = dati(ws, n, [v[0], v[1], '', v[2], v[3]], { fondo: i % 2 ? tenue : null });
+      r.getCell(2).font = { size: 10, bold: true, color: { argb: scuro } };
+      if (i < 5) dec(r, [2], '#,##0.00');
+      if (i >= 6 && v[1] > 0) r.getCell(2).font = { size: 10, bold: true, color: { argb: ROSSO } };
+      r.getCell(5).font = { size: 9, color: { argb: GRIGIO } };
+      n++;
+    });
+    n++;
+
+    n = sezione(ws, n, 'Tratte per classe di distanza', 5, tinta);
+    n = intestazione(ws, n, ['Classe', 'Collegamenti', 'Quota', 'Km totali',
+                             'Quota dei km'], tinta);
+    prima = n;
+    CLASSI.forEach(function (c, i) {
+      var q = d.classi[c[0]] || 0;
+      var r = dati(ws, n, [c[0], q, d.totale ? q / d.totale : 0,
+                           arrotonda(d.classiKm[c[0]] || 0, 1),
+                           d.kmTot ? (d.classiKm[c[0]] || 0) / d.kmTot : 0],
+                   { fondo: i % 2 ? tenue : null });
+      pct(r, [3, 5]);
+      dec(r, [4], '#,##0.0');
+      n++;
+    });
+    totale(ws, n, ['Totale', d.km.length, 1, arrotonda(d.kmTot, 1), 1], tinta, tenue);
+    pct(ws.getRow(n), [3, 5]);
+    dec(ws.getRow(n), [4], '#,##0.0');
+    n++;
+    barre(ws, 'B', prima, n - 2, tinta);
+    n++;
+
+    n = sezione(ws, n, 'Collegamenti per area', 5, tinta);
+    n = intestazione(ws, n, ['Area', 'Collegamenti', 'Quota', '', ''], tinta);
+    prima = n;
+    perValore(d.aree).forEach(function (k, i) {
+      var r = dati(ws, n, [k, d.aree[k], d.totale ? d.aree[k] / d.totale : 0, '', ''],
+                   { fondo: i % 2 ? tenue : null });
+      pct(r, [3]);
+      n++;
+    });
+    barre(ws, 'B', prima, n - 1, tinta);
+    n++;
+
+    n = sezione(ws, n, 'Collegamenti per zona', 5, tinta);
+    n = intestazione(ws, n, ['Zona', 'Collegamenti', 'Quota', '', ''], tinta);
+    prima = n;
+    perValore(d.zone).forEach(function (k, i) {
+      var r = dati(ws, n, [k, d.zone[k], d.totale ? d.zone[k] / d.totale : 0, '', ''],
+                   { fondo: i % 2 ? tenue : null });
+      pct(r, [3]);
+      n++;
+    });
+    barre(ws, 'B', prima, n - 1, tinta);
+    n++;
+
+    n = sezione(ws, n, 'Collegamenti per portante', 5, tinta);
+    n = intestazione(ws, n, ['Portante', 'Collegamenti', 'Quota', '', ''], tinta);
+    prima = n;
+    perValore(d.portanti).forEach(function (k, i) {
+      var r = dati(ws, n, [k, d.portanti[k], d.totale ? d.portanti[k] / d.totale : 0, '', ''],
+                   { fondo: i % 2 ? tenue : null });
+      pct(r, [3]);
+      n++;
+    });
+    barre(ws, 'B', prima, n - 1, tinta);
+
+    if (quanti(d.sedi)) {
+      n += 2;
+      n = sezione(ws, n, 'Estremi per tipo sede', 5, tinta);
+      n = spiega(ws, n,
+        'Conta gli estremi delle tratte, non le centrali: ogni collegamento porta due estremi ' +
+        '(A e Z). Tipo 1 è HUB RA+RC, Tipo 2 HUB RA, Tipo 3 sede di passaggio.',
+        5, tinta, tenue, 2);
+      n = intestazione(ws, n, ['Tipo sede', 'Estremi', 'Quota', '', ''], tinta);
+      prima = n;
+      var totSedi = 0;
+      Object.keys(d.sedi).forEach(function (k) { totSedi += d.sedi[k]; });
+      perNome(d.sedi).forEach(function (k, i) {
+        var r = dati(ws, n, ['Tipo ' + k, d.sedi[k], totSedi ? d.sedi[k] / totSedi : 0, '', ''],
+                     { fondo: i % 2 ? tenue : null });
+        pct(r, [3]);
+        n++;
+      });
+      barre(ws, 'B', prima, n - 1, tinta);
+    }
+
+    if (quanti(d.costituzione)) {
+      n += 2;
+      n = sezione(ws, n, 'Collegamenti per tipo costituzione', 5, tinta);
+      n = intestazione(ws, n, ['Tipo costituzione', 'Collegamenti', 'Quota', '', ''], tinta);
+      prima = n;
+      perValore(d.costituzione).forEach(function (k, i) {
+        var r = dati(ws, n, [k === '-' ? '- (non compilato)' : k, d.costituzione[k],
+                             d.totale ? d.costituzione[k] / d.totale : 0, '', ''],
+                     { fondo: i % 2 ? tenue : null });
+        pct(r, [3]);
+        n++;
+      });
+      barre(ws, 'B', prima, n - 1, tinta);
+    }
+
+    /* ---- Regioni per vendor ---- */
+    var vend = perValore(d.vendor);
+    ws = nuovoFoglio(wb, sig + ' - Regioni x Vendor', tinta, 5);
+    testata(ws, 'Regioni per vendor, ' + d.nome,
+            'Righe: regioni. Colonne: vendor. La sfumatura segue il valore della cella.',
+            vend.length + 2, tinta);
+    spiega(ws, 3,
+      'Ogni cella conta le tratte di quel vendor che toccano quella regione. Valgono le stesse ' +
+      'regole del foglio Regioni: una tratta su più regioni compare in ogni riga interessata.',
+      vend.length + 2, tinta, tenue, 2);
+    n = intestazione(ws, 4, ['Regione'].concat(vend).concat(['Totale']), tinta);
+    prima = n;
+    perNome(d.regioni).forEach(function (k, i) {
+      var v = [k];
+      vend.forEach(function (x) { v.push((d.incrocio[k] && d.incrocio[k][x]) || 0); });
+      v.push(d.regioni[k]);
+      dati(ws, n, v, { fondo: i % 2 ? tenue : null });
+      n++;
+    });
+    /* i totali di colonna si sommano sulle righe regione, non sul conteggio
+       vendor del database: una tratta su piu' regioni pesa una volta per riga */
+    var tv = ['Totale'], somma = 0;
+    vend.forEach(function (x) {
+      var q = 0;
+      Object.keys(d.incrocio).forEach(function (k) { q += (d.incrocio[k][x] || 0); });
+      tv.push(q);
+      somma += q;
+    });
+    tv.push(somma);
+    totale(ws, n, tv, tinta, tenue);
+    ws.getColumn(1).width = 28;
+    for (var i = 0; i < vend.length + 1; i++) ws.getColumn(2 + i).width = 15;
+    if (vend.length) {
+      scala(ws, 'B' + prima + ':' + colonnaExcel(vend.length + 1) + (n - 1), tinta);
+    }
+    barre(ws, colonnaExcel(vend.length + 2), prima, n - 1, tinta);
+  }
+
+  /* --------------------------------------------------- il fascicolo */
+  function esporta() {
+    if (typeof ExcelJS === 'undefined') {
+      if (window.showAlert) window.showAlert('La libreria Excel non risulta caricata.');
+      else alert('La libreria Excel non risulta caricata.');
+      return;
+    }
+
+    var ra = conta(window.RAW_DB_RA, 'RA', 'RA (Rete Aggregation)');
+    var rc = conta(window.RAW_DB, 'RC', 'RC (Rete Core)');
+
+    /* unione delle centrali: sommare i due conteggi darebbe un numero gonfiato */
+    var unione = {};
+    Object.keys(ra.centrali).forEach(function (k) { unione[k] = 1; });
+    Object.keys(rc.centrali).forEach(function (k) { unione[k] = 1; });
+
+    var wb = new ExcelJS.Workbook();
+    wb.creator = 'CRO ITALIA ' + REVISIONE;
+    wb.created = new Date();
+    wb.title = 'Statistiche dei database di rete';
+    wb.company = 'Netcom Group';
+
+    copertina(wb, ra, rc, quanti(unione));
+    glossario(wb);
+    sintesi(wb, ra, rc, quanti(unione));
+    fogliDb(wb, ra, BLU, BLU_SCURO, BLU_TENUE);
+    fogliDb(wb, rc, ROSSO, ROSSO_SCURO, ROSSO_TENUE);
+
+    wb.xlsx.writeBuffer().then(function (buf) {
+      var b = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(b);
+      a.download = 'Statistiche Database CRO ITALIA [' + quando() + '].xlsx';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    }).catch(function (e) {
+      /* la scrittura del file avviene dentro una promessa: senza questo un
+         errore li' dentro non arrivava a schermo e sembrava che il bottone
+         non facesse niente */
+      if (window.console) console.error('Statistiche Excel:', e);
+      alert('Non sono riuscito a scrivere il file delle statistiche: ' +
+            (e && e.message ? e.message : e));
+    });
+  }
+
+  window.croEsportaStatistiche = function () {
+    try { esporta(); } catch (e) {
+      if (window.console) console.error('Statistiche Excel:', e);
+      alert('Non sono riuscito a preparare le statistiche: ' +
+            (e && e.message ? e.message : e));
+    }
+  };
+
+  /* il bottone entra nell'intestazione della finestra, accanto alla X */
+  function metti() {
+    var f = document.getElementById('dbStatsModal');
+    if (!f || f.querySelector('#croStatExport')) return;
+    var chiudi = f.querySelector('#croStatChiudi');
+    if (!chiudi) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.id = 'croStatExport';
+    b.textContent = '\uD83D\uDCD1 Esporta Excel';
+    b.title = 'Scarica il fascicolo completo delle statistiche';
+    b.style.cssText = 'background:rgba(255,255,255,0.2); border:none; color:#fff;' +
+      'padding:5px 12px; border-radius:8px; cursor:pointer; font-size:0.78rem;' +
+      'font-weight:600; margin-right:10px; transition:background 0.18s;';
+    b.addEventListener('mouseenter', function () { b.style.background = 'rgba(255,255,255,0.34)'; });
+    b.addEventListener('mouseleave', function () { b.style.background = 'rgba(255,255,255,0.2)'; });
+    b.addEventListener('click', function () { window.croEsportaStatistiche(); });
+
+    /* L'intestazione della finestra dispone i suoi due elementi ai lati: con
+       un terzo elemento in mezzo il bottone finiva a meta' titolo. Si mette
+       in coda, in un gruppetto con la X. */
+    var gruppo = chiudi.parentNode.querySelector('.cro-stat-comandi');
+    if (!gruppo) {
+      gruppo = document.createElement('div');
+      gruppo.className = 'cro-stat-comandi';
+      gruppo.style.cssText = 'display:flex; align-items:center; gap:10px; margin-left:auto;';
+      chiudi.parentNode.appendChild(gruppo);
+      gruppo.appendChild(chiudi);
+    }
+    gruppo.insertBefore(b, chiudi);
+  }
+
+  setInterval(metti, 500);
+})();
+</script>
 
 </body>
 </html>
