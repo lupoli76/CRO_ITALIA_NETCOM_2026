@@ -4,13 +4,62 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 60.09.09  (rev. pubblicata: V60.09.09 | Set 2026)                    ║
-║   Data: 09 Settembre 2026                                                        ║
+║   Versione: 60.09.11  (rev. pubblicata: V60.09.11 | Set 2026)                    ║
+║   Data: 12 Settembre 2026                                                        ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V60.09.11 | Set 2026:                                                ║
+║   ─────────────────────────                                                      ║
+║   • ATTIVO > SATURO VALE ATTIVO OVUNQUE. Saturo vuol dire capacita'              ║
+║     impegnata, non tratta da realizzare: il collegamento esiste ed e'            ║
+║     esercibile. Prima alcuni punti del tool lo mettevano fra i non attivi        ║
+║   • REGOLA SPOSTATA IN TESTA AL FILE (window.croStatoAttivo): era dentro la      ║
+║     funzione delle caselle dell'Overview, quindi esisteva solo dopo che          ║
+║     quella era girata. Ora e' definita prima di ogni altro script                ║
+║   • ROUTING RA e RC: la via di riserva usata quando i filtri di stato non        ║
+║     sono ancora pronti accettava il solo ATTIVO e scartava le tratte             ║
+║     ATTIVO > SATURO, IN REINSTRADAMENTO e IN VARIAZIONE. Ora usa la regola       ║
+║   • MAPPA NAT: il calcolo del percorso costruiva il grafo con le sole            ║
+║     tratte ATTIVO, quindi una ATTIVO > SATURO non era percorribile               ║
+║   • CONTATORI DEI PERCORSI (RC, Unificato e Top 4): la voce "Non attivi"         ║
+║     contava fra i non attivi anche le tratte ATTIVO > SATURO                     ║
+║   • PANNELLO COLLEGAMENTI NA: elencava come non attive tutte le tratte           ║
+║     diverse da ATTIVO puro, quindi mostrava ATTIVO > SATURO                      ║
+║   • VERIFICA PXM: la pastiglia dello stato era rossa su ATTIVO > SATURO          ║
+║   • COLORI: ATTIVO > SATURO era arancione nelle pastiglie dei filtri di          ║
+║     stato e nell'export Excel dei percorsi. Ora e' verde come ATTIVO.            ║
+║     L'arancione resta al solo stato SATURO scritto da solo                       ║
+║   • NOTE E SUGGERIMENTI aggiornati dove elencavano gli stati attivi senza        ║
+║     ATTIVO > SATURO                                                              ║
+║   • NON TOCCATO: il motore scarta ancora i SubPath con stato SATURO scritto      ║
+║     da solo, che e' un'altra cosa e nei database non compare                     ║
+║                                                                                  ║
+║   CHANGELOG V60.09.10 | Set 2026:                                                ║
+║   ─────────────────────────                                                      ║
+║   • COLLEGAMENTI ATTIVI DELL'OVERVIEW: le due caselle contavano come             ║
+║     attivo il solo stato ATTIVO scritto per intero, quindi ATTIVO > SATURO,      ║
+║     IN REINSTRADAMENTO e IN VARIAZIONE finivano fra i non attivi. Un             ║
+║     collegamento in reinstradamento e' attivo, cambia solo il routing: ora       ║
+║     rientra fra gli attivi come nei filtri di stato dei tab di ricerca e nel     ║
+║     fascicolo Excel delle Statistiche                                            ║
+║   • RA: attivi da 5.299 a 5.303, non attivi da 1.352 a 1.348. RC: attivi da      ║
+║     706 a 708, non attivi da 491 a 489. I totali non cambiano                    ║
+║   • DETTAGLIO DEI NON ATTIVI nelle stesse caselle: IN REINSTRADAMENTO non        ║
+║     compare piu' nell'elenco, perche' ora conta fra gli attivi                   ║
+║   • REGOLA UNICA: la funzione che decide se uno stato e' attivo sta ora in       ║
+║     un posto solo (window.croStatoAttivo) e la usano sia l'Overview sia          ║
+║     l'export Excel delle Statistiche, cosi' i due conteggi non possono piu'      ║
+║     divergere                                                                    ║
+║   • CENTRALE Z DEL RECORD "MILO_arco_1064 | MILO_355 | ALO082 | 5"               ║
+║     corretta nel database: da "TAINO | ANGERA" ad ANGERA, con CLLI e             ║
+║     coordinate allineati. Le centrali univoche della RA passano da 4.058 a       ║
+║     4.057, perche' il nome doppio contava come una centrale a se'                ║
+║   • CONTEGGIO DEI RECORD RA: 6.651 anche nella riga del template Excel,          ║
+║     dove era rimasto 6.652                                                       ║
 ║                                                                                  ║
 ║   CHANGELOG V60.09.09 | Set 2026:                                                ║
 ║   ─────────────────────────                                                      ║
@@ -900,7 +949,7 @@
 ║                                                                                  ║
 ║   CHANGELOG v50.08.00:                                                           ║
 ║   ─────────────────────────                                                      ║
-║   • Database RA (RAW_DB_RA) aggiornato da template Excel: 6.652 record           ║
+║   • Database RA (RAW_DB_RA) aggiornato da template Excel: 6.651 record           ║
 ║     (dati precedenti al 10/06/2026, ora aggiornati al 04/09/2026, allineati      ║
 ║     al RC)                                                                       ║
 ║   • ATTENZIONE: 1 record con Distanza_km anomala nel template sorgente           ║
@@ -1413,6 +1462,28 @@
      ║ SEZIONE: META & RISORSE ESTERNE                                               ║
      ║ Scroll reset, meta tags, librerie esterne                                     ║
      ╚═══════════════════════════════════════════════════════════════════════════════╝ -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   REGOLA UNICA: quando uno stato conta come ATTIVO
+   Sta qui, prima di tutto il resto, perche' la usano il routing, i contatori
+   dei percorsi, le caselle dell'Overview, la mappa NAT, il pannello
+   Collegamenti NA e l'export Excel delle Statistiche.
+   Attivi: ATTIVO, ATTIVO > SATURO, IN REINSTRADAMENTO, IN VARIAZIONE.
+   Saturo vuol dire capacita' impegnata, non tratta da realizzare: il
+   collegamento esiste ed e' esercibile. In reinstradamento cambia il percorso,
+   non lo stato di esercizio.
+   Se un giorno la regola cambia, cambia qui e in nessun altro punto.
+   ═══════════════════════════════════════════════════════════════════════════ */
+window.croStatoAttivo = function (stato) {
+  var u = String(stato == null ? '' : stato).toUpperCase().trim();
+  if (!u) return false;
+  if (u.indexOf('NON ATTIVO') > -1) return false;
+  return u.indexOf('ATTIVO') > -1 ||
+         u.indexOf('REINSTRADAMENTO') > -1 ||
+         u.indexOf('VARIAZIONE') > -1;
+};
+</script>
 
 <script>
   // *** TIMESTAMP GLOBALE PER NOMI FILE EXPORT -> [gg_mm_aaaa-hh.mm.ss] ***
@@ -21338,7 +21409,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V60.09.09 | Set 2026</div>
+<div class="version-tag">V60.09.11 | Set 2026</div>
       </div>
     </div>
   </header>
@@ -22210,10 +22281,39 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #0066CC;">
+              <details class="cl-item" open style="--cl-accent: #0891b2;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🟢 Novità V60.09.11 — Set 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🟢 ATTIVO &gt; SATURO vale ATTIVO ovunque</strong>: saturo vuol dire capacità impegnata, non tratta da realizzare. Il collegamento esiste ed è esercibile, quindi conta fra gli attivi in ogni punto del tool</li>
+    <li><strong>🧭 Routing e mappa NAT</strong>: la via di riserva del routing RA e RC accettava il solo <em>ATTIVO</em> e il calcolo percorso della mappa NAT costruiva il grafo con le sole tratte <em>ATTIVO</em>. Una tratta <em>ATTIVO &gt; SATURO</em> non era percorribile</li>
+    <li><strong>🔢 Contatori dei percorsi</strong>: la voce <em>Non attivi</em> delle schede percorso, nel RC, nell'Unificato e nelle Top 4, contava fra i non attivi anche le tratte <em>ATTIVO &gt; SATURO</em></li>
+    <li><strong>📋 Collegamenti NA e Verifica PXM</strong>: il pannello elencava come non attiva ogni tratta diversa da <em>ATTIVO</em> puro, e la pastiglia dello stato in Verifica PXM era rossa su <em>ATTIVO &gt; SATURO</em></li>
+    <li><strong>🎨 Colori</strong>: <em>ATTIVO &gt; SATURO</em> era arancione nelle pastiglie dei filtri di stato e nell'export Excel dei percorsi; ora è verde come <em>ATTIVO</em>. L'arancione resta al solo stato <em>SATURO</em> scritto da solo</li>
+    <li><strong>🔗 Una regola sola</strong>: <code>window.croStatoAttivo</code> è ora definita in testa al file, prima di ogni altro script, e la chiamano tutti i punti qui sopra</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #16a34a;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">✅ Novità V60.09.10 — Set 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>✅ Collegamenti attivi</strong>: le due caselle qui sopra contavano come attivo il solo stato <em>ATTIVO</em> scritto per intero, così <em>ATTIVO &gt; SATURO</em>, <em>IN REINSTRADAMENTO</em> e <em>IN VARIAZIONE</em> finivano fra i non attivi. Un collegamento in reinstradamento è attivo, cambia solo il routing: ora rientra fra gli attivi</li>
+    <li><strong>🔢 Numeri che cambiano</strong>: RA da 5.299 a 5.303 attivi e da 1.352 a 1.348 non attivi, RC da 706 a 708 e da 491 a 489. I totali restano 6.651 e 1.197</li>
+    <li><strong>📋 Dettaglio dei non attivi</strong>: <em>IN REINSTRADAMENTO</em> non compare più nell'elenco sotto la casella, perché ora conta fra gli attivi</li>
+    <li><strong>🔗 Una regola sola</strong>: la funzione che decide se uno stato è attivo sta in un posto solo e la usano sia questa pagina sia l'export Excel delle Statistiche, così i due conteggi non possono più divergere</li>
+    <li><strong>📍 Correzione nel database RA</strong>: la centrale Z del collegamento <code>MILO_arco_1064 | MILO_355 | ALO082 | 5</code> era scritta come "TAINO | ANGERA"; ora è ANGERA, con CLLI e coordinate allineati. Le centrali univoche della RA passano da 4.058 a 4.057</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066CC;">
                 <summary class="cl-sum">
                   <span class="cl-ver">📑 Novità V60.09.09 — Set 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -39781,7 +39881,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V60.09.09 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V60.09.11 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -39798,6 +39898,41 @@ PERCORSI ALTERNATIVI (Div):
       </div>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+        <details open style="border:1px solid #0891b2;border-radius:12px;overflow:hidden;background:#ecfeff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0e7490;display:flex;align-items:center;gap:0.5rem;background:#cffafe;">
+            🟢 V60.09.11 — ATTIVO &gt; SATURO conta come ATTIVO in tutto il tool
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🟢 Il principio</strong>: saturo vuol dire che la capacità è impegnata, non che la tratta sia da realizzare. Il collegamento esiste ed è esercibile, quindi <em>ATTIVO &gt; SATURO</em> conta fra gli attivi in ogni regola, conteggio, colore e nota. La revisione precedente lo aveva sistemato nelle caselle dell'Overview e nel fascicolo Excel delle Statistiche; qui vengono chiusi tutti gli altri punti.</li>
+              <li><strong>🧭 Routing RA e RC</strong>: quando i filtri di stato dei tab non sono ancora pronti, il motore usa una via di riserva che prima accettava il solo <em>ATTIVO</em>. Una tratta <em>ATTIVO &gt; SATURO</em>, <em>IN REINSTRADAMENTO</em> o <em>IN VARIAZIONE</em> veniva scartata dal grafo. Ora la via di riserva usa la stessa regola del resto del tool.</li>
+              <li><strong>🗺️ Mappa NAT</strong>: il calcolo del percorso fra due nodi costruiva il grafo con le sole tratte <em>ATTIVO</em>, quindi una <em>ATTIVO &gt; SATURO</em> risultava non percorribile anche quando era l'unica via.</li>
+              <li><strong>🔢 Contatori dei percorsi</strong>: nelle schede percorso del RC, dell'Unificato e nelle Top 4 la voce <em>Non attivi</em> contava ogni tratta con stato diverso da <em>ATTIVO</em>, <em>IN REINSTRADAMENTO</em> e <em>IN VARIAZIONE</em>: <em>ATTIVO &gt; SATURO</em> finiva lì dentro e gonfiava il numero.</li>
+              <li><strong>📋 Pannello Collegamenti NA</strong>: elencava tutte le tratte diverse da <em>ATTIVO</em> scritto per intero. Ora elenca le sole non attive secondo la regola. Sui dati RC di oggi le righe restano 489 (451 NON ATTIVO e 38 IN ATTIVAZIONE), mentre la tratta <em>ATTIVO &gt; SATURO</em> e quella <em>IN REINSTRADAMENTO</em> non compaiono più, perché sono attive.</li>
+              <li><strong>🔎 Verifica PXM</strong>: la pastiglia dello stato era verde solo su <em>ATTIVO</em> esatto, quindi <em>ATTIVO &gt; SATURO</em> si presentava in rosso come se fosse un problema.</li>
+              <li><strong>🎨 Colori</strong>: nelle pastiglie dei filtri di stato costruite dai dati e nell'export Excel dei percorsi lo stato <em>ATTIVO &gt; SATURO</em> prendeva l'arancione, perché la ricerca del colore incontrava la parola SATURO prima della parola ATTIVO. Ora è verde come <em>ATTIVO</em>; l'arancione resta al solo stato <em>SATURO</em> scritto da solo.</li>
+              <li><strong>🔗 Dove sta la regola</strong>: <code>window.croStatoAttivo</code> era definita dentro la funzione che alimenta le caselle dell'Overview, quindi esisteva solo dopo che quella funzione era girata. Ora è in un blocco in testa al file, prima di ogni altro script.</li>
+              <li><strong>⚠️ Che cosa non è cambiato</strong>: il motore continua a scartare i SubPath con stato <em>SATURO</em> scritto da solo, che è un'altra cosa rispetto ad <em>ATTIVO &gt; SATURO</em> e nei due database non compare. Resta anche invariato l'elenco degli stati che fanno scattare la frase "180 Giorni" nelle note tecniche: lì <em>ATTIVO &gt; SATURO</em> non c'era già prima.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details open style="border:1px solid #16a34a;border-radius:12px;overflow:hidden;background:#f0fdf4;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#166534;display:flex;align-items:center;gap:0.5rem;background:#dcfce7;">
+            ✅ V60.09.10 — Collegamenti attivi contati con la stessa regola in tutto il tool
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>✅ Che cosa contava l'Overview</strong>: le caselle <em>Collegamenti Attivi RA</em> e <em>Collegamenti Attivi RC</em> prendevano per buono il solo stato <em>ATTIVO</em> scritto per intero. Tutto il resto finiva fra i non attivi, compresi <em>ATTIVO &gt; SATURO</em>, <em>IN REINSTRADAMENTO</em> e <em>IN VARIAZIONE</em>. I filtri di stato dei tab di ricerca e il fascicolo Excel delle Statistiche usavano invece la regola larga, e i due numeri non tornavano: 5.299 in Overview contro 5.303 nell'Excel.</li>
+              <li><strong>🔄 La regola tenuta</strong>: un collegamento in reinstradamento è attivo, cambia solo il percorso su cui viaggia. Ora l'Overview conta attivi <em>ATTIVO</em>, <em>ATTIVO &gt; SATURO</em>, <em>IN REINSTRADAMENTO</em> e <em>IN VARIAZIONE</em>, cioè la stessa regola del resto del tool.</li>
+              <li><strong>🔢 I numeri nuovi</strong>: RA 5.303 attivi e 1.348 non attivi (erano 5.299 e 1.352), RC 708 e 489 (erano 706 e 491). I totali non si muovono: 6.651 collegamenti RA e 1.197 RC. Nel dettaglio sotto la casella <em>IN REINSTRADAMENTO</em> non compare più, perché è passato fra gli attivi.</li>
+              <li><strong>🔗 Una regola sola, in un posto solo</strong>: la funzione che decide se uno stato è attivo si chiama <code>window.croStatoAttivo</code> ed è definita una volta. L'Overview e l'export Excel delle Statistiche la chiamano entrambi, quindi cambiando la regola cambiano insieme e non possono più divergere.</li>
+              <li><strong>📍 Correzione nel database RA</strong>: il collegamento <code>MILO_arco_1064 | MILO_355 | ALO082 | 5</code> aveva la centrale Z scritta come "TAINO | ANGERA", con CLLI e coordinate doppi nella stessa cella. Ora è ANGERA, CLLI SECAITAF, coordinate 45.775019 e 8.57545. Le centrali univoche della RA scendono da 4.058 a 4.057, perché il nome doppio veniva contato come una centrale per conto suo.</li>
+              <li><strong>⚠️ Resta da verificare</strong>: la distanza di quel collegamento è 20,0 km, mentre la cella del template sorgente conteneva due numeri (6,650 e 20,890). L'avviso in testa al file resta al suo posto finché il dato non è confermato.</li>
+            </ul>
+          </div>
+        </details>
 
         <details open style="border:1px solid #0066CC;border-radius:12px;overflow:hidden;background:#eff6ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
@@ -157078,11 +157213,11 @@ var RAW_DB_RA = [
     "TipoSedeA": "2",
     "Lat_GAT_A": "45.72556",
     "Lon_GAT_A": "8.634831",
-    "GAT_Z": "TAINO | ANGERA",
-    "CLLI_Z": "SECAITAE | SECAITAF",
+    "GAT_Z": "ANGERA",
+    "CLLI_Z": "SECAITAF",
     "TipoSedeZ": "3",
-    "Lat_GAT_Z": "45.762616 | 45.775019",
-    "Lon_GAT_Z": "8.613499 | 8.57545",
+    "Lat_GAT_Z": "45.775019",
+    "Lon_GAT_Z": "8.57545",
     "Distanza_km": "20.0",
     "Zona": "MILO",
     "Regione": "Lombardia",
@@ -288377,6 +288512,9 @@ function updateOverviewUnifiedStats() {
   const dbRA = (typeof RAW_DB_RA !== 'undefined' && Array.isArray(RAW_DB_RA)) ? RAW_DB_RA : [];
   const dbRC = (typeof RAW_DB !== 'undefined' && Array.isArray(RAW_DB)) ? RAW_DB : [];
 
+  /* la regola su quando uno stato conta come attivo sta in testa al file:
+     window.croStatoAttivo */
+
   function compute(db) {
     const total = db.length;
     const counts = {};
@@ -288386,7 +288524,10 @@ function updateOverviewUnifiedStats() {
       s = s.toUpperCase();
       counts[s] = (counts[s] || 0) + 1;
     });
-    const active = counts['ATTIVO'] || 0;
+    let active = 0;
+    Object.keys(counts).forEach(k => {
+      if (window.croStatoAttivo(k)) active += counts[k];
+    });
     const nonatt = total - active;
 
     const centrals = new Set();
@@ -288401,7 +288542,7 @@ function updateOverviewUnifiedStats() {
     // Accorpa tutti gli stati che contengono "DA VERIFICARE SU NNI"
     const countsAggregated = {};
     Object.keys(counts).forEach(k => {
-      if (k === 'ATTIVO') return;
+      if (window.croStatoAttivo(k)) return;
       if (k.includes('DA VERIFICARE SU NNI')) {
         countsAggregated['DA VERIFICARE SU NNI'] = (countsAggregated['DA VERIFICARE SU NNI'] || 0) + counts[k];
       } else {
@@ -290776,7 +290917,9 @@ window.natShowPath = function() {
   
   natLinks.forEach(link => {
     const stato = link.stato.toUpperCase();
-    if (stato !== 'ATTIVO') return; // Only active links
+    /* il grafo prende le tratte attive secondo la regola comune: prima
+       accettava il solo ATTIVO e lasciava fuori ATTIVO > SATURO */
+    if (!window.croStatoAttivo(stato)) return;
     
     if (!graph.has(link.from)) graph.set(link.from, []);
     if (!graph.has(link.to)) graph.set(link.to, []);
@@ -292551,9 +292694,11 @@ let dbState = null;
         if (!window.isStateAccepted('RC', stato)) {
           return;
         }
-      } else if (onlyActive && stato !== 'ATTIVO') {
+      } else if (onlyActive && !window.croStatoAttivo(stato)) {
         return;
       }
+      /* SATURO scritto da solo e' un'altra cosa da ATTIVO > SATURO: il primo
+         resta escluso, il secondo e' una tratta attiva */
       // Escludi sempre SubPath SATURO (es. CRM202: saturo, si usa alternativa CRM302)
       if (stato === 'SATURO') { return; }
 
@@ -292977,6 +293122,9 @@ let dbState = null;
         cls += ' route-id-misto';
       } else if (stato === 'SATURO') {
         cls += ' route-id-saturo';
+      } else if (window.croStatoAttivo(stato)) {
+        /* ATTIVO > SATURO e simili: sono attivi, quindi verdi come ATTIVO */
+        cls += ' route-id-attivo';
       }
       
       // Formatta ID con stato e note se non ATTIVO
@@ -293015,6 +293163,7 @@ function renderRouteDetail(route) {
       if (u === 'IN REINSTRADAMENTO') return 'route-id-inreinstradamento';
       if (u === 'MISTO')              return 'route-id-misto';
       if (u === 'SATURO')             return 'route-id-saturo';
+      if (window.croStatoAttivo(u))   return 'route-id-attivo';
       return '';
     };
     let html = '<div class="route-detail">';
@@ -293247,7 +293396,7 @@ function renderBaseTable() {
       var noActC=0;
       if(r.edges) r.edges.forEach(function(e){
         var st=((e.raw&&(e.raw.StatoCollegamento||e.raw.Stato_IdCollegamento||e.raw.stato||''))+'').toUpperCase().trim();
-        if(st&&st!=='ATTIVO'&&st!=='IN REINSTRADAMENTO'&&st!=='IN VARIAZIONE') noActC++;
+        if(st&&!window.croStatoAttivo(st)) noActC++;
       });
 
       cards+='<div style="flex:1;min-width:180px;background:'+md.bg+';border:1.5px solid '+md.br
@@ -293279,7 +293428,7 @@ function renderBaseTable() {
               +' / '
               +(rcC>0?'<span style="color:#dc2626;">'+rcC+'</span>':'-')
             +'</td>'
-            +'<td title="Collegamenti con stato diverso da ATTIVO, IN REINSTRADAMENTO e IN VARIAZIONE" style="cursor:help;color:#6b7280;padding:1px 6px 1px 8px;">Non att.</td>'
+            +'<td title="Collegamenti con stato diverso da ATTIVO, ATTIVO &gt; SATURO, IN REINSTRADAMENTO e IN VARIAZIONE" style="cursor:help;color:#6b7280;padding:1px 6px 1px 8px;">Non att.</td>'
             +'<td style="font-weight:600;padding:1px 0;color:'+(noActC>0?'#dc2626':'#16a34a')+';">'
               +(noActC>0?noActC:'—')
             +'</td>'
@@ -297966,7 +298115,7 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
             // DA VERIFICARE SU NNI è uno stato informativo — non blocca la connettività
             const isInfoOnly = stato.includes('DA VERIFICARE');
             if (!isInfoOnly && !window.isStateAccepted('RA', stato)) return;
-          } else if (onlyActive && stato !== 'ATTIVO') {
+          } else if (onlyActive && !window.croStatoAttivo(stato)) {
             return;
           }
         }
@@ -298638,6 +298787,7 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
       if (u === 'IN REINSTRADAMENTO') return 'route-id-inreinstradamento';
       if (u === 'MISTO')              return 'route-id-misto';
       if (u === 'SATURO')             return 'route-id-saturo';
+      if (window.croStatoAttivo(u))   return 'route-id-attivo';
       return '';
     };
     var pulisci = function (n) { return String(n || '').replace(/::(?:RA|RC)$/, ''); };
@@ -304241,7 +304391,8 @@ window.COL_CONFIG_NA = [
 
 window.getFilteredRowsNA = function() {
   let rows = window.DB_ROWS_NA.filter(function(row) {
-    return String(row.stato || '').toUpperCase().trim() !== 'ATTIVO';
+    /* non attivo secondo la regola comune: ATTIVO > SATURO resta fuori */
+    return !window.croStatoAttivo(row.stato);
   });
 
   const checkboxes = {
@@ -312208,6 +312359,9 @@ div[style*="background:#f3f4f6"] label:hover span {
         return { color: 'blue', cls: 'route-id-invariazione' };
       } else if (stato === 'IN REINSTRADAMENTO') {
         return { color: 'purple', cls: 'route-id-inreinstradamento' };
+      } else if (window.croStatoAttivo(stato)) {
+        /* ATTIVO > SATURO finiva nel rosso della riga sotto */
+        return { color: 'green', cls: 'route-id-attivo' };
       }
       return { color: 'red', cls: 'route-id-nonattivo' };
     }
@@ -314124,7 +314278,7 @@ div[style*="background:#f3f4f6"] label:hover span {
       else if(curSrc==='RC' && e.source==='RA') rcRa++;
       else if(curSrc==='RA' && e.source==='RA') raRa++;
       var st=((e.raw&&(e.raw.StatoCollegamento||e.raw.Stato_IdCollegamento||e.raw.stato||''))+'').toUpperCase().trim();
-      if(st&&st!=='ATTIVO'&&st!=='IN REINSTRADAMENTO'&&st!=='IN VARIAZIONE') inactive++;
+      if(st&&!window.croStatoAttivo(st)) inactive++;
       subpaths++;
       curSrc=e.source;
     });
@@ -314188,7 +314342,7 @@ div[style*="background:#f3f4f6"] label:hover span {
       if(e.source==='XFER' || e.source==='RTN') return;
       var st=getStato(e);
       if(!st){ unknown++; return; }
-      if(st==='ATTIVO'||st==='IN REINSTRADAMENTO'||st==='IN VARIAZIONE') attivi++;
+      if(window.croStatoAttivo(st)) attivi++;
       else inactive++;
     });
     var transitions=0,curSrc=null,raHops=0,rcHops=0;
@@ -314232,7 +314386,7 @@ div[style*="background:#f3f4f6"] label:hover span {
       + g('RC',rcHops,'#dc2626','Tratti percorsi sulla Rete Core (RC)')
       + g('Trans.',transitions>0?transitions:'\u2014',transitions>2?'#f59e0b':'#374151','Passaggi da una rete all\'altra fra RA e RC, cioe\' i gateway attraversati. Il salto sul backbone RTN non conta come passaggio')
       + hdr('Stato link','#059669','Stato dei collegamenti che compongono il percorso, letto dal database')
-      + g('Attivi',attivi,'#16a34a','Collegamenti con stato ATTIVO, IN REINSTRADAMENTO o IN VARIAZIONE')
+      + g('Attivi',attivi,'#16a34a','Collegamenti con stato ATTIVO, ATTIVO > SATURO, IN REINSTRADAMENTO o IN VARIAZIONE')
       + g('Non att.',inactive>0?inactive:'\u2014',inactive>0?'#dc2626':'#16a34a','Collegamenti con stato NON ATTIVO, IN ATTIVAZIONE, DA VERIFICARE SU NNI o IN CESSAZIONE')
       + (unknown>0?g('Stato ?',unknown,'#9ca3af','Collegamenti che nel database non riportano uno stato. XFER e RTN sono esclusi dal conteggio'):'')
       + '</div>';
@@ -314396,7 +314550,7 @@ div[style*="background:#f3f4f6"] label:hover span {
     const _r3na   = _r3.map(r => (r.edges||[]).filter(e => {
       if(e.source==='XFER') return false;
       const st=((e.raw&&(e.raw.StatoCollegamento||e.raw.Stato_IdCollegamento||e.raw.stato||''))+'').toUpperCase().trim();
-      return st&&st!=='ATTIVO'&&st!=='IN REINSTRADAMENTO'&&st!=='IN VARIAZIONE';
+      return st&&!window.croStatoAttivo(st);
     }).length);
     const _r3sp   = _r3.map(r => {
       if(typeof calculateLinksCountUNIFIED==='function') return calculateLinksCountUNIFIED(r.edges||[]).total;
@@ -314418,7 +314572,7 @@ div[style*="background:#f3f4f6"] label:hover span {
         else if(curSrc==='RC'&&e.source==='RA') rcRa++;
         else if(curSrc==='RA'&&e.source==='RA') raRa++;
         const st=((e.raw&&(e.raw.StatoCollegamento||e.raw.Stato_IdCollegamento||e.raw.stato||''))+'').toUpperCase().trim();
-        if(st&&st!=='ATTIVO'&&st!=='IN REINSTRADAMENTO'&&st!=='IN VARIAZIONE') inactive++;
+        if(st&&!window.croStatoAttivo(st)) inactive++;
         subpaths++; curSrc=e.source;
       });
       const distRatio = _r3minKm>0 ? (km-_r3minKm)/_r3minKm : 0;
@@ -317077,6 +317231,7 @@ div[style*="background:#f3f4f6"] label:hover span {
             if (u==='IN REINSTRADAMENTO') return 'route-id-inreinstradamento';
             if (u==='MISTO')              return 'route-id-misto';
             if (u==='SATURO')             return 'route-id-saturo';
+            if (window.croStatoAttivo(u)) return 'route-id-attivo';
             return '';
           };
           // Display nodo: RA con nodeIdToDisplay (include TipoSede), RC senza (GAT + CLLI solo)
@@ -317156,6 +317311,7 @@ div[style*="background:#f3f4f6"] label:hover span {
       if (u === 'IN REINSTRADAMENTO') return 'route-id-inreinstradamento';
       if (u === 'MISTO')              return 'route-id-misto';
       if (u === 'SATURO')             return 'route-id-saturo';
+      if (window.croStatoAttivo(u))   return 'route-id-attivo';
       return '';
     };
     var info = null;
@@ -322362,7 +322518,8 @@ window._buildUnifiedCostBlock = function(opts) {
     'IN VARIAZIONE':       'FF1E40AF',
     'IN REINSTRADAMENTO':  'FF8B5CF6',
     'IN CESSAZIONE':       'FFBE185D',
-    'SATURO':              'FFF97316',
+    'ATTIVO > SATURO':     'FF166534',
+  'SATURO':              'FFF97316',
     'MISTO':               'FF06B6D4',
     'DA VERIFICARE SU NNI':'FF1F2937'
   };
@@ -324673,10 +324830,10 @@ window.filterCorrLinks=function(){
       '<span style="font-size:.64rem;color:var(--gray-500)">'+(r.gA||'?')+' &rarr; '+(r.gZ||'?')+'</span>',
       rc?pill(rc.IdCollegamento,true):pill('Non trovato',false),
       rc?'<span style="font-family:monospace;font-size:.74rem">'+(rc.SubPath||'—')+'</span>':'—',
-      rc?pill(rc.Stato_IdCollegamento||'?',rc.Stato_IdCollegamento==='ATTIVO'):'—',
+      rc?pill(rc.Stato_IdCollegamento||'?',window.croStatoAttivo(rc.Stato_IdCollegamento)):'—',
       ra?pill(ra.IdCollegamento,true):pill('Non trovato',false),
       ra?'<span style="font-family:monospace;font-size:.74rem">'+(ra.subpath||ra.SubPath||'—')+'</span>':'—',
-      ra?pill(ra.Stato_IdCollegamento||'?',ra.Stato_IdCollegamento==='ATTIVO'):'—'
+      ra?pill(ra.Stato_IdCollegamento||'?',window.croStatoAttivo(ra.Stato_IdCollegamento)):'—'
     ];
   });
 
@@ -330323,7 +330480,7 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
     'MISTO [ATTIVO+IN ATTIVAZIONE]': '#06b6d4',
     'MISTO': '#06b6d4',
     'IN CESSAZIONE': '#be185d',
-    'ATTIVO > SATURO': '#b45309'
+    'ATTIVO > SATURO': '#16a34a'
   };
 
   function statiDi(db) {
@@ -334283,7 +334440,7 @@ body.intro-complete { overflow: visible !important; }
     if (s.indexOf('IN CESSAZIONE') > -1) return '#be185d';
     if (s.indexOf('MISTO') > -1) return '#06b6d4';
     if (s.indexOf('REINSTRADAMENTO') > -1) return '#8b5cf6';
-    if (s.indexOf('SATURO') > -1) return '#ea580c';
+    if (s === 'SATURO') return '#ea580c';
     if (s.indexOf('ATTIVO') > -1) return '#059669';
     return '#64748b';
   }
@@ -335527,7 +335684,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V60.09.09';
+  var REVISIONE = 'V60.09.11';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
@@ -335572,8 +335729,11 @@ div[style*="background:#f3f4f6"] label {
     return Math.round(n * p) / p;
   }
 
-  /* stessa regola usata dai filtri di stato dei tab di ricerca */
+  /* stessa regola usata dai filtri di stato dei tab di ricerca e dalle caselle
+     dell'Overview: la funzione vera e' window.croStatoAttivo, qui sotto resta
+     solo la copia di scorta se quella non fosse ancora stata definita */
   function attivo(s) {
+    if (typeof window.croStatoAttivo === 'function') return window.croStatoAttivo(s);
     var u = String(s).toUpperCase();
     if (u.indexOf('NON ATTIVO') > -1) return false;
     return u.indexOf('ATTIVO') > -1 || u.indexOf('REINSTRADAMENTO') > -1 ||
@@ -335992,9 +336152,9 @@ div[style*="background:#f3f4f6"] label {
       'Le quote per regione sono quindi calcolate sulla somma delle righe regione, non sul totale dei collegamenti.',
 
       'Attivo qui vuol dire ATTIVO, ATTIVO > SATURO, IN REINSTRADAMENTO o IN VARIAZIONE: la stessa ' +
-      'regola dei filtri di stato dei tab di ricerca. Tutto il resto conta come non attivo, ' +
-      'DA VERIFICARE SU NNI e IN ATTIVAZIONE compresi. Il motore di calcolo scarta invece sempre ' +
-      'i SubPath con stato SATURO puro, che qui non figurano fra i non attivi.',
+      'regola usata in tutto il tool. Saturo vuol dire capacità impegnata, non tratta da ' +
+      'realizzare, quindi conta fra gli attivi. Tutto il resto conta come non attivo, ' +
+      'DA VERIFICARE SU NNI e IN ATTIVAZIONE compresi.',
 
       'Le centrali sono i nomi distinti che compaiono come estremo A o estremo Z (campi GAT_A e GAT_Z). ' +
       'Una centrale toccata da venti tratte conta una volta sola.',
@@ -336268,7 +336428,7 @@ div[style*="background:#f3f4f6"] label {
       var att = attivo(k);
       var nota = '';
       if (k.toUpperCase().indexOf('SATURO') > -1) {
-        nota = 'Saturo non vuol dire in realizzazione: conta fra gli attivi, ma il motore scarta i SubPath con stato SATURO puro.';
+        nota = 'Saturo vuol dire capacità impegnata, non tratta da realizzare: conta come ATTIVO in tutto il tool.';
       } else if (k.toUpperCase().indexOf('VERIFICARE') > -1) {
         nota = 'Verifica su NNI obbligatoria prima di usare la tratta.';
       } else if (k.toUpperCase().indexOf('ATTIVAZIONE') > -1) {
