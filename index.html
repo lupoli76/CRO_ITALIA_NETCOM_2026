@@ -4,13 +4,101 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 60.09.11  (rev. pubblicata: V60.09.11 | Set 2026)                    ║
-║   Data: 12 Settembre 2026                                                        ║
+║   Versione: 60.09.18  (rev. pubblicata: V60.09.18 | Set 2026)                    ║
+║   Data: 18 Settembre 2026                                                        ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V60.09.18 | Set 2026:                                                ║
+║   ─────────────────────────                                                      ║
+║   • POP UP CHE PROPONE LA RICERCA UNIFICATA: quando la ricerca RC non trova      ║
+║     percorsi compare un pop up che spiega perché e porta di là i parametri       ║
+║     della ricerca appena fallita, con un bottone che apre il tab Unificato.      ║
+║     Il bottone riempie i campi e si ferma: il calcolo lo lanci tu                ║
+║   • SOLO NEL TAB RC. Nella RA non serve: il vincolo dell'arco non lascia         ║
+║     margine di errore, quindi Std, Div e Multi-Path della RA restano come        ║
+║     erano, avvisi compresi                                                       ║
+║   • TRE MESSAGGI DIVERSI: nessun percorso nella rete, nessun percorso con i      ║
+║     vincoli impostati (prova l'Unificata oppure allenta i vincoli), nessun       ║
+║     percorso diversificato (per la parte Div si consiglia l'Unificato)           ║
+║   • SEI PUNTI DI INNESTO: ricerca Std, i due filtri sui collegamenti             ║
+║     obbligatori ed esclusi, i tre casi Div                                       ║
+║   • CENTRALI FISSATE CON L'ETICHETTA INTERA "NOME (CLLI)", non con il CLLI       ║
+║     da solo: nell'Unificato lo stesso CLLI ha più etichette, il nodo RC          ║
+║     senza tipo sede e i nodi RA con [T1] o [T3], quindi il codice nudo           ║
+║     lasciava il campo in attesa di scelta con la tendina aperta.                 ║
+║     L'etichetta del RC combacia con quella del nodo RC dell'Unificato            ║
+║   • VARIANTI ELENCATE NEL POP UP: per ogni centrale dice come l'ha scritta       ║
+║     (il nodo RC) e quali altre etichette l'Unificato conosce per lo stesso       ║
+║     CLLI, per esempio "ABBIATEGRASSO (ABBIITAB) [T1]" e "[T3]", così se          ║
+║     serve una variante la si cambia a mano nel campo                             ║
+║   • AVVISO RTN: se le due centrali stanno in aree RTN diverse, per esempio       ║
+║     LO Lombardia e LI Liguria, il pop up lo dice e spiega che è quello il        ║
+║     motivo del buco, perché la RC è regionale e non attraversa il backbone       ║
+║     nazionale. Nell'Unificato va accesa la RTN prima di calcolare:               ║
+║     l'interruttore resta all'utente, il bottone non lo tocca. Se l'area è la     ║
+║     stessa lo scrive comunque, così si esclude quella causa. Aree e zone         ║
+║     arrivano dalla tabella del tool, ora esposta come window.croRtnArea          ║
+║   • POP UP LARGO 1080 PX, senza barra di scorrimento: partenza e arrivo          ║
+║     affiancati, ognuno con le voci separate una per riga (centrale, CLLI,        ║
+║     riscontro sul DB RC, etichetta inserita, varianti RA), e sotto una riga      ║
+║     sola con vincoli, limiti, interruttori e filtri. Sotto i 1150 px le due      ║
+║     centrali si incolonnano e torna lo scorrimento                               ║
+║   • TENDINE CHIUSE dopo il riempimento e nessun focus sui campi: era il          ║
+║     focus a far aprire l'autocompletamento sopra i campi appena scritti          ║
+║   • RISCONTRO DELLA CENTRALE NEL DB RC, non nel DB RA: il pop up dice se il      ║
+║     CLLI è stato trovato e mostra area, zona e regione. Del tipo sede non si     ║
+║     parla: nel DB RC non esiste, TipoSedeA e TipoSedeZ valgono "-" su tutti      ║
+║     i 1.197 record                                                               ║
+║   • SI PORTANO anche i vincoli (centrali obbligatorie e da evitare,              ║
+║     collegamenti obbligatori ed esclusi, selezioni multiple comprese), i         ║
+║     limiti di collegamenti, risultati e km, gli interruttori DC e Solo POP,      ║
+║     i filtri di stato nel ramo RC di quelli dell'Unificato                       ║
+║   • ZEBRA E VELO DEL MOUSE SULLE RIGHE DIVERSIFICATE, nell'Unificato con         ║
+║     Div A+B, Div Zona A e Div Zona B e nelle tabelle Div di RC e RA: le          ║
+║     righe in posizione pari perdevano la tinta del blocco e restavano            ║
+║     grigie, e sopra di loro il passaggio del mouse non si vedeva. La causa       ║
+║     e' una regola della veste chiara, body:not(.dark-mode) .db-table tbody       ║
+║     tr:nth-child(even) td, che pesa piu' del blocco route-table-v2 e usa la      ║
+║     scorciatoia background, azzerando anche background-image, cioe' il velo.     ║
+║     Le tinte sono riscritte con lo stesso peso ma piu' avanti nel file e con     ║
+║     background-color, che il velo lo lascia stare                                ║
+║   • SFONDO DELLE MAPPE, SECONDA PASSATA: lo stile di OSM France e' pensato       ║
+║     per un pubblico francofono e dove esiste name:fr usa quello, quindi          ║
+║     Milano diventava Milan e Torino Turin, mentre le vie e i paesi senza         ║
+║     name:fr restavano in italiano. Con dei nomi da leggere sulla mappa non       ║
+║     va bene                                                                      ║
+║   • SFONDI ALLINEATI A NAT_ITALIA: cinque voci nel selettore, in basso a         ║
+║     sinistra come in NAT. Google Maps (Stradale) di partenza, Google Maps        ║
+║     (Satellite Ibrido), Stradale (Esri), Topografica (Esri), Satellite           ║
+║     (Esri). Stessi nomi e stessa chiave di memoria di NAT, croSfondoMappa,       ║
+║     quindi la scelta fatta in un tool vale anche nell'altro quando girano        ║
+║     dallo stesso indirizzo                                                       ║
+║   • SULLE VOCI GOOGLE, DETTO CHIARO: mt1.google.com e' il server dei tile        ║
+║     di Google Maps, non un'API pubblica, e i Service Specific Terms del          ║
+║     Google Maps Platform vietano di usare contenuti Google dentro una mappa      ║
+║     non Google come Leaflet. Sono qui per scelta esplicita e possono             ║
+║     smettere di rispondere senza preavviso: per toglierle bastano le due         ║
+║     voci e il cambio dello sfondo di partenza                                    ║
+║   • LINEE LEGGIBILI SULLE ORTOFOTO: sui due sfondi fotografici le tratte         ║
+║     dei percorsi prendono un contorno scuro sotto e uno spessore maggiore,       ║
+║     altrimenti i colori pieni spariscono dentro il verde e il grigio. Lo         ║
+║     stesso vale per i collegamenti della mappa NAT dentro Analisi Extra          ║
+║   • IL CAMBIO SFONDO RIVESTE LE LINEE GIA' DISEGNATE senza rifare il             ║
+║     calcolo: window.SFONDO_ATTIVO e window.sfondoSatellite() dicono a chi        ║
+║     disegna quale palette usare, come in NAT                                     ║
+║   • SCARTATE: la mappa standard di osm.org, che in locale risponde 403;          ║
+║     CARTO, che stampa sui tile la filigrana "API KEY REQUIRED"; OSM France,      ║
+║     per i nomi in francese                                                       ║
+║   • zoom massimo 19, referrerPolicy strict-origin-when-cross-origin, che in      ║
+║     locale non serve ma vale quando il tool gira da GitHub Pages o dal NAS       ║
+║   • CORRETTO IL CARICAMENTO DEL CODICE DI RICERCA CONDIVISO: chiamava            ║
+║     showTab(), che non esiste in questo file, quindi il tab non cambiava mai     ║
+║     e i campi finivano in quello aperto. Ora chiama switchTab() con gli id       ║
+║     giusti (search, search-ra, search-unified)                                   ║
 ║                                                                                  ║
 ║   CHANGELOG V60.09.11 | Set 2026:                                                ║
 ║   ─────────────────────────                                                      ║
@@ -3865,9 +3953,17 @@ window.initRoutesMap = function() {
     mapContainer.innerHTML = '';
     try {
       window.routesMapInstance = L.map(mapContainer).setView([41.8719, 12.5674], 6);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap', maxZoom: 19
-      }).addTo(window.routesMapInstance);
+      /* Lo sfondo lo mette croSfondoMappa: quattro a scelta dal selettore in
+         alto a destra, Stradale (Esri) di partenza. */
+      if (typeof window.croSfondoMappa === 'function') {
+        window.croSfondoMappa(window.routesMapInstance);
+      } else {
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+          attribution: 'Tiles &copy; Esri',
+          maxZoom: 19,
+          referrerPolicy: 'strict-origin-when-cross-origin'
+        }).addTo(window.routesMapInstance);
+      }
       console.log('[ROUTES MAP] ✅ Map init OK');
     } catch(e) {
       console.error('[ROUTES MAP] ❌', e);
@@ -4309,9 +4405,17 @@ window.initRoutesMapUnified = function() {
     mapContainer.innerHTML = '';
     try {
       window.routesMapInstanceUnified = L.map(mapContainer).setView([41.8719, 12.5674], 6);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap', maxZoom: 19
-      }).addTo(window.routesMapInstanceUnified);
+      /* Lo sfondo lo mette croSfondoMappa: quattro a scelta dal selettore in
+         alto a destra, Stradale (Esri) di partenza. */
+      if (typeof window.croSfondoMappa === 'function') {
+        window.croSfondoMappa(window.routesMapInstanceUnified);
+      } else {
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+          attribution: 'Tiles &copy; Esri',
+          maxZoom: 19,
+          referrerPolicy: 'strict-origin-when-cross-origin'
+        }).addTo(window.routesMapInstanceUnified);
+      }
       console.log('[ROUTES MAP UNIFIED] ✅ Map init OK');
     } catch(e) {
       console.error('[ROUTES MAP UNIFIED] ❌', e);
@@ -21409,7 +21513,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V60.09.11 | Set 2026</div>
+<div class="version-tag">V60.09.18 | Set 2026</div>
       </div>
     </div>
   </header>
@@ -21579,7 +21683,24 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="fx-empty" id="fxEmpty" hidden>Nessuna scheda corrisponde ai filtri impostati.</div>
             <div class="features-grid">
 
-                <!-- Feature 1: Dijkstra -->
+      <!-- Feature: suggerimento ricerca Unificata -->
+          <div class="feature-card" data-cat="routing" style="border-left: 3px solid #7c3aed;">
+            <div class="feature-icon" style="color: #7c3aed;">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4M16 17H4m0 0l4 4m-4-4l4-4"/></svg>
+            </div>
+            <div class="feature-header">
+              <h3 class="feature-title" style="color: #7c3aed;">Rilancio sulla Ricerca Unificata</h3>
+              <span class="feature-badge" style="background: #f5f3ff; color: #7c3aed;">Novità</span>
+            </div>
+            <p class="feature-desc">Quando la ricerca <strong>RC</strong> non trova percorsi, un pop up spiega il motivo e propone la <strong>ricerca Unificata RA + RC</strong> con un bottone che apre il tab portandosi dietro i parametri: centrali fissate con l'etichetta intera <strong>NOME (CLLI)</strong> e riscontrate nel <strong>database RC</strong> con area, zona e regione, vincoli, limiti, interruttori e filtri di stato. Tre messaggi distinti per rete senza percorsi, vincoli troppo stretti e diversificato mancante. Nella RA non serve, il vincolo dell'arco non lascia margine di errore. Il bottone riempie i campi e si ferma: il calcolo resta una tua scelta.</p>
+            <div class="feature-specs">
+              <span class="spec-tag" style="background: #f5f3ff; color: #7c3aed;">6 punti, solo RC</span>
+              <span class="spec-tag" style="background: #f5f3ff; color: #7c3aed;">Etichetta intera</span>
+              <span class="spec-tag" style="background: #f5f3ff; color: #7c3aed;">Avviso RTN</span>
+            </div>
+          </div>
+
+          <!-- Feature 1: Dijkstra -->
                 <div class="feature-card" data-cat="routing" style="border-left: 3px solid #ea580c;">
                     <div class="feature-icon" style="color: #ea580c;">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
@@ -22281,10 +22402,30 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #0891b2;">
+              <details class="cl-item" open style="--cl-accent: #7c3aed;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🔀 Novità V60.09.18 — Set 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🔀 Pop up che propone la ricerca Unificata</strong>: quando la ricerca <strong>RC</strong> non trova percorsi compare un pop up con un bottone che apre il tab Unificato portandosi dietro i parametri della ricerca appena fallita. Il bottone riempie i campi e si ferma: il calcolo lo lanci tu dopo aver controllato. Nella RA non serve, il vincolo dell'arco non lascia margine di errore</li>
+    <li><strong>💬 Tre messaggi</strong>: nessun percorso nella rete, nessun percorso con i vincoli impostati (prova l'Unificata oppure allenta i vincoli), nessun percorso diversificato (per la parte Div si consiglia l'Unificato). Il pop up compare su sei punti: ricerca Std, i due filtri sui collegamenti obbligatori ed esclusi, i tre casi Div</li>
+    <li><strong>🏷️ Centrali fissate con l'etichetta intera</strong>: nell'Unificato lo stesso CLLI ha più etichette, il nodo RC senza tipo sede e i nodi RA con [T1] o [T3]. Passando il codice da solo il campo restava in attesa di scelta con la tendina aperta, quindi ora viaggia <code>NOME (CLLI)</code>, che combacia con l'etichetta del nodo RC. Dopo il riempimento le tendine vengono chiuse e nessun campo prende il focus</li>
+    <li><strong>🌐 Avviso RTN</strong>: se le due centrali stanno in aree RTN diverse (per esempio LO Lombardia e LI Liguria) il pop up lo dice e spiega che è quello il motivo del buco, perché la RC è una rete regionale e non attraversa il backbone nazionale. Nell'Unificato va accesa la RTN prima di calcolare: l'interruttore resta a te, il bottone non lo tocca. Se l'area è la stessa lo scrive comunque, così quella causa si esclude subito</li>
+    <li><strong>📐 Pop up largo e impaginato</strong>: le informazioni sono tante e la finestra da 480 px costringeva a scorrere. Ora arriva a 1080 px, con partenza e arrivo affiancati e ogni voce sulla sua riga (centrale, CLLI, riscontro sul DB RC, etichetta inserita, varianti RA) e sotto una riga sola con vincoli, limiti, interruttori e filtri. Nessuna barra di scorrimento; sotto i 1150 px le due centrali si incolonnano</li>
+    <li><strong>🗂️ Varianti elencate</strong>: per ogni centrale il pop up dice come l'ha scritta, il nodo RC, e quali altre etichette l'Unificato conosce per lo stesso CLLI, per esempio <code>ABBIATEGRASSO (ABBIITAB) [T1]</code> e <code>[T3]</code>. Se serve una variante la cambi a mano nel campo</li>
+    <li><strong>🔍 Riscontro nel DB RC</strong>: il pop up dice se il CLLI è stato trovato nel database RC e mostra area, zona e regione. Del tipo sede non si parla, perché nel DB RC non esiste: <code>TipoSedeA</code> e <code>TipoSedeZ</code> valgono "-" su tutti i 1.197 record</li>
+    <li><strong>🧰 Cosa viaggia</strong>: vincoli (centrali obbligatorie e da evitare, collegamenti obbligatori ed esclusi, selezioni multiple comprese), limiti di collegamenti, risultati e km, interruttori DC e Solo POP, filtri di stato nel ramo RC di quelli dell'Unificato</li>
+    <li><strong>🎨 Zebra e velo del mouse sulle righe Div</strong>: nei blocchi <em>Div A+B</em>, <em>Div Zona A</em> e <em>Div Zona B</em> dell'Unificato, e nelle tabelle Div di RC e RA, una riga su due perdeva la tinta del blocco e non reagiva al passaggio del mouse. Colpa di una regola della veste chiara più specifica che usava la scorciatoia <code>background</code>: ora le tinte sono riscritte con <code>background-color</code>, che il velo lo lascia stare</li>
+        <li><strong>🗺️ Sfondo unico per le mappe</strong>: i tile della OpenStreetMap Foundation rispondono <code>403 Access blocked</code> e da un file aperto in locale il Referer non parte. Lo stile di OSM France, provato per primo, scriveva <em>Milan</em> e <em>Turin</em> perché usa <code>name:fr</code> dove esiste. Le tre mappe hanno ora i cinque sfondi di NAT_ITALIA, nel selettore in basso a sinistra: <strong>Google Maps (Stradale)</strong> di partenza, <strong>Google Maps (Satellite Ibrido)</strong>, <strong>Stradale (Esri)</strong>, <strong>Topografica (Esri)</strong> e <strong>Satellite (Esri)</strong>. Stessi nomi e stessa chiave di memoria di NAT, quindi la scelta vale per tutti e due i tool. Sui due sfondi fotografici le tratte prendono un contorno scuro e piu' spessore, altrimenti i colori spariscono sull'ortofoto. Le voci Google passano da <code>mt1.google.com</code>, che non è un'API pubblica: ci sono per scelta e possono smettere di rispondere senza preavviso. CARTO è stata scartata perché stampa sui tile la filigrana <em>API KEY REQUIRED</em></li>
+    <li><strong>🔧 Codice di ricerca condiviso</strong>: il caricamento chiamava <code>showTab()</code>, che in questo file non esiste, quindi il tab non cambiava mai e i campi finivano in quello aperto. Ora chiama <code>switchTab()</code> con gli id giusti</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0891b2;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🟢 Novità V60.09.11 — Set 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -38595,7 +38736,21 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <li><strong>Step 4:</strong> Controlla filtro "Solo NON ATTIVI" (deseleziona se non necessario)</li>
                   <li><strong>Step 5:</strong> Prova con percorso semplice senza vincoli per testare connettività</li>
                   <li><strong>Step 6:</strong> Se persiste, probabile rete disconnessa tra A e Z</li>
+                  <li><strong>Step 7:</strong> Nel tab RC, dal pop up che compare, apri la ricerca Unificata RA + RC: i parametri arrivano già riportati</li>
                 </ol>
+              </div>
+
+              <div class="docs-callout docs-callout-info">
+                <strong>🔀 Scorciatoia: il pop up di rilancio sull'Unificata</strong>
+                <p style="margin-top:0.5rem;margin-bottom:0;">
+                  Dalla V60.09.18 la ricerca RC che non trova percorsi apre un pop up con il bottone
+                  <em>Apri la ricerca Unificata</em>. Il bottone porta sul tab Unificato i parametri della ricerca
+                  appena fallita: centrali fissate con l'etichetta intera e riscontrate nel database RC, vincoli,
+                  limiti, interruttori DC e Solo POP e filtri di stato. I campi vengono riempiti, il calcolo no:
+                  lo lanci tu dopo aver controllato. Se il vuoto dipende da un vincolo, il pop up lo dice e
+                  conviene prima allentare il vincolo. Nel tab RA il pop up non compare, perché lì la
+                  ricerca è vincolata all'arco.
+                </p>
               </div>
 
               <div class="docs-callout docs-callout-warning">
@@ -39881,7 +40036,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V60.09.11 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V60.09.18 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -39898,6 +40053,30 @@ PERCORSI ALTERNATIVI (Div):
       </div>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+        <details open style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#f5f3ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
+            🔀 V60.09.18 — Pop up che propone la ricerca Unificata quando il RC non trova percorsi
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🔀 A cosa serve</strong>: la rete RC, presa da sola, può non collegare due centrali che invece si raggiungono passando dalla RA. Prima di questa revisione la ricerca a vuoto scriveva solo "Nessun percorso trovato" e la strada da fare restava da indovinare. Ora compare un pop up che dice perché la ricerca è andata a vuoto e offre il passaggio alla ricerca Unificata RA + RC con i parametri già riportati.</li>
+              <li><strong>📍 Solo nel tab RC</strong>: nella RA il pop up non c'è. Lì la ricerca è vincolata all'arco, quindi la coppia di centrali non si può sbagliare e un rilancio sull'Unificato non aggiungerebbe niente. Std, Div e Multi-Path della RA restano come erano, avvisi compresi.</li>
+              <li><strong>💬 I tre messaggi</strong>: <em>nessun percorso nella rete</em> quando il grafo non collega le due centrali; <em>nessun percorso con i vincoli impostati, prova l'Unificata oppure allenta i vincoli</em> quando il vuoto dipende da una centrale obbligatoria o da un collegamento escluso; <em>nessun percorso diversificato</em> quando lo Std esiste e il Div no, dove l'Unificato può diversificare passando dall'altra rete.</li>
+              <li><strong>📋 Dove compare</strong>: sei punti. Ricerca Std, i due filtri sui collegamenti obbligatori ed esclusi, e i tre casi Div (nessun Div fra le centrali, nessun Div che passi per le obbligatorie, nessun Div per il percorso scelto).</li>
+              <li><strong>🏷️ Le centrali si fissano con l'etichetta intera</strong>: nell'Unificato lo stesso CLLI può avere più etichette, perché il grafo tiene nodi distinti per le due reti: il nodo RC senza tipo sede e i nodi RA con <code>[T1]</code> o <code>[T3]</code>. Passando il CLLI da solo il campo restava in attesa di scelta con il menu a tendina aperto e tre voci fra cui scegliere. Ora viaggia l'etichetta <code>NOME (CLLI)</code> del tab RC, che combacia con quella del nodo RC dell'Unificato. Subito dopo il riempimento le tendine vengono svuotate e chiuse, e nessun campo prende il focus: era il focus a far aprire l'autocompletamento sopra i campi appena scritti.</li>
+              <li><strong>🌐 L'avviso sulla RTN</strong>: il pop up confronta le aree RTN delle due centrali usando la tabella del tool, quella che normalizza le zone doppie RA e RC sulla stessa area canonica (<code>LO</code> e <code>MILO</code> diventano <code>LO</code>, <code>RM</code> e <code>RMLA</code> diventano <code>LA</code>). Se le aree sono diverse, per esempio <code>LO</code> Lombardia e <code>LI</code> Liguria, scrive che serve la RTN e spiega il perché: la RC è una rete di trasporto regionale e non attraversa il backbone nazionale, quindi due aree diverse nel solo RC non si collegano. Nell'Unificato l'interruttore <em>RTN</em> va acceso a mano prima di calcolare, il bottone del pop up non lo tocca. Se l'area è la stessa il pop up lo dice comunque, così quella causa si esclude e si guarda altrove. La funzione è la stessa del motore, esposta come <code>window.croRtnArea</code>, quindi non c'è una seconda tabella da tenere allineata.</li>
+              <li><strong>📐 Largo e impaginato, senza scorrimento</strong>: il pop up standard è largo 480 px con il corpo limitato a 400 px, e con tutte queste informazioni compariva la barra di scorrimento laterale. Per questo solo pop up la finestra arriva a 1080 px. Partenza e arrivo stanno affiancati in due riquadri, e dentro ognuno le voci sono separate una per riga: centrale, CLLI, riscontro sul DB RC con area, zona e regione, etichetta inserita, varianti RA. Sotto, una riga sola raccoglie vincoli, limiti, interruttori e filtri. Così si legge tutto senza muovere niente e senza mezzo pop up vuoto. Sotto i 1150 px di finestra le due centrali si incolonnano e ricompare lo scorrimento, che a quel punto serve. La larghezza vale solo qui: la classe viene rimossa alla chiusura, quindi gli altri pop up restano a 480 px.</li>
+              <li><strong>🗂️ Le varianti, elencate</strong>: sotto ogni centrale il pop up scrive come l'ha inserita, cioè il nodo RC, e quali altre etichette l'Unificato conosce per lo stesso CLLI. Per <code>ABBIATEGRASSO (ABBIITAB)</code> segnala i due nodi RA <code>[T1]</code> e <code>[T3]</code>, che nel tab RA corrispondono a <code>TipoSede</code> 1 e 3 sulla stessa sede. Nel campo va sempre il nodo RC: se serve una variante la si cambia a mano, con l'elenco già sotto gli occhi.</li>
+              <li><strong>🔍 Riscontro sul database RC</strong>: il pop up cerca il CLLI di partenza e arrivo nel database RC, quello della ricerca da cui si arriva, e scrive se li ha trovati insieme ad area, zona e regione. Il <em>tipo sede</em> in quel database non è valorizzato: i campi <code>TipoSedeA</code> e <code>TipoSedeZ</code> valgono "-" su tutti e 1.197 i record, quindi del tipo sede il pop up non parla affatto: partendo dal tab RC quel dato non esiste. Il <code>[Tn]</code> compare solo nell'elenco delle varianti, dove indica i nodi RA dello stesso CLLI.</li>
+              <li><strong>🧰 Cosa viaggia</strong>: centrali obbligatorie e da evitare, collegamenti obbligatori ed esclusi, selezioni multiple comprese (passate una per una alle funzioni dell'Unificato), limiti di collegamenti, risultati e chilometri, interruttori DC e Solo POP, coppia Div se impostata, filtri di stato nel ramo RC di quelli dell'Unificato lasciando intatto il ramo RA. Sono gli stessi campi che si compilano nell'Unificato, quindi il travaso è uno a uno.</li>
+              <li><strong>👆 Il bottone si ferma sui campi</strong>: apre il tab Unificato, riempie tutto e mostra un avviso in basso. Il calcolo non parte da solo, così i parametri si possono controllare prima di lanciarlo. Il secondo bottone, <em>Resta qui</em>, chiude e non tocca niente.</li>
+              <li><strong>🎨 Zebra e velo del mouse sulle righe diversificate</strong>: nell'Unificato i blocchi aperti con <em>Div A+B</em>, <em>Div Zona A</em> e <em>Div Zona B</em>, e allo stesso modo le tabelle Div del RC e della RA, mostravano le righe in posizione pari grigie invece che nella tinta del loro blocco, e sopra quelle righe il passaggio del mouse non si vedeva. La causa è una regola della veste chiara, <code>body:not(.dark-mode) .db-table tbody tr:nth-child(even) td</code>: le tabelle dei percorsi sono anche <code>.db-table</code>, quel selettore pesa più del blocco <code>route-table-v2</code> e usa la scorciatoia <code>background</code>, che azzera anche <code>background-image</code>, cioè il velo del mouse. Le tinte di Div, Zona A e Zona B sono state riscritte con lo stesso peso ma più avanti nel file e con <code>background-color</code>, che il velo non lo tocca.</li>
+                            <li><strong>🗺️ Lo sfondo delle mappe</strong>: le mappe mostravano riquadri gialli con la scritta <em>Access blocked. App is not following the tile usage policy of OpenStreetMap's volunteer-run servers</em>. La policy non è cambiata: è la sua applicazione a essere diventata attiva, e chiede un Referer valido o uno User-Agent che identifichi l'applicazione, oltre all'attribuzione visibile. Aprendo il file con doppio clic, da <code>file://</code>, il browser non manda nessun Referer e la richiesta viene rifiutata. Sono stati provati diversi fornitori. Lo stile di OSM France, quello di NAT_ITALIA, risponde ma è pensato per un pubblico francofono e usa <code>name:fr</code> dove esiste, quindi scrive <em>Milan</em> al posto di Milano. CARTO stampa sui tile la filigrana <em>API KEY REQUIRED</em>. La mappa standard di osm.org ha il dettaglio e i nomi giusti ma in locale resta bloccata. Il selettore in basso a sinistra di ogni mappa offre cinque sfondi, gli stessi di NAT_ITALIA e con gli stessi nomi: <em>Google Maps (Stradale)</em>, che è quello di partenza, <em>Google Maps (Satellite Ibrido)</em>, <em>Stradale (Esri)</em>, <em>Topografica (Esri)</em> e <em>Satellite (Esri)</em>. La scelta si salva sotto la chiave <code>croSfondoMappa</code>, la stessa di NAT: quando i due tool girano dallo stesso indirizzo, lo sfondo scelto in uno vale anche nell'altro. Vale per le tre mappe di CRO: percorsi RA e RC, percorsi Unificati e mappa NAT dentro Analisi Extra. Sui due sfondi fotografici le tratte dei percorsi prendono un contorno scuro sotto e uno spessore maggiore, perché sui colori pieni l'ortofoto vince sempre; il cambio sfondo riveste le linee già disegnate senza rifare il calcolo. Una avvertenza sulle due voci Google: <code>mt1.google.com</code> è il server dei tile di Google Maps, non un'API pubblica, e i Service Specific Terms del Google Maps Platform vietano di usare contenuti Google dentro una mappa non Google come Leaflet. Sono state messe per scelta esplicita, allineandosi a NAT_ITALIA, e possono smettere di rispondere da un giorno all'altro senza preavviso: per toglierle bastano le due voci e il cambio dello sfondo di partenza. Zoom massimo 19 e <code>referrerPolicy</code> impostata, che in locale non serve ma vale quando il tool gira da GitHub Pages o dal NAS. Resta valido che la strada definitiva è servire il tool e i tile dal NAS, dove nessuna policy esterna può bloccare niente.</li>
+              <li><strong>🔧 Correzione collegata</strong>: il caricamento del codice di ricerca condiviso (<code>loadShareCode</code>) chiamava <code>showTab()</code>, una funzione che in questo file non esiste: il cambio tab non avveniva mai e i campi venivano riempiti nel tab aperto in quel momento. Per il RC passava anche un id sbagliato. Ora chiama <code>switchTab()</code> con <code>search</code>, <code>search-ra</code> e <code>search-unified</code>.</li>
+            </ul>
+          </div>
+        </details>
 
         <details open style="border:1px solid #0891b2;border-radius:12px;overflow:hidden;background:#ecfeff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0e7490;display:flex;align-items:center;gap:0.5rem;background:#cffafe;">
@@ -289511,10 +289690,19 @@ function initNatTopologyMap() {
   
   console.log('[NAT MAP] Adding tile layer...');
   // Add tile layer
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18
-  }).addTo(natMap);
+  /* come le altre due mappe: lo sfondo lo mette croSfondoMappa */
+  if (typeof window.croSfondoMappa === 'function') {
+    window.croSfondoMappa(natMap);
+  } else {
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri',
+      maxZoom: 19,
+      referrerPolicy: 'strict-origin-when-cross-origin'
+    }).addTo(natMap);
+  }
   
+  /* esposta perche' il cambio sfondo possa ridisegnare con la palette giusta */
+  window.natDrawLinks = natDrawLinks;
   // Create layer groups
   natLinksLayer = L.layerGroup().addTo(natMap);
   natNodesLayer = L.layerGroup().addTo(natMap);
@@ -289644,8 +289832,11 @@ function natDrawLinks() {
     if (!isSelected && !showUnselected) return;
     
     const color = isSelected ? (NAT_STATUS_COLORS[link.stato] || '#22c55e') : '#9ca3af';
-    const weight = isSelected ? 2.5 : 1.5;
-    const opacity = isSelected ? 0.9 : 0.5;
+    /* sugli sfondi fotografici le linee sottili spariscono: piu' spessore e
+       piu' opacita', come fa NAT_ITALIA */
+    const foto = (typeof window.sfondoSatellite === 'function') && window.sfondoSatellite();
+    const weight = isSelected ? (foto ? 4 : 2.5) : (foto ? 2.5 : 1.5);
+    const opacity = isSelected ? 1 : (foto ? 0.8 : 0.5);
     
     const poly = L.polyline([[fromNode.lat, fromNode.lon], [toNode.lat, toNode.lon]], {
       color: color,
@@ -296454,8 +296645,17 @@ window.runBaseRoutesSearch = function() {
       }
       baseRoutes = [];
       renderBaseTable();
-      // v35.26: Popup quando non esistono percorsi Std
-      showAlert(msgNoStd + (_dcWarningMsg || ''), 'warning');
+      /* il pop up sostituisce il vecchio avviso: dice perche' la ricerca e'
+         andata a vuoto e offre il passaggio all'Unificato con i parametri */
+      if (typeof window.croSuggerisciUnificato === 'function') {
+        window.croSuggerisciUnificato({
+          rete: 'RC',
+          tipo: mustPassList.length > 0 ? 'vincoli' : 'std',
+          testo: msgNoStd + (_dcWarningMsg || '')
+        });
+      } else {
+        showAlert(msgNoStd + (_dcWarningMsg || ''), 'warning');
+      }
       return;
     }
     
@@ -296512,6 +296712,10 @@ window.runBaseRoutesSearch = function() {
         }
         baseRoutes = [];
         renderBaseTable();
+        if (typeof window.croSuggerisciUnificato === 'function') {
+          window.croSuggerisciUnificato({ rete: 'RC', tipo: 'vincoli',
+            testo: 'I percorsi esistono, ma nessuno passa per tutti i collegamenti obbligatori selezionati.' });
+        }
         return;
       }
     }
@@ -296531,6 +296735,10 @@ window.runBaseRoutesSearch = function() {
         }
         baseRoutes = [];
         renderBaseTable();
+        if (typeof window.croSuggerisciUnificato === 'function') {
+          window.croSuggerisciUnificato({ rete: 'RC', tipo: 'vincoli',
+            testo: 'I percorsi esistono, ma tutti passano per almeno uno dei collegamenti esclusi.' });
+        }
         return;
       }
     }
@@ -296749,8 +296957,12 @@ window.runBaseRoutesSearch = function() {
           'Seleziona un percorso Std e lancia <strong>Percorsi Div</strong> per vedere le alternative diversificate.' +
           '</td></tr>';
       }
-      // v35.26: Popup quando non esistono percorsi Div
-      showAlert('Nessun percorso Div disponibile tra le centrali selezionate.\n\nVerifica i parametri di ricerca.', 'warning');
+      if (typeof window.croSuggerisciUnificato === 'function') {
+        window.croSuggerisciUnificato({ rete: 'RC', tipo: 'div',
+          testo: 'Nessun percorso Div disponibile tra le centrali selezionate.' });
+      } else {
+        showAlert('Nessun percorso Div disponibile tra le centrali selezionate.', 'warning');
+      }
       return;
     }
 
@@ -296774,8 +296986,12 @@ window.runBaseRoutesSearch = function() {
             'Seleziona un percorso Std e lancia <strong>Percorsi Div</strong> per vedere le alternative diversificate.' +
             '</td></tr>';
         }
-        // v35.26: Popup quando non esistono percorsi Div con mustPass
-        showAlert('Nessun percorso Div trovato che passi per tutte le centrali obbligatorie selezionate.', 'warning');
+        if (typeof window.croSuggerisciUnificato === 'function') {
+          window.croSuggerisciUnificato({ rete: 'RC', tipo: 'div',
+            testo: 'Nessun percorso Div che passi per tutte le centrali obbligatorie selezionate.' });
+        } else {
+          showAlert('Nessun percorso Div trovato che passi per tutte le centrali obbligatorie selezionate.', 'warning');
+        }
         return;
       }
     }
@@ -296870,7 +297086,12 @@ window.runBaseRoutesSearch = function() {
       if (altInfo) altInfo.textContent = 'Nessun percorso Div trovato per il percorso 1.' + (idx + 1) + '.';
       altRoutes = [];
       if (altBody) altBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--gray-500);">Nessun percorso Div trovato.</td></tr>';
-      showAlert('Nessun percorso Div trovato per il percorso 1.' + (idx + 1) + '.' + _maxWarn, 'warning');
+      if (typeof window.croSuggerisciUnificato === 'function') {
+        window.croSuggerisciUnificato({ rete: 'RC', tipo: 'div',
+          testo: 'Nessun percorso Div trovato per il percorso 1.' + (idx + 1) + '.' + _maxWarn });
+      } else {
+        showAlert('Nessun percorso Div trovato per il percorso 1.' + (idx + 1) + '.' + _maxWarn, 'warning');
+      }
       return;
     }
 
@@ -313347,6 +313568,10 @@ div[style*="background:#f3f4f6"] label:hover span {
     if (!zona) return null;
     return RTN_ZONA_NORM[zona] || zona;
   }
+  /* serve al pop up di rilancio sull'Unificata, che avvisa quando le due
+     centrali stanno in aree RTN diverse */
+  window.croRtnArea = getRtnAreaForClli;
+  window.croRtnZona = _getRtnZonaForClli;
 
   // ── Helper non-crossing: ord geografico e matching A1 ──────────────────────
   function _getA1Ord(clli) {
@@ -321647,7 +321872,9 @@ div[style*="background:#f3f4f6"] label:hover span {
       
       if (params.scope === 'RC') {
         // Cambia tab
-        if (typeof showTab === 'function') showTab('tab-search-rc');
+        /* era showTab('tab-search-rc'): quella funzione non esiste in questo
+           file e l'id del tab RC e' 'search', non 'search-rc' */
+        if (typeof switchTab === 'function') switchTab('search');
         
         // Popola i campi
         setTimeout(function() {
@@ -321677,7 +321904,7 @@ div[style*="background:#f3f4f6"] label:hover span {
         }, 100);
         
       } else if (params.scope === 'RA') {
-        if (typeof showTab === 'function') showTab('tab-search-ra');
+        if (typeof switchTab === 'function') switchTab('search-ra');
         
         setTimeout(function() {
           if (params.start1) document.getElementById('routeStart1InputRA').value = params.start1;
@@ -321698,7 +321925,7 @@ div[style*="background:#f3f4f6"] label:hover span {
         }, 100);
         
       } else if (params.scope === 'UNIFIED') {
-        if (typeof showTab === 'function') showTab('tab-search-unified');
+        if (typeof switchTab === 'function') switchTab('search-unified');
         
         setTimeout(function() {
           if (params.start) document.getElementById('uRouteStartInput').value = params.start;
@@ -335031,6 +335258,35 @@ body.intro-complete { overflow: visible !important; }
     return righe.join('<br>');
   }
 
+  /* Registro delle tratte disegnate: serve per rivestirle quando si cambia
+     sfondo, senza rifare il calcolo del percorso. */
+  var disegnate = [];
+
+  function stile(rtn) {
+    var foto = (typeof window.sfondoSatellite === 'function') && window.sfondoSatellite();
+    return {
+      peso: foto ? (rtn ? 6 : 5) : (rtn ? 4 : 3),
+      opacita: foto ? 1 : 0.85,
+      contorno: foto ? (rtn ? 10 : 9) : 0
+    };
+  }
+
+  /* Sulle ortofoto i colori pieni spariscono dentro il verde della
+     vegetazione e il grigio dell'urbano: sotto ogni tratta ci va una linea
+     scura piu' larga, che e' quella che la rende leggibile. */
+  window.croAggiornaStileTratte = function () {
+    disegnate.forEach(function (v) {
+      if (!v.seg || !v.seg.setStyle) return;
+      var s = stile(v.rtn);
+      try {
+        v.seg.setStyle({ weight: s.peso, opacity: s.opacita });
+        if (v.bordo && v.bordo.setStyle) {
+          v.bordo.setStyle({ weight: s.contorno, opacity: s.contorno ? 0.55 : 0 });
+        }
+      } catch (e) {}
+    });
+  };
+
   window.croDisegnaTratte = function (latlngs, tratte, routeIdx, mappa) {
     var tinta = window.getRouteColor(routeIdx);
     var pezzi = [];
@@ -335038,12 +335294,22 @@ body.intro-complete { overflow: visible !important; }
       var l = tratte[i / 2];
       var rtn = eRtn(l);
       var a = latlngs[i], b = latlngs[i + 1];
+      var s = stile(rtn);
+      var bordo = L.polyline([a, b], {
+        color: '#1f2937',
+        weight: s.contorno,
+        opacity: s.contorno ? 0.55 : 0,
+        dashArray: rtn ? '10, 6' : null,
+        interactive: false
+      }).addTo(mappa);
+      pezzi.push(bordo);
       var seg = L.polyline([a, b], {
         color: rtn ? TINTA_RTN : tinta,
-        weight: rtn ? 4 : 3,
-        opacity: 0.85,
+        weight: s.peso,
+        opacity: s.opacita,
         dashArray: rtn ? '10, 6' : null
       }).addTo(mappa);
+      disegnate.push({ seg: seg, bordo: bordo, rtn: rtn });
       /* il tooltip stava sulla polilinea unica: ora ogni tratta ha il suo,
          con i nomi, l'identificativo, la distanza e lo stato */
       try { seg.bindTooltip(etichetta(l, a, b, rtn), { sticky: true }); } catch (e) {}
@@ -335684,7 +335950,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V60.09.11';
+  var REVISIONE = 'V60.09.18';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
@@ -336777,6 +337043,712 @@ div[style*="background:#f3f4f6"] label {
   setInterval(metti, 500);
 })();
 </script>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- SUGGERIMENTO RICERCA UNIFICATA (solo tab RC)                               -->
+<!-- Quando la ricerca RC non trova percorsi, un pop up propone la ricerca     -->
+<!-- Unificata RA+RC. Nella RA non serve: il vincolo dell'arco non lascia      -->
+<!-- margine di errore.                                                       -->
+<!-- Unificata RA+RC e porta di là i parametri della ricerca appena fallita.     -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<style>
+/* Il pop up standard e' largo 480 px con il corpo a 400 px e la barra di
+   scorrimento: qui le informazioni sono tante, quindi per questo solo pop up
+   si allarga e si dispone su due colonne, cosi' si legge tutto senza scorrere.
+   La classe la mette e la toglie il modulo qui sotto. */
+.cro-popup-overlay.cro-popup-larga .cro-popup { max-width: 1080px; }
+.cro-popup-overlay.cro-popup-larga .cro-popup-body {
+  max-height: none;
+  overflow-y: visible;
+  padding: 18px 22px;
+}
+.cro-larga-griglia {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: stretch;
+}
+.cro-larga-fondo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 26px;
+  font-size: 0.78rem;
+  color: #374151;
+}
+.cro-larga-fondo b {
+  color: #94a3b8;
+  font-weight: 700;
+  font-size: 0.71rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-right: 5px;
+}
+.cro-larga-blocco {
+  border: 1px solid var(--border-light, #e2e8f0);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--bg-secondary, #f8fafc);
+}
+.cro-larga-tit {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #0066CC;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+}
+/* sotto i 1150 px la finestra non ha spazio per due colonne */
+@media (max-width: 1150px) {
+  .cro-larga-griglia { grid-template-columns: 1fr; }
+  .cro-popup-overlay.cro-popup-larga .cro-popup-body {
+    max-height: 74vh;
+    overflow-y: auto;
+  }
+}
+</style>
+<script>
+(function () {
+  'use strict';
+
+  function el(id) { return document.getElementById(id); }
+
+  function txt(id) {
+    var e = el(id);
+    return e ? String(e.value == null ? '' : e.value).trim() : '';
+  }
+
+  function scrivi(id, valore) {
+    var e = el(id);
+    if (e && valore !== '' && valore != null) e.value = valore;
+  }
+
+  /* Spacchetta un'etichetta di centrale nelle sue parti.
+     Il RC scrive "ACILIA (ROMAITBN)", la RA "ABANO (PADOITAS) [T2]": il CLLI
+     sta fra parentesi in entrambi i casi, il tipo sede solo nella RA. */
+  function pezzi(etichetta) {
+    var s = String(etichetta == null ? '' : etichetta).trim();
+    var mc = s.match(/\(([^)]+)\)/);
+    var mt = s.match(/\[T\s*(\d)\s*\]/i);
+    return {
+      etichetta: s,
+      nome: s.replace(/\s*\([^)]*\)\s*/, ' ').replace(/\s*\[T\s*\d\s*\]\s*/, ' ').trim(),
+      clli: mc ? mc[1].trim().toUpperCase() : '',
+      tipo: mt ? mt[1] : ''
+    };
+  }
+
+  /* Riscontro della centrale nel database RC, che e' quello della ricerca da
+     cui arriviamo. Torna zona, regione, area e tipo sede. Il tipo sede nel DB
+     RC non e' valorizzato su nessun record (TipoSedeA e TipoSedeZ valgono "-"
+     su tutti e 1.197), quindi il pop up lo dice invece di inventarlo. */
+  function riscontroRC(clli) {
+    if (!clli) return null;
+    var db = window.RAW_DB || [];
+    for (var i = 0; i < db.length; i++) {
+      var r = db[i];
+      var lato = '';
+      if (String(r.CLLI_A || '').trim().toUpperCase() === clli) lato = 'A';
+      else if (String(r.CLLI_Z || '').trim().toUpperCase() === clli) lato = 'Z';
+      if (!lato) continue;
+      var t = String(r['TipoSede' + lato] == null ? '' : r['TipoSede' + lato]).trim();
+      var zona = pulito(r.Zona);
+      var area = pulito(r.Area);
+      /* nel database il nord e' unico, mentre sotto il campo centrale il tool
+         mostra NORD OVEST e NORD EST come la tabella dei 37 Nodi A1: si usa la
+         stessa funzione, cosi' il pop up dice quello che si vede nel tab */
+      if (typeof window._areaFromZona === 'function') {
+        area = window._areaFromZona(zona, area) || area;
+      }
+      return {
+        gat: String(r['GAT_' + lato] || '').trim(),
+        zona: zona,
+        regione: pulito(r.Regione),
+        area: area,
+        tipo: (t && t !== '-') ? t : ''
+      };
+    }
+    return null;
+  }
+
+  /* Tutte le etichette che l'Unificato conosce per quel CLLI. Il grafo tiene
+     nodi separati per le due reti, quindi lo stesso codice compare come nodo
+     RC, senza tipo sede, e come uno o piu' nodi RA con [T1] o [T3]. Nel campo
+     si scrive sempre il nodo RC: le altre le elenca il pop up, così se serve
+     una variante la si cambia a mano. */
+  function varianti(clli) {
+    var out = [];
+    if (!clli) return out;
+    var i, r, lato, nome;
+    var rc = window.RAW_DB || [];
+    for (i = 0; i < rc.length; i++) {
+      r = rc[i];
+      lato = (String(r.CLLI_A || '').trim().toUpperCase() === clli) ? 'A'
+           : (String(r.CLLI_Z || '').trim().toUpperCase() === clli) ? 'Z' : '';
+      if (!lato) continue;
+      nome = String(r['GAT_' + lato] || '').trim();
+      if (nome) { out.push({ rete: 'RC', tipo: '', etichetta: nome + ' (' + clli + ')' }); }
+      break;
+    }
+    var ra = window.RAW_DB_RA || [], visti = {};
+    for (i = 0; i < ra.length; i++) {
+      r = ra[i];
+      ['A', 'Z'].forEach(function (l) {
+        if (String(r['CLLI_' + l] || '').trim().toUpperCase() !== clli) return;
+        var n = String(r['GAT_' + l] || '').trim();
+        var t = String(r['TipoSede' + l] == null ? '' : r['TipoSede' + l]).trim();
+        if (!n || !t || t === '-') return;
+        var k = n + '|' + t;
+        if (visti[k]) return;
+        visti[k] = 1;
+        out.push({ rete: 'RA', tipo: t, etichetta: n + ' (' + clli + ') [T' + t + ']' });
+      });
+    }
+    out.sort(function (a, b) {
+      if (a.rete !== b.rete) return a.rete === 'RC' ? -1 : 1;
+      return String(a.tipo).localeCompare(String(b.tipo));
+    });
+    return out;
+  }
+
+  function pulito(v) {
+    var s = String(v == null ? '' : v).trim();
+    return (s && s !== '-') ? s : '';
+  }
+
+  function lista(v) { return Array.isArray(v) ? v.slice() : []; }
+
+  function copia(o) {
+    try { return JSON.parse(JSON.stringify(o || {})); } catch (e) { return {}; }
+  }
+
+  /* ─────────────────────────────────────────── raccolta dei parametri */
+  /* Solo RC: nella RA il vincolo dell'arco non lascia margine di errore e il
+     pop up non serve. */
+  function raccogli() {
+    return {
+      rete: 'RC',
+      start: pezzi(txt('routeStart1Input')),
+      end: pezzi(txt('routeEnd1Input')),
+      start2: txt('routeStart2Input'),
+      end2: txt('routeEnd2Input'),
+      pop: window._onlyPOPFilterRC === true,
+      dc: !!(window.sedeFilters && window.sedeFilters.RC &&
+             !window.sedeFilters.RC.passaDataCenter),
+      filtri: copia(window.stateFilters && window.stateFilters.RC),
+      limiti: {
+        uRouteMinLinksInput: txt('routeMinLinksInput'),
+        uRouteMaxLinksInput: txt('routeMaxLinksInput'),
+        uRouteMinResultsInput: txt('routeMinResultsInput'),
+        uRouteMaxResultsInput: txt('routeMaxResultsInput'),
+        uRouteMinKmInput: txt('routeMinKmInput'),
+        uRouteMaxKmInput: txt('routeMaxKmInput')
+      },
+      vincoli: {
+        must: txt('routeMustPassInput'),
+        avoid: txt('routeAvoidInput'),
+        linkMust: txt('routeLinkMustPassInput'),
+        linkAvoid: txt('routeLinkAvoidInput'),
+        listaMust: lista(window.selectedMustPass),
+        listaAvoid: lista(window.selectedAvoid),
+        listaLinkMust: lista(window.selectedLinkMustPass),
+        listaLinkAvoid: lista(window.selectedLinkAvoid)
+      }
+    };
+  }
+
+  function quantiVincoli(v) {
+    if (!v) return 0;
+    return (v.must ? 1 : 0) + (v.avoid ? 1 : 0) + (v.linkMust ? 1 : 0) +
+           (v.linkAvoid ? 1 : 0) + v.listaMust.length + v.listaAvoid.length +
+           v.listaLinkMust.length + v.listaLinkAvoid.length;
+  }
+
+  /* ─────────────────────────────────────────── travaso nell'Unificato */
+  function applica(d) {
+    /* Le centrali si fissano con l'etichetta intera "NOME (CLLI)", non con il
+       CLLI nudo: nell'Unificato lo stesso CLLI puo' avere piu' etichette (il
+       nodo RC senza tipo sede e i nodi RA con [T1], [T3]), quindi il codice da
+       solo lascia il campo in attesa di scelta con il menu a tendina aperto.
+       L'etichetta del RC e' identica a quella del nodo RC dell'Unificato. */
+    scrivi('uRouteStartInput', d.start.etichetta || d.start.clli);
+    scrivi('uRouteEndInput', d.end.etichetta || d.end.clli);
+    if (d.start2) scrivi('uRouteStart2Input', d.start2);
+    if (d.end2) scrivi('uRouteEnd2Input', d.end2);
+
+    if (d.limiti) {
+      Object.keys(d.limiti).forEach(function (k) { scrivi(k, d.limiti[k]); });
+    }
+
+    /* interruttore DC: si confronta lo stato e si preme una volta sola */
+    if (typeof d.dc === 'boolean' && typeof window.toggleExcludeDC === 'function' &&
+        window.sedeFilters && window.sedeFilters.UNIFIED) {
+      var dcOra = !window.sedeFilters.UNIFIED.passaDataCenter;
+      if (dcOra !== d.dc) window.toggleExcludeDC('UNIFIED');
+    }
+
+    /* interruttore Solo POP */
+    if (typeof window.togglePOPFilterUNIFIED === 'function') {
+      if ((window._onlyPOPFilterUNIFIED === true) !== !!d.pop) {
+        window.togglePOPFilterUNIFIED();
+      }
+    }
+
+    /* filtri di stato: quelli della rete di partenza finiscono nel ramo
+       corrispondente dei filtri dell'Unificato, l'altro ramo resta com'e' */
+    if (d.filtri && window.stateFilters && window.stateFilters.UNIFIED) {
+      var ramo = d.rete;
+      window.stateFilters.UNIFIED[ramo] = copia(d.filtri);
+      Object.keys(d.filtri).forEach(function (k) {
+        var cb = el('unified' + ramo + 'State' + k);
+        if (cb) cb.checked = !!d.filtri[k];
+      });
+      if (typeof window.updateStateFilters === 'function') {
+        window.updateStateFilters('UNIFIED');
+      }
+    }
+
+    /* vincoli: solo dal RC, dove sono gli stessi dell'Unificato.
+       Se la selezione multipla e' in uso si passano gli elenchi con le
+       funzioni pubbliche dell'Unificato, altrimenti il campo singolo. */
+    if (d.vincoli) {
+      var v = d.vincoli;
+      if (v.listaMust.length && typeof window.addMustPassUNIFIED === 'function') {
+        v.listaMust.forEach(function (x) { window.addMustPassUNIFIED(x); });
+      } else {
+        scrivi('uRouteMustPassInput', v.must);
+      }
+      if (v.listaAvoid.length && typeof window.addAvoidUNIFIED === 'function') {
+        v.listaAvoid.forEach(function (x) { window.addAvoidUNIFIED(x); });
+      } else {
+        scrivi('uRouteAvoidInput', v.avoid);
+      }
+      if (v.listaLinkMust.length && typeof window.addLinkMustPassUNIFIED === 'function') {
+        v.listaLinkMust.forEach(function (x) { window.addLinkMustPassUNIFIED(x); });
+      } else {
+        scrivi('uRouteLinkMustPassInput', v.linkMust);
+      }
+      if (v.listaLinkAvoid.length && typeof window.addLinkAvoidUNIFIED === 'function') {
+        v.listaLinkAvoid.forEach(function (x) { window.addLinkAvoidUNIFIED(x); });
+      } else {
+        scrivi('uRouteLinkAvoidInput', v.linkAvoid);
+      }
+    }
+
+    chiudiTendine();
+    if (window.console) console.log('[UNIFICATO] parametri portati dal RC', d);
+  }
+
+  /* I menu a tendina dell'autocompletamento vanno svuotati e chiusi: riempire
+     i campi da codice non li apre, ma se uno era rimasto aperto prima resta
+     li' sopra i campi appena scritti. */
+  function chiudiTendine() {
+    ['uRouteStartDropdown', 'uRouteEndDropdown', 'uRouteStart2Dropdown',
+     'uRouteEnd2Dropdown', 'uRouteMustPassDropdown', 'uRouteAvoidDropdown',
+     'uRouteLinkMustPassDropdown', 'uRouteLinkAvoidDropdown'].forEach(function (id) {
+      var e = el(id);
+      if (!e) return;
+      e.innerHTML = '';
+      e.style.display = 'none';
+      e.classList.remove('active', 'visible', 'show');
+    });
+  }
+
+  /* La larghezza vale per questo pop up e non per gli altri: la classe si
+     toglie appena il pop up si chiude, da qualunque bottone. */
+  function larga(on) {
+    var ov = el('croPopupOverlay');
+    if (ov) ov.classList.toggle('cro-popup-larga', !!on);
+  }
+
+  var chiudiOriginale = window.closeCROPopup;
+  if (typeof chiudiOriginale === 'function' && !window._croLargaAgganciata) {
+    window._croLargaAgganciata = true;
+    window.closeCROPopup = function () {
+      larga(false);
+      return chiudiOriginale.apply(this, arguments);
+    };
+  }
+
+  window.croVaiUnificato = function () {
+    var d = window._croUltimoTravaso;
+    if (typeof window.closeCROPopup === 'function') window.closeCROPopup();
+    if (!d) return;
+    if (typeof window.switchTab === 'function') window.switchTab('search-unified');
+    /* il cambio tab rimette lo scroll in cima con un timer suo: si aspetta
+       che abbia finito, altrimenti i campi si riempiono e non si vedono */
+    setTimeout(function () {
+      try { applica(d); } catch (e) {
+        if (window.console) console.error('[UNIFICATO] travaso:', e);
+      }
+      /* nessun focus sui campi: metterlo faceva aprire l'autocompletamento e
+         il menu restava sopra i campi appena riempiti */
+      chiudiTendine();
+      if (typeof window.showToast === 'function') {
+        window.showToast('Parametri portati dalla ricerca RC. ' +
+                         'Premi Calcola Percorsi UNIFICATO RA + RC.', 'info');
+      }
+    }, 180);
+  };
+
+  /* ───────────────────────────────────────────────────── il pop up */
+  function riga(etichetta, valore, tinta) {
+    return '<tr>' +
+      '<td style="padding:3px 8px 3px 0;color:#6b7280;font-size:0.78rem;white-space:nowrap;vertical-align:top;">' +
+      etichetta + '</td>' +
+      '<td style="padding:3px 0;font-size:0.78rem;color:' + (tinta || '#374151') + ';">' +
+      valore + '</td></tr>';
+  }
+
+  /* Una voce del blocco centrale: etichetta stretta a sinistra, valore a
+     destra. Prima era tutto di seguito in un paragrafo solo. */
+  function voce(etichetta, valore) {
+    return '<tr>' +
+      '<td style="padding:1px 8px 1px 0;color:#94a3b8;font-size:0.71rem;' +
+      'text-transform:uppercase;letter-spacing:0.02em;white-space:nowrap;' +
+      'vertical-align:top;">' + etichetta + '</td>' +
+      '<td style="padding:1px 0;font-size:0.78rem;color:#374151;line-height:1.4;">' +
+      valore + '</td></tr>';
+  }
+
+  function bloccoCentrale(ruolo, p) {
+    var testa = '<div style="font-size:0.7rem;font-weight:700;color:#0066CC;' +
+                'text-transform:uppercase;letter-spacing:0.03em;margin-bottom:2px;">' +
+                ruolo + '</div>';
+    if (!p.clli) {
+      return testa + '<div style="font-size:0.8rem;color:#b45309;">non indicata</div>';
+    }
+
+    var righe = '';
+    var rc = riscontroRC(p.clli);
+    var nome = (rc && rc.gat) || p.nome || p.clli;
+
+    righe += voce('Centrale', '<strong style="font-size:0.84rem;">' + nome + '</strong>');
+    righe += voce('CLLI', '<code style="font-size:0.76rem;">' + p.clli + '</code>');
+
+    if (!rc) {
+      righe += voce('DB RC', '<span style="color:#b45309;">CLLI non trovato</span>');
+    } else {
+      var dove = [rc.area, rc.zona, rc.regione].filter(function (x) { return x; })
+                   .join(' <span style="color:#cbd5e1;">·</span> ');
+      righe += voce('DB RC', '<span style="color:#059669;">trovata</span>' +
+                    (dove ? ' <span style="color:#6b7280;">' + dove + '</span>' : ''));
+    }
+
+    var v = varianti(p.clli), nodoRC = null, altre = [];
+    v.forEach(function (x) {
+      if (x.rete === 'RC' && !nodoRC) nodoRC = x; else altre.push(x);
+    });
+    righe += voce('Inserita come', '<code style="color:#0066CC;font-size:0.76rem;">' +
+                  ((nodoRC && nodoRC.etichetta) || p.etichetta) + '</code>');
+    if (altre.length) {
+      /* si mostra il solo suffisso: il nome e il CLLI sono gia' due righe sopra */
+      righe += voce('Varianti RA', altre.map(function (x) {
+        return '<code style="font-size:0.74rem;">[T' + x.tipo + ']</code>';
+      }).join(' ') + ' <span style="color:#6b7280;">stesso CLLI, nodo RA: ' +
+        'cambiala a mano se ti serve</span>');
+    }
+
+    return testa + '<table style="width:100%;border-collapse:collapse;">' +
+           righe + '</table>';
+  }
+
+  /* Aree RTN delle due centrali. La funzione e la tabella delle zone sono
+     quelle del tool (window.croRtnArea), non una copia. */
+  function areeRtn(d) {
+    if (typeof window.croRtnArea !== 'function') return null;
+    var a = window.croRtnArea(d.start.clli), z = window.croRtnArea(d.end.clli);
+    if (!a || !z) return null;
+    var ra = riscontroRC(d.start.clli), rz = riscontroRC(d.end.clli);
+    return {
+      a: a, z: z, uguali: a === z,
+      regA: (ra && ra.regione) || '', regZ: (rz && rz.regione) || ''
+    };
+  }
+
+  function avvisoRtn(d) {
+    var ar = areeRtn(d);
+    if (!ar || ar.uguali) return '';
+    var etA = ar.a + (ar.regA ? ' (' + ar.regA + ')' : '');
+    var etZ = ar.z + (ar.regZ ? ' (' + ar.regZ + ')' : '');
+    return '<div style="margin-top:0.8rem;padding:0.6rem 0.8rem;background:#ecfeff;' +
+      'border:1px solid #67e8f9;border-left:4px solid #0891b2;border-radius:6px;' +
+      'font-size:0.82rem;color:#155e75;line-height:1.55;">' +
+      '<strong>🌐 Qui serve la RTN.</strong> Le due centrali stanno in aree diverse, ' +
+      '<strong>' + etA + '</strong> e <strong>' + etZ + '</strong>, ed \u00e8 con ogni ' +
+      'probabilit\u00e0 il motivo del buco: la RC \u00e8 una rete di trasporto regionale e non ' +
+      'attraversa il backbone nazionale, quindi due aree diverse nel solo RC non si ' +
+      'collegano. Nell\'Unificato accendi l\'interruttore <strong>🌐 RTN</strong> ' +
+      'prima di calcolare: il percorso va al Nodo A1 pi\u00f9 vicino di ciascuna area e ' +
+      'passa per la RTN. L\'interruttore resta a te, il bottone qui sotto non lo tocca.' +
+      '</div>';
+  }
+
+  /* opz = { tipo: 'std'|'vincoli'|'div', testo: '...' } */
+  window.croSuggerisciUnificato = function (opz) {
+    opz = opz || {};
+    var tipo = opz.tipo || 'std';
+    var d;
+    try { d = raccogli(); } catch (e) {
+      if (window.console) console.error('[UNIFICATO] raccolta:', e);
+      return;
+    }
+    window._croUltimoTravaso = d;
+
+    var titolo, apertura;
+    if (tipo === 'vincoli') {
+      titolo = 'Nessun percorso con i vincoli impostati';
+      apertura = 'Nessun percorso con i vincoli impostati, prova l\'Unificata oppure ' +
+                 'allenta i vincoli.';
+    } else if (tipo === 'div') {
+      titolo = 'Nessun percorso diversificato nella rete RC';
+      apertura = 'Il percorso Std c\'è, il diversificato no. Per la parte diversificata ' +
+                 'si consiglia la ricerca Unificata RA + RC, che può diversificare ' +
+                 'passando dall\'altra rete.';
+    } else {
+      titolo = 'Nessun percorso nella rete RC';
+      apertura = 'La ricerca sulla sola rete RC non ha prodotto percorsi. ' +
+                 'Le due centrali possono essere collegate passando dall\'altra rete: ' +
+                 'prova la ricerca Unificata RA + RC.';
+    }
+
+    var html = '<div style="font-size:0.86rem;color:#374151;line-height:1.55;">' +
+               apertura + '</div>';
+
+    if (opz.testo) {
+      html += '<div style="margin-top:0.6rem;padding:0.5rem 0.7rem;background:#f8fafc;' +
+              'border-left:3px solid #94a3b8;border-radius:4px;font-size:0.78rem;' +
+              'color:#475569;">' + opz.testo + '</div>';
+    }
+
+    html += avvisoRtn(d);
+
+    var tab = function (righe) {
+      return '<table style="width:100%;border-collapse:collapse;">' + righe + '</table>';
+    };
+
+    /* le due centrali affiancate, il resto in fondo su una riga sola:
+       occupa meno spazio in altezza e non lascia mezzo pop up vuoto */
+    html += '<div class="cro-larga-griglia" style="margin-top:0.8rem;">' +
+            '<div class="cro-larga-blocco">' + bloccoCentrale('Partenza', d.start) + '</div>' +
+            '<div class="cro-larga-blocco">' + bloccoCentrale('Arrivo', d.end) + '</div>' +
+            '</div>';
+
+    var nv = quantiVincoli(d.vincoli);
+    var pezzo = function (et, v) { return '<span><b>' + et + '</b>' + v + '</span>'; };
+    var fondo = pezzo('Vincoli', nv
+      ? nv + ' portati, gli stessi campi dell\'Unificato'
+      : 'nessuno impostato');
+    fondo += pezzo('Limiti', 'collegamenti, risultati e km, min e max');
+    fondo += pezzo('Interruttori', 'DC ' + (d.dc ? 'acceso' : 'spento') +
+                   ', Solo POP ' + (d.pop ? 'acceso' : 'spento'));
+    fondo += pezzo('Filtri di stato', 'nel ramo RC dell\'Unificato');
+    if (d.start2 || d.end2) {
+      fondo += pezzo('Coppia Div', (d.start2 || '—') + ' → ' + (d.end2 || '—'));
+    }
+    var ar = areeRtn(d);
+    if (ar && ar.uguali) {
+      fondo += pezzo('Aree RTN', 'stessa area (' + ar.a + '), la RTN non serve');
+    }
+
+    html += '<div class="cro-larga-blocco" style="margin-top:8px;">' +
+            '<div class="cro-larga-tit">Resto della ricerca</div>' +
+            '<div class="cro-larga-fondo">' + fondo + '</div></div>';
+
+    html += '<div style="margin-top:0.7rem;font-size:0.76rem;color:#6b7280;">' +
+            'Il bottone riempie i campi e ti porta sul tab Unificato: il calcolo ' +
+            'non parte da solo, così puoi controllare i parametri prima di lanciarlo.' +
+            '</div>';
+
+    if (typeof window.showCROPopup !== 'function') {
+      /* senza il sistema di pop up si resta sul messaggio semplice */
+      if (typeof window.showAlert === 'function') window.showAlert(apertura, 'warning');
+      return;
+    }
+
+    larga(true);
+    window.showCROPopup(titolo, html, 'warning', {
+      buttons: [
+        { text: '🔀 Apri la ricerca Unificata', type: 'primary',
+          onclick: 'window.croVaiUnificato()' },
+        { text: 'Resta qui', type: 'secondary', onclick: 'closeCROPopup()' }
+      ]
+    });
+  };
+})();
+</script>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- TABELLE PERCORSO: ZEBRA E VELO DEL MOUSE SULLE RIGHE DIVERSIFICATE          -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<style id="cro-zebra-div-fix">
+/* La veste chiara contiene questa regola:
+     body:not(.dark-mode) .db-table tbody tr:nth-child(even) td { background: #eef2f8; }
+   Le tabelle dei percorsi sono anche .db-table, e quel selettore pesa (0,3,4)
+   contro i (0,2,3) del blocco route-table-v2: vinceva lui su tutte le righe in
+   posizione pari. Due effetti, quelli segnalati: la riga Div, Zona A o Zona B
+   perdeva la sua tinta e tornava grigia, e la scorciatoia "background"
+   azzerava anche background-image, cioe' il velo del passaggio del mouse.
+   Qui le stesse tinte vengono riscritte con lo stesso peso, ma piu' avanti nel
+   file, e usando background-color, che il velo non lo tocca. */
+
+/* Le righe senza classe di blocco non si toccano: la loro riga alternata
+   resta quella della veste chiara. Azzerarla qui spegnerebbe la zebra delle
+   tabelle costruite a runtime, come quelle di Verifica PXM, che non passano
+   da croZebraApply() e quindi non hanno la classe .cro-zebra. */
+body:not(.dark-mode) .route-table-v2 > tbody > tr.route-detail-row.cro-zebra > td {
+  background-color: #eef2f7;
+}
+
+/* Div standard */
+body:not(.dark-mode) .route-table-v2 > tbody > tr.cro-alt-div > td {
+  background-color: var(--rt-div-bg);
+}
+body:not(.dark-mode) .route-table-v2 > tbody > tr.cro-alt-div.cro-zebra-alt > td {
+  background-color: var(--rt-div-zebra);
+}
+body:not(.dark-mode) .route-table-v2 > tbody > tr.cro-alt-div.route-detail-row > td {
+  background-color: var(--rt-div-detail);
+}
+
+/* Div Zona A */
+body:not(.dark-mode) .route-table-v2 > tbody > tr.cro-alt-a > td {
+  background-color: var(--rt-dva-bg);
+}
+body:not(.dark-mode) .route-table-v2 > tbody > tr.cro-alt-a.cro-zebra-alt > td {
+  background-color: var(--rt-dva-zebra);
+}
+body:not(.dark-mode) .route-table-v2 > tbody > tr.cro-alt-a.route-detail-row > td {
+  background-color: var(--rt-dva-detail);
+}
+
+/* Div Zona B */
+body:not(.dark-mode) .route-table-v2 > tbody > tr.cro-alt-b > td {
+  background-color: var(--rt-dvb-bg);
+}
+body:not(.dark-mode) .route-table-v2 > tbody > tr.cro-alt-b.cro-zebra-alt > td {
+  background-color: var(--rt-dvb-zebra);
+}
+body:not(.dark-mode) .route-table-v2 > tbody > tr.cro-alt-b.route-detail-row > td {
+  background-color: var(--rt-dvb-detail);
+}
+
+/* il velo del mouse, rimesso con lo stesso peso della regola che lo spegneva */
+body:not(.dark-mode) .route-table-v2 > tbody > tr:hover > td {
+  background-image: linear-gradient(var(--rt-hover), var(--rt-hover));
+}
+body:not(.dark-mode) .route-table-v2 > tbody > tr.route-detail-row:hover > td {
+  background-image: none;
+}
+
+</style>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- SFONDI DELLE MAPPE                                                          -->
+<!-- Stessi sfondi, stessi nomi e stessa chiave di memoria di NAT_ITALIA: la     -->
+<!-- scelta fatta in un tool vale anche nell'altro quando girano dallo stesso    -->
+<!-- indirizzo. Selettore in basso a sinistra, come in NAT.                      -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  'use strict';
+
+  /* niente uscita anticipata se Leaflet non c'e' ancora: le funzioni si
+     definiscono comunque e il controllo su L sta dentro croSfondoMappa */
+  var CHIAVE_SFONDO = 'croSfondoMappa';
+  var SFONDO_PREDEFINITO = 'Google Maps (Stradale)';
+
+  /* ATTENZIONE: mt1.google.com e' il server dei tile di Google Maps, non
+     un'API pubblica. I Service Specific Terms del Google Maps Platform
+     vietano di usare contenuti Google dentro una mappa non Google, e Leaflet
+     e' una mappa non Google. Sono qui per scelta esplicita, allineata a
+     NAT_ITALIA: possono smettere di funzionare da un giorno all'altro senza
+     preavviso. Per toglierli bastano queste due voci piu' il cambio di
+     SFONDO_PREDEFINITO. */
+  function definizioni() {
+    return {
+      'Google Maps (Stradale)': L.tileLayer(
+        'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          referrerPolicy: 'strict-origin-when-cross-origin',
+          attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+        }),
+      'Google Maps (Satellite Ibrido)': L.tileLayer(
+        'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          referrerPolicy: 'strict-origin-when-cross-origin',
+          attribution: '&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+        }),
+      'Stradale (Esri)': L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19,
+          referrerPolicy: 'strict-origin-when-cross-origin',
+          attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom'
+        }),
+      'Topografica (Esri)': L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19,
+          referrerPolicy: 'strict-origin-when-cross-origin',
+          attribution: 'Tiles &copy; Esri'
+        }),
+      'Satellite (Esri)': L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          maxZoom: 19,
+          referrerPolicy: 'strict-origin-when-cross-origin',
+          attribution: 'Tiles &copy; Esri &mdash; Esri, Maxar, Earthstar Geographics'
+        })
+    };
+  }
+
+  function salvato(sfondi) {
+    var s = null;
+    try { s = window.localStorage.getItem(CHIAVE_SFONDO); } catch (e) { s = null; }
+    return (s && sfondi[s]) ? s : SFONDO_PREDEFINITO;
+  }
+
+  /* Vale per qualunque sfondo fotografico, Esri o ibrido Google: su ortofoto
+     le linee hanno bisogno di piu' spessore e di un contorno scuro sotto. */
+  window.sfondoSatellite = function () {
+    return /satellite|ibrido/i.test(window.SFONDO_ATTIVO || '');
+  };
+
+  window.SFONDO_ATTIVO = window.SFONDO_ATTIVO || SFONDO_PREDEFINITO;
+
+  /* Mette gli sfondi su una mappa Leaflet e aggiunge il selettore. */
+  window.croSfondoMappa = function (map) {
+    if (!map || typeof L === 'undefined') return null;
+    var sfondi = definizioni();
+    var iniziale = salvato(sfondi);
+    window.SFONDO_ATTIVO = iniziale;
+    sfondi[iniziale].addTo(map);
+
+    try {
+      L.control.layers(sfondi, null, {
+        position: 'bottomleft',
+        collapsed: true
+      }).addTo(map);
+    } catch (e) {}
+
+    map.on('baselayerchange', function (e) {
+      if (!e || !e.name) return;
+      try { window.localStorage.setItem(CHIAVE_SFONDO, e.name); } catch (err) {}
+      window.SFONDO_ATTIVO = e.name;
+      /* le linee gia' disegnate cambiano vestito senza ricalcolare niente */
+      try {
+        if (typeof window.croAggiornaStileTratte === 'function') {
+          window.croAggiornaStileTratte();
+        }
+        if (typeof window.natDrawLinks === 'function') window.natDrawLinks();
+      } catch (err) {}
+    });
+
+    return sfondi[iniziale];
+  };
+})();
+</script>
+
 
 </body>
 </html>
