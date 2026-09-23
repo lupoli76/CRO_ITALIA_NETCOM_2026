@@ -126,10 +126,15 @@
 ║   • CAMPO DI RICERCA DELLE SCHEDE SEMPRE VUOTO ALL'AVVIO: il browser lo          ║
 ║     riempiva con un valore digitato in passato e il filtro partiva gia'          ║
 ║     applicato, quindi nelle Funzionalita' Principali si vedevano poche           ║
-║     schede o nessuna. Il tool quel testo non lo salva: in memoria tiene          ║
-║     solo la categoria e la densita'. Ora il campo ha gli attributi che           ║
-║     scoraggiano il riempimento automatico e, se arriva lo stesso, viene          ║
-║     svuotato prima che l'utente lo tocchi, rifacendo il filtro                   ║
+║     schede o nessuna. Oltre agli attributi che scoraggiano il riempimento        ║
+║     automatico, il campo nasce in sola lettura, che e' la condizione in          ║
+║     cui Chrome non lo tocca, e si sblocca al primo clic o al primo tasto.        ║
+║     Per dieci secondi un controllo ogni mezzo secondo svuota quello che          ║
+║     dovesse arrivare in ritardo, e si ferma appena scrivi                        ║
+║   • NESSUN FILTRO RICORDATO DALLA SESSIONE PRECEDENTE: la categoria e la         ║
+║     densita' delle schede restavano in memoria e tornavano alla riapertura.      ║
+║     Le due chiavi vengono ora cancellate all'avvio, prima che il modulo le       ║
+║     legga, e si riparte sempre da Tutte                                          ║
 ║   • CORRETTO IL CARICAMENTO DEL CODICE DI RICERCA CONDIVISO: chiamava            ║
 ║     showTab(), che non esiste in questo file, quindi il tab non cambiava mai     ║
 ║     e i campi finivano in quello aperto. Ora chiama switchTab() con gli id       ║
@@ -22457,7 +22462,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         <li><strong>🗺️ Sfondo unico per le mappe</strong>: i tile della OpenStreetMap Foundation rispondono <code>403 Access blocked</code> e da un file aperto in locale il Referer non parte. Lo stile di OSM France, provato per primo, scriveva <em>Milan</em> e <em>Turin</em> perché usa <code>name:fr</code> dove esiste. Le tre mappe hanno ora i cinque sfondi di NAT_ITALIA, nel selettore in basso a sinistra: <strong>Google Maps (Stradale)</strong> di partenza, <strong>Google Maps (Satellite Ibrido)</strong>, <strong>Stradale (Esri)</strong>, <strong>Topografica (Esri)</strong> e <strong>Satellite (Esri)</strong>. Stessi nomi e stessa chiave di memoria di NAT, quindi la scelta vale per tutti e due i tool. Sui due sfondi fotografici le tratte prendono un contorno scuro e piu' spessore, altrimenti i colori spariscono sull'ortofoto. Le voci Google passano da <code>mt1.google.com</code>, che non è un'API pubblica: ci sono per scelta e possono smettere di rispondere senza preavviso. CARTO è stata scartata perché stampa sui tile la filigrana <em>API KEY REQUIRED</em></li>
     <li><strong>🖱️ Niente tooltip sui campi, esempi veri nell'Unificato</strong>: nei tab RA, RC e Unificato i campi di inserimento non mostrano più il tooltip al passaggio del mouse, che copriva il campo mentre ci si scriveva: basta l'esempio dentro. Nell'Unificato cinque esempi su sei avevano CLLI inventati; ora sono veri e misti: la forma doppia nodo RC o nodo RA di Tipo 1, come <code>AVEZZANO (AVEZITAF) o AVEZZANO (AVEZITAF) [T1]</code>, centrali solo RC come <code>EUR (ROMAITDH)</code> e centrali di Tipo 2 della RA come <code>BRA (BRAAITAD) [T2]</code>. Le Tipo 3, sedi di passaggio, non compaiono. Il corpo del segnaposto si riduce quanto basta per far entrare l'esempio</li>
     <li><strong>🔗 Esempi veri nei campi dei collegamenti</strong>: <em>Collegamento Obbligatorio</em> e <em>Collegamento da Evitare</em> mostravano identificativi come <code>RC_1234</code> o <code>TO_MO_arco_1</code>, che nei database non esistono. Nel tab RC ora ci sono due SubPath veri del DB RC, <code>CAM001</code> e <code>CLI024</code>; nell'Unificato gli esempi sono misti, uno per rete: <code>CLO112, ACB023</code> e <code>CPU046, ALO081/1</code></li>
-    <li><strong>🔎 Ricerca schede sempre vuota all'avvio</strong>: il browser riempiva il campo di ricerca delle Funzionalità Principali con un valore digitato in passato e il filtro partiva già applicato, facendo sembrare sparite le schede. Il tool quel testo non lo salva: ora il campo ha gli attributi che scoraggiano il riempimento automatico e, se arriva lo stesso, viene svuotato prima che tu lo tocchi</li>
+    <li><strong>🔎 Ricerca schede sempre vuota all'avvio</strong>: il browser riempiva il campo di ricerca delle Funzionalità Principali con un valore digitato in passato e il filtro partiva già applicato, facendo sembrare sparite le schede. Il campo nasce ora in sola lettura, la condizione in cui Chrome non lo riempie, e si sblocca al primo clic; quello che dovesse arrivare in ritardo viene svuotato entro dieci secondi. Anche la categoria e la densità non vengono più ricordate: si riparte sempre da <strong>Tutte</strong></li>
     <li><strong>🔧 Codice di ricerca condiviso</strong>: il caricamento chiamava <code>showTab()</code>, che in questo file non esiste, quindi il tab non cambiava mai e i campi finivano in quello aperto. Ora chiama <code>switchTab()</code> con gli id giusti</li>
                   </ul>
                 </div>
@@ -40114,7 +40119,7 @@ PERCORSI ALTERNATIVI (Div):
                             <li><strong>🗺️ Lo sfondo delle mappe</strong>: le mappe mostravano riquadri gialli con la scritta <em>Access blocked. App is not following the tile usage policy of OpenStreetMap's volunteer-run servers</em>. La policy non è cambiata: è la sua applicazione a essere diventata attiva, e chiede un Referer valido o uno User-Agent che identifichi l'applicazione, oltre all'attribuzione visibile. Aprendo il file con doppio clic, da <code>file://</code>, il browser non manda nessun Referer e la richiesta viene rifiutata. Sono stati provati diversi fornitori. Lo stile di OSM France, quello di NAT_ITALIA, risponde ma è pensato per un pubblico francofono e usa <code>name:fr</code> dove esiste, quindi scrive <em>Milan</em> al posto di Milano. CARTO stampa sui tile la filigrana <em>API KEY REQUIRED</em>. La mappa standard di osm.org ha il dettaglio e i nomi giusti ma in locale resta bloccata. Il selettore in basso a sinistra di ogni mappa offre cinque sfondi, gli stessi di NAT_ITALIA e con gli stessi nomi: <em>Google Maps (Stradale)</em>, che è quello di partenza, <em>Google Maps (Satellite Ibrido)</em>, <em>Stradale (Esri)</em>, <em>Topografica (Esri)</em> e <em>Satellite (Esri)</em>. La scelta si salva sotto la chiave <code>croSfondoMappa</code>, la stessa di NAT: quando i due tool girano dallo stesso indirizzo, lo sfondo scelto in uno vale anche nell'altro. Vale per le tre mappe di CRO: percorsi RA e RC, percorsi Unificati e mappa NAT dentro Analisi Extra. Sui due sfondi fotografici le tratte dei percorsi prendono un contorno scuro sotto e uno spessore maggiore, perché sui colori pieni l'ortofoto vince sempre; il cambio sfondo riveste le linee già disegnate senza rifare il calcolo. Una avvertenza sulle due voci Google: <code>mt1.google.com</code> è il server dei tile di Google Maps, non un'API pubblica, e i Service Specific Terms del Google Maps Platform vietano di usare contenuti Google dentro una mappa non Google come Leaflet. Sono state messe per scelta esplicita, allineandosi a NAT_ITALIA, e possono smettere di rispondere da un giorno all'altro senza preavviso: per toglierle bastano le due voci e il cambio dello sfondo di partenza. Zoom massimo 19 e <code>referrerPolicy</code> impostata, che in locale non serve ma vale quando il tool gira da GitHub Pages o dal NAS. Resta valido che la strada definitiva è servire il tool e i tile dal NAS, dove nessuna policy esterna può bloccare niente.</li>
               <li><strong>🖱️ Tooltip sui campi e esempi dell'Unificato</strong>: nei tab Ricerca Percorso RA, RC e Unificato il passaggio del mouse su un campo di inserimento mostrava un tooltip scuro che copriva il campo stesso mentre ci si scriveva. L'esempio scritto dentro il campo dice già cosa va inserito, quindi quei tooltip sono stati tolti. Restano quelli sui bottoni, sulle intestazioni delle colonne e sulle etichette, e sui due campi dei riferimenti SdF, dove l'esempio <em>SdF-2024-001</em> da solo non spiega che cosa sia. Nell'Unificato gli esempi dei sei campi centrale sono stati rifatti: cinque avevano CLLI inventati, come <code>ROMEITSR</code> o <code>ROMEITEU</code>, che in nessuno dei due database esistono. Ora sono tutte centrali vere e gli esempi sono misti, per mostrare tutto quello che l'Unificato accetta: la forma doppia nodo RC o nodo RA di Tipo 1, come <code>AVEZZANO (AVEZITAF) o AVEZZANO (AVEZITAF) [T1]</code> nel campo di arrivo e <code>LODI</code> nell'arrivo Div; centrali presenti solo nel DB RC, come <code>EUR (ROMAITDH)</code> e <code>PRATI (ROMAITFV)</code>; centrali di Tipo 2 della RA, come <code>BRA (BRAAITAD) [T2]</code> e <code>ARCE (ARCEITAH) [T2]</code>. Le Tipo 3 non compaiono negli esempi: sono sedi di passaggio, si vedono nei percorsi ma non si inseriscono. Sugli schermi stretti la forma doppia è più lunga del campo, 319 pixel di testo in 196 di spazio a 1366 di finestra: il corpo del solo segnaposto scende quanto basta per farla entrare, fino a un minimo di 9 pixel, e torna pieno quando lo spazio c'è. Il testo che si scrive nel campo non cambia dimensione.</li>
               <li><strong>🔗 I campi dei collegamenti</strong>: <em>Collegamento Obbligatorio (SubPath/Arco/Ramo)</em> e <em>Collegamento da Evitare (SubPath/Arco/Ramo)</em> avevano esempi che nei due database non compaiono: <code>RC_1234</code>, <code>RC_5678</code>, <code>TO_MO_arco_1</code> e <code>MI_NA_arco_2</code>. L'unico vero era <code>AM_arco_1021</code>, che però è un arco della RA, e come modello un SubPath è più utile. Nel tab RC ci sono ora due SubPath del DB RC, <code>CAM001</code> per l'obbligatorio e <code>CLI024</code> per l'escluso. Nell'Unificato, che lavora su tutte e due le reti, gli esempi sono misti: <code>CLO112, ACB023</code> accosta un SubPath RC a uno RA, e <code>CPU046, ALO081/1</code> fa lo stesso mostrando anche la forma con il suffisso, quella che nella RA distingue i rami dello stesso SubPath.</li>
-              <li><strong>🔎 Il campo di ricerca delle schede</strong>: capitava di aprire l'Overview e trovare nelle <em>Funzionalità Principali</em> poche schede o nessuna, con dentro al campo di ricerca un testo digitato tempo prima, per esempio un'utenza. Il tool quel testo non lo memorizza: in <code>localStorage</code> tiene solo la categoria scelta con le pastiglie e la densità delle schede. Il valore arrivava dal riempimento automatico del browser. Il campo ha ora gli attributi che browser e gestori di password leggono per lasciarlo stare (<code>autocomplete</code>, <code>data-lpignore</code>, <code>data-1p-ignore</code>, <code>data-form-type</code>) e, se il valore arriva lo stesso, viene svuotato prima che l'utente lo tocchi, con il filtro rifatto da capo. Se il testo l'hai scritto tu, resta dov'è: il controllo distingue gli eventi veri da quelli generati dal codice. Per togliere la voce anche dalla memoria del browser, apri il menu a tendina che compare cliccando nel campo, evidenzia la voce e premi Maiusc+Canc.</li>
+              <li><strong>🔎 Il campo di ricerca delle schede</strong>: capitava di aprire l'Overview e trovare nelle <em>Funzionalità Principali</em> poche schede o nessuna, con dentro al campo di ricerca un testo digitato tempo prima, per esempio un'utenza. Il tool quel testo non lo memorizza: in <code>localStorage</code> tiene solo la categoria scelta con le pastiglie e la densità delle schede. Il valore arrivava dal riempimento automatico del browser. Il campo ha ora gli attributi che browser e gestori di password leggono per lasciarlo stare (<code>autocomplete</code>, <code>data-lpignore</code>, <code>data-1p-ignore</code>, <code>data-form-type</code>), un <code>name</code> diverso a ogni apertura, e soprattutto nasce in <strong>sola lettura</strong>: è la condizione in cui Chrome non riempie un campo, e il blocco cade al primo clic o al primo tasto, quindi scrivere resta immediato. Per dieci secondi un controllo ogni mezzo secondo svuota quello che dovesse arrivare in ritardo, e si ferma appena l'utente scrive. Insieme a questo, la categoria scelta con le pastiglie e la densità delle schede non vengono più ricordate: le due chiavi in <code>localStorage</code> (<code>cro_overview_cat</code> e <code>cro_overview_density</code>) vengono cancellate all'avvio, prima che il modulo le legga, e l'Overview riparte sempre da <em>Tutte</em>. Se il testo l'hai scritto tu, resta dov'è: il controllo distingue gli eventi veri da quelli generati dal codice. Per togliere la voce anche dalla memoria del browser, apri il menu a tendina che compare cliccando nel campo, evidenzia la voce e premi Maiusc+Canc.</li>
               <li><strong>🔧 Correzione collegata</strong>: il caricamento del codice di ricerca condiviso (<code>loadShareCode</code>) chiamava <code>showTab()</code>, una funzione che in questo file non esiste: il cambio tab non avveniva mai e i campi venivano riempiti nel tab aperto in quel momento. Per il RC passava anche un id sbagliato. Ora chiama <code>switchTab()</code> con <code>search</code>, <code>search-ra</code> e <code>search-unified</code>.</li>
             </ul>
           </div>
@@ -337875,19 +337880,27 @@ input.cro-ph-fit::placeholder { font-size: var(--cro-ph-size) !important; }
 
 
 <!-- ═══════════════════════════════════════════════════════════════════════════ -->
-<!-- RICERCA SCHEDE: IL CAMPO PARTE SEMPRE VUOTO                                 -->
-<!-- Il browser riempiva il campo con un valore digitato in passato, e il filtro -->
-<!-- partiva gia' applicato: le schede sembravano sparite. Il tool quel testo    -->
-<!-- non lo salva (in memoria tiene solo la categoria e la densita'), quindi il  -->
-<!-- valore arriva dal riempimento automatico. Qui lo si scoraggia con gli       -->
-<!-- attributi e, se arriva lo stesso, si svuota il campo prima che l'utente lo  -->
-<!-- tocchi.                                                                     -->
+<!-- RICERCA SCHEDE: CAMPO VUOTO E NESSUN FILTRO RICORDATO                       -->
+<!-- Due cose. Il campo di ricerca delle Funzionalita' Principali deve essere    -->
+<!-- vuoto a ogni apertura: il browser ci rimetteva dentro un valore digitato    -->
+<!-- in passato e il filtro partiva applicato. E la categoria scelta la volta    -->
+<!-- prima non deve tornare: si riparte sempre da Tutte.                         -->
 <!-- ═══════════════════════════════════════════════════════════════════════════ -->
 <script>
 (function () {
   'use strict';
 
+  /* ── 1. niente filtri ricordati ─────────────────────────────────────────
+     Questo giro deve avvenire prima che il modulo delle schede legga la
+     memoria: lo script sta in fondo al body, quindi prima di DOMContentLoaded.
+     Le due chiavi sono quelle del modulo (categoria e densita'). */
+  ['cro_overview_cat', 'cro_overview_density'].forEach(function (k) {
+    try { window.localStorage.removeItem(k); } catch (e) {}
+  });
+
+  /* ── 2. il campo parte vuoto ───────────────────────────────────────────── */
   var scritto = false;
+  var sbloccato = false;
 
   function campo() { return document.getElementById('fxSearch'); }
 
@@ -337895,29 +337908,40 @@ input.cro-ph-fit::placeholder { font-size: var(--cro-ph-size) !important; }
     var el = campo();
     if (!el || el._croNoFill) return;
     el._croNoFill = true;
-    /* attributi che i browser e i gestori di password leggono per lasciare
-       stare un campo: non sono una garanzia, ma tolgono la maggior parte dei
-       casi */
+
     el.setAttribute('autocomplete', 'off');
-    el.setAttribute('name', 'fx-ricerca-schede');
+    el.setAttribute('name', 'fx-ricerca-schede-' + Math.random().toString(36).slice(2, 8));
     el.setAttribute('autocapitalize', 'off');
     el.setAttribute('autocorrect', 'off');
     el.setAttribute('data-lpignore', 'true');
     el.setAttribute('data-1p-ignore', 'true');
     el.setAttribute('data-form-type', 'other');
-    /* solo un evento vero segna che il testo l'ha scritto l'utente: quelli
-       generati qui sotto hanno isTrusted a false */
+
+    /* Il trucco che con Chrome funziona davvero: un campo in sola lettura non
+       viene riempito in automatico. Il blocco cade al primo clic o al primo
+       tocco della tastiera, quindi scrivere resta immediato. */
+    el.setAttribute('readonly', 'readonly');
+    ['focus', 'mousedown', 'touchstart', 'keydown'].forEach(function (ev) {
+      el.addEventListener(ev, sblocca, true);
+    });
+
     el.addEventListener('input', function (ev) {
       if (ev && ev.isTrusted) scritto = true;
     });
+  }
+
+  function sblocca() {
+    var el = campo();
+    if (!el || sbloccato) return;
+    sbloccato = true;
+    el.removeAttribute('readonly');
+    try { el.focus(); } catch (e) {}
   }
 
   function pulisci() {
     var el = campo();
     if (!el || scritto || !el.value) return;
     el.value = '';
-    /* il modulo delle schede ascolta 'input': cosi' il filtro si rifa' da
-       solo e tornano visibili tutte le schede */
     try {
       el.dispatchEvent(new Event('input', { bubbles: true }));
     } catch (e) {
@@ -337925,31 +337949,49 @@ input.cro-ph-fit::placeholder { font-size: var(--cro-ph-size) !important; }
       ev.initEvent('input', true, true);
       el.dispatchEvent(ev);
     }
-    if (window.console) console.log('[SCHEDE] campo di ricerca svuotato all\'avvio');
+  }
+
+  /* la categoria torna su Tutte anche se il modulo l'avesse gia' applicata */
+  function tutte() {
+    var chip = document.querySelector('.fx-chip[data-cat="all"], .fx-chip[data-cat=""]');
+    if (!chip) {
+      var chips = document.querySelectorAll('.fx-chip');
+      chip = chips.length ? chips[0] : null;
+    }
+    if (chip && !chip.classList.contains('active')) chip.click();
   }
 
   function avvia() {
     prepara();
     pulisci();
-    /* il riempimento automatico puo' arrivare dopo il caricamento: si
-       ricontrolla qualche volta, poi basta */
-    [120, 400, 1000, 2000].forEach(function (t) { setTimeout(pulisci, t); });
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', avvia);
+    document.addEventListener('DOMContentLoaded', function () {
+      avvia();
+      tutte();
+    });
   } else {
     avvia();
+    tutte();
   }
   window.addEventListener('load', avvia);
-  /* tornando indietro nella cronologia la pagina esce dalla cache con i campi
-     come li aveva lasciati */
   window.addEventListener('pageshow', function (ev) {
     if (ev && ev.persisted) { scritto = false; }
     avvia();
   });
+
+  /* Il riempimento automatico puo' arrivare in ritardo: per i primi dieci
+     secondi si controlla ogni mezzo secondo, poi basta. Se nel frattempo
+     l'utente ha scritto qualcosa, il controllo si ferma subito. */
+  var giri = 0;
+  var orologio = setInterval(function () {
+    if (scritto || ++giri > 20) { clearInterval(orologio); return; }
+    pulisci();
+  }, 500);
 })();
 </script>
+
 
 </body>
 </html>
