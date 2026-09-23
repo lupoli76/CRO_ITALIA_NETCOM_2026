@@ -95,6 +95,34 @@
 ║     per i nomi in francese                                                       ║
 ║   • zoom massimo 19, referrerPolicy strict-origin-when-cross-origin, che in      ║
 ║     locale non serve ma vale quando il tool gira da GitHub Pages o dal NAS       ║
+║   • VIA I TOOLTIP DAI CAMPI DI INSERIMENTO nei tab RA, RC e Unificato:           ║
+║     comparivano al passaggio del mouse e coprivano il campo mentre ci si         ║
+║     scriveva. Basta l'esempio dentro il campo. Restano quelli di bottoni,        ║
+║     intestazioni ed etichette, e i due campi dei riferimenti SdF, dove           ║
+║     l'esempio da solo non spiega cosa sia                                        ║
+║   • ESEMPI VERI E MISTI NEI CAMPI DELL'UNIFICATO: cinque dei sei avevano         ║
+║     CLLI inventati (ROMEITSR, ROMEITEU, ROMEITNO, ROMEITCO) che in nessuno       ║
+║     dei due database esistono. Ora mostrano tutto quello che l'Unificato         ║
+║     accetta: la forma doppia nodo RC o nodo RA di Tipo 1 (AVEZZANO,              ║
+║     LODI), centrali solo RC (EUR, PRATI) e centrali di Tipo 2 della RA           ║
+║     (BRA, ARCE). Le Tipo 3 non compaiono: sono sedi di passaggio, si             ║
+║     vedono nei percorsi ma non si inseriscono                                    ║
+║   • CORPO DEL SEGNAPOSTO ADATTATO: la forma doppia e' piu' lunga del campo       ║
+║     sugli schermi stretti, quindi il corpo del solo segnaposto scende            ║
+║     quanto basta per farla entrare, fino a un minimo di 9 px, e torna            ║
+║     pieno quando lo spazio c'e'. Il testo scritto dall'utente non cambia         ║
+║   • ESEMPI VERI ANCHE NEI CAMPI DEI COLLEGAMENTI: Collegamento                   ║
+║     Obbligatorio e Collegamento da Evitare mostravano RC_1234, RC_5678,          ║
+║     TO_MO_arco_1 e MI_NA_arco_2, che nei due database non esistono.              ║
+║     Nel tab RC ora ci sono due SubPath veri del DB RC, CAM001 e CLI024;          ║
+║     nell'Unificato gli esempi sono misti, uno per rete: CLO112 con ACB023        ║
+║     e CPU046 con ALO081/1                                                        ║
+║   • GLI STESSI ESEMPI ANCHE DOPO IL RESET TAB: quattro punti in JS li            ║
+║     riscrivevano nella forma vecchia quando si svuotavano i campi                ║
+║   • SCHEDA DELLA MAPPA AGGIORNATA nelle Funzionalità Principali: parlava         ║
+║     della mappa com'era prima e non diceva niente dei cinque sfondi, del         ║
+║     selettore in basso a sinistra, della scelta condivisa con NAT_ITALIA e       ║
+║     del contorno che le tratte prendono sulle ortofoto                           ║
 ║   • CORRETTO IL CARICAMENTO DEL CODICE DI RICERCA CONDIVISO: chiamava            ║
 ║     showTab(), che non esiste in questo file, quindi il tab non cambiava mai     ║
 ║     e i campi finivano in quello aperto. Ora chiama switchTab() con gli id       ║
@@ -22054,9 +22082,10 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <h3 class="feature-title" style="color: #4f46e5;">Mappa Visualizzazione Percorsi</h3>
                         <span class="feature-badge" style="background: #eef2ff; color: #4f46e5;">Path Viewer</span>
                     </div>
-                    <p class="feature-desc">Mappa Leaflet.js dedicata alla <strong>visualizzazione dei percorsi</strong> calcolati nella Ricerca Percorsi. Overlay colorati differenziati per percorsi primari (Std) e diversificati (Div), layer control avanzato, zoom automatico sul percorso selezionato. <strong>Contesto RA/RC</strong>: la mappa si resetta automaticamente quando passi da "Ricerca Percorso RA" a "Ricerca Percorso RC" (e viceversa), evitando refusi di ricerche precedenti. Le funzionalità complete di analisi topografica (filtri, marker, ricerca indirizzo, COLT vicine) sono disponibili nel tool <strong>NAT Italia</strong>.</p>
+                    <p class="feature-desc">Mappa Leaflet.js dedicata alla <strong>visualizzazione dei percorsi</strong> calcolati nella Ricerca Percorsi. Overlay colorati differenziati per percorsi primari (Std) e diversificati (Div), ogni tratta come polilinea a sé, zoom automatico sul percorso selezionato. <strong>Cinque sfondi</strong> dal selettore in basso a sinistra: Google Maps Stradale e Satellite Ibrido, Stradale, Topografica e Satellite di Esri. La scelta resta in memoria e vale per le tre mappe del tool e per <strong>NAT Italia</strong>, che usa la stessa chiave. Sui due sfondi fotografici le tratte prendono un contorno scuro e più spessore, altrimenti i colori spariscono sull'ortofoto. <strong>Contesto RA/RC</strong>: la mappa si resetta automaticamente quando passi da "Ricerca Percorso RA" a "Ricerca Percorso RC" (e viceversa), evitando refusi di ricerche precedenti. Le funzionalità complete di analisi topografica (filtri, marker, ricerca indirizzo, COLT vicine) sono disponibili nel tool <strong>NAT Italia</strong>.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #eef2ff; color: #4f46e5;">Leaflet.js</span>
+                        <span class="spec-tag" style="background: #eef2ff; color: #4f46e5;">5 sfondi mappa</span>
                         <span class="spec-tag" style="background: #eef2ff; color: #4f46e5;">Path Overlay</span>
                         <span class="spec-tag" style="background: #eef2ff; color: #4f46e5;">→ NAT Italia</span>
                     </div>
@@ -22419,6 +22448,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <li><strong>🧰 Cosa viaggia</strong>: vincoli (centrali obbligatorie e da evitare, collegamenti obbligatori ed esclusi, selezioni multiple comprese), limiti di collegamenti, risultati e km, interruttori DC e Solo POP, filtri di stato nel ramo RC di quelli dell'Unificato</li>
     <li><strong>🎨 Zebra e velo del mouse sulle righe Div</strong>: nei blocchi <em>Div A+B</em>, <em>Div Zona A</em> e <em>Div Zona B</em> dell'Unificato, e nelle tabelle Div di RC e RA, una riga su due perdeva la tinta del blocco e non reagiva al passaggio del mouse. Colpa di una regola della veste chiara più specifica che usava la scorciatoia <code>background</code>: ora le tinte sono riscritte con <code>background-color</code>, che il velo lo lascia stare</li>
         <li><strong>🗺️ Sfondo unico per le mappe</strong>: i tile della OpenStreetMap Foundation rispondono <code>403 Access blocked</code> e da un file aperto in locale il Referer non parte. Lo stile di OSM France, provato per primo, scriveva <em>Milan</em> e <em>Turin</em> perché usa <code>name:fr</code> dove esiste. Le tre mappe hanno ora i cinque sfondi di NAT_ITALIA, nel selettore in basso a sinistra: <strong>Google Maps (Stradale)</strong> di partenza, <strong>Google Maps (Satellite Ibrido)</strong>, <strong>Stradale (Esri)</strong>, <strong>Topografica (Esri)</strong> e <strong>Satellite (Esri)</strong>. Stessi nomi e stessa chiave di memoria di NAT, quindi la scelta vale per tutti e due i tool. Sui due sfondi fotografici le tratte prendono un contorno scuro e piu' spessore, altrimenti i colori spariscono sull'ortofoto. Le voci Google passano da <code>mt1.google.com</code>, che non è un'API pubblica: ci sono per scelta e possono smettere di rispondere senza preavviso. CARTO è stata scartata perché stampa sui tile la filigrana <em>API KEY REQUIRED</em></li>
+    <li><strong>🖱️ Niente tooltip sui campi, esempi veri nell'Unificato</strong>: nei tab RA, RC e Unificato i campi di inserimento non mostrano più il tooltip al passaggio del mouse, che copriva il campo mentre ci si scriveva: basta l'esempio dentro. Nell'Unificato cinque esempi su sei avevano CLLI inventati; ora sono veri e misti: la forma doppia nodo RC o nodo RA di Tipo 1, come <code>AVEZZANO (AVEZITAF) o AVEZZANO (AVEZITAF) [T1]</code>, centrali solo RC come <code>EUR (ROMAITDH)</code> e centrali di Tipo 2 della RA come <code>BRA (BRAAITAD) [T2]</code>. Le Tipo 3, sedi di passaggio, non compaiono. Il corpo del segnaposto si riduce quanto basta per far entrare l'esempio</li>
+    <li><strong>🔗 Esempi veri nei campi dei collegamenti</strong>: <em>Collegamento Obbligatorio</em> e <em>Collegamento da Evitare</em> mostravano identificativi come <code>RC_1234</code> o <code>TO_MO_arco_1</code>, che nei database non esistono. Nel tab RC ora ci sono due SubPath veri del DB RC, <code>CAM001</code> e <code>CLI024</code>; nell'Unificato gli esempi sono misti, uno per rete: <code>CLO112, ACB023</code> e <code>CPU046, ALO081/1</code></li>
     <li><strong>🔧 Codice di ricerca condiviso</strong>: il caricamento chiamava <code>showTab()</code>, che in questo file non esiste, quindi il tab non cambiava mai e i campi finivano in quello aperto. Ora chiama <code>switchTab()</code> con gli id giusti</li>
                   </ul>
                 </div>
@@ -22841,7 +22872,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                            class="db-search-input"
                            type="text"
                            autocomplete="off"
-                           placeholder="Es. RC_1234, TO_MO_arco_1">
+                           placeholder="Es. CAM001">
                     <div id="routeLinkMustPassDropdown" class="custom-autocomplete-dropdown"></div>
                   </div>
                   <div id="routeLinkMustPassTags" style="display:none;"></div>
@@ -22863,7 +22894,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                            class="db-search-input"
                            type="text"
                            autocomplete="off"
-                           placeholder="Es. RC_5678, MI_NA_arco_2">
+                           placeholder="Es. CLI024">
                     <div id="routeLinkAvoidDropdown" class="custom-autocomplete-dropdown"></div>
                   </div>
                   <div id="routeLinkAvoidTags" style="display:none;"></div>
@@ -24967,7 +24998,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <div style="display:flex; justify-content: space-between; align-items:center; margin-top:0.2rem; margin-bottom:0.25rem;"><label for="uRouteStartInput" style="margin:0;">🚀 Centrale di Partenza (Std)</label><span id="uCustomerDistanceStart" style="font-size: 0.82rem; color: var(--tim-blue); font-weight: 600; display: none; white-space: nowrap;">📏 Distanza Cliente: -</span></div>
                   <div class="custom-autocomplete-wrapper">
                     <input id="uRouteStartInput" class="db-search-input" type="text" autocomplete="off"
-                           placeholder="Es. ROMA SUD (ROMEITSR)">
+                           placeholder="Es. BRA (BRAAITAD) [T2]">
                     <div id="uRouteStartDropdown" class="custom-autocomplete-dropdown"></div>
                   </div>
                 </div>
@@ -24979,7 +25010,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   </div>
                   <div class="custom-autocomplete-wrapper">
                     <input id="uRouteEndInput" class="db-search-input" type="text" autocomplete="off"
-                           placeholder="Es. AVEZZANO (AVEZITAF)">
+                           placeholder="Es. AVEZZANO (AVEZITAF) o AVEZZANO (AVEZITAF) [T1]">
                     <div id="uRouteEndDropdown" class="custom-autocomplete-dropdown"></div>
                   </div>
                 </div>
@@ -24996,7 +25027,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                            class="db-search-input"
                            type="text"
                            autocomplete="off"
-                           placeholder="Es. ROMA EUR (ROMEITEU)">
+                           placeholder="Es. EUR (ROMAITDH)">
                     <div id="uRouteStart2Dropdown" class="custom-autocomplete-dropdown"></div>
                   </div>
                 </div>
@@ -25009,7 +25040,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                            class="db-search-input"
                            type="text"
                            autocomplete="off"
-                           placeholder="Es. ROMA NORD (ROMEITNO)">
+                           placeholder="Es. LODI (LODIITAJ) o LODI (LODIITAJ) [T1]">
                     <div id="uRouteEnd2Dropdown" class="custom-autocomplete-dropdown"></div>
                   </div>
                 </div>
@@ -25033,7 +25064,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                            class="db-search-input"
                            type="text"
                            autocomplete="off"
-                           placeholder="Es. EUR (ROMEITEU)">
+                           placeholder="Es. ARCE (ARCEITAH) [T2]">
                     <div id="uRouteMustPassDropdown" class="custom-autocomplete-dropdown"></div>
                   </div>
                   <div id="uRouteMustPassTags" style="display:none;"></div>
@@ -25063,7 +25094,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                            class="db-search-input"
                            type="text"
                            autocomplete="off"
-                           placeholder="Es. COLOMBO (ROMEITCO)">
+                           placeholder="Es. PRATI (ROMAITFV)">
                     <div id="uRouteAvoidDropdown" class="custom-autocomplete-dropdown"></div>
                   </div>
                   <div id="uRouteAvoidTags" style="display:none;"></div>
@@ -25089,7 +25120,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                            class="db-search-input"
                            type="text"
                            autocomplete="off"
-                           placeholder="Es. RC_1234, AM_arco_1021">
+                           placeholder="Es. CLO112, ACB023">
                     <div id="uRouteLinkMustPassDropdown" class="custom-autocomplete-dropdown"></div>
                   </div>
                   <div id="uRouteLinkMustPassTags" style="display:none;"></div>
@@ -25111,7 +25142,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                            class="db-search-input"
                            type="text"
                            autocomplete="off"
-                           placeholder="Es. RC_5678, MI_NA_arco_2">
+                           placeholder="Es. CPU046, ALO081/1">
                     <div id="uRouteLinkAvoidDropdown" class="custom-autocomplete-dropdown"></div>
                   </div>
                   <div id="uRouteLinkAvoidTags" style="display:none;"></div>
@@ -40073,6 +40104,8 @@ PERCORSI ALTERNATIVI (Div):
               <li><strong>👆 Il bottone si ferma sui campi</strong>: apre il tab Unificato, riempie tutto e mostra un avviso in basso. Il calcolo non parte da solo, così i parametri si possono controllare prima di lanciarlo. Il secondo bottone, <em>Resta qui</em>, chiude e non tocca niente.</li>
               <li><strong>🎨 Zebra e velo del mouse sulle righe diversificate</strong>: nell'Unificato i blocchi aperti con <em>Div A+B</em>, <em>Div Zona A</em> e <em>Div Zona B</em>, e allo stesso modo le tabelle Div del RC e della RA, mostravano le righe in posizione pari grigie invece che nella tinta del loro blocco, e sopra quelle righe il passaggio del mouse non si vedeva. La causa è una regola della veste chiara, <code>body:not(.dark-mode) .db-table tbody tr:nth-child(even) td</code>: le tabelle dei percorsi sono anche <code>.db-table</code>, quel selettore pesa più del blocco <code>route-table-v2</code> e usa la scorciatoia <code>background</code>, che azzera anche <code>background-image</code>, cioè il velo del mouse. Le tinte di Div, Zona A e Zona B sono state riscritte con lo stesso peso ma più avanti nel file e con <code>background-color</code>, che il velo non lo tocca.</li>
                             <li><strong>🗺️ Lo sfondo delle mappe</strong>: le mappe mostravano riquadri gialli con la scritta <em>Access blocked. App is not following the tile usage policy of OpenStreetMap's volunteer-run servers</em>. La policy non è cambiata: è la sua applicazione a essere diventata attiva, e chiede un Referer valido o uno User-Agent che identifichi l'applicazione, oltre all'attribuzione visibile. Aprendo il file con doppio clic, da <code>file://</code>, il browser non manda nessun Referer e la richiesta viene rifiutata. Sono stati provati diversi fornitori. Lo stile di OSM France, quello di NAT_ITALIA, risponde ma è pensato per un pubblico francofono e usa <code>name:fr</code> dove esiste, quindi scrive <em>Milan</em> al posto di Milano. CARTO stampa sui tile la filigrana <em>API KEY REQUIRED</em>. La mappa standard di osm.org ha il dettaglio e i nomi giusti ma in locale resta bloccata. Il selettore in basso a sinistra di ogni mappa offre cinque sfondi, gli stessi di NAT_ITALIA e con gli stessi nomi: <em>Google Maps (Stradale)</em>, che è quello di partenza, <em>Google Maps (Satellite Ibrido)</em>, <em>Stradale (Esri)</em>, <em>Topografica (Esri)</em> e <em>Satellite (Esri)</em>. La scelta si salva sotto la chiave <code>croSfondoMappa</code>, la stessa di NAT: quando i due tool girano dallo stesso indirizzo, lo sfondo scelto in uno vale anche nell'altro. Vale per le tre mappe di CRO: percorsi RA e RC, percorsi Unificati e mappa NAT dentro Analisi Extra. Sui due sfondi fotografici le tratte dei percorsi prendono un contorno scuro sotto e uno spessore maggiore, perché sui colori pieni l'ortofoto vince sempre; il cambio sfondo riveste le linee già disegnate senza rifare il calcolo. Una avvertenza sulle due voci Google: <code>mt1.google.com</code> è il server dei tile di Google Maps, non un'API pubblica, e i Service Specific Terms del Google Maps Platform vietano di usare contenuti Google dentro una mappa non Google come Leaflet. Sono state messe per scelta esplicita, allineandosi a NAT_ITALIA, e possono smettere di rispondere da un giorno all'altro senza preavviso: per toglierle bastano le due voci e il cambio dello sfondo di partenza. Zoom massimo 19 e <code>referrerPolicy</code> impostata, che in locale non serve ma vale quando il tool gira da GitHub Pages o dal NAS. Resta valido che la strada definitiva è servire il tool e i tile dal NAS, dove nessuna policy esterna può bloccare niente.</li>
+              <li><strong>🖱️ Tooltip sui campi e esempi dell'Unificato</strong>: nei tab Ricerca Percorso RA, RC e Unificato il passaggio del mouse su un campo di inserimento mostrava un tooltip scuro che copriva il campo stesso mentre ci si scriveva. L'esempio scritto dentro il campo dice già cosa va inserito, quindi quei tooltip sono stati tolti. Restano quelli sui bottoni, sulle intestazioni delle colonne e sulle etichette, e sui due campi dei riferimenti SdF, dove l'esempio <em>SdF-2024-001</em> da solo non spiega che cosa sia. Nell'Unificato gli esempi dei sei campi centrale sono stati rifatti: cinque avevano CLLI inventati, come <code>ROMEITSR</code> o <code>ROMEITEU</code>, che in nessuno dei due database esistono. Ora sono tutte centrali vere e gli esempi sono misti, per mostrare tutto quello che l'Unificato accetta: la forma doppia nodo RC o nodo RA di Tipo 1, come <code>AVEZZANO (AVEZITAF) o AVEZZANO (AVEZITAF) [T1]</code> nel campo di arrivo e <code>LODI</code> nell'arrivo Div; centrali presenti solo nel DB RC, come <code>EUR (ROMAITDH)</code> e <code>PRATI (ROMAITFV)</code>; centrali di Tipo 2 della RA, come <code>BRA (BRAAITAD) [T2]</code> e <code>ARCE (ARCEITAH) [T2]</code>. Le Tipo 3 non compaiono negli esempi: sono sedi di passaggio, si vedono nei percorsi ma non si inseriscono. Sugli schermi stretti la forma doppia è più lunga del campo, 319 pixel di testo in 196 di spazio a 1366 di finestra: il corpo del solo segnaposto scende quanto basta per farla entrare, fino a un minimo di 9 pixel, e torna pieno quando lo spazio c'è. Il testo che si scrive nel campo non cambia dimensione.</li>
+              <li><strong>🔗 I campi dei collegamenti</strong>: <em>Collegamento Obbligatorio (SubPath/Arco/Ramo)</em> e <em>Collegamento da Evitare (SubPath/Arco/Ramo)</em> avevano esempi che nei due database non compaiono: <code>RC_1234</code>, <code>RC_5678</code>, <code>TO_MO_arco_1</code> e <code>MI_NA_arco_2</code>. L'unico vero era <code>AM_arco_1021</code>, che però è un arco della RA, e come modello un SubPath è più utile. Nel tab RC ci sono ora due SubPath del DB RC, <code>CAM001</code> per l'obbligatorio e <code>CLI024</code> per l'escluso. Nell'Unificato, che lavora su tutte e due le reti, gli esempi sono misti: <code>CLO112, ACB023</code> accosta un SubPath RC a uno RA, e <code>CPU046, ALO081/1</code> fa lo stesso mostrando anche la forma con il suffisso, quella che nella RA distingue i rami dello stesso SubPath.</li>
               <li><strong>🔧 Correzione collegata</strong>: il caricamento del codice di ricerca condiviso (<code>loadShareCode</code>) chiamava <code>showTab()</code>, una funzione che in questo file non esiste: il cambio tab non avveniva mai e i campi venivano riempiti nel tab aperto in quel momento. Per il RC passava anche un id sbagliato. Ora chiama <code>switchTab()</code> con <code>search</code>, <code>search-ra</code> e <code>search-unified</code>.</li>
             </ul>
           </div>
@@ -294982,12 +295015,12 @@ window.showAlert('Cronologia cancellata.\n\n' + count + ' ricerche eliminate.');
     const linkMustPassInput = document.getElementById('routeLinkMustPassInput');
     if (linkMustPassInput) {
       linkMustPassInput.value = '';
-      linkMustPassInput.placeholder = 'Es: RC_1234, TO_MO_arco_1, IdCollegamento...';
+      linkMustPassInput.placeholder = 'Es. CAM001';
     }
     const linkAvoidInput = document.getElementById('routeLinkAvoidInput');
     if (linkAvoidInput) {
       linkAvoidInput.value = '';
-      linkAvoidInput.placeholder = 'Es: RC_5678, MI_NA_arco_2, IdCollegamento...';
+      linkAvoidInput.placeholder = 'Es. CLI024';
     }
     // Reset bottoni
     const linkMustPassBtn = document.getElementById('routeLinkMustPassMultiBtn');
@@ -297605,7 +297638,9 @@ window.runBaseRoutesSearch = function() {
       btn.style.color = '#6d28d9';
       btn.style.borderColor = '#6d28d9';
       btn.innerHTML = 'POP';
-      input.placeholder = 'Es. ROMA INVIOLATELLA (ROMEITIV) oppure AVEZZANO (AVEZITAF) [T1]';
+      /* stesso esempio del campo nell'HTML: prima qui ce n'era un altro,
+         con un CLLI che nei due database non esiste */
+      input.placeholder = 'Es. AVEZZANO (AVEZITAF) o AVEZZANO (AVEZITAF) [T1]';
       input.style.borderColor = '';
     }
 
@@ -316064,12 +316099,12 @@ div[style*="background:#f3f4f6"] label:hover span {
     const linkMustPassInputU = document.getElementById('uRouteLinkMustPassInput');
     if (linkMustPassInputU) {
       linkMustPassInputU.value = '';
-      linkMustPassInputU.placeholder = 'Es: RC_1234, AM_arco_1021, CB_9, IdCollegamento...';
+      linkMustPassInputU.placeholder = 'Es. CLO112, ACB023';
     }
     const linkAvoidInputU = document.getElementById('uRouteLinkAvoidInput');
     if (linkAvoidInputU) {
       linkAvoidInputU.value = '';
-      linkAvoidInputU.placeholder = 'Es: RC_5678, MI_NA_arco_2, CB_15, IdCollegamento...';
+      linkAvoidInputU.placeholder = 'Es. CPU046, ALO081/1';
     }
     // Reset bottoni UNIFIED
     const linkMustPassBtnU = document.getElementById('uRouteLinkMustPassMultiBtn');
@@ -325289,23 +325324,16 @@ window.exportCorrelazione=function(){
 
   // Mappa tooltip personalizzati per ID elemento
   var TIPS = {
+    /* Sui campi di inserimento dei tab RA, RC e Unificato il tooltip non
+       c'e' piu': copriva il campo mentre ci si scriveva, e l'esempio dentro
+       il campo dice gia' cosa va inserito. Restano quelli dei bottoni, delle
+       intestazioni e delle etichette. */
     // RC
-    'routeStart1Input':    'CLLI o nome della centrale di partenza (es. ROMAITDG)',
-    'routeEnd1Input':      'CLLI o nome della centrale di arrivo (es. MILNITXX)',
-    'routeStart2Input':    'Centrale di partenza alternativa (percorso diversificato)',
-    'routeEnd2Input':      'Centrale di arrivo alternativa (percorso diversificato)',
-    'routeMustPassInput':  'Centrale obbligata: il percorso passerà per questo nodo',
-    'routeAvoidInput':     'Centrale da evitare: il percorso non passerà per questo nodo',
-    'routeMaxResultsInput':'Numero massimo di percorsi da calcolare (default 30)',
     'routeOnlyActiveBtn':  'Se attivo, mostra solo percorsi con tutti i collegamenti ATTIVI',
     'resetTabBtnRC':       'Reset completo del tab RC — svuota campi, tabelle e Top4 (la cronologia resta)',
     // RA
-    'routeStart1InputRA':  'CLLI o nome della centrale RA di partenza',
-    'routeEnd1InputRA':    'CLLI o nome della centrale RA di arrivo',
     'resetTabBtnRA':       'Reset completo del tab RA (la cronologia resta)',
     // Unified
-    'uRouteStartInput':    'CLLI o nome della centrale di partenza (ricerca RA+RC)',
-    'uRouteEndInput':      'CLLI o nome della centrale di arrivo (ricerca RA+RC)',
     'uRcOnlyBtn':          'Solo RC: esclude il layer RA dal grafo Unified. Utile per percorsi puramente RC',
     'uRtnModeBtn':         'RTN: abilita il routing interregionale automatico via Rete di Trasporto Nazionale. Individua i Nodi A1 di zona A e zona B e costruisce il percorso in 3 segmenti',
     'resetTabBtnUNIFIED':  'Reset completo del tab Unificato — svuota campi, tabelle e Top4 (la cronologia resta)',
@@ -337749,6 +337777,92 @@ body:not(.dark-mode) .route-table-v2 > tbody > tr.route-detail-row:hover > td {
 })();
 </script>
 
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- SEGNAPOSTO DELL'UNIFICATO: CORPO ADATTATO ALLO SPAZIO                        -->
+<!-- L'esempio nella forma doppia, nodo RC e nodo RA, e' piu' lungo del campo    -->
+<!-- sugli schermi stretti. Qui il corpo del solo segnaposto scende quanto basta -->
+<!-- per farlo entrare, e torna pieno quando lo spazio c'e'. Il testo scritto    -->
+<!-- dall'utente non cambia dimensione.                                         -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<style>
+input.cro-ph-fit::placeholder { font-size: var(--cro-ph-size) !important; }
+</style>
+<script>
+(function () {
+  'use strict';
+
+  var CAMPI = ['uRouteStartInput', 'uRouteEndInput', 'uRouteStart2Input',
+               'uRouteEnd2Input', 'uRouteMustPassInput', 'uRouteAvoidInput'];
+  /* sotto i 9 px il segnaposto non si legge piu': meglio un'ultima parte
+     tagliata che un testo illeggibile */
+  var MINIMO = 9;
+  var tela = document.createElement('canvas').getContext('2d');
+
+  function adatta(el) {
+    el.classList.remove('cro-ph-fit');
+    el.style.removeProperty('--cro-ph-size');
+    var testo = el.getAttribute('placeholder') || '';
+    /* campo non visibile (tab chiuso): si riprova quando compare */
+    if (!testo || !el.clientWidth) return;
+    var sp = getComputedStyle(el, '::placeholder');
+    var si = getComputedStyle(el);
+    var base = parseFloat(sp.fontSize) || 12;
+    tela.font = sp.fontStyle + ' ' + sp.fontWeight + ' ' + base + 'px ' + sp.fontFamily;
+    if (sp.textTransform === 'uppercase' || si.textTransform === 'uppercase') {
+      testo = testo.toUpperCase();
+    }
+    var serve = tela.measureText(testo).width;
+    var spazio = el.clientWidth - parseFloat(si.paddingLeft) - parseFloat(si.paddingRight) - 4;
+    if (serve <= spazio) return;
+    var corpo = Math.max(MINIMO, Math.floor(base * spazio / serve * 10) / 10);
+    el.style.setProperty('--cro-ph-size', corpo + 'px');
+    el.classList.add('cro-ph-fit');
+  }
+
+  function tutti() {
+    CAMPI.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) adatta(el);
+    });
+  }
+  window.croAdattaSegnaposto = tutti;
+
+  function avvia() {
+    tutti();
+    /* ResizeObserver scatta quando il campo cambia larghezza e anche quando
+       compare, cioe' all'apertura del tab: niente agganci a switchTab */
+    if (typeof ResizeObserver === 'function') {
+      var ro = new ResizeObserver(function (voci) {
+        voci.forEach(function (v) { adatta(v.target); });
+      });
+      CAMPI.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) ro.observe(el);
+      });
+    } else {
+      window.addEventListener('resize', tutti);
+    }
+    /* il bottone POP riscrive il segnaposto del campo di arrivo */
+    if (typeof MutationObserver === 'function') {
+      var mo = new MutationObserver(function (m) {
+        m.forEach(function (x) { adatta(x.target); });
+      });
+      CAMPI.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) mo.observe(el, { attributes: true, attributeFilter: ['placeholder'] });
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', avvia);
+  } else {
+    avvia();
+  }
+})();
+</script>
 
 </body>
 </html>
