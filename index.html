@@ -93,6 +93,17 @@
 ║   • VIA OGNI RIFERIMENTO AL BOTTONE CONDIVIDI: tolta la scheda                   ║
 ║     "Condivisione Ricerche" dalle Funzionalita' Principali e le citazioni        ║
 ║     nelle schede di RA, RC e Unificato. Le schede passano da 35 a 34             ║
+║   • RESET CAMPI NON TOCCA PIU' I RISULTATI: nei tab RC e Unificato               ║
+║     svuotava anche le tabelle dei percorsi gia' calcolati. Ora svuota solo       ║
+║     le caselle e le selezioni multiple, come fa da sempre nel tab RA. A          ║
+║     cancellare tutto resta Reset Tab                                             ║
+║   • CRONOLOGIA DELL'UNIFICATO CON RTN E SOLO RC: lo scatto della ricerca         ║
+║     non teneva conto dei due interruttori, e il controllo dei doppioni           ║
+║     guardava solo partenza, arrivo e filtro POP. La stessa coppia cercata        ║
+║     prima senza RTN e poi con RTN acceso risultava un doppione e non             ║
+║     veniva salvata. Ora i due interruttori fanno parte dello scatto,             ║
+║     entrano nel controllo dei doppioni, tornano al loro posto quando si          ║
+║     ripesca la ricerca e si vedono nel dettaglio della cronologia                ║
 ║   • VIA LE TABELLE TOP 4 da RC e Unificato. Erano un secondo elenco sopra        ║
 ║     ai risultati: chi guardava la tabella vera non le vedeva, e chi le           ║
 ║     vedeva perdeva il filo dell'ordine. I migliori percorsi restano ora al       ║
@@ -2853,8 +2864,16 @@ window.showHistoryModalDetail = function(idx) {
   html += buildTableRow('🏁 Arrivo', endVal);
   
   // UNIFIED: mostra filtro POP se attivo
-  if (ctx === 'UNIFIED' && item.popOnly) {
-    html += '<tr><th>Filtro</th><td><span class="history-detail-tag active">Solo POP</span></td></tr>';
+  if (ctx === 'UNIFIED' && (item.popOnly || item.rtnMode || item.rcOnly)) {
+    var _tag = [];
+    if (item.popOnly) _tag.push('Solo POP');
+    if (item.rtnMode) _tag.push('\uD83C\uDF10 RTN');
+    if (item.rcOnly) _tag.push('\uD83D\uDD34 Solo RC');
+    html += '<tr><th>Filtro</th><td>'
+      + _tag.map(function (t) {
+          return '<span class="history-detail-tag active">' + t + '</span>';
+        }).join(' ')
+      + '</td></tr>';
   }
   
   // SEZIONE: Percorso Diversificato (se presente) - solo per RC/RA
@@ -22545,6 +22564,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <li><strong>🧹 Bottoni su una riga sola</strong>: nei tab RA, RC e Unificato <em>Filtri Stati</em>, <em>Confronta</em> e <em>Reset Campi</em> stavano su una riga a parte sopra quella di calcolo. Ora stanno tutti nella riga di calcolo: <em>Reset Campi</em> ha la misura di <em>Reset Tab</em> e gli sta davanti, <em>Filtri Stati</em> e <em>Confronta</em> restano pastiglie in coda a destra. Il bottone <em>Condividi</em> è stato tolto</li>
     <li><strong>📏 Spazio sopra Info Zona</strong>: nel tab Unificato fra la riga dei bottoni e <em>Info Zona</em> c'erano 48 pixel invece dei 24 di RA e RC. Ora i tre tab hanno la stessa distanza</li>
     <li><strong>📘 Note e regole più largo</strong>: il pannello che si apre dal bottone <em>Note e regole</em> nei tab RA, RC e Unificato passa da 552 a 718 pixel, il 30% in più, perché i riquadri di esempio andavano a capo di continuo. Sotto i 764 pixel di finestra vale sempre il limite del 94%, quindi il pannello non sborda</li>
+    <li><strong>🔄 Reset Campi e cronologia</strong>: nei tab RC e Unificato <em>Reset Campi</em> svuotava anche le tabelle dei percorsi calcolati; ora svuota solo le caselle, come nel tab RA. E la cronologia dell'Unificato tiene conto di <em>RTN</em> e <em>Solo RC</em>: prima la stessa coppia cercata con RTN acceso passava per doppione e non veniva salvata</li>
     <li><strong>🥇 Via le tabelle Top 4</strong>: erano un secondo elenco sopra ai risultati, e chi guardava la tabella vera spesso non le vedeva. I migliori percorsi restano ora al loro posto nell'elenco, che segue la distanza</li>
     <li><strong>🏅 Nastro sopra la riga</strong>: il percorso premiato ha una fascia colorata che dice la posizione a parole e porta il numero del percorso; la riga sotto prende la stessa tinta in chiaro e una linguetta da 6 px li unisce, arrotondata in alto</li>
     <li><strong>🥉 Tre invece di quattro, medaglie al posto giusto</strong>: oro il primo, argento il secondo, bronzo il terzo. Prima il trofeo viola stava davanti all'oro, e il numero dentro la medaglia era quello del percorso, non della posizione. Anche <em>ZNA</em> e <em>ZNB</em> passano a tre</li>
@@ -262843,28 +262863,8 @@ window.showAlert('Cronologia cancellata.\n\n' + count + ' ricerche eliminate.');
 
     routeState.onlyActive = false;
 
-    const baseInfo = document.getElementById('routeBaseInfo');
-    const altInfo = document.getElementById('routeAltInfo');
-    const baseBody = document.getElementById('routeBaseBody');
-    const altBody = document.getElementById('routeAltBody');
-
-    if (baseInfo) baseInfo.textContent = 'Nessun percorso calcolato';
-    if (altInfo) altInfo.textContent = 'Nessun percorso Div calcolato';
-
-    if (baseBody) {
-      baseBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--gray-500);">' +
-        'Nessun percorso calcolato. Imposta i parametri e premi <strong>Calcola Percorsi Std</strong>.' +
-        '</td></tr>';
-    }
-    if (altBody) {
-      altBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--gray-500);">' +
-        'Seleziona un percorso Std e lancia <strong>Percorsi Div</strong> per vedere le alternative diversificate.' +
-        '</td></tr>';
-    }
-
-    baseRoutes = [];
-    altRoutes = [];
-    inlineAltBaseIndex = null;
+    /* Reset Campi svuota le caselle, non i risultati: le tabelle e i percorsi
+       gia' calcolati restano dove sono. A cancellare tutto ci pensa Reset Tab. */
     routeState.start1 = '';
     routeState.end1 = '';
     routeState.start2 = '';
@@ -281327,6 +281327,9 @@ div[style*="background:#f3f4f6"] label:hover span {
   var _uRtnMode = false;
   window._uRtnModeChanged = function() {
     _uRtnMode = !_uRtnMode;
+    /* leggibile da fuori: serve alla cronologia, che deve sapere se la
+       ricerca e' stata fatta con RTN acceso */
+    window._uRtnModeAttivo = _uRtnMode;
     var btn = document.getElementById('uRtnModeBtn');
     if (btn) {
       if (_uRtnMode) {
@@ -283975,22 +283978,9 @@ div[style*="background:#f3f4f6"] label:hover span {
       linkAvoidBtnU.textContent = '➕ Sel. Multipla';
     }
 
-    const infoEl = document.getElementById('uRouteInfo');
-    if (infoEl) infoEl.textContent = 'Nessun percorso calcolato';
+    /* Reset Campi svuota le caselle, non i risultati: la tabella e i percorsi
+       gia' calcolati restano dove sono. A cancellare tutto ci pensa Reset Tab. */
 
-    const body = document.getElementById('uRouteBody');
-    if (body) {
-      body.innerHTML = '<tr><td colspan="7" style="text-align:center; color: var(--gray-500);">Imposta Partenza e Arrivo e premi <strong>Calcola Percorsi UNIFICATO RA + RC</strong>.</td></tr>';
-    }
-    
-    const altSection = document.getElementById('uRouteAltSection');
-    if (altSection) altSection.style.display = 'none';
-    
-    _baseRoutesUNIFIED = [];
-    _altRoutesUNIFIED = [];
-    _selectedBaseIndexUNIFIED = null;
-    _lastUnified = null;
-    
     // Toast di conferma
     if (typeof showToast === 'function') {
       showToast('🔁 Campi UNIFICATO resettati', 'info');
@@ -285772,6 +285762,10 @@ div[style*="background:#f3f4f6"] label:hover span {
       start: (document.getElementById('uRouteStartInput')?.value || '').trim(),
       end: (document.getElementById('uRouteEndInput')?.value || '').trim(),
       popOnly: (window._onlyPOPFilterUNIFIED === true),
+      /* senza questi due la stessa coppia cercata con RTN acceso passava per
+         doppione della ricerca precedente e non veniva salvata */
+      rtnMode: (window._uRtnModeAttivo === true),
+      rcOnly: (window._uRcOnlyAttivo === true),
       // Posizione Cliente
       cLat: (document.getElementById('uClientLatInput')?.value || '').trim(),
       cLon: (document.getElementById('uClientLonInput')?.value || '').trim(),
@@ -285793,7 +285787,10 @@ div[style*="background:#f3f4f6"] label:hover span {
     const hist = loadSearchHistoryUNIFIED();
     // evita duplicati consecutivi
     const last = hist[0];
-    if (last && last.start === snap.start && last.end === snap.end && last.popOnly === snap.popOnly) return;
+    if (last && last.start === snap.start && last.end === snap.end
+        && last.popOnly === snap.popOnly
+        && (last.rtnMode === true) === (snap.rtnMode === true)
+        && (last.rcOnly === true) === (snap.rcOnly === true)) return;
 
     hist.unshift(snap);
     if (hist.length > 20) hist.length = 20;
@@ -285919,6 +285916,16 @@ div[style*="background:#f3f4f6"] label:hover span {
       if (window._onlyPOPFilterUNIFIED === true && typeof window.togglePOPFilterUNIFIED === 'function') window.togglePOPFilterUNIFIED();
     }
 
+    /* RTN e Solo RC tornano come erano al momento della ricerca: senza
+       questo la ricerca ripescata dava un risultato diverso */
+    if ((s.rtnMode === true) !== (window._uRtnModeAttivo === true)
+        && typeof window._uRtnModeChanged === 'function') {
+      window._uRtnModeChanged();
+    }
+    if ((s.rcOnly === true) !== (window._uRcOnlyAttivo === true)
+        && typeof window._uRcOnlyChanged === 'function') {
+      window._uRcOnlyChanged();
+    }
     // close panel
     const panel = document.getElementById('historyPanelUNIFIED');
     if (panel) panel.style.display = 'none';
