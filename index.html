@@ -4,13 +4,118 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 60.09.18  (rev. pubblicata: V60.09.18 | Set 2026)                    ║
-║   Data: 18 Settembre 2026                                                        ║
+║   Versione: 60.09.25  (rev. pubblicata: V60.09.25 | Set 2026)                    ║
+║   Data: 25 Settembre 2026                                                        ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V60.09.25 | Set 2026:                                                ║
+║   ─────────────────────────                                                      ║
+║   • RIPARO DELL'INTESTAZIONE RIFATTO: era un riquadro dentro ogni cella,         ║
+║     quindi copriva lo sfondo ma non i bordi fra una colonna e l'altra, dove      ║
+║     si vedevano passare le righe della tabella e la linguetta dei nastri.        ║
+║     Ora e' un elemento solo, largo quanto la tabella e sbordante di sei          ║
+║     pixel ai lati, come si comporta la barra di export quando e' accesa          ║
+║   • INTESTAZIONE APPICCICATA DELLE TABELLE di RC e Unificato: sotto la           ║
+║     navigazione restavano scoperti quattordici pixel e le righe si vedevano      ║
+║     passare di la'. Il riparo esisteva gia' ma non si accendeva mai, perche'     ║
+║     la misura veniva presa sul <thead>: con le celle appiccicate il <thead>      ║
+║     resta dov'e' e il suo rettangolo torna sempre 0, cosi' la condizione         ║
+║     non era mai vera. Ora la misura si prende sulla prima cella                  ║
+║     dell'intestazione e si confronta con la sua quota. Con la barra di           ║
+║     export accesa il problema non si vedeva perche' era la barra a coprire       ║
+║     quello spazio                                                                ║
+║   • IL CONTROLLO ASCOLTA anche lo scorrimento dentro i contenitori, non          ║
+║     solo quello della pagina, e ha una rete di sicurezza ogni 400 ms             ║
+║   • NUMERO DEL PERCORSO TOLTO DAL NASTRO: si ripeteva, sta gia' nella            ║
+║     colonna # della riga subito sotto                                            ║
+║   • ZNA E ZNB CLASSIFICAVANO I PERCORSI INVECE DEI TRATTI: lo stesso             ║
+║     identico tratto di Zona A compariva come 1° su un percorso, 2° su un         ║
+║     altro e 3° su un terzo, che non vuol dire niente. Ora si raggruppano i       ║
+║     percorsi per tratto di zona e si classificano i tratti distinti: chi         ║
+║     condivide lo stesso tratto porta la stessa posizione, e il suggerimento      ║
+║     dice da quanti percorsi quel tratto e' condiviso                             ║
+║   • CARD ANALISI PERCORSI RIPULITE: via la riga con il numero del                ║
+║     percorso, che ripeteva quello gia' scritto nell'intestazione della           ║
+║     card, e via le intestazioni di sezione Percorso, Rete e Stato link,          ║
+║     che stavano su una colonna sola e non si capiva a quali voci si              ║
+║     riferissero                                                                  ║
+║   • ETICHETTE PER ESTESO E UGUALI NEI DUE TAB: Km diventa Distanza con il        ║
+║     valore in km, RA e RC diventano Rete RA e Rete RC, Trans. diventa            ║
+║     Cambi Rete, Non att. diventa NON Attivi. Nel tab RC spariscono le            ║
+║     voci RA / RC, che in un tab dove c'e' solo la Rete Core non dicono           ║
+║     niente, e compare il conteggio degli Attivi che mancava                      ║
+║   • COLLEGAMENTI E SUBPATH SONO DUE CONTEGGI DIVERSI: nella RA piu'              ║
+║     collegamenti fisici appartengono allo stesso subpath, che                    ║
+║     nell'identificativo e' il terzo pezzo (RMLA_arco_1050 | RMLA_217 |           ║
+║     ALA047 | 1 da' il subpath ALA047), mentre nella RC coincidono. Nelle         ║
+║     card dell'Unificato la voce Subpath mostrava in realta' i collegamenti:      ║
+║     ora ci sono due voci, Collegamenti con il conteggio logico e fra             ║
+║     parentesi quello fisico, e Subpath con i subpath distinti                    ║
+║   • RETE RA anche lei con i due numeri: prima mostrava i soli tratti             ║
+║     fisici, ora il conteggio logico e fra parentesi quello fisico, per           ║
+║     esempio 3 (5). La Rete RC resta un numero solo, li' i due conteggi           ║
+║     coincidono                                                                   ║
+║   • TAB RC: la voce diventa Subpath / Collegamenti, perche' sulla Rete           ║
+║     Core sono la stessa cosa                                                     ║
+║   • IMPAGINAZIONE DELLE CARD: nell'Unificato la prima riga porta a               ║
+║     sinistra le due zone ZNA e ZNB e a destra la distanza, poi                   ║
+║     Collegamenti e Subpath, Nodi / Centrali e Cambi Rete, Rete RA e Rete         ║
+║     RC, Attivi e NON Attivi. Fuori dalla modalita' RTN, dove le zone non         ║
+║     ci sono, la distanza prende tutta la riga e le coppie sotto restano          ║
+║     allineate. Nel tab RC la distanza sta da sola sulla prima riga, poi          ║
+║     Subpath / Collegamenti e Nodi / Centrali, poi Attivi e NON Attivi            ║
+║   • NODI diventa NODI / CENTRALI in tutti e due i tab                            ║
+║   • UNA RIGA SOLA PER I BOTTONI nei tab RA, RC e Unificato: Filtri Stati,        ║
+║     Confronta e Reset Campi stavano su una riga tutta loro sopra quella di       ║
+║     calcolo. Ora stanno tutti nella riga di calcolo. Reset Campi ha preso        ║
+║     misura e stile di Reset Tab e gli sta davanti, dopo il divisore; Filtri      ║
+║     Stati e Confronta restano pastiglie e vanno in coda, allineati a             ║
+║     destra. La riga rimasta vuota viene tolta, cosi' non lascia il suo           ║
+║     spazio                                                                       ║
+║   • SUGGERIMENTO SUI TRE RESET CAMPI: al passaggio del mouse dicono che          ║
+║     svuotano i campi della scheda e spengono le selezioni multiple               ║
+║     collegate, e che tabelle e cronologia restano                                ║
+║   • VIA IL BOTTONE CONDIVIDI dai tre tab, non serviva piu'. Le note dei          ║
+║     tab e le schede dell'Overview non lo citano piu'                             ║
+║   • SPAZIO SOPRA INFO ZONA ALLINEATO: nell'Unificato fra la riga dei             ║
+║     bottoni e la riga di Info Zona c'erano 48 px invece dei 24 di RA e RC.       ║
+║     Le note del tab, nascoste in tutti e tre, nell'Unificato stanno dentro       ║
+║     un altro riquadro che resta figlio della griglia: alto zero ma con il        ║
+║     suo spazio di griglia da 24 px, che si sommava                               ║
+║   • PANNELLO NOTE E REGOLE PIU' LARGO nei tab RA, RC e Unificato: da 552 a       ║
+║     718 px, il 30% in piu'. Le note stanno su una colonna sola e i riquadri      ║
+║     di esempio andavano a capo di continuo. Il limite del 94% della              ║
+║     finestra resta, quindi su schermi stretti il pannello non sborda             ║
+║   • VIA OGNI RIFERIMENTO AL BOTTONE CONDIVIDI: tolta la scheda                   ║
+║     "Condivisione Ricerche" dalle Funzionalita' Principali e le citazioni        ║
+║     nelle schede di RA, RC e Unificato. Le schede passano da 35 a 34             ║
+║   • VIA LE TABELLE TOP 4 da RC e Unificato. Erano un secondo elenco sopra        ║
+║     ai risultati: chi guardava la tabella vera non le vedeva, e chi le           ║
+║     vedeva perdeva il filo dell'ordine. I migliori percorsi restano ora al       ║
+║     loro posto nell'elenco, che segue la distanza                                ║
+║   • NASTRO SOPRA LA RIGA: il percorso premiato ha una fascia colorata che        ║
+║     dice la posizione a parole (Miglior percorso complessivo, Secondo            ║
+║     miglior percorso, Terzo) e porta il numero del percorso. La riga sotto       ║
+║     prende la stessa tinta in chiaro e una linguetta da 6 px li unisce,          ║
+║     arrotondata in alto e con un'ombra interna che le da' rilievo                ║
+║   • DA QUATTRO A TRE: le medaglie sono tre, e fra il terzo e il quarto           ║
+║     classificato lo score e' quasi sempre una differenza di decimali. Con        ║
+║     cinque nastri su otto righe meta' tabella sarebbe premiata                   ║
+║   • MEDAGLIE AL POSTO GIUSTO: oro il primo, argento il secondo, bronzo il        ║
+║     terzo. Prima il trofeo viola stava davanti all'oro e il numero dentro        ║
+║     la medaglia era quello del percorso, non della posizione: 🥈 #1               ║
+║     voleva dire "terzo classificato, percorso numero 1"                          ║
+║   • ZNA E ZNB a tre posizioni come la classifica generale, erano quattro         ║
+║   • CARD ANALISI PERCORSI da quattro a tre, con gli stessi colori dei            ║
+║     nastri e cliccabili: portano alla riga del percorso e fanno lampeggiare      ║
+║     il nastro per un paio di secondi. Lampeggia il nastro, non la riga           ║
+║     intera, che sarebbe troppo                                                   ║
+║   • NOTE DEI DUE TAB riscritte: la voce "Come nasce la Top 4" diventa            ║
+║     "Come nascono i migliori tre" e racconta il nastro invece della tabella      ║
 ║                                                                                  ║
 ║   CHANGELOG V60.09.18 | Set 2026:                                                ║
 ║   ─────────────────────────                                                      ║
@@ -21553,7 +21658,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V60.09.18 | Set 2026</div>
+<div class="version-tag">V60.09.25 | Set 2026</div>
       </div>
     </div>
   </header>
@@ -21749,7 +21854,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <h3 class="feature-title" style="color: #ea580c;">Algoritmo Dijkstra Avanzato</h3>
                         <span class="feature-badge" style="background: #fff7ed; color: #ea580c;">Core Engine</span>
                     </div>
-                    <p class="feature-desc">Calcolo automatico fino a <strong>3000 percorsi primari (Std)</strong> (default 30) ottimizzati per distanza e <strong>10 alternativi diversificati (Div)</strong> per ciascuno. Vincoli configurabili: centrali obbligatorie (selezione multipla), centrali da evitare (multipla), distanza min/max km, numero collegamenti. <strong>Esclusione Data Center</strong>: 17 sedi IDC/housing escluse di default dal routing (toggle [DC]). <strong>Overlay di caricamento</strong> visualizzato durante l'elaborazione dei percorsi.</p>
+                    <p class="feature-desc">Calcolo automatico fino a <strong>3000 percorsi primari (Std)</strong> (default 30) ottimizzati per distanza e <strong>10 alternativi diversificati (Div)</strong> per ciascuno. Vincoli configurabili: centrali obbligatorie (selezione multipla), centrali da evitare (multipla), distanza min/max km, numero collegamenti. <strong>Esclusione Data Center</strong>: 17 sedi IDC/housing escluse di default dal routing (toggle [DC]). <strong>Overlay di caricamento</strong> visualizzato durante l'elaborazione dei percorsi. I <strong>migliori tre percorsi</strong> sono segnalati da un nastro colorato sopra la riga, oro argento e bronzo, e dalle card <em>Analisi Percorsi</em> cliccabili che portano alla riga.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #fff7ed; color: #ea580c;">Dijkstra</span>
                         <span class="spec-tag" style="background: #fff7ed; color: #ea580c;">Max 3000+10 Paths</span>
@@ -21914,7 +22019,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Network Aggregation</span>
                     </div>
                     <div style="margin-top:0.35rem;"><span style="font-size:0.65rem;background:#eff6ff;color:#0066CC;padding:2px 8px;border-radius:3px;font-weight:700;display:inline-block;">RETAIL &amp; WHOLESALE</span></div>
-                    <p class="feature-desc">Rete di aggregazione regionale con <strong>Multi-Path</strong>: calcolo simultaneo percorsi su tutti gli archi compatibili tra Partenza e Arrivo. Bottoni <strong style="color: #0066CC;">🔽 Filtri Stati</strong>, <strong style="color: #0066CC;">⚖️ Confronta</strong> (Comparatore 3 Percorsi), <strong style="color: #0066CC;">🔗 Condividi</strong> per copia link configurazione, <strong style="color: #059669;">🌍 Mappa NAT</strong> per esportare percorsi su mappa geografica. Toggle <strong>Solo Collegamenti ATTIVI</strong>, export TXT professionale.</p>
+                    <p class="feature-desc">Rete di aggregazione regionale con <strong>Multi-Path</strong>: calcolo simultaneo percorsi su tutti gli archi compatibili tra Partenza e Arrivo. Bottoni <strong style="color: #0066CC;">🔽 Filtri Stati</strong>, <strong style="color: #0066CC;">⚖️ Confronta</strong> (Comparatore 3 Percorsi), <strong style="color: #059669;">🌍 Mappa NAT</strong> per esportare percorsi su mappa geografica. Toggle <strong>Solo Collegamenti ATTIVI</strong>, export TXT professionale.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">Multi-Path</span>
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">⚖️ Confronta</span>
@@ -21934,7 +22039,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Network Core</span>
                     </div>
                     <div style="margin-top:0.35rem;"><span style="font-size:0.65rem;background:#fef2f2;color:#dc2626;padding:2px 8px;border-radius:3px;font-weight:700;display:inline-block;">RETAIL &amp; WHOLESALE</span></div>
-                    <p class="feature-desc">Backbone nazionale DWDM e collegamenti metropolitani <strong>Ultra Dense Urban</strong> e <strong>Dense Urban</strong>. Bottoni <strong style="color: #0066CC;">🔽 Filtri Stati</strong> (5 stati: Attivo, Non Attivo, In Attivazione, In Variazione, In Reinstradamento), <strong style="color: #0066CC;">⚖️ Confronta</strong> (Comparatore 3 Percorsi), <strong style="color: #0066CC;">🔗 Condividi</strong>, <strong style="color: #059669;">🌍 Mappa NAT</strong> per esportare percorsi su mappa geografica.</p>
+                    <p class="feature-desc">Backbone nazionale DWDM e collegamenti metropolitani <strong>Ultra Dense Urban</strong> e <strong>Dense Urban</strong>. Bottoni <strong style="color: #0066CC;">🔽 Filtri Stati</strong> (5 stati: Attivo, Non Attivo, In Attivazione, In Variazione, In Reinstradamento), <strong style="color: #0066CC;">⚖️ Confronta</strong> (Comparatore 3 Percorsi), <strong style="color: #059669;">🌍 Mappa NAT</strong> per esportare percorsi su mappa geografica.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #fef2f2; color: #b91c1c;">DWDM Backbone</span>
                         <span class="spec-tag" style="background: #fef2f2; color: #b91c1c;">⚖️ Confronta</span>
@@ -22076,7 +22181,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <span class="feature-badge" style="background: #f5f3ff; color: #7c3aed;">Combined Analysis</span>
                     </div>
                     <div style="margin-top:0.35rem;"><span style="font-size:0.65rem;background:#f5f3ff;color:#7c3aed;padding:2px 8px;border-radius:3px;font-weight:700;display:inline-block;">RETAIL &amp; WHOLESALE</span></div>
-                    <p class="feature-desc">Ricerca percorsi che attraversano <strong>entrambe le reti RA e RC</strong> con gateway automatici. Colonna <strong>Mix</strong> mostra composizione (RA:n, RC:m, salti). Toggle <strong style="color:#0891b2;">🌐 RTN</strong> per routing interregionale automatico (Nodo A1 → backbone RTN → Nodo A1 area opposta) con flusso <strong>Std → Div Zona A → Div Zona B</strong>. Toggle <strong style="color:#dc2626;">🔴 Solo RC</strong> per ricerca esclusiva su backbone. Bottoni <strong style="color: #0066CC;">🔽 Filtri Stati</strong> (RA 4 stati + RC 5 stati), <strong style="color: #0066CC;">⚖️ Confronta</strong> (Comparatore 3 Percorsi), <strong style="color: #0066CC;">🔗 Condividi</strong>, <strong style="color: #059669;">🌍 Mappa NAT</strong> per esportare percorsi unificati su mappa geografica con gateway evidenziati.</p>
+                    <p class="feature-desc">Ricerca percorsi che attraversano <strong>entrambe le reti RA e RC</strong> con gateway automatici. Colonna <strong>Mix</strong> mostra composizione (RA:n, RC:m, salti). Toggle <strong style="color:#0891b2;">🌐 RTN</strong> per routing interregionale automatico (Nodo A1 → backbone RTN → Nodo A1 area opposta) con flusso <strong>Std → Div Zona A → Div Zona B</strong>. Toggle <strong style="color:#dc2626;">🔴 Solo RC</strong> per ricerca esclusiva su backbone. Bottoni <strong style="color: #0066CC;">🔽 Filtri Stati</strong> (RA 4 stati + RC 5 stati), <strong style="color: #0066CC;">⚖️ Confronta</strong> (Comparatore 3 Percorsi), <strong style="color: #059669;">🌍 Mappa NAT</strong> per esportare percorsi unificati su mappa geografica con gateway evidenziati.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #f5f3ff; color: #7c3aed;">RA+RC Gateway</span>
                         <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">🌐 RTN</span>
@@ -22142,26 +22247,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 </div>
 
 <!-- Feature: Condivisione -->
-<div class="feature-card" data-cat="export" style="border-left: 3px solid #16a34a;">
-  <div class="feature-icon" style="color: #16a34a;">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
-    </svg>
-  </div>
-  <div class="feature-header">
-    <h3 class="feature-title" style="color: #16a34a;">Condivisione Ricerche</h3>
-    <span class="feature-badge" style="background:#ecfdf5;color:#16a34a;">🔗 Share</span>
-  </div>
-  <p class="feature-desc">Funzionalità <strong>🔗 Condividi</strong> per generare e condividere link con parametri di ricerca preconfigurati. Include centrali partenza/arrivo, filtri attivi, vincoli obbligatori/evitare. Toggle comportamento: clic ripetuto chiude il pannello, <strong>auto-chiusura 10 sec</strong>. Bottone copia clipboard per condivisione rapida con colleghi.</p>
-  <div class="feature-specs">
-    <span class="spec-tag" style="background:#ecfdf5;color:#16a34a;">URL Params</span>
-    <span class="spec-tag" style="background:#ecfdf5;color:#16a34a;">Copy Link</span>
-    <span class="spec-tag" style="background:#ecfdf5;color:#16a34a;">Auto-close 10s</span>
-  </div>
-</div>
-
-<!-- Feature: Integrazione NAT Italia -->
+<!-- La scheda della condivisione e' stata tolta insieme al bottone -->
+          <!-- Feature: Integrazione NAT Italia -->
 <div class="feature-card" data-cat="mappe" style="border-left: 3px solid #059669;">
   <div class="feature-icon" style="color: #059669;">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22443,10 +22530,31 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #7c3aed;">
+              <details class="cl-item" open style="--cl-accent: #d4a017;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🥇 Novità V60.09.25 — Set 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📌 Riparo dell'intestazione</strong>: era un riquadro disegnato dentro ogni cella, quindi copriva lo sfondo ma non i bordi fra una colonna e l'altra, dove si vedevano passare le righe e la linguetta dei nastri. Ora è un elemento solo, largo quanto la tabella: sotto l'intestazione non passa più niente, come già succedeva con la barra di export accesa</li>
+    <li><strong>📌 Intestazione delle tabelle</strong>: nei tab RC e Unificato, scorrendo i risultati, restavano scoperti quattordici pixel sotto la navigazione e le righe si vedevano passare di là. Il riparo esisteva ma non si accendeva mai, perché la misura veniva presa sul <code>&lt;thead&gt;</code> invece che sulle celle appiccicate. Con la barra di export accesa il problema non si vedeva, perché era la barra a coprire quello spazio</li>
+    <li><strong>📍 ZNA e ZNB per tratto, non per percorso</strong>: lo stesso identico tratto di Zona A compariva come 1° su un percorso, 2° su un altro e 3° su un terzo. Ora si classificano i tratti distinti: i percorsi che condividono un tratto portano la stessa posizione, e il suggerimento dice da quanti percorsi è condiviso</li>
+    <li><strong>📊 Card Analisi Percorsi ripulite</strong>: via la riga con il numero del percorso, che ripeteva l'intestazione della card, e via le intestazioni di sezione <em>Percorso</em>, <em>Rete</em> e <em>Stato link</em>, che stavano su una colonna sola senza riferimenti chiari. Etichette per esteso e uguali nei due tab: <em>Distanza</em> con il valore in km, <em>Rete RA</em>, <em>Rete RC</em>, <em>Cambi Rete</em>, <em>NON Attivi</em>. Nel tab RC sparisce la voce <em>RA / RC</em> e compare il conteggio degli <em>Attivi</em></li>
+    <li><strong>🔢 Collegamenti e Subpath contati a parte</strong>: nella RA più collegamenti fisici appartengono allo stesso subpath, nella RC coincidono. Nelle card dell'Unificato la voce <em>Subpath</em> mostrava in realtà i collegamenti: ora ci sono <em>Collegamenti</em>, con il conteggio logico e fra parentesi quello fisico, e <em>Subpath</em> con i subpath distinti. Anche <em>Rete RA</em> porta i due numeri, per esempio <code>3 (5)</code>. Nel tab RC la voce diventa <em>Subpath / Collegamenti</em>, perché lì sono la stessa cosa</li>
+    <li><strong>🧹 Bottoni su una riga sola</strong>: nei tab RA, RC e Unificato <em>Filtri Stati</em>, <em>Confronta</em> e <em>Reset Campi</em> stavano su una riga a parte sopra quella di calcolo. Ora stanno tutti nella riga di calcolo: <em>Reset Campi</em> ha la misura di <em>Reset Tab</em> e gli sta davanti, <em>Filtri Stati</em> e <em>Confronta</em> restano pastiglie in coda a destra. Il bottone <em>Condividi</em> è stato tolto</li>
+    <li><strong>📏 Spazio sopra Info Zona</strong>: nel tab Unificato fra la riga dei bottoni e <em>Info Zona</em> c'erano 48 pixel invece dei 24 di RA e RC. Ora i tre tab hanno la stessa distanza</li>
+    <li><strong>📘 Note e regole più largo</strong>: il pannello che si apre dal bottone <em>Note e regole</em> nei tab RA, RC e Unificato passa da 552 a 718 pixel, il 30% in più, perché i riquadri di esempio andavano a capo di continuo. Sotto i 764 pixel di finestra vale sempre il limite del 94%, quindi il pannello non sborda</li>
+    <li><strong>🥇 Via le tabelle Top 4</strong>: erano un secondo elenco sopra ai risultati, e chi guardava la tabella vera spesso non le vedeva. I migliori percorsi restano ora al loro posto nell'elenco, che segue la distanza</li>
+    <li><strong>🏅 Nastro sopra la riga</strong>: il percorso premiato ha una fascia colorata che dice la posizione a parole e porta il numero del percorso; la riga sotto prende la stessa tinta in chiaro e una linguetta da 6 px li unisce, arrotondata in alto</li>
+    <li><strong>🥉 Tre invece di quattro, medaglie al posto giusto</strong>: oro il primo, argento il secondo, bronzo il terzo. Prima il trofeo viola stava davanti all'oro, e il numero dentro la medaglia era quello del percorso, non della posizione. Anche <em>ZNA</em> e <em>ZNB</em> passano a tre</li>
+    <li><strong>📊 Card Analisi Percorsi</strong>: da quattro a tre, con gli stessi colori dei nastri, e ora cliccabili: portano alla riga del percorso e fanno lampeggiare il nastro</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #7c3aed;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🔀 Novità V60.09.18 — Set 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -22971,11 +23079,11 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                           title="Filtri avanzati per stato collegamenti">
                     🔽 Filtri Stati
                   </button>
-                  <button class="btn btn-chip" type="button" onclick="openRouteCompare('RC')" style="white-space: nowrap;" title="Confronta due percorsi side-by-side">⚖️ Confronta</button>
-                  <button class="btn btn-chip" type="button" onclick="showSharePanel('RC')" style="white-space: nowrap;" title="Genera codice condivisibile">🔗 Condividi</button>
+                  <button class="btn btn-chip" type="button" id="btnCompareRC" onclick="openRouteCompare('RC')" style="white-space: nowrap;" title="Confronta due percorsi side-by-side">⚖️ Confronta</button>
+                  
                 </div>
                 <!-- Bottone Reset a destra -->
-                <button class="btn btn-chip" type="button" onclick="resetRouteForm()" style="white-space: nowrap;">🔁 Reset Campi</button>
+                <button class="btn btn-chip" type="button" id="btnResetCampiRC" onclick="resetRouteForm()" style="white-space: nowrap;">🔁 Reset Campi</button>
               </div>
 
               <!-- RIGA 5: Opzioni di filtro base e azioni principali -->
@@ -23116,11 +23224,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       peggiore per ogni metrica.</p>
     </li>
 
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #004C99;">🔗 Condividi</strong>: genera un link condivisibile con tutti i parametri della ricerca corrente
-      (centrali, filtri e vincoli), per <strong>salvare</strong> o <strong>condividere</strong> configurazioni
-      operative con i colleghi.</p>
-    </li>
+    
 
     <li><p style="margin-top: 0.9rem;">
       <strong style="color: #059669;">🌍 Mappa NAT</strong>: esporta i percorsi calcolati (Std e Div) verso <strong>NAT Italia</strong> per la visualizzazione geografica. Polyline colorate con marker per ogni centrale e tooltip dettagliati.</p>
@@ -23161,7 +23265,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <strong>↩️ Undo (Ultime 20)</strong>: tiene le ultime venti ricerche di questo tab e le ripropone com’erano, centrali e vincoli compresi. Serve per tornare su una fattibilità già calcolata senza reimpostare tutto a mano.</p>
     </li>
     <li><p style="margin-top: 0.25rem;">
-    <strong>🏆 Come nasce la Top 4</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. Le prime quattro posizioni prendono le medaglie: <strong>Premier</strong>, <strong>2° Oro</strong>, <strong>3° Argento</strong>, <strong>4° Bronzo</strong>; il numero accanto alla medaglia è la posizione nell’elenco completo, che segue invece la distanza.</p>
+    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo.</p>
     </li>
   </ul>
 
@@ -23256,18 +23360,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             </div>
           </div>
 
-          <div id="rcTop4Section" class="top4-section">
-            <div class="top4-header">🏆 Top 4 Percorsi</div>
-            <div class="db-table-wrapper">
-              <table class="db-table route-table route-table-v2">
-                <thead><tr>
-                  <th>#</th><th>Percorso Centrali</th><th>ID Collegamenti</th>
-                  <th style="white-space:nowrap;">Collegamenti</th><th>Distanza (km)</th><th>Azioni</th>
-                </tr></thead>
-                <tbody id="rcTop4Body"></tbody>
-              </table>
-            </div>
-          </div>
+          <!-- la tabella rcTop4Section e' stata tolta: i migliori tre percorsi si leggono ora nella tabella dei risultati, con il nastro sopra la riga -->
           <div class="db-table-wrapper">
             <!-- BARRA SELEZIONE EXPORT RC -->
             <div id="rcSelBar" class="expsm-inline-bar">
@@ -24519,10 +24612,10 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     🔽 Filtri Stati
                   </button>
                   <button class="btn btn-chip" type="button" id="btnCompareMultiPathRA" onclick="openRouteCompare('RA_MULTIPATH')" style="white-space: nowrap;" title="Confronta due percorsi dalla tabella Multi-Path">⚖️ Confronta Multi-Path</button>
-                  <button class="btn btn-chip" type="button" onclick="showSharePanel('RA')" style="white-space: nowrap;" title="Genera codice condivisibile">🔗 Condividi</button>
+                  
                 </div>
                 <!-- Bottone Reset a destra -->
-                <button class="btn btn-chip" type="button" onclick="resetRouteFormRA()" style="white-space: nowrap;">🔁 Reset Campi</button>
+                <button class="btn btn-chip" type="button" id="btnResetCampiRA" onclick="resetRouteFormRA()" style="white-space: nowrap;">🔁 Reset Campi</button>
               </div>
               
               <!-- Pannello Filtri Stati Avanzati RA (CHIUSO di default, tutti i filtri attivi) -->
@@ -24661,11 +24754,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     migliore e del peggiore per ogni metrica.</p>
   </li>
 
-  <li><p style="margin-top: 1rem;">
-    <strong style="color: #004C99;">🔗 Condividi</strong>: genera un link condivisibile contenente tutti i parametri della ricerca
-    corrente (centrali e filtri), consentendo di <strong>salvare o condividere configurazioni
-    operative</strong> con altri utenti.</p>
-  </li>
+  
 
   <li><p style="margin-top: 1rem;">
     <strong style="color: #059669;">🌍 Mappa NAT</strong>: esporta i percorsi (Std, Div e Multi-Path) verso <strong>NAT Italia</strong>. Polyline colorate con marker per ogni centrale. I Multi-Path duplicati (stesso arco di Std) sono esclusi automaticamente.</p>
@@ -25220,13 +25309,13 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                           title="Filtri avanzati per stato collegamenti RA e RC">
                     🔽 Filtri Stati
                   </button>
-                  <button class="btn btn-chip" type="button" onclick="openRouteCompare('UNIFIED')" style="white-space: nowrap;" title="Confronta due percorsi side-by-side">⚖️ Confronta</button>
-                  <button class="btn btn-chip" type="button" onclick="showSharePanel('UNIFIED')" style="white-space: nowrap;" title="Genera codice condivisibile">🔗 Condividi</button>
+                  <button class="btn btn-chip" type="button" id="btnCompareUNIFIED" onclick="openRouteCompare('UNIFIED')" style="white-space: nowrap;" title="Confronta due percorsi side-by-side">⚖️ Confronta</button>
+                  
                   <button id="uRcOnlyBtn" type="button" class="btn btn-chip" onclick="window._uRcOnlyChanged()" title="Modalità Solo RC: usa solo rete RC, esclude layer RA" style="white-space:nowrap;transition:background 0.15s,color 0.15s,border-color 0.15s;">🔴 Solo RC</button>
                   <button id="uRtnModeBtn" type="button" class="btn btn-chip" onclick="window._uRtnModeChanged()" title="Modalità RTN: percorso interregionale — routing Unified verso il Nodo A1 più vicino della stessa area, poi salto RTN backbone, poi Unified verso la centrale di arrivo" style="white-space:nowrap;transition:background 0.15s,color 0.15s,border-color 0.15s;">🌐 RTN</button>
                 </div>
                 <!-- Bottone Reset a destra -->
-                <button class="btn btn-chip" type="button" onclick="window.resetUnifiedRouteForm()" style="white-space: nowrap;">🔁 Reset Campi</button>
+                <button class="btn btn-chip" type="button" id="btnResetCampiUNIFIED" onclick="window.resetUnifiedRouteForm()" style="white-space: nowrap;">🔁 Reset Campi</button>
               </div>
 
               <!-- RIGA 5: Opzioni di filtro base e azioni principali -->
@@ -25442,11 +25531,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <strong>% overlap</strong> per valutare differenze e ridondanza.</p>
   </li>
 
-  <li><p style="margin-top: 0.25rem;">
-    <strong style="color: #004C99;">🔗 Condividi</strong>: genera un link condivisibile con tutti i parametri della ricerca corrente
-    (centrali, filtri e vincoli), per <strong>salvare</strong> o <strong>condividere</strong> configurazioni
-    operative con i colleghi.</p>
-  </li>
+  
 
   <li><p style="margin-top: 0.25rem;">
     <strong style="color: #0066CC;">📊 Pannello Analisi Percorsi</strong>: dopo ogni ricerca appare automaticamente
@@ -25517,7 +25602,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <strong>↩️ Undo (Ultime 20)</strong>: tiene le ultime venti ricerche di questo tab e le ripropone com’erano, centrali e vincoli compresi. Serve per tornare su una fattibilità già calcolata senza reimpostare tutto a mano.</p>
     </li>
     <li><p style="margin-top: 0.25rem;">
-    <strong>🏆 Come nasce la Top 4</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. Le prime quattro posizioni prendono le medaglie: <strong>Premier</strong>, <strong>2° Oro</strong>, <strong>3° Argento</strong>, <strong>4° Bronzo</strong>; il numero accanto alla medaglia è la posizione nell’elenco completo, che segue invece la distanza. Nel calcolo il salto sul backbone <strong>RTN</strong> viene ignorato: non conta come collegamento e non produce un passaggio di rete. In modalità RTN, accanto alla medaglia, <strong>ZNA</strong> e <strong>ZNB</strong> indicano quale percorso è il migliore per la sola Zona A e per la sola Zona B, calcolati con lo stesso punteggio sui rispettivi segmenti.</p>
+    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo. Nel calcolo il salto sul backbone <strong>RTN</strong> viene ignorato: non conta come collegamento e non produce un passaggio di rete. In modalità RTN, sotto il numero del percorso, <strong>ZNA</strong> e <strong>ZNB</strong> segnalano i migliori tre per la sola Zona A e per la sola Zona B, calcolati con lo stesso punteggio sui rispettivi segmenti.</p>
     </li>
 </ul>              
 
@@ -25654,18 +25739,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
           </div>
 
           <div style="margin-top: 0.5rem;">
-            <div id="uTop4Section" class="top4-section">
-              <div class="top4-header">🏆 Top 4 Percorsi</div>
-              <div class="db-table-wrapper">
-                <table class="db-table route-table route-table-v2">
-                  <thead><tr>
-                    <th style="width: 5%;">#</th><th style="width: 41%;">Percorso Centrali</th><th style="width: 33.2%;">ID Collegamenti</th>
-                    <th style="width: 6.3%;">Collegamenti</th><th style="width: 6.5%;">Distanza (km)</th><th style="width: 8%;">Azioni</th>
-                  </tr></thead>
-                  <tbody id="uTop4Body"></tbody>
-                </table>
-              </div>
-            </div>
+            <!-- la tabella uTop4Section e' stata tolta: i migliori tre percorsi si leggono ora nella tabella dei risultati, con il nastro sopra la riga -->
             <!-- BARRA SELEZIONE EXPORT UNIFIED -->
             <div id="unifiedSelBar" class="expsm-inline-bar">
               <span class="expsm-inline-bar-label" id="unifiedSelBarLabel">📋 Export — Percorsi Std</span>
@@ -40080,7 +40154,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V60.09.18 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V60.09.25 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -40097,6 +40171,28 @@ PERCORSI ALTERNATIVI (Div):
       </div>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+        <details open style="border:1px solid #d4a017;border-radius:12px;overflow:hidden;background:#fdf8e7;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#6b4e0a;display:flex;align-items:center;gap:0.5rem;background:#f8ecc4;">
+            🥇 V60.09.25 — I migliori tre percorsi dentro la tabella, via le Top 4
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📌 Il riparo è un elemento solo</strong>: il riquadro che copre lo spazio fra la navigazione e l'intestazione era disegnato dentro ogni cella dell'intestazione. Copriva lo sfondo, ma non i bordi che dividono le colonne: in quei pochi pixel si vedevano passare le righe della tabella e la linguetta colorata dei nastri. Ora il riparo è un elemento solo, largo quanto la tabella e sbordante di sei pixel ai lati, che si accende quando l'intestazione raggiunge la sua quota e resta spento quando c'è la barra di export, che copre già lei quello spazio. È lo stesso comportamento che si vedeva con l'export acceso, riportato anche quando l'export è spento.</li>
+              <li><strong>📌 L'intestazione appiccicata delle tabelle</strong>: nei tab RC e Unificato l'intestazione della tabella dei risultati si ferma sotto la navigazione mentre si scorre. Fra il bordo della navigazione e l'intestazione restavano però quattordici pixel scoperti, e le righe si vedevano passare di là. Il riparo che copre quello spazio era già scritto, ma non si accendeva mai: la misura per capire se l'intestazione avesse raggiunto la sua quota veniva presa sul <code>&lt;thead&gt;</code>, mentre le celle appiccicate sono i <code>&lt;th&gt;</code>; il <code>&lt;thead&gt;</code> resta dov'è e il suo rettangolo torna sempre 0, quindi la condizione non risultava mai vera. Ora la misura si prende sulla prima cella dell'intestazione e si confronta con la quota calcolata. Con la barra di export accesa il difetto non si notava, perché quello spazio lo copriva la barra, che è anch'essa appiccicata e opaca. Il controllo ascolta ora anche lo scorrimento dentro i contenitori, non solo quello della pagina, e ha una rete di sicurezza che rigira ogni 400 millisecondi.</li>
+              <li><strong>📍 ZNA e ZNB contavano i percorsi</strong>: in modalità RTN le etichette di zona assegnavano la posizione ordinando i <em>percorsi</em> per punteggio del tratto. Quando più percorsi usano lo stesso identico tratto di Zona A, e cambiano solo nella parte dopo il nodo A1, quel tratto si ritrovava etichettato <code>ZNA 1°</code> sul primo percorso, <code>ZNA 2°</code> sul secondo e <code>ZNA 3°</code> sul quarto: tre posizioni diverse per la stessa identica tratta. Ora i percorsi vengono raggruppati per tratto di zona, con una firma costruita sugli identificativi dei collegamenti, e la classifica riguarda i tratti distinti. I percorsi che condividono un tratto portano quindi la stessa posizione, e il suggerimento del badge dice da quanti percorsi quel tratto è condiviso. Le etichette restano limitate ai primi tre tratti di ciascuna zona.</li>
+              <li><strong>📊 Le card Analisi Percorsi</strong>: il corpo della card ripeteva nella prima riga la posizione del percorso, che è già scritta nell'intestazione, e conteneva tre intestazioni di sezione (<em>Percorso</em>, <em>Rete</em>, <em>Stato link</em>) che, stando su una colonna sola di una griglia a due, sembravano riferirsi alla voce accanto invece che al gruppo. Sono state tolte tutte. Le etichette sono ora per esteso e identiche nei due tab: <em>Distanza</em> con il valore in chilometri, <em>Subpath</em>, <em>Nodi</em>, <em>Cambi Rete</em> al posto di <em>Trans.</em>, <em>Rete RA</em> e <em>Rete RC</em> al posto di <em>RA</em> e <em>RC</em>, <em>Attivi</em> e <em>NON Attivi</em>. Nel tab RC è sparita la voce <em>RA / RC</em>, che in un tab dove esiste solo la Rete Core non porta informazione, ed è comparso il conteggio degli <em>Attivi</em>, che lì mancava.</li>
+              <li><strong>🔢 Collegamenti e subpath non sono la stessa cosa</strong>: nella Rete di Aggregazione più collegamenti fisici possono appartenere allo stesso subpath, che nell'identificativo è il terzo pezzo: <code>RMLA_arco_1050 | RMLA_217 | ALA047 | 1</code> sta sul subpath <code>ALA047</code>, e quattro collegamenti come <code>NE_arco_1042 | NE_146 | ANE009 | 9</code>, <code>| 8</code>, <code>| 7</code> e <code>NE_145 | ANE009 | 6</code> stanno tutti sul subpath <code>ANE009</code>. Nella Rete Core invece collegamento e subpath coincidono. Nelle card dell'Unificato la voce <em>Subpath</em> mostrava in realtà il conteggio dei collegamenti: ora le voci sono due. <em>Collegamenti</em> porta il conteggio logico, quello che segue la regola RA (verde vale 1, due blu valgono 1, grigio vale 0) e conta 1 per ogni tratto RC, con fra parentesi i tratti reali quando il numero differisce, per esempio <code>13 (15)</code>. <em>Subpath</em> conta i subpath distinti attraversati, RA e RC insieme, per esempio 12. Anche <em>Rete RA</em> mostra ora i due numeri, <code>3 (5)</code>: tre collegamenti conteggiati su cinque tratti reali. <em>Rete RC</em> resta un numero solo, perché lì i due conteggi coincidono, e per lo stesso motivo nel tab RC la voce si chiama <em>Subpath / Collegamenti</em>.</li>
+              <li><strong>🧹 I bottoni su una riga sola</strong>: nei tab RA, RC e Unificato i bottoni <em>Filtri Stati</em>, <em>Confronta</em> e <em>Reset Campi</em> occupavano una riga tutta loro sopra quella di calcolo, che restava mezza vuota. Ora stanno tutti nella riga di calcolo. <em>Reset Campi</em> ha preso misura e stile di <em>Reset Tab</em> e gli sta davanti, subito dopo il divisore, così i due comandi di azzeramento sono vicini e si distinguono solo per l'etichetta. <em>Filtri Stati</em> e <em>Confronta</em> restano pastiglie piccole e vanno in coda, spinte contro il bordo destro; la riga rimasta senza bottoni viene nascosta, così non lascia il suo spazio. Sotto i 1100 pixel di larghezza la coda va a capo invece di stringere i bottoni. Il bottone <em>Condividi</em> è stato tolto da tutti e tre i tab.</li>
+              <li><strong>🥇 Perché le Top 4 non ci sono più</strong>: erano una seconda tabella sopra ai risultati, con dentro gli stessi percorsi già presenti sotto. Chi scorreva la tabella vera non le notava, e chi le notava perdeva il filo dell'ordine, perché lì i percorsi comparivano in un ordine diverso da quello dell'elenco. Sono state tolte da entrambi i tab, RC e Unificato.</li>
+              <li><strong>🏅 Il nastro</strong>: i percorsi migliori restano al loro posto nell'elenco, che segue la distanza, e prendono una fascia colorata sopra la riga con la posizione scritta a parole (<em>Miglior percorso complessivo</em>, <em>Secondo miglior percorso</em>, <em>Terzo miglior percorso</em>) e il numero del percorso. La riga sotto prende la stessa tinta in chiaro, e una linguetta da 6 px scende dal nastro alla riga tenendo insieme le due: è arrotondata in alto e un'ombra interna le dà rilievo.</li>
+              <li><strong>🥉 Tre e non quattro</strong>: le medaglie sono tre, e fra il terzo e il quarto classificato il punteggio è quasi sempre una differenza di decimali, cioè rumore. Con cinque nastri su otto righe di risultati metà tabella sarebbe premiata e l'evidenza si annacquerebbe. Per lo stesso motivo <em>ZNA</em> e <em>ZNB</em>, in modalità RTN, segnalano ora i migliori tre di ciascuna zona invece dei migliori quattro.</li>
+              <li><strong>🏆 Le medaglie al posto giusto</strong>: prima il primo classificato aveva un trofeo viola e il secondo l'oro, il che faceva sembrare l'oro il premio buono con qualcos'altro sopra; e il numero dentro la medaglia era quello del <em>percorso</em>, non della posizione, per cui <code>🥈 #1</code> voleva dire "terzo classificato, ed è il percorso numero 1". Ora l'ordine è quello che conosce chiunque: oro, argento, bronzo. L'oro è giallo pieno e il bronzo tende al rosso, così il primo e il terzo non si confondono quando scendono alle tinte leggere della riga.</li>
+              <li><strong>📊 Card Analisi Percorsi</strong>: passano da quattro a tre e usano gli stessi colori dei nastri, quindi card, nastro e riga si collegano a colpo d'occhio. Ogni card è cliccabile: porta la riga del percorso sotto gli occhi e fa lampeggiare il nastro per un paio di secondi. Lampeggia il solo nastro, non la riga intera, che su una tabella da trenta risultati sarebbe troppo.</li>
+              <li><strong>📝 Le note dei due tab</strong>: la voce a scomparsa <em>Come nasce la Top 4</em> è diventata <em>Come nascono i migliori tre</em>. Il calcolo del punteggio non è cambiato: ogni passaggio di rete pesa 12 punti, ogni collegamento non attivo 8, ogni collegamento mezzo punto, e lo scostamento dalla distanza minima 2 punti per ogni raddoppio.</li>
+            </ul>
+          </div>
+        </details>
 
         <details open style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#f5f3ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
@@ -261224,25 +261320,19 @@ function renderBaseTable() {
     const _gKm = r => r.distanceKm || 0;
     const _mKm = baseRoutes.length ? Math.min(...baseRoutes.map(_gKm)) : 0;
     const _sc4 = (typeof window._routeScore === 'function') ? window._routeScore : _gKm;
+    /* i migliori tre: la classifica si legge dal nastro sopra la riga, non
+       piu' da una tabella a parte */
     const _rnk = {};
-    [...baseRoutes.map((r,i) => ({i, s: _sc4(r.edges, _gKm(r), _mKm)}))].sort((a,b)=>a.s-b.s).slice(0,4)
+    [...baseRoutes.map((r,i) => ({i, s: _sc4(r.edges, _gKm(r), _mKm)}))].sort((a,b)=>a.s-b.s).slice(0,3)
       .forEach(({i}, rank) => { _rnk[i] = rank; });
-    const _M = ['🏆','🥇','🥈','🥉'];
-    const _MC = ['#7c3aed','#d97706','#64748b','#ea7226'];
-    const _MB = ['#f5f3ff','#fefce8','#f8fafc','#fff7ed'];
-    const _ML = ['Premier','2° Oro','3° Argento','4° Bronzo'];
 
     const rowsHtml = baseRoutes.map((route, idx) => {
       const idx1 = idx + 1;
       const distStr = route.distanceKm.toFixed(2).replace('.', ',');
-      // Badge numerazione
+      /* nella cella resta il solo numero del percorso: la posizione in
+         classifica la dice il nastro */
       const rank = _rnk[idx];
-      const numCell = rank !== undefined
-        ? '<span style="display:inline-flex;align-items:center;gap:3px;background:'+_MB[rank]
-          +';border:1.5px solid '+_MC[rank]+';border-radius:5px;padding:1px 6px;'
-          +'font-size:0.68rem;font-weight:700;color:'+_MC[rank]+';white-space:nowrap;"'
-          +' title="'+_ML[rank]+'">'+_M[rank]+' <span style="opacity:0.65;font-size:0.62rem;">#'+idx1+'</span></span>'
-        : String(idx1);
+      const numCell = '<span style="font-size:0.78rem;font-weight:600;color:#374151;">' + idx1 + '</span>';
       const azioniHtml =
         '<div class="route-actions">' +
           '<button type="button" class="btn btn-chip" id="routeBaseAltBtn_' + idx + '" onclick="runAltRoutesSearch(' + idx + ')">▶ Percorsi Div</button>' +
@@ -261262,7 +261352,10 @@ function renderBaseTable() {
         '<div style="white-space: normal; word-wrap: break-word; font-size: 0.78rem;">' + renderRouteIds(route) + '</div>';
 
       return (
-        '<tr id="routeBaseRow_' + idx + '">' +
+        (rank !== undefined && typeof window.croNastro === 'function'
+          ? window.croNastro(rank + 1, idx1, 'rcNastro_' + idx) : '') +
+        '<tr id="routeBaseRow_' + idx + '"'
+          + (rank !== undefined ? ' class="cro-top cro-nastro-' + (rank + 1) + '"' : '') + '>' +
           '<td>' + numCell + '</td>' +
           '<td>' + pathCellHtml + '</td>' +
           '<td>' + idsCellHtml + '</td>' +
@@ -261287,6 +261380,28 @@ function renderBaseTable() {
   }
 
   // ── Pannello Analisi Percorsi RC ──────────────────────────────────────────
+  /* Blocco dati della card, uguale a quello dell'Unificato */
+  function _rcBloccoDati(km, subpaths, nodi, attivi, noAtt) {
+    var g = function (l, v, c, tip, tutta) {
+      return '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:4px;'
+        + 'padding:2px 4px;border-bottom:1px solid rgba(0,0,0,0.04);'
+        + (tutta ? 'grid-column:1/-1;' : '') + '">'
+        + '<span title="' + (tip || '') + '" style="color:#9ca3af;font-size:0.61rem;'
+        + 'cursor:' + (tip ? 'help' : 'default') + ';white-space:nowrap;">' + l + '</span>'
+        + '<span style="font-weight:700;color:' + (c || '#374151') + ';font-size:0.71rem;">'
+        + v + '</span></div>';
+    };
+    /* la distanza da sola sulla prima riga, poi le coppie */
+    return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 8px;">'
+      + g('Distanza', km + ' km', '#0066CC', 'Somma delle distanze dei collegamenti del percorso', true)
+      + g('Subpath / Collegamenti', subpaths, '#374151', 'Nella Rete Core collegamento e subpath sono la stessa cosa, quindi il conteggio e\' unico')
+      + g('Nodi / Centrali', nodi || '?', '#374151', 'Centrali attraversate dal percorso, partenza e arrivo compresi')
+      + g('Attivi', attivi, '#16a34a', 'Collegamenti con stato ATTIVO, ATTIVO > SATURO, IN REINSTRADAMENTO o IN VARIAZIONE')
+      + g('NON Attivi', noAtt > 0 ? noAtt : '\u2014', noAtt > 0 ? '#dc2626' : '#16a34a',
+          'Collegamenti con stato NON ATTIVO, IN ATTIVAZIONE, DA VERIFICARE SU NNI o IN CESSAZIONE')
+      + '</div>';
+  }
+
   function _rcUpdateStatsPanel() {
     var panel = document.getElementById('rcRouteStatsPanel');
     if (!panel) return;
@@ -261304,13 +261419,14 @@ function renderBaseTable() {
     var hiKm = Math.max.apply(null,allKm).toFixed(2).replace('.',',');
     var lblR = document.getElementById('rcStatsRightLabel');
     if(lblR) lblR.innerHTML='<span style="font-size:0.62rem;color:#374151;background:#eff6ff;border:1px solid #bfdbfe;border-radius:3px;padding:1px 6px;">'+loKm+' km – '+hiKm+' km</span>';
+    /* stessi colori dei nastri nella tabella: card, nastro e riga si
+       collegano a colpo d'occhio */
     var medals=[
-      {e:'🏆',l:'Premier',   bg:'#fdf4ff',br:'#a855f7',c:'#581c87',tip:'Miglior bilanciamento distanza/non-attivi/subpath'},
-      {e:'🥇',l:'2° Oro',    bg:'#fef9c3',br:'#eab308',c:'#854d0e',tip:'Secondo miglior percorso'},
-      {e:'🥈',l:'3° Argento', bg:'#f1f5f9',br:'#94a3b8',c:'#334155',tip:'Terzo miglior percorso'},
-      {e:'🥉',l:'4° Bronzo',  bg:'#fff7ed',br:'#f97316',c:'#9a3412',tip:'Quarto miglior percorso'}
+      {e:'🥇',l:'Miglior percorso', bg:'#fdf8e7',br:'#d4a017',c:'#6b4e0a',tip:'Miglior bilanciamento distanza/non-attivi/subpath'},
+      {e:'🥈',l:'Secondo',          bg:'#f6f8fa',br:'#8e9aa8',c:'#3f4a57',tip:'Secondo miglior percorso'},
+      {e:'🥉',l:'Terzo',            bg:'#faf1eb',br:'#a0522d',c:'#6f3617',tip:'Terzo miglior percorso'}
     ];
-    var n=Math.min(baseRoutes.length,4), cards='';
+    var n=Math.min(baseRoutes.length,3), cards='';
     for(var ci=0;ci<n;ci++){
       var ridx=order[ci]; var md=medals[ci]; var r=baseRoutes[ridx];
       var km=getKm(r).toFixed(2).replace('.',',');
@@ -261319,14 +261435,15 @@ function renderBaseTable() {
       // Conta RA e RC
       var raC=0, rcC=0;
       if(r.edges) r.edges.forEach(function(e){ if(e.source==='RA') raC++; else if(e.source==='RC') rcC++; });
-      // Non attivi
-      var noActC=0;
+      // Attivi e non attivi
+      var noActC=0, attC=0;
       if(r.edges) r.edges.forEach(function(e){
         var st=((e.raw&&(e.raw.StatoCollegamento||e.raw.Stato_IdCollegamento||e.raw.stato||''))+'').toUpperCase().trim();
-        if(st&&!window.croStatoAttivo(st)) noActC++;
+        if(!st) return;
+        if(window.croStatoAttivo(st)) attC++; else noActC++;
       });
 
-      cards+='<div style="flex:1;min-width:180px;background:'+md.bg+';border:1.5px solid '+md.br
+      cards+='<div class="cro-card-click" onclick="window.croVaiAlPercorso(\'rcNastro_'+ridx+'\',\'routeBaseRow_'+ridx+'\')" title="Vai al percorso #'+(ridx+1)+' nella tabella" style="flex:1;min-width:180px;background:'+md.bg+';border:1.5px solid '+md.br
         +';border-radius:10px;padding:0.5rem 0.7rem;">'
         // Header: emoji + label + #N
         +'<div title="'+md.tip+'" style="cursor:help;display:flex;align-items:center;justify-content:space-between;'
@@ -261340,27 +261457,10 @@ function renderBaseTable() {
             +'#'+(ridx+1)
           +'</span>'
         +'</div>'
-        // Body: tabella 2 colonne, allineamento sinistra
-        +'<table style="width:100%;border-collapse:collapse;font-size:0.71rem;">'
-          +'<tr>'
-            +'<td title="Somma delle distanze dei collegamenti del percorso" style="cursor:help;color:#6b7280;padding:1px 6px 1px 0;white-space:nowrap;">Distanza</td>'
-            +'<td style="font-weight:700;color:#1e40af;padding:1px 0;">'+(km)+' km</td>'
-            +'<td title="Collegamenti che compongono il percorso" style="cursor:help;color:#6b7280;padding:1px 6px 1px 8px;white-space:nowrap;">Subpath</td>'
-            +'<td style="font-weight:600;padding:1px 0;">'+subpaths+'</td>'
-          +'</tr>'
-          +'<tr>'
-            +'<td title="Tratti su Rete di Aggregazione e su Rete Core" style="cursor:help;color:#6b7280;padding:1px 6px 1px 0;">RA / RC</td>'
-            +'<td style="font-weight:600;padding:1px 0;">'
-              +(raC>0?'<span style="color:#0066CC;">'+raC+'</span>':'-')
-              +' / '
-              +(rcC>0?'<span style="color:#dc2626;">'+rcC+'</span>':'-')
-            +'</td>'
-            +'<td title="Collegamenti con stato diverso da ATTIVO, ATTIVO &gt; SATURO, IN REINSTRADAMENTO e IN VARIAZIONE" style="cursor:help;color:#6b7280;padding:1px 6px 1px 8px;">Non att.</td>'
-            +'<td style="font-weight:600;padding:1px 0;color:'+(noActC>0?'#dc2626':'#16a34a')+';">'
-              +(noActC>0?noActC:'—')
-            +'</td>'
-          +'</tr>'
-        +'</table>'
+        /* Stesse voci e stessa impaginazione delle card dell'Unificato: due
+           colonne di coppie etichetta-valore, niente RA / RC, che in un tab
+           dove c'e' solo la Rete Core non dice niente. */
+        + _rcBloccoDati(km, subpaths, nodi, attC, noActC)
       +'</div>';
     }
     se('rcStatsBest', cards);
@@ -282285,7 +282385,7 @@ div[style*="background:#f3f4f6"] label:hover span {
      suo, quindi va messa sull'oggetto globale */
   window._calcOverlapPct = _calcOverlapPct;
 
-  function _uBuildStatBlock(route, idx, isBest, medal) {
+  function _uBuildStatBlock(route, idx, isBest, cellaZone) {
     if(!route) return '<span style="color:#9ca3af;font-size:0.7rem;">\u2014</span>';
     var edges=route.edges||[], nodes=route.nodes||[];
     var km=edges.reduce(function(s,e){return s+(Number(e.weight)||0);},0);
@@ -282319,12 +282419,36 @@ div[style*="background:#f3f4f6"] label:hover span {
       if(e.source==='RA') raHops++; else if(e.source==='RC') rcHops++;
     });
     var subpath=linksInfo.total+(raw!==linksInfo.total?' ('+raw+')':'');
+    /* Collegamenti e subpath sono due cose diverse: nella RA piu' collegamenti
+       fisici appartengono allo stesso subpath, che nel loro identificativo e'
+       il terzo pezzo (RMLA_arco_1050 | RMLA_217 | ALA047 | 1 -> ALA047).
+       Nella RC invece coincidono. Qui si contano i subpath distinti. */
+    var _sp = {};
+    edges.forEach(function(e){
+      if(e.source==='XFER' || e.source==='RTN') return;
+      var s = (e.raw && (e.raw.SubPath || e.raw.Subpath || e.raw.subpath)) || '';
+      if(!s){
+        var id = String(e.id || e.arco || '');
+        var pezzi = id.split('|');
+        s = (pezzi.length > 2 ? pezzi[2] : id).trim();
+      }
+      s = String(s).trim();
+      if(s && s !== '-') _sp[s] = 1;
+    });
+    var subpathN = Object.keys(_sp).length || '\u2014';
+    /* RA: il conteggio logico segue la regola dei collegamenti (verde vale 1,
+       due blu valgono 1, grigio vale 0), quello fisico sono i tratti reali */
+    var raLog = linksInfo.raCount, raFis = raHops;
+    var raTxt = raLog + (raFis !== raLog ? ' (' + raFis + ')' : '');
     var totalEdges=attivi+inactive+(unknown?unknown:0);
     // Riga con tooltip (title sull'etichetta, nessuna icona)
-    var g=function(l,v,c,tip){
+    var g=function(l,v,c,tip,tutta){
       var tt=tip?' title="'+tip+'"':'';
       var bg = _bColor ? 'background:'+_bColor+'09;' : '';
-      return '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:4px;padding:2px 4px;border-bottom:1px solid rgba(0,0,0,0.04);'+bg+'">'
+      /* tutta: la voce occupa le due colonne, quando sopra non c'e' la
+         coppia delle zone e la distanza resterebbe spaiata */
+      var sp = tutta ? 'grid-column:1/-1;' : '';
+      return '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:4px;padding:2px 4px;border-bottom:1px solid rgba(0,0,0,0.04);'+sp+bg+'">'
         +'<span style="color:#9ca3af;font-size:0.61rem;cursor:'+(tip?'help':'default')+';white-space:nowrap;"'+tt+'>'+l+'</span>'
         +'<span style="font-weight:700;color:'+(c||'#374151')+';font-size:0.71rem;">'+v+'</span></div>';
     };
@@ -282338,19 +282462,26 @@ div[style*="background:#f3f4f6"] label:hover span {
         +'letter-spacing:0.04em;padding:3px 4px 2px;border-bottom:1.5px solid '+(c||'#e5e7eb')+';grid-column:1/-1;'
         +'background:'+(c||'#f9fafb')+'14;margin-bottom:0;cursor:'+(tip?'help':'default')+';">'+t+'</div>';
     };
+    /* Niente riga del numero: la posizione sta gia' nell'intestazione della
+       card. Niente intestazioni di sezione (Percorso, Rete, Stato link):
+       stavano su una colonna sola e non si capiva a quali voci si
+       riferissero. Etichette per esteso. */
+    /* Prima riga: a sinistra le due zone, a destra la distanza. Senza le
+       zone, cioe' fuori dalla modalita' RTN, la distanza prende tutta la
+       riga e le coppie sotto restano allineate. */
     return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 8px;">'
-      + hdr('Percorso','#374151','Dati generali del percorso: posizione in classifica, distanza, collegamenti e centrali attraversate')
-      + g('#',(idx+1),isBest?'#92400e':'#374151','Posizione del percorso nell\'elenco, ordinato per punteggio (distanza e numero di collegamenti)')
-      + g('Km',km.toFixed(2).replace('.',','),'#0066CC','Somma delle distanze dei collegamenti del percorso. Il salto sul backbone RTN non ha una distanza propria e non incide')
-      + g('Subpath',subpath,'#374151','Collegamenti conteggiati: RC vale 1, RA verde vale 1, due RA blu valgono 1, RA grigio vale 0. Fra parentesi i tratti reali del percorso, quando il numero differisce (RTN escluso)')
-      + g('Nodi',nodes.length||'?','#374151','Centrali attraversate dal percorso, partenza e arrivo compresi')
-      + hdr('Rete','#0066CC','Come si ripartisce il percorso fra Rete di Aggregazione e Rete Core, e quante volte passa dall\'una all\'altra')
-      + g('RA',raHops,'#0066CC','Tratti percorsi sulla Rete di Aggregazione (RA)')
-      + g('RC',rcHops,'#dc2626','Tratti percorsi sulla Rete Core (RC)')
-      + g('Trans.',transitions>0?transitions:'\u2014',transitions>2?'#f59e0b':'#374151','Passaggi da una rete all\'altra fra RA e RC, cioe\' i gateway attraversati. Il salto sul backbone RTN non conta come passaggio')
-      + hdr('Stato link','#059669','Stato dei collegamenti che compongono il percorso, letto dal database')
+      + (cellaZone
+          ? '<div style="padding:2px 0 3px;border-bottom:1px solid rgba(0,0,0,0.04);">' + cellaZone + '</div>'
+          : '')
+      + g('Distanza',km.toFixed(2).replace('.',',')+' km','#0066CC','Somma delle distanze dei collegamenti del percorso. Il salto sul backbone RTN non ha una distanza propria e non incide',!cellaZone)
+      + g('Collegamenti',subpath,'#374151','Collegamenti conteggiati: RC vale 1, RA verde vale 1, due RA blu valgono 1, RA grigio vale 0. Fra parentesi i tratti reali del percorso, quando il numero differisce (RTN escluso)')
+      + g('Subpath',subpathN,'#374151','Subpath distinti attraversati. Nella RA piu\' collegamenti possono appartenere allo stesso subpath, che nell\'identificativo e\' il terzo pezzo; nella RC collegamento e subpath coincidono')
+      + g('Nodi / Centrali',nodes.length||'?','#374151','Centrali attraversate dal percorso, partenza e arrivo compresi')
+      + g('Cambi Rete',transitions>0?transitions:'\u2014',transitions>2?'#f59e0b':'#374151','Passaggi da una rete all\'altra fra RA e RC, cioe\' i gateway attraversati. Il salto sul backbone RTN non conta come passaggio')
+      + g('Rete RA',raTxt,'#0066CC','Tratti sulla Rete di Aggregazione (RA): collegamenti conteggiati e, fra parentesi, tratti reali quando il numero differisce')
+      + g('Rete RC',rcHops,'#dc2626','Tratti percorsi sulla Rete Core (RC)')
       + g('Attivi',attivi,'#16a34a','Collegamenti con stato ATTIVO, ATTIVO > SATURO, IN REINSTRADAMENTO o IN VARIAZIONE')
-      + g('Non att.',inactive>0?inactive:'\u2014',inactive>0?'#dc2626':'#16a34a','Collegamenti con stato NON ATTIVO, IN ATTIVAZIONE, DA VERIFICARE SU NNI o IN CESSAZIONE')
+      + g('NON Attivi',inactive>0?inactive:'\u2014',inactive>0?'#dc2626':'#16a34a','Collegamenti con stato NON ATTIVO, IN ATTIVAZIONE, DA VERIFICARE SU NNI o IN CESSAZIONE')
       + (unknown>0?g('Stato ?',unknown,'#9ca3af','Collegamenti che nel database non riportano uno stato. XFER e RTN sono esclusi dal conteggio'):'')
       + '</div>';
   }
@@ -282406,13 +282537,13 @@ div[style*="background:#f3f4f6"] label:hover span {
         + loKm+' km – '+hiKm+' km</span>' + rtnLabel;
     }
 
+    /* stessi colori dei nastri nella tabella */
     var medals = [
-      { e:'🏆', l:'Premier',     bg:'#fdf4ff', br:'#a855f7', c:'#581c87', tip:'Percorso Premier — miglior bilanciamento distanza / non-attivi / subpath' },
-      { e:'🥇', l:'2° Oro',      bg:'#fef9c3', br:'#eab308', c:'#854d0e', tip:'Secondo miglior percorso' },
-      { e:'🥈', l:'3° Argento',  bg:'#f1f5f9', br:'#94a3b8', c:'#334155', tip:'Terzo miglior percorso' },
-      { e:'🥉', l:'4° Bronzo',   bg:'#fff7ed', br:'#f97316', c:'#9a3412', tip:'Quarto miglior percorso' }
+      { e:'🥇', l:'Miglior percorso', bg:'#fdf8e7', br:'#d4a017', c:'#6b4e0a', tip:'Miglior bilanciamento distanza / non-attivi / subpath' },
+      { e:'🥈', l:'Secondo',          bg:'#f6f8fa', br:'#8e9aa8', c:'#3f4a57', tip:'Secondo miglior percorso' },
+      { e:'🥉', l:'Terzo',            bg:'#faf1eb', br:'#a0522d', c:'#6f3617', tip:'Terzo miglior percorso' }
     ];
-    var n = Math.min(routes.length, 4);
+    var n = Math.min(routes.length, 3);
     var cards = '';
 
     for(var ci=0; ci<n; ci++) {
@@ -282438,9 +282569,11 @@ div[style*="background:#f3f4f6"] label:hover span {
       // ── Riga ZNA/ZNB: indica quale percorso è il migliore per ogni zona ──────
       var zoneRow = '';
       if (isRtn && (rtnA !== null || rtnB !== null)) {
-        var rankLabel = ci===0?'1°':ci===1?'2°':ci===2?'3°':'4°';
+        var rankLabel = ci===0?'1°':ci===1?'2°':'3°';
+        /* la coppia ZNA/ZNB e' ora la prima cella del blocco dati, non una
+           riga a parte sopra di esso */
         zoneRow =
-          '<div style="display:flex;gap:4px;margin-bottom:5px;">'
+          '<div style="display:flex;gap:4px;">'
             + (rtnA !== null
               ? '<div style="flex:1;display:flex;align-items:center;justify-content:space-between;gap:3px;'
                 +'background:#0891b2;border-radius:5px;padding:2px 6px;" '
@@ -282462,10 +282595,9 @@ div[style*="background:#f3f4f6"] label:hover span {
           + '</div>';
       }
 
-      cards += '<div style="flex:1;min-width:0;background:'+md.bg+';border:1.5px solid '+md.br+';border-radius:10px;padding:0.5rem 0.65rem;">'
+      cards += '<div class="cro-card-click" onclick="window.croVaiAlPercorso(\'uNastro_'+ridx+'\',\'uRouteBaseRow_'+ridx+'\')" title="Vai al percorso #'+(ridx+1)+' nella tabella" style="flex:1;min-width:0;background:'+md.bg+';border:1.5px solid '+md.br+';border-radius:10px;padding:0.5rem 0.65rem;">'
         + headerRow
-        + zoneRow
-        + _uBuildStatBlock(routes[ridx], ridx, ci===0)
+        + _uBuildStatBlock(routes[ridx], ridx, ci===0, zoneRow)
         + '</div>';
     }
     se('uStatsBest', cards);
@@ -282543,40 +282675,51 @@ div[style*="background:#f3f4f6"] label:hover span {
     });
     // Top 3 indici ordinati per score crescente
     const _r3order = [..._r3scores.keys()].sort((a,b)=>_r3scores[a]-_r3scores[b]);
-    const _top3Badges = {};
-    // Badges: emoji medaglia + numero percorso + numero posizione chiaro
-    var _mkBadge = function(emoji, routeN, rank, bg, border, color, ttip) {
-      return '<span title="'+ttip+'" style="display:inline-flex;align-items:center;gap:2px;'
-        +'background:'+bg+';border:1.5px solid '+border+';border-radius:6px;'
-        +'padding:1px 5px;font-size:0.68rem;font-weight:700;color:'+color+';cursor:help;white-space:nowrap;">'
-        +emoji+' <span style="font-weight:900;font-size:0.72rem;">#'+routeN+'</span>'
-        +'</span>';
-    };
-    const _medals = [
-      _mkBadge('🏆', _r3order[0]+1, 1, '#fdf4ff', '#a855f7', '#581c87',
-        '🏆 Premier — Percorso #'+(_r3order[0]+1)+': miglior bilanciamento distanza/non-attivi/subpath'),
-      _mkBadge('🥇', _r3order[1]+1, 2, '#fef3c7', '#f59e0b', '#92400e',
-        '🥇 2° Oro — Percorso #'+(_r3order[1]+1)),
-      _mkBadge('🥈', _r3order[2]+1, 3, '#f1f5f9', '#94a3b8', '#374151',
-        '🥈 3° Argento — Percorso #'+(_r3order[2]+1)),
-      _mkBadge('🥉', _r3order.length>3?(_r3order[3]+1):0, 4, '#fff7ed', '#f97316', '#c2410c',
-        '🥉 4° Bronzo — Percorso #'+(_r3order.length>3?(_r3order[3]+1):0))
-    ];
-    if(_r3order.length > 0) _top3Badges[_r3order[0]] = _medals[0];
-    if(_r3order.length > 1) _top3Badges[_r3order[1]] = _medals[1];
-    if(_r3order.length > 2) _top3Badges[_r3order[2]] = _medals[2];
-    if(_r3order.length > 3) _top3Badges[_r3order[3]] = _medals[3];
+    /* i migliori tre: la posizione la dice il nastro sopra la riga, quindi
+       qui basta sapere chi e' primo, secondo e terzo */
+    const _top3Rank = {};
+    for (var _ri = 0; _ri < 3 && _ri < _r3order.length; _ri++) {
+      _top3Rank[_r3order[_ri]] = _ri + 1;
+    }
 
     // In RTN mode: calcola ranking separato per Zona A e Zona B
     const _rtnRankA = {}, _rtnRankB = {};
+    /* quanti percorsi condividono quel tratto di zona: serve al suggerimento */
+    const _rtnQuantiA = {}, _rtnQuantiB = {};
     if (_uRtnMode) {
       const _rtnKmA = _r3.map(r => { const sp=_rtnSplitEdges(r.edges||[]); return sp.a.reduce((s,e)=>s+(Number(e.weight)||0),0); });
       const _rtnKmB = _r3.map(r => { const sp=_rtnSplitEdges(r.edges||[]); return sp.b.reduce((s,e)=>s+(Number(e.weight)||0),0); });
       const _minA = Math.min(..._rtnKmA)||0, _minB = Math.min(..._rtnKmB)||0;
       const _scA = _r3.map((r,i) => _rtnZoneScore(_rtnSplitEdges(r.edges||[]).a, _rtnKmA[i], _minA));
       const _scB = _r3.map((r,i) => _rtnZoneScore(_rtnSplitEdges(r.edges||[]).b, _rtnKmB[i], _minB));
-      [..._scA.keys()].sort((a,b)=>_scA[a]-_scA[b]).forEach((origIdx,rank)=>{ _rtnRankA[origIdx]=rank+1; });
-      [..._scB.keys()].sort((a,b)=>_scB[a]-_scB[b]).forEach((origIdx,rank)=>{ _rtnRankB[origIdx]=rank+1; });
+      /* Due percorsi che usano lo stesso identico tratto di zona devono
+         portare la stessa posizione. Prima la classifica numerava i
+         percorsi: lo stesso tratto di Zona A compariva come 1° sul primo
+         percorso, 2° sul secondo e 3° sul quarto, che non vuol dire niente.
+         Ora si raggruppa per tratto e si classificano i tratti distinti. */
+      const _firmaZona = (ed) => (ed || [])
+        .map(e => (e.id || e.arco || '') + ':' + (e.source || ''))
+        .join('>');
+      const _classificaZona = (punteggi, firme, posizioni, quanti) => {
+        const gruppi = {};
+        firme.forEach((f, i) => {
+          if (!gruppi[f]) gruppi[f] = { s: punteggi[i], idx: [] };
+          if (punteggi[i] < gruppi[f].s) gruppi[f].s = punteggi[i];
+          gruppi[f].idx.push(i);
+        });
+        Object.keys(gruppi)
+          .sort((x, y) => gruppi[x].s - gruppi[y].s)
+          .forEach((f, rank) => {
+            gruppi[f].idx.forEach(i => {
+              posizioni[i] = rank + 1;
+              quanti[i] = gruppi[f].idx.length;
+            });
+          });
+      };
+      _classificaZona(_scA, _r3.map(r => _firmaZona(_rtnSplitEdges(r.edges||[]).a)),
+                      _rtnRankA, _rtnQuantiA);
+      _classificaZona(_scB, _r3.map(r => _firmaZona(_rtnSplitEdges(r.edges||[]).b)),
+                      _rtnRankB, _rtnQuantiB);
     }
 
         const rowsHtml = _baseRoutesUNIFIED.map((route, idx) => {
@@ -282642,14 +282785,21 @@ div[style*="background:#f3f4f6"] label:hover span {
         '</div>';
       
       return (
-        '<tr id="uRouteBaseRow_' + idx + '">' +
+        (_top3Rank[idx] && typeof window.croNastro === 'function'
+          ? window.croNastro(_top3Rank[idx], idx1, 'uNastro_' + idx) : '') +
+        '<tr id="uRouteBaseRow_' + idx + '"'
+          + (_top3Rank[idx] ? ' class="cro-top cro-nastro-' + _top3Rank[idx] + '"' : '') + '>' +
           '<td style="white-space:nowrap;text-align:center;vertical-align:middle;">'
-          + (_top3Badges[idx] || '<span style="font-size:0.78rem;font-weight:600;color:#374151;">' + idx1 + '</span>')
-          + (_uRtnMode && _rtnRankA[idx] <= 4
-            ? '<div style="margin-top:2px;"><span style="display:inline-block;width:40px;height:16px;line-height:16px;text-align:center;font-size:0.62rem;font-weight:700;border-radius:3px;box-sizing:border-box;background:#0891b2;color:#fff;" title="Zona A ' + _rtnRankA[idx] + '° — Partenza→Nodo A1">ZNA ' + _rtnRankA[idx] + '°</span></div>'
+          + '<span style="font-size:0.78rem;font-weight:600;color:#374151;">' + idx1 + '</span>'
+          + (_uRtnMode && _rtnRankA[idx] <= 3
+            ? '<div style="margin-top:2px;"><span style="display:inline-block;width:40px;height:16px;line-height:16px;text-align:center;font-size:0.62rem;font-weight:700;border-radius:3px;box-sizing:border-box;background:#0891b2;color:#fff;" title="Zona A ' + _rtnRankA[idx] + '° — Partenza→Nodo A1'
+              + (_rtnQuantiA[idx] > 1 ? ', tratto condiviso da ' + _rtnQuantiA[idx] + ' percorsi' : '')
+              + '">ZNA ' + _rtnRankA[idx] + '°</span></div>'
             : '')
-          + (_uRtnMode && _rtnRankB[idx] <= 4
-            ? '<div style="margin-top:2px;"><span style="display:inline-block;width:40px;height:16px;line-height:16px;text-align:center;font-size:0.62rem;font-weight:700;border-radius:3px;box-sizing:border-box;background:#16a34a;color:#fff;" title="Zona B ' + _rtnRankB[idx] + '° — Nodo A1→Arrivo">ZNB ' + _rtnRankB[idx] + '°</span></div>'
+          + (_uRtnMode && _rtnRankB[idx] <= 3
+            ? '<div style="margin-top:2px;"><span style="display:inline-block;width:40px;height:16px;line-height:16px;text-align:center;font-size:0.62rem;font-weight:700;border-radius:3px;box-sizing:border-box;background:#16a34a;color:#fff;" title="Zona B ' + _rtnRankB[idx] + '° — Nodo A1→Arrivo'
+              + (_rtnQuantiB[idx] > 1 ? ', tratto condiviso da ' + _rtnQuantiB[idx] + ' percorsi' : '')
+              + '">ZNB ' + _rtnRankB[idx] + '°</span></div>'
             : '')
           + '</td>' +
           '<td>' + nodesCellHtml + '</td>' +
@@ -293033,13 +293183,16 @@ window.exportCorrelazione=function(){
        intestazioni e delle etichette. */
     // RC
     'routeOnlyActiveBtn':  'Se attivo, mostra solo percorsi con tutti i collegamenti ATTIVI',
-    'resetTabBtnRC':       'Reset completo del tab RC — svuota campi, tabelle e Top4 (la cronologia resta)',
+    'resetTabBtnRC':       'Reset completo del tab RC — svuota campi e tabelle (la cronologia resta)',
+    'btnResetCampiRC':     'Svuota i campi della scheda e spegne le selezioni multiple collegate (tabelle e cronologia restano)',
     // RA
     'resetTabBtnRA':       'Reset completo del tab RA (la cronologia resta)',
+    'btnResetCampiRA':     'Svuota i campi della scheda e spegne le selezioni multiple collegate (tabelle e cronologia restano)',
     // Unified
     'uRcOnlyBtn':          'Solo RC: esclude il layer RA dal grafo Unified. Utile per percorsi puramente RC',
     'uRtnModeBtn':         'RTN: abilita il routing interregionale automatico via Rete di Trasporto Nazionale. Individua i Nodi A1 di zona A e zona B e costruisce il percorso in 3 segmenti',
-    'resetTabBtnUNIFIED':  'Reset completo del tab Unificato — svuota campi, tabelle e Top4 (la cronologia resta)',
+    'resetTabBtnUNIFIED':  'Reset completo del tab Unificato — svuota campi e tabelle (la cronologia resta)',
+    'btnResetCampiUNIFIED': 'Svuota i campi della scheda e spegne le selezioni multiple collegate (tabelle e cronologia restano)',
     // Analisi Fattibilità
     'af_sede_a':           'CLLI della sede A (punto di partenza della fattibilità)',
     'af_sede_z':           'CLLI della sede Z (punto di arrivo della fattibilità)',
@@ -296432,7 +296585,9 @@ body.dark-mode .cro-dist { background: #16213e; border-color: #374151; }
   z-index: 3001;
   display: flex;
   flex-direction: column;
-  width: min(552px, 94vw);
+  /* 30% in piu' dei 552 px di prima: le note stanno strette su una colonna
+     sola e con i riquadri di esempio andavano a capo di continuo */
+  width: min(718px, 94vw);
   background: var(--white);
   box-shadow: -12px 0 40px rgba(15, 23, 42, 0.22);
   transform: translateX(100%);
@@ -301699,20 +301854,67 @@ body.intro-complete { overflow: visible !important; }
     for (var i = 0; i < el.length; i++) {
       var e = el[i];
       if (e.closest && e.closest('.top4-section')) { e.classList.remove('cro-fermo'); continue; }
-      var rif = e.tagName === 'TABLE'
-        ? (e.tHead ? e.tHead.getBoundingClientRect().top : 9999)
-        : e.getBoundingClientRect().top;
-      e.classList.toggle('cro-fermo', rif <= 157 && rif > 0);
+      if (e.tagName === 'TABLE') {
+        /* La misura va presa sulla prima cella dell'intestazione, non sul
+           <thead>: sono le celle a essere appiccicate, il <thead> resta dov'e'
+           e il suo rettangolo tornava sempre 0, quindi la condizione
+           rif > 0 non era mai vera e il riparo non si accendeva mai. */
+        var th = (e.tHead && e.tHead.rows[0]) ? e.tHead.rows[0].cells[0] : null;
+        if (!th) { e.classList.remove('cro-fermo'); continue; }
+        var quota = parseFloat(getComputedStyle(th).top) || 156;
+        var alto = th.getBoundingClientRect().top;
+        var tab = e.getBoundingClientRect();
+        /* attaccata quando ha raggiunto la sua quota e la tabella scorre
+           ancora sotto: se la tabella e' finita, il riparo non serve */
+        var attaccata = alto <= quota + 1 && tab.bottom > quota + 24;
+        e.classList.toggle('cro-fermo', attaccata);
+        /* il riparo continuo si accende insieme all'intestazione, e resta
+           spento quando c'e' la barra di export, che copre gia' lei */
+        var copri = e._croCopri;
+        if (copri) {
+          var conBarra = !!(e.closest('.tab-content') &&
+                            e.closest('.tab-content').classList.contains('cro-barra-on'));
+          copri.classList.toggle('cro-copri-on', attaccata && !conBarra);
+        }
+      } else {
+        var rif = e.getBoundingClientRect().top;
+        e.classList.toggle('cro-fermo', rif <= 157 && rif > 0);
+      }
+    }
+  }
+
+  /* Un riparo per tabella, messo subito prima della tabella dentro il suo
+     contenitore: e' un elemento solo, quindi copre anche i bordi fra le
+     colonne, che il riquadro per cella lasciava scoperti. */
+  function copriture() {
+    var tab = document.querySelectorAll('#tab-search table.route-table-v2, ' +
+      '#tab-search-unified table.route-table-v2');
+    for (var i = 0; i < tab.length; i++) {
+      var t = tab[i];
+      if (t._croCopri && t._croCopri.isConnected) continue;
+      var cont = t.parentNode;
+      if (!cont) continue;
+      var d = document.createElement('div');
+      d.className = 'cro-copri';
+      cont.insertBefore(d, t);
+      t._croCopri = d;
     }
   }
 
   function avvia() {
     sposta();
+    copriture();
     aggiorna();
     fermi();
     window.addEventListener('scroll', fermi, { passive: true });
     window.addEventListener('resize', fermi);
-    setInterval(function () { sposta(); aggiorna(); }, 700);
+    /* lo scorrimento puo' avvenire dentro un contenitore invece che sulla
+       pagina: il controllo in cattura li prende tutti */
+    document.addEventListener('scroll', fermi, true);
+    /* e una rete di sicurezza per i casi in cui non scatta nessun evento,
+       per esempio quando la tabella viene ridisegnata sotto il cursore */
+    setInterval(fermi, 400);
+    setInterval(function () { sposta(); copriture(); aggiorna(); }, 700);
     window.addEventListener('resize', aggiorna);
     if (window.ResizeObserver) {
       COPPIE.forEach(function (c) {
@@ -302022,12 +302224,23 @@ body.intro-complete { overflow: visible !important; }
 
   /* '|' e' il divisore, gli altri sono pezzi di testo da cercare nei bottoni
      della riga oppure id di bottoni da portare dentro */
+  /* '>>' spinge a destra quello che segue: Filtri Stati, Confronta e Reset
+     Campi stavano su una riga tutta loro sopra, e salgono qui in coda. */
   var ORDINE = {
-    'tab-search-ra': ['Calcola', 'Multi-Path', 'Undo', '|', 'Reset Tab'],
-    'tab-search': ['Calcola', 'Undo', '|', '#excludeDCToggleRC', '|', 'Reset Tab'],
+    'tab-search-ra': ['Calcola', 'Multi-Path', 'Undo', '|',
+                      '#btnResetCampiRA', 'Reset Tab',
+                      '>>', '#btnToggleStateFiltersRA', '#btnCompareMultiPathRA'],
+    'tab-search': ['Calcola', 'Undo', '|', '#excludeDCToggleRC', '|',
+                   '#btnResetCampiRC', 'Reset Tab',
+                   '>>', '#btnToggleStateFiltersRC', '#btnCompareRC'],
     'tab-search-unified': ['Calcola', 'Undo', '|', '#excludeDCToggleUNIFIED',
-                           '#uRcOnlyBtn', '#uRtnModeBtn', '|', 'Reset Tab']
+                           '#uRcOnlyBtn', '#uRtnModeBtn', '|',
+                           '#btnResetCampiUNIFIED', 'Reset Tab',
+                           '>>', '#btnToggleStateFiltersUNIFIED', '#btnCompareUNIFIED']
   };
+  /* Reset Campi sta accanto a Reset Tab e ne prende misura e stile: da
+     pastiglia piccola diventa bottone pieno come gli altri della riga */
+  var GRANDI = ['btnResetCampiRA', 'btnResetCampiRC', 'btnResetCampiUNIFIED'];
 
   var MODI = ['excludeDCToggleUNIFIED', 'excludeDCToggleRC', 'uRcOnlyBtn', 'uRtnModeBtn'];
   var DC = ['excludeDCToggleUNIFIED', 'excludeDCToggleRC'];
@@ -302056,6 +302269,22 @@ body.intro-complete { overflow: visible !important; }
     s.textContent = '\u2502';
     return s;
   }
+  /* Il gruppo di coda sta in un contenitore suo: cosi' quando la riga va a
+     capo i tre bottoni scendono insieme e restano allineati a destra, invece
+     di spezzarsi come farebbe un semplice spazio elastico. */
+  function coda() {
+    var d = document.createElement('div');
+    d.className = 'cro-coda-calcolo';
+    return d;
+  }
+  /* la riga sopra, rimasta senza bottoni, non deve lasciare il suo vuoto */
+  function svuota(tab) {
+    var righe = tab.querySelectorAll('.route-options-row');
+    for (var i = 0; i < righe.length; i++) {
+      if (righe[i].dataset.croOrdine === '1') continue;
+      if (!righe[i].querySelector('button')) righe[i].style.display = 'none';
+    }
+  }
 
   function ordina(tabId) {
     var riga = rigaCalcola(tabId);
@@ -302064,30 +302293,40 @@ body.intro-complete { overflow: visible !important; }
     var voci = ORDINE[tabId], pezzi = [], i;
     for (i = 0; i < voci.length; i++) {
       var v = voci[i];
-      if (v === '|') { pezzi.push('|'); continue; }
+      if (v === '|' || v === '>>') { pezzi.push(v); continue; }
       var el = (v.charAt(0) === '#') ? document.getElementById(v.slice(1)) : perTesto(riga, v);
       if (!el) return;                     /* aspetta che ci siano tutti */
       pezzi.push(el);
     }
 
     /* via i divisori vecchi, poi si riattacca tutto nell'ordine chiesto */
-    var vecchi = riga.querySelectorAll('.cro-sep-calcolo');
+    var dentro = null;
+    var vecchi = riga.querySelectorAll('.cro-sep-calcolo, .cro-coda-calcolo');
     for (i = 0; i < vecchi.length; i++) vecchi[i].parentNode.removeChild(vecchi[i]);
 
     for (i = 0; i < pezzi.length; i++) {
-      if (pezzi[i] === '|') { riga.appendChild(divisore()); continue; }
+      if (pezzi[i] === '|') { (dentro || riga).appendChild(divisore()); continue; }
+      if (pezzi[i] === '>>') { dentro = coda(); riga.appendChild(dentro); continue; }
       var b = pezzi[i];
-      b.classList.remove('btn-chip');
       if (MODI.indexOf(b.id) > -1) {
+        /* i tre interruttori diventano bottoni pieni come quelli di calcolo */
+        b.classList.remove('btn-chip');
         b.classList.add('btn', 'btn-secondary', 'cro-modo-calcolo');
         ['padding', 'font-size', 'border-radius'].forEach(function (k) {
           b.style.removeProperty(k);
         });
+      } else if (GRANDI.indexOf(b.id) > -1) {
+        b.classList.remove('btn-chip');
+        b.classList.add('btn', 'btn-secondary');
+        ['padding', 'font-size', 'border-radius'].forEach(function (k) {
+          b.style.removeProperty(k);
+        });
       }
-      riga.appendChild(b);
+      (dentro || riga).appendChild(b);
     }
 
     riga.dataset.croOrdine = '1';
+    svuota(document.getElementById(tabId));
   }
 
   /* ------------------------------------------------------ acceso e spento */
@@ -303681,7 +303920,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V60.09.18';
+  var REVISIONE = 'V60.09.25';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
@@ -305681,6 +305920,230 @@ input.cro-ph-fit::placeholder { font-size: var(--cro-ph-size) !important; }
 })();
 </script>
 
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- NASTRI DEI MIGLIORI PERCORSI                                                -->
+<!-- Le tabelle Top 4 erano un secondo elenco sopra ai risultati: chi guardava   -->
+<!-- la tabella vera non le vedeva, e chi le vedeva perdeva il filo dell'ordine. -->
+<!-- Qui i migliori tre percorsi restano al loro posto nell'elenco e prendono    -->
+<!-- un nastro sopra, con la riga tinta dello stesso colore e una linguetta che  -->
+<!-- unisce le due righe. Oro primo, argento secondo, bronzo terzo.              -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<style id="cro-nastri-css">
+/* tinte: l'oro e' giallo pieno, il bronzo va sul rosso, cosi' il primo e il
+   terzo non si confondono quando scendono alle tinte leggere della riga */
+.cro-nastro-1 { --cro-tinta:#d4a017; --cro-testo:#6b4e0a;
+                --cro-sfumatura:linear-gradient(100deg,#f3dc95 0%,#fbf0cd 38%,#f0d67f 100%);
+                --cro-riga:#fdf8e7; }
+.cro-nastro-2 { --cro-tinta:#8e9aa8; --cro-testo:#3f4a57;
+                --cro-sfumatura:linear-gradient(100deg,#dfe5ea 0%,#f2f5f8 38%,#dbe2e8 100%);
+                --cro-riga:#f6f8fa; }
+.cro-nastro-3 { --cro-tinta:#a0522d; --cro-testo:#6f3617;
+                --cro-sfumatura:linear-gradient(100deg,#e6cbba 0%,#f4e2d6 38%,#e0c1ac 100%);
+                --cro-riga:#faf1eb; }
+
+/* il nastro */
+tr.cro-nastro > td {
+  padding: 0 12px !important;
+  height: 23px;
+  /* la cella con colspan finisce per essere anche l'ultima della riga, e
+     l'ultima colonna e' allineata a destra: qui il testo va a sinistra */
+  text-align: left !important;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border-bottom: 0 !important;
+  position: relative;
+  background: var(--cro-sfumatura) !important;
+  color: var(--cro-testo);
+  /* l'ombra interna da' risalto all'arrotondamento; il filo chiaro in cima
+     alza il bordo */
+  box-shadow: inset 0 3px 5px -2px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.55);
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+}
+/* la riga del percorso premiato */
+tr.cro-top > td {
+  position: relative;
+  background: var(--cro-riga) !important;
+  box-shadow: inset 0 -3px 5px -2px rgba(0,0,0,0.14);
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+/* la linguetta: un elemento a se', cosi' si puo' arrotondare in alto.
+   Con l'ombra interna non si poteva. */
+tr.cro-nastro > td:first-child::before,
+tr.cro-top > td:first-child::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 6px;
+  background: var(--cro-tinta);
+  /* zero e non uno: con z-index positivo la linguetta finiva sopra
+     l'intestazione appiccicata invece che scorrerle sotto */
+  z-index: 0;
+}
+tr.cro-nastro > td:first-child::before { border-top-left-radius: 7px; }
+tr.cro-top > td:first-child::before { border-bottom-left-radius: 7px; }
+
+/* il riquadro di dettaglio aperto con Espandi non deve chiudere il blocco */
+tr.cro-top.cro-top-aperto > td {
+  box-shadow: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.cro-nastro-testo { display: inline-flex; align-items: center; gap: 5px; }
+.cro-nastro-num {
+  font-weight: 800;
+  background: rgba(255,255,255,0.55);
+  border-radius: 4px;
+  padding: 0 5px;
+}
+
+/* il lampeggio arriva dalla card: si accende il solo nastro, non tutta la riga */
+@keyframes cro-lampeggio {
+  0%, 100% { filter: none; }
+  25%, 75% { filter: brightness(1.18) saturate(1.5); }
+  50%      { filter: brightness(0.92) saturate(1.7); }
+}
+tr.cro-lampeggia > td {
+  animation: cro-lampeggio 0.55s ease-in-out 3;
+}
+.cro-card-click { cursor: pointer; transition: box-shadow 0.15s, border-color 0.15s; }
+.cro-card-click:hover { box-shadow: 0 2px 10px rgba(38,45,53,0.16); }
+
+body.dark-mode tr.cro-nastro > td { box-shadow: inset 0 3px 5px -2px rgba(0,0,0,0.5); }
+body.dark-mode tr.cro-top > td { background: rgba(255,255,255,0.05) !important; }
+@media (prefers-reduced-motion: reduce) {
+  tr.cro-lampeggia > td { animation: none; }
+}
+</style>
+<script>
+(function () {
+  'use strict';
+
+  var ETICHETTE = {
+    1: { emoji: '\uD83E\uDD47', testo: 'Miglior percorso complessivo' },
+    2: { emoji: '\uD83E\uDD48', testo: 'Secondo miglior percorso' },
+    3: { emoji: '\uD83E\uDD49', testo: 'Terzo miglior percorso' }
+  };
+
+  /* Il nastro che precede la riga del percorso premiato. rank va da 1 a 3,
+     numero e' il #N del percorso nell'elenco, id lega il nastro alla card. */
+  window.croNastro = function (rank, numero, id) {
+    var e = ETICHETTE[rank];
+    if (!e) return '';
+    /* il numero del percorso non si ripete nel nastro: sta gia' nella riga
+       subito sotto, nella colonna # */
+    return '<tr class="cro-nastro cro-nastro-' + rank + '"' +
+      (id ? ' id="' + id + '"' : '') + '>' +
+      '<td colspan="6"><span class="cro-nastro-testo">' + e.emoji + ' ' + e.testo +
+      '</span></td></tr>';
+  };
+
+  /* Classi da mettere sulla riga del percorso premiato */
+  window.croClassiRiga = function (rank) {
+    return rank ? ' class="cro-top cro-nastro-' + rank + '"' : '';
+  };
+
+  /* Dalla card al percorso: porta la riga sotto gli occhi e fa lampeggiare il
+     solo nastro. La riga intera sarebbe troppo. */
+  window.croVaiAlPercorso = function (idNastro, idRiga) {
+    var nastro = document.getElementById(idNastro);
+    var riga = document.getElementById(idRiga);
+    var bersaglio = nastro || riga;
+    if (!bersaglio) return;
+    try {
+      bersaglio.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (e) {
+      bersaglio.scrollIntoView();
+    }
+    if (!nastro) return;
+    nastro.classList.remove('cro-lampeggia');
+    /* il reflow serve a far ripartire l'animazione se si clicca due volte */
+    void nastro.offsetWidth;
+    nastro.classList.add('cro-lampeggia');
+    setTimeout(function () { nastro.classList.remove('cro-lampeggia'); }, 2200);
+  };
+})();
+</script>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- RIPARO CONTINUO SOPRA L'INTESTAZIONE DELLE TABELLE PERCORSO                 -->
+<!-- Con la barra di export accesa sotto l'intestazione non passa niente,        -->
+<!-- perche' la barra e' un elemento unico e opaco. Senza barra il riparo era    -->
+<!-- un riquadro dentro ogni cella: copriva lo sfondo ma non i bordi fra una     -->
+<!-- colonna e l'altra, dove si vedevano passare le righe e la linguetta dei     -->
+<!-- nastri. Qui il riparo diventa un elemento solo, largo quanto la tabella.    -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<style id="cro-copri-css">
+.cro-copri {
+  display: block;
+  height: 0;
+  position: sticky;
+  /* stessa quota dell'intestazione: la variabile la imposta lo script del tab */
+  top: var(--cro-top-testata, 156px);
+  /* sopra l'intestazione (30) e sopra la barra di export (40) */
+  z-index: 45;
+  pointer-events: none;
+}
+.cro-copri::before {
+  content: '';
+  position: absolute;
+  /* sborda di qualche pixel ai lati per coprire anche i bordi della tabella */
+  left: -6px;
+  right: -6px;
+  bottom: 0;
+  height: 18px;
+  background: var(--white, #f7f9fc);
+  display: none;
+}
+.cro-copri.cro-copri-on::before { display: block; }
+body.dark-mode .cro-copri::before { background: #111827; }
+
+/* il riparo per cella non serve piu': lo fa l'elemento unico */
+#tab-search:not(.cro-barra-on) table.route-table-v2.cro-fermo > thead > tr > th::before,
+#tab-search-unified:not(.cro-barra-on) table.route-table-v2.cro-fermo > thead > tr > th::before {
+  content: none;
+}
+</style>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- RIGA DI CALCOLO: CODA ALLINEATA A DESTRA                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<style id="cro-riga-calcolo-coda">
+/* il gruppo di coda e' spinto a destra e resta unito quando la riga va a capo */
+.cro-coda-calcolo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+/* i bottoni della coda restano piccoli, allineati fra loro */
+#tab-search-ra .route-options-row .btn-chip,
+#tab-search .route-options-row .btn-chip,
+#tab-search-unified .route-options-row .btn-chip {
+  align-self: center;
+  margin: 0;
+}
+</style>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- UNIFICATO: SPAZIO SOPRA INFO ZONA UGUALE A RA E RC                          -->
+<!-- Le note del tab sono nascoste in tutti e tre i tab, ma nell'Unificato       -->
+<!-- stanno dentro un altro riquadro, che resta figlio della griglia: alto zero  -->
+<!-- ma con lo spazio di griglia da 24 px, che si sommava ai 24 sotto il         -->
+<!-- pannello. Nascondendo anche il contenitore lo spazio torna uguale.          -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<style id="cro-spazio-infozona">
+#tab-search-unified .route-layout > .route-notes-panel { display: none; }
+</style>
 
 </body>
 </html>
