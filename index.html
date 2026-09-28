@@ -104,6 +104,16 @@
 ║     veniva salvata. Ora i due interruttori fanno parte dello scatto,             ║
 ║     entrano nel controllo dei doppioni, tornano al loro posto quando si          ║
 ║     ripesca la ricerca e si vedono nel dettaglio della cronologia                ║
+║   • NOTE E REGOLE RIORDINATE: le voci seguivano l'ordine in cui erano state      ║
+║     scritte nel tempo. Ora seguono l'ordine in cui si usa il tab: da dove si     ║
+║     parte, che cosa calcola, le centrali e la rete, i vincoli, i filtri e        ║
+║     gli interruttori, cosa si fa con i risultati, l'export, e in fondo i         ║
+║     comandi di servizio. Tolto anche un doppione della voce Undo, presente       ║
+║     due volte in RA e in RC: le voci scendono a 23 nella RA e 29 nel RC          ║
+║   • NOTE E REGOLE COMPLETATE nei tre tab: mancavano il modello KMZ, i due        ║
+║     bottoni Maps, le caselle Rif. Std e Rif. Div, Pulisci Tabella, piu' le       ║
+║     card Analisi Percorsi nel RC e Verifica Div nell'Unificato. Le voci          ║
+║     passano a 24 nella RA, 29 nel RC e 37 nell'Unificato                         ║
 ║   • VIA LE TABELLE TOP 4 da RC e Unificato. Erano un secondo elenco sopra        ║
 ║     ai risultati: chi guardava la tabella vera non le vedeva, e chi le           ║
 ║     vedeva perdeva il filo dell'ordine. I migliori percorsi restano ora al       ║
@@ -22556,6 +22566,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧭 Note e regole riordinate</strong>: le voci seguivano l'ordine in cui erano state scritte nel tempo; ora seguono l'ordine in cui si usa il tab, da dove si parte fino ai comandi di servizio. Tolto anche un doppione della voce <em>Undo</em>, che compariva due volte in RA e in RC</li>
+    <li><strong>📘 Note e regole completate</strong>: nei tre tab mancavano il <em>modello KMZ</em>, i bottoni <em>Maps</em>, le caselle <em>Rif. Std</em> e <em>Rif. Div</em>, <em>Pulisci Tabella</em>, più le card <em>Analisi Percorsi</em> nel RC e <em>Verifica Div</em> nell'Unificato</li>
+    <li><strong>📐 Impaginazione delle card</strong>: nell'Unificato la prima riga porta a sinistra <em>ZNA</em> e <em>ZNB</em> e a destra la <em>Distanza</em>, poi le coppie Collegamenti e Subpath, Nodi / Centrali e Cambi Rete, Rete RA e Rete RC, Attivi e NON Attivi. Senza RTN la distanza prende tutta la riga. Nel tab RC la distanza sta da sola in cima. <em>Nodi</em> diventa <em>Nodi / Centrali</em> in tutti e due i tab</li>
     <li><strong>📌 Riparo dell'intestazione</strong>: era un riquadro disegnato dentro ogni cella, quindi copriva lo sfondo ma non i bordi fra una colonna e l'altra, dove si vedevano passare le righe e la linguetta dei nastri. Ora è un elemento solo, largo quanto la tabella: sotto l'intestazione non passa più niente, come già succedeva con la barra di export accesa</li>
     <li><strong>📌 Intestazione delle tabelle</strong>: nei tab RC e Unificato, scorrendo i risultati, restavano scoperti quattordici pixel sotto la navigazione e le righe si vedevano passare di là. Il riparo esisteva ma non si accendeva mai, perché la misura veniva presa sul <code>&lt;thead&gt;</code> invece che sulle celle appiccicate. Con la barra di export accesa il problema non si vedeva, perché era la barra a coprire quello spazio</li>
     <li><strong>📍 ZNA e ZNB per tratto, non per percorso</strong>: lo stesso identico tratto di Zona A compariva come 1° su un percorso, 2° su un altro e 3° su un terzo. Ora si classificano i tratti distinti: i percorsi che condividono un tratto portano la stessa posizione, e il suggerimento dice da quanti percorsi è condiviso</li>
@@ -23161,96 +23174,31 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 <div class="route-help-panel">
   <p><strong>Note su Ricerca Percorso RC:</strong></p>
   <ul>
-    <li><p style="margin-top: 0.4rem;">
+                  <li><p style="margin-top: 0.4rem;">
       <strong style="color: #004C99;">📍 Posizione Cliente</strong>: inserisci l’indirizzo completo oppure le coordinate (Lat/Lon). Con
       <strong>“🔍 Geocodifica Indirizzo”</strong> il sistema converte automaticamente l’indirizzo in coordinate
       geografiche utilizzabili per la ricerca.</p>
     </li>
-
-    <li><p style="margin-top: 0.9rem;">
+                  <li><p style="margin-top: 0.9rem;">
       <strong style="color: #004C99;">🔎 Trova Centrale Vicina</strong>: calcola la centrale RC più vicina alla posizione cliente tramite
       algoritmo di <strong>Haversine</strong> e la imposta automaticamente come
       <strong>“🚀 Centrale di Partenza (Percorso Std)”</strong>.</p>
     </li>
-
-    <li><p style="margin-top: 0.9rem;">
+                  <li><p style="margin-top: 0.9rem;">
       <strong style="color: #004C99;">🥇 Percorso Std</strong>: utilizza <strong>Partenza 1 / Arrivo 1</strong> e restituisce fino a
       <strong>30 soluzioni</strong> ordinate per distanza crescente. Questi rappresentano i percorsi standard
       primari (candidati principali).</p>
     </li>
-
-    <li><p style="margin-top: 0.9rem;">
+                  <li><p style="margin-top: 0.9rem;">
       <strong style="color: #004C99;">🥈 Percorsi Div</strong>: genera percorsi diversificati usando <strong>Partenza 2 / Arrivo 2</strong>
       se valorizzati; in caso contrario usa i nodi dello Std. Serve per ottenere alternative e migliorare la
       <strong>ridondanza</strong> del routing.</p>
     </li>
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #004C99;">✅ Centrale Obbligatoria</strong>: forza il transito attraverso la centrale indicata.
-      <strong>“➕ Sel. Multipla”</strong> apre il <strong>pannello vincoli</strong> per imporre più centrali. La selezione singola già presente viene mantenuta come prima voce multipla.</p>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo.</p>
     </li>
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #004C99;">🚫 Centrale da Evitare</strong>: esclude la centrale dal routing (inclusi nodi T3 di transito, filtro post-espansione).
-      <strong>“➕ Sel. Multipla”</strong> per escludere più centrali tramite pannello vincoli.</p>
-    </li>
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #004C99;">✅ Collegamento Obbligatorio (SubPath/Arco/Ramo)</strong>: forza il passaggio su specifici collegamenti/SubPath/archi.
-      <strong>"➕ Sel. Multipla"</strong> per imporre più collegamenti tramite pannello. Match su IdCollegamento, Nome_SubPath, ID_ARCO.</p>
-    </li>
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #004C99;">🚫 Collegamento da Evitare (SubPath/Arco/Ramo)</strong>: esclude collegamenti/SubPath/archi dal routing.
-      <strong>"➕ Sel. Multipla"</strong> per escludere più collegamenti tramite pannello. Autocomplete con ricerca parziale su tutti i campi.</p>
-    </li>
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #6d28d9;">📋 Pannello Vincoli Routing</strong>: si apre automaticamente (in alto a destra) alla prima attivazione multipla.
-      Riunisce tutte le sezioni attive con chip rimovibili: <strong>✕</strong> singola, <strong>🗑 Svuota</strong> sezione, <strong>🗑 Tutto</strong> tutte.
-      <strong>⬡</strong> per trascinare, <strong>🔓/🔒</strong> per bloccare. La <strong>×</strong> chiude senza cancellare. In modalità singola non compare.</p>
-    </li>
-
-<!-- <li><p style="margin-top: 0.15rem;">
-      <strong style="color: #004C99;">🟢 Solo tratte attive</strong>: se abilitato, considera esclusivamente collegamenti in stato
-      <strong>ATTIVO</strong>, ignorando <strong>IN COSTRUZIONE</strong> e <strong>PROGETTATA</strong>.</p>
-    </li>  -->
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #004C99;">⚙️ Filtri avanzati</strong>: limita i risultati per numero di hop, distanza (km) e numero massimo
-      di percorsi visualizzati, migliorando prestazioni e leggibilità della ricerca.</p>
-    </li>
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #004C99;">↩️ Undo (Ultime 20)</strong>: ripristina una delle ultime <strong>20 ricerche</strong> salvate con
-      parametri e selezioni (centrali, filtri, selezione multipla). Il/i bottoni
-      <strong>“🔁 Reset Campi”</strong> non cancellano la cronologia.</p>
-    </li>
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #004C99;">🔽 Filtri Stati</strong>: filtra i percorsi in base allo stato dei collegamenti
-      (<strong>ATTIVO</strong>, <strong>NON ATTIVO</strong>, <strong>IN ATTIVAZIONE</strong>,
-      <strong>IN VARIAZIONE</strong>, <strong>IN REINSTRADAMENTO</strong>, <strong>MISTO (ATTIVO+IN ATTIVAZIONE)</strong>). Applicazione immediata ai risultati. <span style="display:block;margin-top:0.25rem;color:#0e7490;">ℹ️ Le caselle non sono un elenco fisso: vengono costruite leggendo gli stati presenti nel database in uso, gli stessi del tab <strong>Database</strong>. Gli stati previsti ma assenti dai dati non compaiono, quelli nuovi vengono aggiunti.</span></p>
-    </li>
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #d1008f;">🏢 Bottone [DC]</strong>: esclude/include le <strong>17 centrali Data Center</strong> (IDC/housing) dal routing.
-      Di default i DC sono <strong>esclusi</strong> (bottone magenta attivo). Clicca per abilitare il passaggio attraverso i Data Center.</p>
-    </li>
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #004C99;">⚖️ Confronta</strong>: attiva il comparatore fino a <strong>3 percorsi affiancati</strong>, mostrando
-      distanza, hop, collegamenti e <strong>% overlap</strong>, con evidenziazione automatica del migliore e del
-      peggiore per ogni metrica.</p>
-    </li>
-
-    
-
-    <li><p style="margin-top: 0.9rem;">
-      <strong style="color: #059669;">🌍 Mappa NAT</strong>: esporta i percorsi calcolati (Std e Div) verso <strong>NAT Italia</strong> per la visualizzazione geografica. Polyline colorate con marker per ogni centrale e tooltip dettagliati.</p>
-    </li>
-
-    <li><p style="margin-top: 0.9rem;">
+                  <li><strong style="color: #004C99;">📊 Analisi Percorsi</strong>: sopra la tabella, tre card con i migliori percorsi: oro il primo, argento il secondo, bronzo il terzo, gli stessi colori del nastro che segnala la riga nella tabella. Ogni card è cliccabile e porta alla riga del percorso, facendo lampeggiare il nastro. Dentro la card: distanza, collegamenti e subpath, nodi, attivi e non attivi.</li>
+                  <li><p style="margin-top: 0.9rem;">
       <strong style="color: #004C99;">🏢 Filtro POP (NODO A1)</strong>: il bottone <strong>[POP]</strong> nel campo
       <strong>🏁 Centrale di Arrivo</strong> limita le destinazioni alle <strong>37 centrali NODO A1</strong>
       (POP nazionali). Quando attivo, ogni voce nel dropdown mostra una <strong>seconda riga</strong>
@@ -23263,31 +23211,80 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         [A1_DIV]
       </span>.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong>🏢 Area, zona e regione delle centrali</strong>: ogni voce delle tendine porta una seconda riga con area, zona e regione lette dal database, e la stessa riga resta sotto il nome e il CLLI dentro la casella. I Nodi A1 sono in blu, quelli di sola diversificazione in ambra con <code>NO PE</code>, i Data Center in rosa. L’area segue la tabella dei 37 Nodi A1 della guida, quindi il nord è diviso in NORD OVEST e NORD EST.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #004C99;">✅ Centrale Obbligatoria</strong>: forza il transito attraverso la centrale indicata.
+      <strong>“➕ Sel. Multipla”</strong> apre il <strong>pannello vincoli</strong> per imporre più centrali. La selezione singola già presente viene mantenuta come prima voce multipla.</p>
+    </li>
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #004C99;">🚫 Centrale da Evitare</strong>: esclude la centrale dal routing (inclusi nodi T3 di transito, filtro post-espansione).
+      <strong>“➕ Sel. Multipla”</strong> per escludere più centrali tramite pannello vincoli.</p>
+    </li>
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #004C99;">✅ Collegamento Obbligatorio (SubPath/Arco/Ramo)</strong>: forza il passaggio su specifici collegamenti/SubPath/archi.
+      <strong>"➕ Sel. Multipla"</strong> per imporre più collegamenti tramite pannello. Match su IdCollegamento, Nome_SubPath, ID_ARCO.</p>
+    </li>
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #004C99;">🚫 Collegamento da Evitare (SubPath/Arco/Ramo)</strong>: esclude collegamenti/SubPath/archi dal routing.
+      <strong>"➕ Sel. Multipla"</strong> per escludere più collegamenti tramite pannello. Autocomplete con ricerca parziale su tutti i campi.</p>
+    </li>
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #6d28d9;">📋 Pannello Vincoli Routing</strong>: si apre automaticamente (in alto a destra) alla prima attivazione multipla.
+      Riunisce tutte le sezioni attive con chip rimovibili: <strong>✕</strong> singola, <strong>🗑 Svuota</strong> sezione, <strong>🗑 Tutto</strong> tutte.
+      <strong>⬡</strong> per trascinare, <strong>🔓/🔒</strong> per bloccare. La <strong>×</strong> chiude senza cancellare. In modalità singola non compare.</p>
+    </li>
+                  <li><p style="margin-top: 0.15rem;">
+      <strong style="color: #004C99;">🟢 Solo tratte attive</strong>: se abilitato, considera esclusivamente collegamenti in stato
+      <strong>ATTIVO</strong>, ignorando <strong>IN COSTRUZIONE</strong> e <strong>PROGETTATA</strong>.</p>
+    </li>
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #004C99;">🔽 Filtri Stati</strong>: filtra i percorsi in base allo stato dei collegamenti
+      (<strong>ATTIVO</strong>, <strong>NON ATTIVO</strong>, <strong>IN ATTIVAZIONE</strong>,
+      <strong>IN VARIAZIONE</strong>, <strong>IN REINSTRADAMENTO</strong>, <strong>MISTO (ATTIVO+IN ATTIVAZIONE)</strong>). Applicazione immediata ai risultati. <span style="display:block;margin-top:0.25rem;color:#0e7490;">ℹ️ Le caselle non sono un elenco fisso: vengono costruite leggendo gli stati presenti nel database in uso, gli stessi del tab <strong>Database</strong>. Gli stati previsti ma assenti dai dati non compaiono, quelli nuovi vengono aggiunti.</span></p>
+    </li>
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #004C99;">⚙️ Filtri avanzati</strong>: limita i risultati per numero di hop, distanza (km) e numero massimo
+      di percorsi visualizzati, migliorando prestazioni e leggibilità della ricerca.</p>
+    </li>
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #d1008f;">🏢 Bottone [DC]</strong>: esclude/include le <strong>17 centrali Data Center</strong> (IDC/housing) dal routing.
+      Di default i DC sono <strong>esclusi</strong> (bottone magenta attivo). Clicca per abilitare il passaggio attraverso i Data Center.</p>
+    </li>
+                  <li><p style="margin-top: 1rem;">
     <strong>➕ Espandi</strong>: apre sotto il percorso il dettaglio dei collegamenti, uno per riga, con le due centrali, l’identificativo, la distanza del singolo tratto e lo stato. C’è sui percorsi Std, sui Div e sui Div dei Div, e nella Top 4.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong>🗺️ Etichette sulla mappa</strong>: passando il mouse su una centrale compaiono nome e CLLI su due righe, senza dover cliccare. Sui collegamenti l’etichetta segue il tratto sotto il mouse e mostra le due centrali, il SubPath per la RC o l’IdCollegamento per la RA e la distanza di quel tratto.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #004C99;">⚖️ Confronta</strong>: attiva il comparatore fino a <strong>3 percorsi affiancati</strong>, mostrando
+      distanza, hop, collegamenti e <strong>% overlap</strong>, con evidenziazione automatica del migliore e del
+      peggiore per ogni metrica.</p>
+    </li>
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #059669;">🌍 Mappa NAT</strong>: esporta i percorsi calcolati (Std e Div) verso <strong>NAT Italia</strong> per la visualizzazione geografica. Polyline colorate con marker per ogni centrale e tooltip dettagliati.</p>
+    </li>
+                  <li><strong style="color: #004C99;">🗺️ Maps</strong>: apre la <strong>Mappa Percorsi</strong> dentro il tool con i percorsi già disegnati. I due bottoni portano cose diverse: quello sotto <em>Percorsi Std</em> porta i soli percorsi standard, quello sotto <em>Percorsi Std + Div</em> porta anche i diversificati. Gli sfondi della mappa si scelgono dal riquadro in basso a sinistra.</li>
+                  <li><p style="margin-top: 1rem;">
     <strong>📄 Export TXT</strong>: il file è uguale in tutti i tab e in tutte le combinazioni, Std, Div e Std + Div. Per ogni percorso trovi un riquadro di testa con distanza e collegamenti, l’elenco delle centrali, il riquadro dei collegamenti con numero, distanza per rete e mix, le righe di dettaglio con distanza e stato, il riquadro degli identificativi separati da virgola e da più, poi <em>Routing C-FOS</em>, <em>Routing OTS</em>, <em>Verifica e Info NNI</em> e l’elenco delle C-FOS da allegare alla richiesta dei file KMZ. Fra un percorso e il successivo c’è una doppia riga di separazione. Il nome del file segue sempre lo stesso schema: <code>[SdF] CRO RC Std • partenza - arrivo [data]</code>, con la sezione della fattibilità davanti quando è compilata.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong>📊 Export XLSX</strong>: dalla stessa barra si ottiene un foglio di calcolo con sei schede. <em>Riepilogo</em> ha una riga per percorso con i colori della tabella a video, la distanza divisa per tratta e, con i costi attivi, la stima e il dettaglio. <em>Note</em> raccoglie Nota Lavorante, Nota File Condiviso, <em>Routing Subpath</em> e Note Costi, già pronte da incollare in pratica. Seguono <em>Dati Servizio</em>, <em>Centrali</em>, <em>Collegamenti</em> e <em>KMZ</em>. In <em>Routing Subpath</em> la sequenza è scritta nei modi in uso: con la virgola e con il più, e in più con i separatori di rete quando il percorso attraversa il backbone. Per la RA compare il SubPath, non l’IdCollegamento intero.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><strong style="color: #004C99;">📄 Modello KMZ</strong>: nella barra di export l’interruttore <strong>KMZ</strong>, sotto la scritta <em>Modello</em>, fa scaricare insieme al file anche il modello <strong>Tracciati KMZ per archi DWDM</strong> già compilato: una riga per ogni collegamento dei percorsi selezionati, con i percorsi separati fra loro. Il nome del file riporta il riferimento di fattibilità scritto in <strong>Rif. Std</strong> o <strong>Rif. Div</strong>, se c’è, e la data. L’interruttore vale per quell’export soltanto: non modifica il TXT né l’XLSX, si aggiunge.</li>
+                  <li><strong style="color: #004C99;">📋 Rif. Std e Rif. Div</strong>: due caselle nella barra di export dove scrivere il riferimento della fattibilità, per esempio <em>SDF-2024-001</em>. Non entrano nel calcolo: finiscono nel nome dei file esportati e nel modello KMZ, così i file arrivano già riconoscibili a chi li riceve.</li>
+                  <li><strong style="color: #004C99;">🧹 Pulisci Tabella</strong>: svuota la tabella dei risultati e lascia stare i campi, al contrario di <strong>Reset Campi</strong> che svuota i campi e lascia la tabella. <strong>Reset Tab</strong> fa tutte e due le cose.</li>
+                  <li><p style="margin-top: 1rem;">
     <strong>🧼 Reset Campi e Reset Tab</strong>: <em>Reset Campi</em> svuota le caselle della scheda in cui si trova e spegne le selezioni multiple collegate. <em>Reset Tab</em> riporta il tab allo stato iniziale: campi, filtri per stato e per sede, selezioni multiple, pannello vincoli. Nessuno dei due tocca la cronologia delle ultime ricerche, che si cancella solo dal bottone dedicato.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
-    <strong>↩️ Undo (Ultime 20)</strong>: tiene le ultime venti ricerche di questo tab e le ripropone com’erano, centrali e vincoli compresi. Serve per tornare su una fattibilità già calcolata senza reimpostare tutto a mano.</p>
+                  <li><p style="margin-top: 0.9rem;">
+      <strong style="color: #004C99;">↩️ Undo (Ultime 20)</strong>: ripristina una delle ultime <strong>20 ricerche</strong> salvate con
+      parametri e selezioni (centrali, filtri, selezione multipla). Il/i bottoni
+      <strong>“🔁 Reset Campi”</strong> non cancellano la cronologia.</p>
     </li>
-    <li><p style="margin-top: 0.25rem;">
-    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo.</p>
-    </li>
-  </ul>
+                </ul>
 
   <!--    <p style="margin-top: 0.3rem; margin-bottom: 0rem; padding: 0.75rem; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px; font-size: 0.8rem;">
        <strong>💡 In Sviluppo:</strong> a breve ci sarà l'implementazione di un processo automatizzato che, dato un indirizzo cliente, calcolerà il percorso ottimale dalla <strong>Centrale RC più vicina</strong> al <strong>NODO A1</strong> ad essa connesso, tramite geolocalizzazione.  
@@ -24689,38 +24686,38 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="route-help-panel">
               <p><strong>Note su Ricerca Percorso RA:</strong></p>
 <ul>
-  <li><p style="margin-top: 0.4rem;">
+                  <li><p style="margin-top: 0.4rem;">
     <strong style="color: #004C99;">📍 Posizione Cliente</strong>: inserisci l’indirizzo completo oppure le coordinate (Lat/Lon). Con
     <strong>“🔍 Geocodifica Indirizzo”</strong> il sistema converte automaticamente l’indirizzo in coordinate
     geografiche utilizzabili per il calcolo dei percorsi.</p>
   </li>
-
-  <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong style="color: #004C99;">🔎 Trova Centrale Vicina</strong>: calcola la centrale RA più vicina (Tipo 1 o Tipo 2) alla posizione
     cliente tramite algoritmo di <strong>Haversine</strong> e la imposta automaticamente come
     <strong>“🚀 Centrale di Partenza (Percorso Std)”</strong>.</p>
   </li>
-
-  <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong style="color: #004C99;">🥇 Percorso Std</strong>: utilizza <strong>Partenza 1 → Arrivo 1</strong> e restituisce il percorso
     ottimale ordinato per distanza. La centrale di partenza può essere <strong>Tipo 1 o Tipo 2</strong>, mentre
     la centrale di arrivo è sempre <strong>Tipo 1 (NODO A1)</strong>.</p>
   </li>
-
-  <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong style="color: #004C99;">🥈 Percorsi Div</strong>: calcola un percorso alternativo e diversificato verso un’altra centrale
     <strong>Tipo 1 (NODO A1)</strong> sullo stesso arco. Disponibile solo con arrivo Tipo 1, fornisce
     <strong>ridondanza e resilienza</strong> per scenari di disaster recovery.</p>
   </li>
-
-  <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
+    <strong style="color: #7c3aed;">🔀 Multi-Path</strong>: funzione avanzata che calcola
+    <strong>tutti i percorsi Std</strong> su <strong>tutti gli archi compatibili</strong> tra Partenza e Arrivo.
+    Utile per confrontare rapidamente più soluzioni e individuare l’opzione più efficiente.</p>
+  </li>
+                  <li><p style="margin-top: 1rem;">
     <strong style="color: #004C99;">🏢 Tipi Sede</strong>:
     <strong>Tipo 1</strong> = HUB RA+RC (NODO A1, interconnesso con Rete Core) •
     <strong>Tipo 2</strong> = HUB RA (aggregazione verso Tipo 1) •
     <strong>Tipo 3</strong> = Passaggio/transito, non visualizzato nei percorsi ma attraversato dai collegamenti.</p>
   </li>
-
-  <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong style="color: #004C99;">🏢 Filtro POP (NODO A1)</strong>: il bottone <strong>[POP]</strong> limita la destinazione alle
     <strong>37 centrali NODO A1</strong>, principali nodi di interconnessione regionale con la
     <strong>rete Core RC Italia</strong>. Quando attivo, ogni voce nel dropdown mostra una <strong>seconda riga</strong>
@@ -24731,73 +24728,59 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     Le centrali <strong>A1_DIV</strong> (solo diversificazione RTN, no PE) sono segnalate con
     <span style="font-size:0.8rem;color:#0066CC;background:#eff6ff;border-radius:3px;padding:1px 5px;">[A1_DIV]</span>.</p>
   </li>
-
-  <li><p style="margin-top: 0.5rem;">
+                  <li><p style="margin-top: 0.5rem;">
     <strong style="color: #004C99;">📍 Archi Multipli</strong>: se una centrale appartiene a più archi, viene mostrato
     <strong>[Premi Qui]</strong> per visualizzare l’elenco completo. I filtri <strong>Arco</strong> e
     <strong>Tipo Sede</strong> aggiornano dinamicamente le centrali disponibili negli autocomplete.</p>
   </li>
-
-  <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong style="color: #004C99;">⚠️ Selezione Arco Obbligatoria</strong>: quando Partenza e Arrivo risultano compatibili con più archi,
     è necessario selezionare <strong>un solo arco</strong> nel
     <strong>“🔍 Filtro per Arco (Checkbox)”</strong> prima di eseguire il calcolo, per evitare ambiguità di
     percorso.</p>
   </li>
-
-  <li><p style="margin-top: 1rem;">
-    <strong style="color: #7c3aed;">🔀 Multi-Path</strong>: funzione avanzata che calcola
-    <strong>tutti i percorsi Std</strong> su <strong>tutti gli archi compatibili</strong> tra Partenza e Arrivo.
-    Utile per confrontare rapidamente più soluzioni e individuare l’opzione più efficiente.</p>
-  </li>
-
-  <li><p style="margin-top: 1rem;">
-    <strong style="color: #004C99;">↩️ Undo (Ultime 20)</strong>: consente di ripristinare una delle ultime <strong>20 ricerche</strong>
-    effettuate. Tutti i parametri vengono salvati automaticamente. Il comando
-    <strong>“🔁 Reset Campi”</strong> non cancella la cronologia delle ricerche.</p>
-  </li>
-
-  <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
+    <strong>🏢 Area, zona e regione delle centrali</strong>: ogni voce delle tendine porta una seconda riga con area, zona e regione lette dal database, e la stessa riga resta sotto il nome e il CLLI dentro la casella. I Nodi A1 sono in blu, quelli di sola diversificazione in ambra con <code>NO PE</code>, i Data Center in rosa. L’area segue la tabella dei 37 Nodi A1 della guida, quindi il nord è diviso in NORD OVEST e NORD EST.</p>
+    </li>
+                  <li><p style="margin-top: 1rem;">
     <strong style="color: #004C99;">🔽 Filtri Stati</strong>: permette di visualizzare solo i percorsi con collegamenti in stati
     specifici (<strong>ATTIVO</strong>, <strong>NON ATTIVO [DA VERIFICARE SU NNI]</strong>,
     <strong>IN ATTIVAZIONE</strong>, <strong>DA VERIFICARE SU NNI</strong>, <strong>MISTO (ATTIVO+IN ATTIVAZIONE)</strong>). I filtri vengono applicati <strong>in tempo reale</strong> ai risultati. <span style="display:block;margin-top:0.25rem;color:#0e7490;">ℹ️ Le caselle non sono un elenco fisso: vengono costruite leggendo gli stati presenti nel database in uso, gli stessi del tab <strong>Database</strong>. Gli stati previsti ma assenti dai dati non compaiono, quelli nuovi vengono aggiunti.</span></p>
   </li>
-
-  <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong style="color: #d1008f;">🏢 Bottone [DC]</strong>: esclude/include le <strong>17 centrali Data Center</strong> (IDC/housing) dal routing.
     Di default i DC sono <strong>esclusi</strong> (bottone magenta attivo). Clicca per abilitare il passaggio attraverso i Data Center.</p>
   </li>
-
-  <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
+    <strong>➕ Espandi</strong>: apre sotto il percorso il dettaglio dei collegamenti, uno per riga, con le due centrali, l’identificativo, la distanza del singolo tratto e lo stato. C’è sui percorsi Std, sui Div e sui Div dei Div.</p>
+    </li>
+                  <li><p style="margin-top: 1rem;">
+    <strong>🗺️ Etichette sulla mappa</strong>: passando il mouse su una centrale compaiono nome e CLLI su due righe, senza dover cliccare. Sui collegamenti l’etichetta segue il tratto sotto il mouse e mostra le due centrali, il SubPath per la RC o l’IdCollegamento per la RA e la distanza di quel tratto.</p>
+    </li>
+                  <li><p style="margin-top: 1rem;">
     <strong style="color: #004C99;">⚖️ Confronta</strong>: attiva il comparatore fino a <strong>3 percorsi affiancati</strong>, mostrando
     distanza, hop, collegamenti e <strong>percentuale di overlap</strong>, con evidenziazione automatica del
     migliore e del peggiore per ogni metrica.</p>
   </li>
-
-  
-
-  <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong style="color: #059669;">🌍 Mappa NAT</strong>: esporta i percorsi (Std, Div e Multi-Path) verso <strong>NAT Italia</strong>. Polyline colorate con marker per ogni centrale. I Multi-Path duplicati (stesso arco di Std) sono esclusi automaticamente.</p>
   </li>
-    <li><p style="margin-top: 1rem;">
-    <strong>🏢 Area, zona e regione delle centrali</strong>: ogni voce delle tendine porta una seconda riga con area, zona e regione lette dal database, e la stessa riga resta sotto il nome e il CLLI dentro la casella. I Nodi A1 sono in blu, quelli di sola diversificazione in ambra con <code>NO PE</code>, i Data Center in rosa. L’area segue la tabella dei 37 Nodi A1 della guida, quindi il nord è diviso in NORD OVEST e NORD EST.</p>
-    </li>
-    <li><p style="margin-top: 1rem;">
-    <strong>➕ Espandi</strong>: apre sotto il percorso il dettaglio dei collegamenti, uno per riga, con le due centrali, l’identificativo, la distanza del singolo tratto e lo stato. C’è sui percorsi Std, sui Div e sui Div dei Div.</p>
-    </li>
-    <li><p style="margin-top: 1rem;">
-    <strong>🗺️ Etichette sulla mappa</strong>: passando il mouse su una centrale compaiono nome e CLLI su due righe, senza dover cliccare. Sui collegamenti l’etichetta segue il tratto sotto il mouse e mostra le due centrali, il SubPath per la RC o l’IdCollegamento per la RA e la distanza di quel tratto.</p>
-    </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><strong style="color: #004C99;">🗺️ Maps</strong>: apre la <strong>Mappa Percorsi</strong> dentro il tool con i percorsi già disegnati. I due bottoni portano cose diverse: quello sotto <em>Percorsi Std</em> porta i soli percorsi standard, quello sotto <em>Percorsi Std + Div</em> porta anche i diversificati. Gli sfondi della mappa si scelgono dal riquadro in basso a sinistra.</li>
+                  <li><p style="margin-top: 1rem;">
     <strong>📄 Export TXT</strong>: il file è uguale in tutti i tab e in tutte le combinazioni, Std, Div e Std + Div. Per ogni percorso trovi un riquadro di testa con distanza e collegamenti, l’elenco delle centrali, il riquadro dei collegamenti con numero, distanza per rete e mix, le righe di dettaglio con distanza e stato, il riquadro degli identificativi separati da virgola e da più, poi <em>Routing C-FOS</em>, <em>Routing OTS</em>, <em>Verifica e Info NNI</em> e l’elenco delle C-FOS da allegare alla richiesta dei file KMZ. Fra un percorso e il successivo c’è una doppia riga di separazione. Il nome del file segue sempre lo stesso schema: <code>[SdF] CRO RA Std • partenza - arrivo [data]</code>, con la sezione della fattibilità davanti quando è compilata.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><strong style="color: #004C99;">📄 Modello KMZ</strong>: nella barra di export l’interruttore <strong>KMZ</strong>, sotto la scritta <em>Modello</em>, fa scaricare insieme al file anche il modello <strong>Tracciati KMZ per archi DWDM</strong> già compilato: una riga per ogni collegamento dei percorsi selezionati, con i percorsi separati fra loro. Il nome del file riporta il riferimento di fattibilità scritto in <strong>Rif. Std</strong> o <strong>Rif. Div</strong>, se c’è, e la data. L’interruttore vale per quell’export soltanto: non modifica il TXT né l’XLSX, si aggiunge.</li>
+                  <li><strong style="color: #004C99;">📋 Rif. Std e Rif. Div</strong>: due caselle nella barra di export dove scrivere il riferimento della fattibilità, per esempio <em>SDF-2024-001</em>. Non entrano nel calcolo: finiscono nel nome dei file esportati e nel modello KMZ, così i file arrivano già riconoscibili a chi li riceve.</li>
+                  <li><strong style="color: #004C99;">🧹 Pulisci Tabella</strong>: svuota la tabella dei risultati e lascia stare i campi, al contrario di <strong>Reset Campi</strong> che svuota i campi e lascia la tabella. <strong>Reset Tab</strong> fa tutte e due le cose.</li>
+                  <li><p style="margin-top: 1rem;">
     <strong>🧼 Reset Campi e Reset Tab</strong>: <em>Reset Campi</em> svuota le caselle della scheda in cui si trova e spegne le selezioni multiple collegate. <em>Reset Tab</em> riporta il tab allo stato iniziale: campi, filtri per stato e per sede, selezioni multiple. Nessuno dei due tocca la cronologia delle ultime ricerche, che si cancella solo dal bottone dedicato.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
-    <strong>↩️ Undo (Ultime 20)</strong>: tiene le ultime venti ricerche di questo tab e le ripropone com’erano, centrali e filtri compresi. Serve per tornare su una fattibilità già calcolata senza reimpostare tutto a mano.</p>
-    </li>
-</ul>
+                  <li><p style="margin-top: 1rem;">
+    <strong style="color: #004C99;">↩️ Undo (Ultime 20)</strong>: consente di ripristinare una delle ultime <strong>20 ricerche</strong>
+    effettuate. Tutti i parametri vengono salvati automaticamente. Il comando
+    <strong>“🔁 Reset Campi”</strong> non cancella la cronologia delle ricerche.</p>
+  </li>
+                </ul>
 
            
               <p style="margin-top: 1rem; padding: 0.75rem; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 4px solid var(--tim-blue); border-radius: 4px; font-size: 0.75rem;">
@@ -25444,79 +25427,57 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               <div class="route-help-panel" style="margin-top:0;">
                 <p><strong>Note su Ricerca Percorso Unificato:</strong></p>
 				<ul>
-  <li><p style="margin-top: 0.25rem;">
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #004C99;">📍 Posizione Cliente</strong>: inserisci l’indirizzo completo oppure le coordinate (Lat/Lon). Con
     <strong>“🔍 Geocodifica Indirizzo”</strong> il sistema converte automaticamente l’indirizzo in coordinate
     geografiche utilizzabili per la ricerca.</p>
   </li>
-
-  <li><p style="margin-top: 0.25rem;">
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #004C99;">🔎 Trova Centrale Vicina</strong>: calcola la centrale più vicina (RA Tipo 1/2 o RC) tramite algoritmo
     di <strong>Haversine</strong>. Usa il bottone <strong>“🚀/🏁 Inserisci”</strong> per scegliere se impostarla
     come Partenza o Arrivo.</p>
   </li>
-
-  <li><p style="margin-top: 0.25rem;">
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #004C99;">👥 Modalità Cliente <span style="color:#007800;">Sede A</span> → Rete → <span style="color:#B00020;">Sede Z</span></strong>: inserisci le coordinate di due clienti (A e Z). Il
     sistema individua le centrali più vicine e calcola il percorso ottimale sulla rete unificata
     <strong>RA+RC</strong>.</p>
   </li>
-
-  <li><p style="margin-top: 0.25rem;">
+                  <li><p style="margin-top: 1rem;">
+    <strong>🌐 Calcola Percorso Cliente</strong>: dalle coordinate delle due sedi trova la centrale più vicina a ciascuna e lancia la ricerca fra le due. Lo schema sul bottone lo riassume: Sede A, poi <code>RTR › RTN › RTR</code>, poi Sede Z, dove RTR è la rete di trasporto regionale e RTN il backbone nazionale, attraversato solo quando le due sedi stanno in aree diverse.</p>
+    </li>
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #004C99;">🥇 Percorso Std</strong>: utilizza <strong>Partenza 1 / Arrivo 1</strong> e restituisce fino a
     <strong>10 soluzioni</strong> ordinate per distanza crescente. Questi rappresentano i percorsi standard
     primari (candidati principali).</p>
   </li>
-
-  <li><p style="margin-top: 0.25rem;">
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #004C99;">🥈 Percorsi Div</strong>: genera percorsi diversificati usando <strong>Partenza 2 / Arrivo 2</strong>
     se valorizzati; altrimenti usa i nodi dello Std. Serve per ottenere alternative e migliorare la <strong>ridondanza</strong>.
     Se non trova percorsi al primo tentativo, attiva automaticamente un <strong>fallback</strong>: aggiunge i nodi intermedi dello Std
     agli evitare e riesegue la ricerca su 200 candidati, consentendo percorsi RC↔RA↔RC su assi geografici complessi.</p>
   </li>
-
-  <li><p style="margin-top: 0.25rem;">
-    <strong style="color: #004C99;">✅ Centrale Obbligatoria</strong>: forza il transito attraverso la centrale indicata.
-    <strong>“➕ Sel. Multipla”</strong> apre il <strong>pannello vincoli</strong> per imporre più centrali. La selezione singola già presente viene mantenuta come prima voce multipla.</p>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo. Nel calcolo il salto sul backbone <strong>RTN</strong> viene ignorato: non conta come collegamento e non produce un passaggio di rete. In modalità RTN, sotto il numero del percorso, <strong>ZNA</strong> e <strong>ZNB</strong> segnalano i migliori tre per la sola Zona A e per la sola Zona B, calcolati con lo stesso punteggio sui rispettivi segmenti.</p>
+    </li>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong style="color: #0066CC;">📊 Pannello Analisi Percorsi</strong>: dopo ogni ricerca appare automaticamente
+    il pannello <strong>📊 Analisi Percorsi</strong> con <strong>4 card classificate</strong>:
+    <strong>🏆 Premier · 🥇 Oro · 🥈 Argento · 🥉 Bronzo</strong>. Ogni card mostra il dettaglio del percorso
+    (distanza, subpath, nodi, RA/RC, stato link attivi/non-attivi).
+    La <strong>classifica</strong> usa uno scoring ottimizzato per i costi: penalità ×12 per ogni transizione
+    <strong>RA↔RC</strong> e <strong>RA→RA</strong> (uso transponder), ×8 per subpath non attivi,
+    ×0,5 per numero di subpath totali, ×2 per distanza normalizzata.
+    I badge <strong>🏆🥇🥈🥉</strong> appaiono anche nella colonna <strong>#</strong> della tabella risultati.
+    Il pannello si nasconde automaticamente con <strong>🧼 Reset Tab</strong>.</p>
   </li>
-
-  <li><p style="margin-top: 0.25rem;">
-    <strong style="color: #004C99;">🚫 Centrale da Evitare</strong>: esclude la centrale dal routing (inclusi nodi T3 di transito, filtro post-espansione).
-    <strong>“➕ Sel. Multipla”</strong> per escludere più centrali tramite pannello vincoli.</p>
-  </li>
-
-  <li><p style="margin-top: 0.25rem;">
-    <strong style="color: #004C99;">✅ Collegamento Obbligatorio (SubPath/Arco/Ramo)</strong>: forza il passaggio su specifici collegamenti/SubPath/archi.
-    <strong>"➕ Sel. Multipla"</strong> per imporre più collegamenti tramite pannello. Match su IdCollegamento, Nome_SubPath, ID_ARCO.</p>
-  </li>
-
-  <li><p style="margin-top: 0.25rem;">
-    <strong style="color: #004C99;">🚫 Collegamento da Evitare (SubPath/Arco/Ramo)</strong>: esclude collegamenti/SubPath/archi dal routing.
-    <strong>"➕ Sel. Multipla"</strong> per escludere più collegamenti tramite pannello. Autocomplete con ricerca parziale su tutti i campi.</p>
-  </li>
-
-  <li><p style="margin-top: 0.25rem;">
-    <strong style="color: #6d28d9;">📋 Pannello Vincoli Routing</strong>: si apre automaticamente (in alto a destra) alla prima attivazione multipla.
-    Riunisce tutte le sezioni attive: <strong>✕</strong> rimuovi singola, <strong>🗑 Svuota</strong> sezione, <strong>🗑 Tutto</strong> tutte.
-    <strong>⬡</strong> per trascinare, <strong>🔓/🔒</strong> per bloccare. La <strong>×</strong> chiude senza cancellare. In modalità singola non compare.</p>
-  </li>
-
-  <li><p style="margin-top: 0.25rem;">
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #004C99;">🏢 Tipi Sede RA</strong>:
     <strong>Tipo 1 [T1]</strong> = HUB RA+RC (NODO A1, interconnesso con Rete Core) •
     <strong>Tipo 2 [T2]</strong> = HUB RA (aggregazione verso T1) •
     <strong>Tipo 3 [T3]</strong> = nodo di transito fisico (non selezionabile come endpoint, ma <strong>visualizzato nel percorso</strong>
     con tipo reale dell'arco specifico — es. un nodo che è T2 su un altro arco appare [T3] se usato come transito in questo arco).</p>
   </li>
-
-  <li><p style="margin-top: 0.25rem;">
-    <strong style="color: #004C99;">🔗 Interconnessione RA↔RA / RA↔RC / RC↔RA</strong>:
-    passaggio RA–RC automatico su nodi con <strong>stesso CLLI</strong>
-    (centrali <strong>[T1] / NODO A1</strong>); passaggio <strong>RA↔RA</strong> tra sedi
-    <strong>T1/T2</strong> con <strong>stesso CLLI</strong> e <strong>tipo sede</strong>.
-  </p></li>
-
-  <li><p style="margin-top: 0.25rem;">
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #004C99;">🏢 Filtro POP (NODO A1)</strong>: il bottone <strong>[POP]</strong> nel campo
     <strong>🏁 Centrale di Arrivo</strong> limita la destinazione alle <strong>37 centrali NODO A1</strong>
     (POP nazionali), utile per instradamenti verso i principali punti di interconnessione regionali.
@@ -25532,99 +25493,103 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       [A1_DIV]
     </span>.</p>
   </li>
-
-  <li><p style="margin-top: 0.25rem;">
+                  <li><p style="margin-top: 0.25rem;">
+    <strong style="color: #004C99;">🔗 Interconnessione RA↔RA / RA↔RC / RC↔RA</strong>:
+    passaggio RA–RC automatico su nodi con <strong>stesso CLLI</strong>
+    (centrali <strong>[T1] / NODO A1</strong>); passaggio <strong>RA↔RA</strong> tra sedi
+    <strong>T1/T2</strong> con <strong>stesso CLLI</strong> e <strong>tipo sede</strong>.
+  </p></li>
+                  <li><p style="margin-top: 1rem;">
+    <strong>🏢 Area, zona e regione delle centrali</strong>: ogni voce delle tendine porta una seconda riga con area, zona e regione lette dal database, e la stessa riga resta sotto il nome e il CLLI dentro la casella. I Nodi A1 sono in blu, quelli di sola diversificazione in ambra con <code>NO PE</code>, i Data Center in rosa. L’area segue la tabella dei 37 Nodi A1 della guida, quindi il nord è diviso in NORD OVEST e NORD EST.</p>
+    </li>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong style="color: #004C99;">✅ Centrale Obbligatoria</strong>: forza il transito attraverso la centrale indicata.
+    <strong>“➕ Sel. Multipla”</strong> apre il <strong>pannello vincoli</strong> per imporre più centrali. La selezione singola già presente viene mantenuta come prima voce multipla.</p>
+  </li>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong style="color: #004C99;">🚫 Centrale da Evitare</strong>: esclude la centrale dal routing (inclusi nodi T3 di transito, filtro post-espansione).
+    <strong>“➕ Sel. Multipla”</strong> per escludere più centrali tramite pannello vincoli.</p>
+  </li>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong style="color: #004C99;">✅ Collegamento Obbligatorio (SubPath/Arco/Ramo)</strong>: forza il passaggio su specifici collegamenti/SubPath/archi.
+    <strong>"➕ Sel. Multipla"</strong> per imporre più collegamenti tramite pannello. Match su IdCollegamento, Nome_SubPath, ID_ARCO.</p>
+  </li>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong style="color: #004C99;">🚫 Collegamento da Evitare (SubPath/Arco/Ramo)</strong>: esclude collegamenti/SubPath/archi dal routing.
+    <strong>"➕ Sel. Multipla"</strong> per escludere più collegamenti tramite pannello. Autocomplete con ricerca parziale su tutti i campi.</p>
+  </li>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong style="color: #6d28d9;">📋 Pannello Vincoli Routing</strong>: si apre automaticamente (in alto a destra) alla prima attivazione multipla.
+    Riunisce tutte le sezioni attive: <strong>✕</strong> rimuovi singola, <strong>🗑 Svuota</strong> sezione, <strong>🗑 Tutto</strong> tutte.
+    <strong>⬡</strong> per trascinare, <strong>🔓/🔒</strong> per bloccare. La <strong>×</strong> chiude senza cancellare. In modalità singola non compare.</p>
+  </li>
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #004C99;">🔽 Filtri Stati</strong>: filtra i risultati per stato dei collegamenti. In RA:
     <strong>ATTIVO</strong>, <strong>NON ATTIVO [DA VERIFICARE SU NNI]</strong>, <strong>IN ATTIVAZIONE</strong>, <strong>DA VERIFICARE SU NNI</strong>, <strong>MISTO (ATTIVO+IN ATTIVAZIONE)</strong>.
     In RC: <strong>ATTIVO</strong>, <strong>NON ATTIVO</strong>, <strong>IN ATTIVAZIONE</strong>,
     <strong>IN VARIAZIONE</strong>, <strong>IN REINSTRADAMENTO</strong>, <strong>MISTO (ATTIVO+IN ATTIVAZIONE)</strong>. <span style="display:block;margin-top:0.25rem;color:#0e7490;">ℹ️ Le caselle non sono un elenco fisso: vengono costruite leggendo gli stati presenti nel database in uso, gli stessi del tab <strong>Database</strong>. Gli stati previsti ma assenti dai dati non compaiono, quelli nuovi vengono aggiunti.</span></p>
   </li>
-
-  <li><p style="margin-top: 0.25rem;">
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #d1008f;">🏢 Bottone [DC]</strong>: esclude/include le <strong>17 centrali Data Center</strong> (IDC/housing) dal routing.
     Di default i DC sono <strong>esclusi</strong> (bottone magenta attivo). Clicca per abilitare il passaggio attraverso i Data Center.</p>
   </li>
-
-  <li><p style="margin-top: 0.25rem;">
-    <strong style="color: #004C99;">⚖️ Confronta</strong>: attiva il comparatore fino a <strong>3 percorsi affiancati</strong>, mostrando
-    distanza, hop, collegamenti in formato <em>Nome (CLLI) [TipoSede] :RA: / :RC:</em> e
-    <strong>% overlap</strong> per valutare differenze e ridondanza.</p>
+                  <li><p style="margin-top: 0.25rem;">	
+    <strong style="color: #dc2626;">🔴 Solo RC</strong>: esclude completamente il layer RA, usando solo la <strong>Rete Core RC</strong>. Utile per verificare la fattibilità su sola rete backbone senza coinvolgere archi di Aggregazione.</p>
   </li>
-
-  
-
-  <li><p style="margin-top: 0.25rem;">
-    <strong style="color: #0066CC;">📊 Pannello Analisi Percorsi</strong>: dopo ogni ricerca appare automaticamente
-    il pannello <strong>📊 Analisi Percorsi</strong> con <strong>4 card classificate</strong>:
-    <strong>🏆 Premier · 🥇 Oro · 🥈 Argento · 🥉 Bronzo</strong>. Ogni card mostra il dettaglio del percorso
-    (distanza, subpath, nodi, RA/RC, stato link attivi/non-attivi).
-    La <strong>classifica</strong> usa uno scoring ottimizzato per i costi: penalità ×12 per ogni transizione
-    <strong>RA↔RC</strong> e <strong>RA→RA</strong> (uso transponder), ×8 per subpath non attivi,
-    ×0,5 per numero di subpath totali, ×2 per distanza normalizzata.
-    I badge <strong>🏆🥇🥈🥉</strong> appaiono anche nella colonna <strong>#</strong> della tabella risultati.
-    Il pannello si nasconde automaticamente con <strong>🧼 Reset Tab</strong>.</p>
-  </li>
-
-  <li><p style="margin-top: 0.25rem;">
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #0891b2;">🌐 RTN — Rete di Trasporto Nazionale</strong>: abilita il routing interregionale automatico. Il percorso viene costruito in 3 segmenti distinti:<br>
     &nbsp;&nbsp;① <strong>Zona A</strong>: Partenza → Nodo A1 della propria area geografica (routing Unified RC-first)<br>
     &nbsp;&nbsp;② <strong>Backbone RTN</strong>: salto virtuale tra i due Nodi A1 (evidenziato con badge <span style="display:inline-block;padding:1px 6px;background:#f0f9ff;border:1px dashed #0891b2;border-radius:3px;color:#0891b2;font-size:0.8em;font-weight:700;">🌐 RTN</span>)<br>
     &nbsp;&nbsp;③ <strong>Zona B</strong>: Nodo A1 dell'area di arrivo → Arrivo (routing Unified RC-first)<br>
     I <strong>37 Nodi A1</strong> sono i POP di interconnessione regionale TIM. La ricerca privilegia sempre percorsi <strong>pure RC</strong> verso il Nodo A1; solo in assenza di path RC puri utilizza il grafo Unified RA+RC.<br>
   </li>
-	
-  <li><p style="margin-top: 0.25rem;">	
+                  <li><p style="margin-top: 0.25rem;">	
     <strong>Flusso diversificazione RTN:</strong><br>
     &nbsp;&nbsp;• <strong>▶ Div Zona A</strong>: genera diversificati per il segmento Partenza→Nodo A1, usando il Nodo A1 alternativo della stessa area (es. NOLA SGT invece di NAPOLI TUPPUTI). Il segmento B rimane fisso come nello Std.<br>
     &nbsp;&nbsp;• <strong>▶ Div Zona B</strong> (su ogni riga Div A): genera diversificati per il segmento Nodo A1→Arrivo, usando il Nodo A1 alternativo dell'area di arrivo (es. ROMA INVIOLATELLA invece di ROMA SUD). Il segmento A è quello del Div A selezionato.<br>
     I Div <strong>non riutilizzano nessun collegamento fisico</strong> del percorso di riferimento.<br>
-  </li>	
-
-  <li><p style="margin-top: 0.25rem;">
+  </li>
+                  <li><p style="margin-top: 0.25rem;">
     <strong style="color: #0891b2;">🌐 Cambia Interconnessione RTN</strong>: dopo un calcolo con backbone RTN, accanto al contatore risultati appare il bottone
     <span style="display:inline-block;padding:1px 6px;background:#f0f9ff;border:1px dashed #0891b2;border-radius:3px;color:#0891b2;font-size:0.8em;font-weight:700;">🌐 Cambia interconnessione RTN</span>.
     Apre un popup dove selezionare manualmente i <strong>Nodi A1</strong> di Partenza e Arrivo da usare come interconnessione del backbone (alternative della stessa area geografica, raggruppate per macro-regione — es. Lombardia mostra insieme i 4 nodi A1 di area LO e MI).
     Alla conferma <strong>✅ Applica</strong> il percorso viene ricalcolato sui nuovi tratti A→A1 e A1→Z e la tabella risultati si aggiorna.</p>
   </li>
-	
-  <li><p style="margin-top: 0.25rem;">	
-    <strong style="color: #dc2626;">🔴 Solo RC</strong>: esclude completamente il layer RA, usando solo la <strong>Rete Core RC</strong>. Utile per verificare la fattibilità su sola rete backbone senza coinvolgere archi di Aggregazione.</p>
-  </li>
-
-  <li><p style="margin-top: 0.25rem;">
-    <strong style="color: #059669;">🌍 Mappa NAT</strong>: esporta i percorsi Unificati (Std e Div) verso <strong>NAT Italia</strong>. Polyline colorate con marker per ogni centrale e gateway evidenziati in viola.</p>
-  </li>
-    <li><p style="margin-top: 1rem;">
-    <strong>🏢 Area, zona e regione delle centrali</strong>: ogni voce delle tendine porta una seconda riga con area, zona e regione lette dal database, e la stessa riga resta sotto il nome e il CLLI dentro la casella. I Nodi A1 sono in blu, quelli di sola diversificazione in ambra con <code>NO PE</code>, i Data Center in rosa. L’area segue la tabella dei 37 Nodi A1 della guida, quindi il nord è diviso in NORD OVEST e NORD EST.</p>
-    </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong>➕ Espandi</strong>: apre sotto il percorso il dettaglio dei collegamenti, uno per riga, con le due centrali, l’identificativo, la distanza del singolo tratto e lo stato. C’è sui percorsi Std, sui Div e sui Div dei Div, e nella Top 4. Il salto sul backbone compare come <em>RTN · Rete di Trasporto Nazionale</em>, senza distanza propria.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong>🗺️ Etichette sulla mappa</strong>: passando il mouse su una centrale compaiono nome e CLLI su due righe, senza dover cliccare. Sui collegamenti l’etichetta segue il tratto sotto il mouse e mostra le due centrali, il SubPath per la RC o l’IdCollegamento per la RA e la distanza di quel tratto.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
-    <strong>🕓 Ultime ricerche</strong>: sotto <em>Posizione Cliente</em> restano le ultime due ricerche di centrale vicina, con coordinate, indirizzo, centrale trovata, distanza, destinazione e data-ora al secondo. La stessa cosa sotto <em>Modalità Cliente</em> per la Sede A e la Sede Z. Restano anche dopo la chiusura del tool e si cancellano solo dal bottone <em>Cancella cronologia</em> della scheda, che chiede conferma con un secondo clic.</p>
-    </li>
-    <li><p style="margin-top: 1rem;">
-    <strong>🌐 Calcola Percorso Cliente</strong>: dalle coordinate delle due sedi trova la centrale più vicina a ciascuna e lancia la ricerca fra le due. Lo schema sul bottone lo riassume: Sede A, poi <code>RTR › RTN › RTR</code>, poi Sede Z, dove RTR è la rete di trasporto regionale e RTN il backbone nazionale, attraversato solo quando le due sedi stanno in aree diverse.</p>
-    </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><strong style="color: #004C99;">🔍 Verifica Div</strong>: confronta il percorso scelto con un altro calcolato in precedenza e dice quanto sono davvero diversificati, cioè quali tratti hanno in comune. Compare quando c’è un percorso da confrontare.</li>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong style="color: #004C99;">⚖️ Confronta</strong>: attiva il comparatore fino a <strong>3 percorsi affiancati</strong>, mostrando
+    distanza, hop, collegamenti in formato <em>Nome (CLLI) [TipoSede] :RA: / :RC:</em> e
+    <strong>% overlap</strong> per valutare differenze e ridondanza.</p>
+  </li>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong style="color: #059669;">🌍 Mappa NAT</strong>: esporta i percorsi Unificati (Std e Div) verso <strong>NAT Italia</strong>. Polyline colorate con marker per ogni centrale e gateway evidenziati in viola.</p>
+  </li>
+                  <li><strong style="color: #004C99;">🗺️ Maps</strong>: apre la <strong>Mappa Percorsi</strong> dentro il tool con i percorsi già disegnati. I due bottoni portano cose diverse: quello sotto <em>Percorsi Std</em> porta i soli percorsi standard, quello sotto <em>Percorsi Std + Div</em> porta anche i diversificati. Gli sfondi della mappa si scelgono dal riquadro in basso a sinistra.</li>
+                  <li><p style="margin-top: 1rem;">
     <strong>📄 Export TXT</strong>: il file è uguale in tutti i tab e in tutte le combinazioni, Std, Div e Std + Div. Per ogni percorso trovi un riquadro di testa con distanza e collegamenti, l’elenco delle centrali, il riquadro dei collegamenti con numero, distanza per rete e mix, le righe di dettaglio con distanza e stato, il riquadro degli identificativi separati da virgola e da più, poi <em>Routing C-FOS</em>, <em>Routing OTS</em>, <em>Verifica e Info NNI</em> e l’elenco delle C-FOS da allegare alla richiesta dei file KMZ. Fra un percorso e il successivo c’è una doppia riga di separazione. Il nome del file segue sempre lo stesso schema: <code>[SdF] CRO UNIFICATO Std • partenza - arrivo [data]</code>, con la sezione della fattibilità davanti quando è compilata.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong>📊 Export XLSX</strong>: dalla stessa barra si ottiene un foglio di calcolo con sei schede. <em>Riepilogo</em> ha una riga per percorso con i colori della tabella a video, la distanza divisa per tratta e, con i costi attivi, la stima e il dettaglio. <em>Note</em> raccoglie Nota Lavorante, Nota File Condiviso, <em>Routing Subpath</em> e Note Costi, già pronte da incollare in pratica. Seguono <em>Dati Servizio</em>, <em>Centrali</em>, <em>Collegamenti</em> e <em>KMZ</em>. In <em>Routing Subpath</em> la sequenza è scritta nei modi in uso: con la virgola e con il più, e in più con i separatori di rete quando il percorso attraversa il backbone. Per la RA compare il SubPath, non l’IdCollegamento intero.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><strong style="color: #004C99;">📄 Modello KMZ</strong>: nella barra di export l’interruttore <strong>KMZ</strong>, sotto la scritta <em>Modello</em>, fa scaricare insieme al file anche il modello <strong>Tracciati KMZ per archi DWDM</strong> già compilato: una riga per ogni collegamento dei percorsi selezionati, con i percorsi separati fra loro. Il nome del file riporta il riferimento di fattibilità scritto in <strong>Rif. Std</strong> o <strong>Rif. Div</strong>, se c’è, e la data. L’interruttore vale per quell’export soltanto: non modifica il TXT né l’XLSX, si aggiunge.</li>
+                  <li><strong style="color: #004C99;">📋 Rif. Std e Rif. Div</strong>: due caselle nella barra di export dove scrivere il riferimento della fattibilità, per esempio <em>SDF-2024-001</em>. Non entrano nel calcolo: finiscono nel nome dei file esportati e nel modello KMZ, così i file arrivano già riconoscibili a chi li riceve.</li>
+                  <li><strong style="color: #004C99;">🧹 Pulisci Tabella</strong>: svuota la tabella dei risultati e lascia stare i campi, al contrario di <strong>Reset Campi</strong> che svuota i campi e lascia la tabella. <strong>Reset Tab</strong> fa tutte e due le cose.</li>
+                  <li><p style="margin-top: 1rem;">
     <strong>🧼 Reset Campi e Reset Tab</strong>: <em>Reset Campi</em> svuota le caselle della scheda in cui si trova e spegne le selezioni multiple collegate. <em>Reset Tab</em> riporta il tab allo stato iniziale: campi, filtri per stato e per sede, selezioni multiple, pannello vincoli, modalità RTN e Solo RC. Nessuno dei due tocca la cronologia delle ultime ricerche, che si cancella solo dal bottone dedicato.</p>
     </li>
-    <li><p style="margin-top: 1rem;">
+                  <li><p style="margin-top: 1rem;">
     <strong>↩️ Undo (Ultime 20)</strong>: tiene le ultime venti ricerche di questo tab e le ripropone com’erano, centrali e vincoli compresi. Serve per tornare su una fattibilità già calcolata senza reimpostare tutto a mano.</p>
     </li>
-    <li><p style="margin-top: 0.25rem;">
-    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo. Nel calcolo il salto sul backbone <strong>RTN</strong> viene ignorato: non conta come collegamento e non produce un passaggio di rete. In modalità RTN, sotto il numero del percorso, <strong>ZNA</strong> e <strong>ZNB</strong> segnalano i migliori tre per la sola Zona A e per la sola Zona B, calcolati con lo stesso punteggio sui rispettivi segmenti.</p>
+                  <li><p style="margin-top: 1rem;">
+    <strong>🕓 Ultime ricerche</strong>: sotto <em>Posizione Cliente</em> restano le ultime due ricerche di centrale vicina, con coordinate, indirizzo, centrale trovata, distanza, destinazione e data-ora al secondo. La stessa cosa sotto <em>Modalità Cliente</em> per la Sede A e la Sede Z. Restano anche dopo la chiusura del tool e si cancellano solo dal bottone <em>Cancella cronologia</em> della scheda, che chiede conferma con un secondo clic.</p>
     </li>
-</ul>              
+                </ul>              
 
                 <p style="margin-top: 0.1rem; padding: 0.75rem; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 4px solid var(--tim-blue); border-radius: 3px; font-size: 0.75rem;">
                   <strong>💡 Mix RA/RC:</strong> La colonna "Mix" nei risultati mostra la composizione del percorso (es. <code style="background: #e2e8f0; padding: 2px 6px; border-radius: 3px;">RA:3 • RC:2 • 1 salto</code> indica 3 tratte RA, 2 tratte RC e 1 cambio RA↔RC). Questo permette di valutare quali segmenti di rete vengono attraversati.
@@ -40198,6 +40163,10 @@ PERCORSI ALTERNATIVI (Div):
           </summary>
           <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
             <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📐 Come sono impaginate le card</strong>: nell'Unificato la prima riga porta a sinistra le due zone <em>ZNA</em> e <em>ZNB</em>, dentro un'unica cella divisa in due, e a destra la <em>Distanza</em>. Sotto vengono le coppie: <em>Collegamenti</em> e <em>Subpath</em>, <em>Nodi / Centrali</em> e <em>Cambi Rete</em>, <em>Rete RA</em> e <em>Rete RC</em>, <em>Attivi</em> e <em>NON Attivi</em>. Fuori dalla modalità RTN le zone non esistono e la distanza prende tutta la riga, così le coppie sotto restano allineate invece di sfalsarsi. Nel tab RC la distanza sta da sola sulla prima riga, poi <em>Subpath / Collegamenti</em> e <em>Nodi / Centrali</em>, poi <em>Attivi</em> e <em>NON Attivi</em>. L'etichetta <em>Nodi</em> è diventata <em>Nodi / Centrali</em> in tutti e due i tab.</li>
+              <li><strong>📏 Lo spazio sopra Info Zona</strong>: nel tab Unificato fra la riga dei bottoni e la riga di <em>Info Zona</em> c'erano 48 pixel invece dei 24 di RA e RC. La scheda dei parametri è una griglia con 24 pixel fra un riquadro e l'altro: in RA e RC contiene un riquadro solo, mentre nell'Unificato le note del tab stanno dentro un secondo riquadro che resta figlio della griglia, alto zero e senza contenuto visibile, ma che si porta dietro la sua spaziatura. Nascondendo anche quel contenitore, e non solo le note che ci stanno dentro, i tre tab hanno la stessa distanza.</li>
+              <li><strong>📘 Il pannello Note e regole</strong>: il cassetto che si apre dal bottone <em>Note e regole</em> nei tab RA, RC e Unificato è passato da 552 a 718 pixel, il 30% in più, perché le note stanno su una colonna sola e i riquadri di esempio andavano a capo di continuo. Resta il limite del 94% della larghezza della finestra, quindi su schermi stretti il pannello si stringe da solo invece di sbordare.</li>
+              <li><strong>🔄 Reset Campi e cronologia dell'Unificato</strong>: nei tab RC e Unificato il bottone <em>Reset Campi</em> svuotava anche le tabelle dei percorsi già calcolati, mentre nel tab RA toccava solo le caselle; era quello il comportamento giusto, e ora vale per tutti e tre. A cancellare tabelle e risultati resta <em>Reset Tab</em>. Sulla cronologia dell'Unificato il problema non era il salvataggio ma il controllo dei doppioni: lo scatto della ricerca teneva partenza, arrivo e filtro POP, e non i due interruttori, per cui la stessa coppia cercata prima senza <em>RTN</em> e poi con <em>RTN</em> acceso risultava identica alla precedente e veniva scartata. Ora <em>RTN</em> e <em>Solo RC</em> fanno parte dello scatto, entrano nel confronto dei doppioni, tornano al loro posto quando si ripesca la ricerca dalla finestra Undo, e compaiono come etichette nel dettaglio della cronologia insieme a <em>Solo POP</em>.</li>
               <li><strong>📌 Il riparo è un elemento solo</strong>: il riquadro che copre lo spazio fra la navigazione e l'intestazione era disegnato dentro ogni cella dell'intestazione. Copriva lo sfondo, ma non i bordi che dividono le colonne: in quei pochi pixel si vedevano passare le righe della tabella e la linguetta colorata dei nastri. Ora il riparo è un elemento solo, largo quanto la tabella e sbordante di sei pixel ai lati, che si accende quando l'intestazione raggiunge la sua quota e resta spento quando c'è la barra di export, che copre già lei quello spazio. È lo stesso comportamento che si vedeva con l'export acceso, riportato anche quando l'export è spento.</li>
               <li><strong>📌 L'intestazione appiccicata delle tabelle</strong>: nei tab RC e Unificato l'intestazione della tabella dei risultati si ferma sotto la navigazione mentre si scorre. Fra il bordo della navigazione e l'intestazione restavano però quattordici pixel scoperti, e le righe si vedevano passare di là. Il riparo che copre quello spazio era già scritto, ma non si accendeva mai: la misura per capire se l'intestazione avesse raggiunto la sua quota veniva presa sul <code>&lt;thead&gt;</code>, mentre le celle appiccicate sono i <code>&lt;th&gt;</code>; il <code>&lt;thead&gt;</code> resta dov'è e il suo rettangolo torna sempre 0, quindi la condizione non risultava mai vera. Ora la misura si prende sulla prima cella dell'intestazione e si confronta con la quota calcolata. Con la barra di export accesa il difetto non si notava, perché quello spazio lo copriva la barra, che è anch'essa appiccicata e opaca. Il controllo ascolta ora anche lo scorrimento dentro i contenitori, non solo quello della pagina, e ha una rete di sicurezza che rigira ogni 400 millisecondi.</li>
               <li><strong>📍 ZNA e ZNB contavano i percorsi</strong>: in modalità RTN le etichette di zona assegnavano la posizione ordinando i <em>percorsi</em> per punteggio del tratto. Quando più percorsi usano lo stesso identico tratto di Zona A, e cambiano solo nella parte dopo il nodo A1, quel tratto si ritrovava etichettato <code>ZNA 1°</code> sul primo percorso, <code>ZNA 2°</code> sul secondo e <code>ZNA 3°</code> sul quarto: tre posizioni diverse per la stessa identica tratta. Ora i percorsi vengono raggruppati per tratto di zona, con una firma costruita sugli identificativi dei collegamenti, e la classifica riguarda i tratti distinti. I percorsi che condividono un tratto portano quindi la stessa posizione, e il suggerimento del badge dice da quanti percorsi quel tratto è condiviso. Le etichette restano limitate ai primi tre tratti di ciascuna zona.</li>
@@ -256915,7 +256884,7 @@ function switchDbScope(scope) {
 if (subtitleEl) {
   subtitleEl.innerHTML = scope === 'RA'
     ? 'Consulta, filtra ed esporta i collegamenti presenti nel database RA Italia (Rete Aggregation) ' +
-      '<span class="db-update ra">aggiornato il 04/09/2026.</span>'
+      '<span class="db-update ra">aggiornato il 24/09/2026.</span>'
     : 'Consulta, filtra ed esporta i collegamenti presenti nel database RC Italia (Rete Core) ' +
       '<span class="db-update rc">aggiornato il 24/09/2026.</span>';
 }
