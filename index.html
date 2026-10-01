@@ -44,6 +44,32 @@
 ║     superati, nella Guida nuove parti su formato CROPACK e procedura di          ║
 ║     aggiornamento, e aggiornati Architettura, Guida per Tab e la nota sul        ║
 ║     Confronto DB Excel                                                           ║
+║   • CARD DELL'OVERVIEW CALCOLATE DAI DATI: tre righe erano testo fisso e non     ║
+║     seguivano gli aggiornamenti dei DB. La riga "Nodi di Rete divisi" della card ║
+║     Centrali Univoche RA diceva 5083: ora conta le coppie centrale + TipoSede 1, ║
+║     2 o 3 come la ricerca RA, e con i dati del 01/10/2026 sono 5.077 (476 di     ║
+║     tipo 1, 2.467 di tipo 2, 2.134 di tipo 3). Anche la riga dei tipi e gli      ║
+║     elenchi delle zone nelle card Zone Geografiche RA e RC ora nascono dai dati. ║
+║     Tutti i valori delle 8 card vengono dai database                             ║
+║   • UNIFICATO, REGOLA DI RETE con RTN acceso o spento: i percorsi restano        ║
+║     ordinati per km e, a parita' di km (al centesimo, come in tabella), vengono  ║
+║     prima i solo RC, poi i solo RA, poi i misti RA+RC, perche' una sola rete     ║
+║     vuol dire un solo tipo di scheda transponder invece di due. Senza RTN la     ║
+║     classe e' quella del percorso intero, con RTN quella di ogni tratto di zona. ║
+║     Vale per tabella, Div e migliori tre (dove decide a parita' di punteggio).   ║
+║     Il tool cerca anche i percorsi su una sola rete, perche' a parita' di km ci  ║
+║     siano tutti                                                                  ║
+║   • RTN, VARIANTI PER ZONA: ogni zona calcola tante varianti quanto il campo Max ║
+║     risultati (100 se vuoto), prima erano al massimo 20. Le combinazioni zona A  ║
+║     + zona B sono ordinate per km totali, a parita' con la regola di rete, e la  ║
+║     tabella mostra le migliori Max risultati                                     ║
+║   • ESCLUSIONI SEMPRE APPLICATE: i campi singoli (centrale e collegamento        ║
+║     obbligatori o da evitare) valgono per quello che mostrano, anche se scritti  ║
+║     a mano o arrivati dal Rilancio RC; le Div (normali e RTN zona A, B, A+B)     ║
+║     rispettano i collegamenti obbligatori e da evitare; i tratti RTN escludono   ║
+║     centrali e collegamenti gia' nella ricerca invece di scartarli dopo; Cambia  ║
+║     interconnessione RTN rilancia la ricerca completa con i Nodi A1 scelti, con  ║
+║     tutti i vincoli e i filtri                                                   ║
 ║                                                                                  ║
 ║   CHANGELOG V60.09.25 | Set 2026:                                                ║
 ║   ─────────────────────────                                                      ║
@@ -19404,14 +19430,14 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <div class="stat-box ra">
     <div class="stat-value" id="stat-ra-centrali">0</div>
     <div class="stat-label">Centrali Univoche</div>
-    <div class="stat-sublabel">5083 Nodi di Rete divisi</div>
-	<div class="stat-sublabel">Tipo 1, Tipo 2 e Tipo 3</div>
+    <div class="stat-sublabel"><span id="stat-ra-noditipo">0</span> Nodi di Rete divisi</div>
+	<div class="stat-sublabel" id="stat-ra-tipi">Tipo 1, Tipo 2 e Tipo 3</div>
   </div>
   <div class="stat-box ra">
     <div class="stat-value" id="stat-ra-zone">0</div>
     <div class="stat-label">Zone Geografiche</div>
     <div class="stat-sublabel">Copertura Nazionale</div>
-	<div class="stat-sublabel">AM, CA, CB, ER, LI, MILO, MU, NE, PU, PV, RMLA, SA, SI, TO</div>
+	<div class="stat-sublabel" id="stat-ra-zonelist">—</div>
   </div>
   <div class="stat-box ra">
     <div class="stat-value" id="stat-ra-nonatt">0</div>
@@ -19434,7 +19460,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <div class="stat-value" id="stat-rc-zone">0</div>
     <div class="stat-label">Zone Geografiche</div>
 	<div class="stat-sublabel">Copertura Nazionale</div>
-	<div class="stat-sublabel">AM, CA, CB, ER, LI, LO, MU, NE, PU, PV, RM, SA, SI, TO</div>
+	<div class="stat-sublabel" id="stat-rc-zonelist">—</div>
   </div>
   <div class="stat-box rc">
     <div class="stat-value" id="stat-rc-nonatt">0</div>
@@ -19785,7 +19811,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <span class="feature-badge" style="background: #f5f3ff; color: #7c3aed;">Combined Analysis</span>
                     </div>
                     <div style="margin-top:0.35rem;"><span style="font-size:0.65rem;background:#f5f3ff;color:#7c3aed;padding:2px 8px;border-radius:3px;font-weight:700;display:inline-block;">RETAIL &amp; WHOLESALE</span></div>
-                    <p class="feature-desc">Ricerca percorsi che attraversano <strong>entrambe le reti RA e RC</strong> con gateway automatici. Colonna <strong>Mix</strong> mostra composizione (RA:n, RC:m, salti). Toggle <strong style="color:#0891b2;">🌐 RTN</strong> per routing interregionale automatico (Nodo A1 → backbone RTN → Nodo A1 area opposta) con flusso <strong>Std → Div Zona A → Div Zona B</strong>. Toggle <strong style="color:#dc2626;">🔴 Solo RC</strong> per ricerca esclusiva su backbone. Bottoni <strong style="color: #0066CC;">🔽 Filtri Stati</strong> (RA 4 stati + RC 5 stati), <strong style="color: #0066CC;">⚖️ Confronta</strong> (Comparatore 3 Percorsi), <strong style="color: #059669;">🌍 Mappa NAT</strong> per esportare percorsi unificati su mappa geografica con gateway evidenziati.</p>
+                    <p class="feature-desc">Ricerca percorsi che attraversano <strong>entrambe le reti RA e RC</strong> con gateway automatici. Colonna <strong>Mix</strong> mostra composizione (RA:n, RC:m, salti). Toggle <strong style="color:#0891b2;">🌐 RTN</strong> per routing interregionale automatico (Nodo A1 → backbone RTN → Nodo A1 area opposta) con flusso <strong>Std → Div Zona A → Div Zona B</strong>, con tante varianti per zona quanto Max risultati. Con RTN acceso o spento i percorsi sono ordinati per km e, a parità di km, prima i <strong>solo RC</strong>, poi i <strong>solo RA</strong>, poi i misti RA+RC (una sola scheda transponder invece di due). Toggle <strong style="color:#dc2626;">🔴 Solo RC</strong> per ricerca esclusiva su backbone. Bottoni <strong style="color: #0066CC;">🔽 Filtri Stati</strong> (RA 4 stati + RC 5 stati), <strong style="color: #0066CC;">⚖️ Confronta</strong> (Comparatore 3 Percorsi), <strong style="color: #059669;">🌍 Mappa NAT</strong> per esportare percorsi unificati su mappa geografica con gateway evidenziati.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #f5f3ff; color: #7c3aed;">RA+RC Gateway</span>
                         <span class="spec-tag" style="background: #f0f9ff; color: #0891b2;">🌐 RTN</span>
@@ -20113,6 +20139,10 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <li><strong>⏱️ Apertura più rapida</strong>: la decodifica costa circa 35 ms, ma il browser legge 1,7 MB di dati invece di 8: in prova l'apertura è scesa da circa 1,2 a 0,8 secondi</li>
     <li><strong>🔄 Convertitore DB CRO</strong>: i database si aggiornano con una pagina a parte: trascini il template Excel <em>CRO_DB_Template.xlsx</em> (o un JSON) insieme al file del tool, controlli record, stati e differenze rispetto al tool, e scarichi il tool aggiornato. Funziona senza rete e ogni blocco viene ricontrollato prima della consegna</li>
     <li><strong>📘 Overview e Guida</strong>: nuova scheda <em>Aggiornamento dei database</em> fra le Funzionalità Principali; la scheda <em>Database Enterprise</em> non cita più numeri superati; la Guida spiega il formato CROPACK e la procedura di aggiornamento nella sezione Database, e aggiorna Architettura, Guida per Tab e la nota sul Confronto DB Excel</li>
+    <li><strong>🔢 Card dell'Overview calcolate dai dati</strong>: nella card <em>Centrali Univoche</em> della RA la riga <em>Nodi di Rete divisi</em> diceva 5083, un numero scritto a mano e rimasto indietro. Ora lo calcola il tool a ogni apertura, contando le coppie centrale + TipoSede 1, 2 o 3 come la ricerca RA: con i dati del 01/10/2026 sono 5.077. Dai dati nascono ora anche la riga dei tipi e gli elenchi delle zone nelle card <em>Zone Geografiche</em> RA e RC, quindi tutti i valori delle 8 card seguono gli aggiornamenti dei database</li>
+    <li><strong>🌐 Regola di rete nell'Unificato</strong>: con RTN acceso o spento i percorsi restano ordinati per km; a parità di km vengono prima i solo RC, poi i solo RA, poi i misti RA+RC, perché una sola rete vuol dire un solo tipo di scheda transponder invece di due. Senza RTN vale per il percorso intero, con RTN per ogni tratto di zona. Vale per tabella, Div e migliori tre</li>
+    <li><strong>🔢 RTN, varianti per zona</strong>: ogni zona calcola tante varianti quanto <em>Max risultati</em> (100 se vuoto), prima al massimo 20</li>
+    <li><strong>🚫 Esclusioni sempre applicate</strong>: vale quello che si vede nei campi singoli, anche scritto a mano; le Div rispettano i collegamenti obbligatori e da evitare; i tratti RTN escludono centrali e collegamenti già nella ricerca; <em>Cambia interconnessione RTN</em> passa da tutti i vincoli e filtri</li>
                   </ul>
                 </div>
               </details>
@@ -23019,7 +23049,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     agli evitare e riesegue la ricerca su 200 candidati, consentendo percorsi RC↔RA↔RC su assi geografici complessi.</p>
   </li>
                   <li><p style="margin-top: 0.25rem;">
-    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo. Nel calcolo il salto sul backbone <strong>RTN</strong> viene ignorato: non conta come collegamento e non produce un passaggio di rete. In modalità RTN, sotto il numero del percorso, <strong>ZNA</strong> e <strong>ZNB</strong> segnalano i migliori tre per la sola Zona A e per la sola Zona B, calcolati con lo stesso punteggio sui rispettivi segmenti.</p>
+    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince; a parità di punteggio vale la regola di rete (solo RC, poi solo RA, poi misti RA+RC; con RTN per ciascuna zona). Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza e, a parità di km, la regola di rete, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo. Nel calcolo il salto sul backbone <strong>RTN</strong> viene ignorato: non conta come collegamento e non produce un passaggio di rete. In modalità RTN, sotto il numero del percorso, <strong>ZNA</strong> e <strong>ZNB</strong> segnalano i migliori tre per la sola Zona A e per la sola Zona B, calcolati con lo stesso punteggio sui rispettivi segmenti.</p>
     </li>
                   <li><p style="margin-top: 0.25rem;">
     <strong style="color: #0066CC;">📊 Pannello Analisi Percorsi</strong>: dopo ogni ricerca appare automaticamente
@@ -34016,6 +34046,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
                   <p><span style="background:#f5f3ff;color:#7c3aed;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:6px;">RETAIL &amp; WHOLESALE</span><strong>Scopo:</strong> Calcola percorsi che attraversano <strong>sia la rete RA che la rete RC</strong> in un unico calcolo. Necessario quando il cliente è attestato su una centrale RA ma il servizio richiede transito su backbone RC. Con il toggle <strong>🌐 RTN</strong> abilita il routing interregionale automatico tra aree geografiche diverse (es. Campania → Lazio).</p>
                   <p><strong>Come si usa (modalità standard):</strong> Identico a RC/RA. Il motore combina automaticamente i due grafi con transizioni RA↔RC nei nodi T1/POP. I percorsi mostrano chiaramente le tratte RA (blu) e RC (rosso).</p>
+                  <p><strong>Ordine dei percorsi:</strong> con RTN acceso o spento i percorsi sono ordinati per distanza in km. A parità di km, cioè quando le distanze coincidono al centesimo come in tabella, vengono prima i percorsi <strong>solo RC</strong>, poi i <strong>solo RA</strong>, poi i <strong>misti RA+RC</strong>: una sola rete vuol dire un solo tipo di scheda transponder invece di due. Senza RTN la classe è quella del percorso intero, con RTN quella di ciascun tratto di zona. La stessa regola vale per le Div e, a parità di punteggio, per i migliori tre del nastro.</p>
                   <p><strong>Come si usa (modalità 🌐 RTN):</strong></p>
                   <ol style="margin-left:1.2rem;line-height:1.9;">
                     <li>Attiva il toggle <strong style="color:#0891b2;">🌐 RTN</strong> (diventa azzurro).</li>
@@ -34372,7 +34403,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <text x="464" y="272" class="fx-card-s">Cambia il nodo di arrivo.</text>
                   <text x="464" y="288" class="fx-card-s">Parte dal Div A che hai selezionato.</text>
                 </svg>
-                <p class="docs-fig-nota">I due segmenti laterali vengono calcolati con priorita' al grafo RC; il grafo unificato RA+RC entra in gioco solo se non esiste un percorso RC puro. Il tratto centrale e' un <strong>salto virtuale</strong>: non corrisponde a un cavo, serve a legare i due nodi di interconnessione e compare con il badge RTN nella colonna Percorso Centrali. <strong>Un percorso Div non condivide alcun collegamento fisico con quello di riferimento</strong>: gli archi del percorso base vengono rimossi dal grafo prima di cercare l'alternativa.</p>
+                <p class="docs-fig-nota">I due segmenti laterali (zona A e zona B) vengono calcolati sia sul grafo RC sia sul grafo unificato RA+RC: ogni zona tiene tante varianti quanto <strong>Max risultati</strong> (100 se vuoto), ordinate per km e, a parità di km, prima le solo RC, poi le solo RA, poi le miste RA+RC, perché un tratto su una sola rete usa un solo tipo di scheda transponder. Le combinazioni zona A + zona B seguono la stessa regola sui km totali, e centrali e collegamenti da evitare sono esclusi già durante la ricerca. Il tratto centrale e' un <strong>salto virtuale</strong>: non corrisponde a un cavo, serve a legare i due nodi di interconnessione e compare con il badge RTN nella colonna Percorso Centrali. <strong>Un percorso Div non condivide alcun collegamento fisico con quello di riferimento</strong>: gli archi del percorso base vengono rimossi dal grafo prima di cercare l'alternativa.</p>
               </figure>
 <h4 class="docs-section-title" style="margin-top:1.2rem;">I 37 Nodi A1 TIM</h4>
               <p>I Nodi A1 sono i POP (Point of Presence) di interconnessione interregionale della rete TIM, classificati per area geografica.
@@ -36342,6 +36373,10 @@ PERCORSI ALTERNATIVI (Div):
               <li><strong>🔄 Il Convertitore DB CRO</strong>: pagina a parte, senza librerie esterne e senza rete. Legge il template Excel o un JSON, riconosce RC e RA dalle intestazioni, compatta, rimonta e confronta con la sorgente, mostra le differenze rispetto al tool e scarica il tool aggiornato sostituendo i blocchi fra i marcatori. Le date nel bottone Database e nel tab Database restano da aggiornare a mano</li>
               <li><strong>📝 Cosa ha insegnato il primo aggiornamento</strong>: nel template del 01/10 15 distanze RC erano celle di testo con la virgola (il tool le avrebbe lette come numeri interi, per esempio 15 km invece di 15,474) e 7 erano numeri con decimali spuri invisibili in Excel. Sono state corrette prima della conversione. Le regole per l'Excel sono ora nella sezione <em>Database</em> della Guida</li>
               <li><strong>📘 Overview e Guida</strong>: nuova scheda <em>Aggiornamento dei database</em>; scheda <em>Database Enterprise</em> e riquadro <em>Database</em> dell'Architettura riscritti senza i vecchi numeri (500+ centrali, 5.700+ collegamenti); nella Guida per Tab il Database spiega dove si legge la data dei dati; la nota sul Confronto DB Excel rimanda al convertitore</li>
+              <li><strong>🔢 Card dell'Overview calcolate dai dati</strong>: gli elenchi delle zone nelle card <em>Zone Geografiche</em> RA e RC e la riga dei tipi della card <em>Centrali Univoche</em> RA erano testo fisso; ora li scrive la funzione delle card in base ai dati. La riga <em>Nodi di Rete divisi</em> della card <em>Centrali Univoche</em> RA era testo fisso (5083) e non seguiva gli aggiornamenti dei DB. Ora la calcola la funzione delle card dell'Overview, con la stessa regola di <code>buildCentralLabelsRA</code>: centrale (GAT e CLLI) più TipoSede 1, 2 o 3, contate una volta per coppia. Con i dati del 01/10/2026 il risultato è 5.077, lo stesso numero che la ricerca RA scrive in console; 1.023 centrali compaiono con più di un tipo, per questo i nodi sono più delle 4.054 centrali univoche</li>
+              <li><strong>🌐 Regola di rete nell'Unificato</strong>: con RTN acceso o spento ogni percorso viene classificato solo RC, solo RA o misto RA+RC in base ai collegamenti (un passaggio di layer RA↔RC nella stessa centrale non rende misto un percorso fatto di collegamenti di una sola rete). L'ordine resta per km; a parità di km, cioè quando le distanze coincidono al centesimo come in tabella, vengono prima i solo RC, poi i solo RA, poi i misti, perché una sola rete vuol dire un solo tipo di scheda transponder invece di due; poi conta il numero di tratte. Senza RTN la classe è quella del percorso intero, con RTN quella di ciascun tratto di zona: a parità di km totali prima le combinazioni con meno tratti misti, poi con meno tratti solo RA. Oltre alla ricerca per km il tool cerca anche i percorsi su una sola rete fra le due centrali, così a parità di km ci sono tutti; nelle Div questo trova anche alternative che prima mancavano. La regola vale per la tabella dei percorsi Std, per le Div (normali e RTN di zona) e per i migliori tre del nastro, dove decide a parità di punteggio. Prima la tabella era ordinata solo per km e, con RTN, un tratto RC puro escludeva del tutto i misti anche più corti. Con centrali obbligatorie la ricerca resta quella per tappe</li>
+              <li><strong>🔢 RTN, varianti per zona</strong>: ogni zona calcola tante varianti quanto il campo <em>Max risultati</em> (100 se vuoto), prima al massimo 20. Con collegamenti da evitare ne cerca il doppio, così gli scarti non tolgono posto. La tabella mostra le migliori combinazioni fino a <em>Max risultati</em>: per vedere più varianti di zona si alza quel campo o si usano le Div di zona</li>
+              <li><strong>🚫 Esclusioni sempre applicate</strong>: i campi singoli di centrali e collegamenti obbligatori o da evitare vengono letti al momento della ricerca, quindi vale quello che si vede anche se scritto a mano o arrivato dal Rilancio RC (prima contava solo la voce scelta dalla tendina). Le Div, normali e RTN di zona A, B e A+B, rispettano i collegamenti obbligatori e da evitare. I tratti RTN escludono centrali e collegamenti già durante la ricerca: prima i 20 percorsi per zona venivano scartati dopo e con una centrale esclusa si poteva scendere da 100 a 32 risultati. <em>Cambia interconnessione RTN</em> rilancia la ricerca completa con i Nodi A1 scelti, passando da tutti i vincoli e filtri</li>
             </ul>
           </div>
         </details>
@@ -38836,10 +38871,19 @@ function updateOverviewUnifiedStats() {
 
     const centrals = new Set();
     const zones = new Set();
+    // Nodi di rete divisi per tipo: coppie centrale + TipoSede 1, 2 o 3, contate come in buildCentralLabelsRA
+    const nodiTipo = new Set();
+    const tipiPresenti = new Set();
+    const addNodo = (gat, clli, tipo) => {
+      const t = parseInt(tipo, 10);
+      if (gat && (t === 1 || t === 2 || t === 3)) { nodiTipo.add((clli ? gat + ' (' + clli + ')' : gat) + '|Tipo:' + t); tipiPresenti.add(t); }
+    };
     db.forEach(l => {
       if (l.CLLI_A) centrals.add(l.CLLI_A);
       if (l.CLLI_Z) centrals.add(l.CLLI_Z);
       if (l.Zona) zones.add(l.Zona);
+      addNodo(l.GAT_A, l.CLLI_A, l.TipoSedeA);
+      addNodo(l.GAT_Z, l.CLLI_Z, l.TipoSedeZ);
     });
 
     // breakdown NON attivi (top 4) con colori
@@ -38874,7 +38918,7 @@ function updateOverviewUnifiedStats() {
       return '<span style="color:' + color + '; font-weight:600;">' + displayKey + '</span>: ' + countsAggregated[k];
     }).join('<br>') || '—';
 
-    return { total, active, nonatt, centrali: centrals.size, zone: zones.size, breakdown: breakdownHtml };
+    return { total, active, nonatt, centrali: centrals.size, nodiTipo: nodiTipo.size, zone: zones.size, zoneList: Array.from(zones).sort().join(', ') || '—', tipi: Array.from(tipiPresenti).sort().map(t => 'Tipo ' + t),  breakdown: breakdownHtml };
   }
 
   const ra = compute(dbRA);
@@ -38887,7 +38931,10 @@ function updateOverviewUnifiedStats() {
   setText('stat-ra-active', ra.active.toLocaleString('it-IT'));
   setText('stat-ra-total', '/ ' + ra.total.toLocaleString('it-IT'));
   setText('stat-ra-centrali', ra.centrali.toLocaleString('it-IT'));
+  setText('stat-ra-noditipo', ra.nodiTipo.toLocaleString('it-IT'));
   setText('stat-ra-zone', ra.zone.toLocaleString('it-IT'));
+  setText('stat-ra-zonelist', ra.zoneList);
+  setText('stat-ra-tipi', ra.tipi.length ? (ra.tipi.length > 1 ? ra.tipi.slice(0, -1).join(', ') + ' e ' + ra.tipi[ra.tipi.length - 1] : ra.tipi[0]) : '—');
   setText('stat-ra-nonatt', ra.nonatt.toLocaleString('it-IT'));
   setHtml('stat-ra-breakdown', ra.breakdown);
 
@@ -38896,6 +38943,7 @@ function updateOverviewUnifiedStats() {
   setText('stat-rc-total', '/ ' + rc.total.toLocaleString('it-IT'));
   setText('stat-rc-centrali', rc.centrali.toLocaleString('it-IT'));
   setText('stat-rc-zone', rc.zone.toLocaleString('it-IT'));
+  setText('stat-rc-zonelist', rc.zoneList);
   setText('stat-rc-nonatt', rc.nonatt.toLocaleString('it-IT'));
   setHtml('stat-rc-breakdown', rc.breakdown);
 }
@@ -63695,6 +63743,155 @@ div[style*="background:#f3f4f6"] label:hover span {
    * 3. BestA1_arrivo → End (Unified RA+RC)
    * Combina i segmenti e ritorna array di path objects.
    */
+  // ═══ Regole di ricerca RTN e vincoli sui collegamenti (V60.10.26) ═══
+  // Un tratto di zona e' "solo RC" (classe 0), "solo RA" (classe 1) o "misto"
+  // L'ordine resta per km: la classe decide solo a parita' di km.
+  // RA+RC (classe 2, anche un solo passaggio XFER). Solo RC e solo RA hanno
+  // precedenza sui misti perche' usano un solo tipo di scheda transponder;
+  // fra i due, solo RC ha la priorita'.
+  function _uEdgeMatchesLink(edge, linkConstraint) {
+    if (!edge || !linkConstraint) return false;
+    var linkUpper = String(linkConstraint).toUpperCase().trim();
+    if (!linkUpper) return false;
+    var raw = edge.raw || {};
+    var idColl = String(edge.id || raw.IdCollegamento || raw['IdCollegamento (Ramo)'] || '').toUpperCase().trim();
+    if (idColl && idColl.indexOf(linkUpper) !== -1) return true;
+    var subpath = String(raw.Nome_SubPath || raw.SubPath || '').toUpperCase().trim();
+    if (subpath && subpath.indexOf(linkUpper) !== -1) return true;
+    var arco = String(raw.ID_ARCO || raw.Arco || '').toUpperCase().trim();
+    if (arco && arco.indexOf(linkUpper) !== -1) return true;
+    return false;
+  }
+  function _uPathAvoidsLinks(p) {
+    if (!_linkAvoidListUNIFIED.length) return true;
+    var edges = (p && p.edges) || [];
+    return !_linkAvoidListUNIFIED.some(function(l) { return edges.some(function(e) { return _uEdgeMatchesLink(e, l); }); });
+  }
+  function _uPathHasMustLinks(p) {
+    if (!_linkMustPassListUNIFIED.length) return true;
+    var edges = (p && p.edges) || [];
+    return _linkMustPassListUNIFIED.every(function(l) { return edges.some(function(e) { return _uEdgeMatchesLink(e, l); }); });
+  }
+  function _rtnSegClass(edges) {
+    // Contano i collegamenti: un passaggio di layer RA↔RC nella stessa centrale
+    // (per esempio all'estremo, su una T1 presente in entrambe le reti) non
+    // aggiunge una seconda rete se tutti i collegamenti sono di una rete sola
+    var hasRC = false, hasRA = false;
+    (edges || []).forEach(function(e) {
+      if (e.source === 'RC') hasRC = true;
+      else if (e.source === 'RA') hasRA = true;
+    });
+    if (hasRC && hasRA) return 2;
+    return hasRA ? 1 : 0;
+  }
+  function _rtnKm(edges) {
+    return (edges || []).reduce(function(s, e) { return s + (e.source !== 'XFER' && e.source !== 'RTN' ? (Number(e.weight) || 0) : 0); }, 0);
+  }
+  // Rango di un percorso RTN: quanti tratti di zona sono misti e quanti solo RA.
+  // null se il percorso non passa dal backbone RTN.
+  function _rtnPathRank(p) {
+    var edges = (p && p.edges) || [];
+    var i = -1;
+    for (var k = 0; k < edges.length; k++) { if (edges[k] && edges[k].source === 'RTN') { i = k; break; } }
+    if (i < 0) return null;
+    var c1 = _rtnSegClass(edges.slice(0, i)), c2 = _rtnSegClass(edges.slice(i + 1));
+    return { mix: (c1 === 2 ? 1 : 0) + (c2 === 2 ? 1 : 0), ra: (c1 === 1 ? 1 : 0) + (c2 === 1 ? 1 : 0), a: c1, b: c2 };
+  }
+  function _rtnCompareRank(a, b) {
+    var rA = _rtnPathRank(a), rB = _rtnPathRank(b);
+    if (!rA || !rB) return 0;
+    if (rA.mix !== rB.mix) return rA.mix - rB.mix;
+    return rA.ra - rB.ra;
+  }
+  // Varianti per zona = "Max risultati" della ricerca (default 100)
+  function _rtnZoneK() {
+    var v = parseInt(document.getElementById('uRouteMaxResultsInput')?.value || '', 10);
+    return Number.isFinite(v) ? Math.max(1, Math.min(3000, v)) : 100;
+  }
+  window._rtnPathRank = _rtnPathRank;
+
+  // ═══ Regola di rete dell'Unificato, con o senza RTN (V60.10.26) ═══
+  // Senza RTN la classe vale per il percorso intero: solo RC, solo RA, misto.
+  // Con RTN vale per i due tratti di zona (_rtnPathRank).
+  function _uNetCompare(a, b) {
+    var rA = _rtnPathRank(a), rB = _rtnPathRank(b);
+    if (rA && rB) {
+      if (rA.mix !== rB.mix) return rA.mix - rB.mix;
+      return rA.ra - rB.ra;
+    }
+    if (!rA && !rB) return _rtnSegClass((a && a.edges) || []) - _rtnSegClass((b && b.edges) || []);
+    return 0;
+  }
+  // Firma sui soli collegamenti: lo stesso percorso con o senza passaggi di
+  // layer RA↔RC agli estremi conta una volta
+  function _uPathSig(p) {
+    return ((p && p.edges) || []).filter(function(e) { return e && e.source !== 'XFER'; })
+      .map(function(e) { return (e.id || e.arco || '') + '/' + (e.source || ''); }).join('|');
+  }
+  // Due distanze sono "pari" se coincidono al centesimo di km, come in tabella
+  var _U_KM_EQ = 0.005;
+  function _uKmCmp(x, y) { return Math.abs(x - y) > _U_KM_EQ ? x - y : 0; }
+  function _uSortByNetwork(paths) {
+    var dec = paths.map(function(p, i) { return { p: p, i: i, km: _rtnKm(p.edges), h: (p.edges || []).length }; });
+    dec.sort(function(x, y) {
+      var k = _uKmCmp(x.km, y.km);
+      if (k) return k;
+      var c = _uNetCompare(x.p, y.p);
+      if (c) return c;
+      if (x.h !== y.h) return x.h - y.h;
+      return x.i - y.i;
+    });
+    return dec.map(function(d) { return d.p; });
+  }
+  // Vista del grafo con i soli archi di una rete ('RC' o 'RA')
+  function _uNetGraphView(graph, src) {
+    var g = {};
+    Object.keys(graph).forEach(function(k) {
+      g[k] = (graph[k] || []).filter(function(e) { return e && e.source === src; });
+    });
+    return g;
+  }
+  // Percorsi su una sola rete fra le due centrali, da aggiungere a quelli per km
+  // della ricerca senza RTN: i solo RC e solo RA piu' lunghi dei misti non
+  // devono restare fuori dalla tabella
+  function _uSingleNetCandidates(graph, startKey, endKey, k, avoidNodes, have) {
+    var out = [];
+    var sB = startKey.replace(/::(?:RA|RC)$/, ''), eB = endKey.replace(/::(?:RA|RC)$/, '');
+    [['RC', '::RC'], ['RA', '::RA']].forEach(function(n) {
+      var from = sB + n[1], to = eB + n[1];
+      if (!graph[from] || !graph[to] || from === to) return;
+      var view = _uNetGraphView(graph, n[0]);
+      var list = [];
+      try { list = yenKShortestUNIFIED(view, from, to, k, avoidNodes || new Set()) || []; } catch (e) { list = []; }
+      list.forEach(function(p) {
+        var sig = _uPathSig(p);
+        if (have.has(sig)) return;
+        have.add(sig);
+        out.push(p);
+      });
+    });
+    return out;
+  }
+
+  // Campi singoli (senza selezione multipla): vale quello che si vede nel campo.
+  // Il valore scritto a mano, o arrivato dal Rilancio RC, entra nei vincoli
+  // anche se non e' stato scelto dalla tendina.
+  function _uSyncSingleFieldsUNIFIED() {
+    function val(id) { var el = document.getElementById(id); return el ? String(el.value || '').trim() : ''; }
+    function centrale(id, nome) {
+      var v = val(id);
+      if (!v) return [];
+      var lbl = resolveUnifiedInput(v, null, nome);
+      if (lbl) { var el = document.getElementById(id); if (el) el.value = lbl; return [lbl]; }
+      if (typeof showToast === 'function') showToast('⚠️ ' + nome + ' "' + v + '" non riconosciuta: scegli la centrale dall\'elenco', 'warning');
+      return [];
+    }
+    if (!_mustPassMultiModeUNIFIED)     _mustPassListUNIFIED     = centrale('uRouteMustPassInput', 'Centrale obbligatoria');
+    if (!_avoidMultiModeUNIFIED)        _avoidListUNIFIED        = centrale('uRouteAvoidInput', 'Centrale da evitare');
+    if (!_linkMustPassMultiModeUNIFIED) { var lm = val('uRouteLinkMustPassInput'); _linkMustPassListUNIFIED = lm ? [lm.toUpperCase()] : []; }
+    if (!_linkAvoidMultiModeUNIFIED)    { var la = val('uRouteLinkAvoidInput');    _linkAvoidListUNIFIED    = la ? [la.toUpperCase()] : []; }
+  }
+
   function runRtnRouteSearch(startKey, endKey, graph, nodeInfo, maxResults, avoidNodes, forceA1) {
     var startBase = startKey.replace(/::(?:RA|RC)$/, '');
     var endBase   = endKey.replace(/::(?:RA|RC)$/, '');
@@ -63718,7 +63915,12 @@ div[style*="background:#f3f4f6"] label:hover span {
     window._uRtnLastA1Start = a1Start;
     window._uRtnLastA1End   = a1End;
 
-    var avoidEmpty = new Set();
+    // Varianti per zona: tante quanto "Max risultati" (default 100). Con
+    // collegamenti da evitare se ne cercano il doppio, perche' quelle scartate
+    // non tolgano posto alle buone.
+    var kZone = _rtnZoneK();
+    var kSearch = _linkAvoidListUNIFIED.length ? Math.min(kZone * 2, 3000) : kZone;
+    var avoid = avoidNodes || new Set();
 
     // Grafo RC-only per i segmenti RTN (cachato in _uGraphRCCache)
     var graphRC = null;
@@ -63741,126 +63943,106 @@ div[style*="background:#f3f4f6"] label:hover span {
       }
     }
 
-    // Determina il layer migliore per ogni Nodo A1 (RC ha priorità su RA)
-    function bestKeyForA1(a1Clli) {
-      var rcKey = a1Clli + '::RC';
-      var raKey = a1Clli + '::RA';
-      if (graphRC[rcKey]) return rcKey;
-      if (graph[rcKey]) return rcKey;
-      if (graph[raKey]) return raKey;
-      return rcKey; // default
+    function yen(g, fromK, toK) {
+      if (!g[fromK] || !g[toK] || fromK === toK) return [];
+      try { return yenKShortestUNIFIED(g, fromK, toK, kSearch, avoid) || []; } catch(e) { return []; }
     }
+    function layers(clli) {
+      var ks = [clli + '::RC', clli + '::RA'].filter(function(k) { return graph[k]; });
+      return ks.length ? ks : [clli + '::RC'];
+    }
+    function uniq(arr) { return arr.filter(function(x, i) { return arr.indexOf(x) === i; }); }
 
-    var a1StartKey = bestKeyForA1(a1Start);
-    var a1EndKey   = bestKeyForA1(a1End);
-
-    // Helper: cerca percorsi prima su RC-only, poi fallback su Unified
-    function searchSegment(fromKey, toKey, k) {
-      // 1. Prova RC-only
-      var fromRC = fromKey.replace(/::RA$/, '::RC');
-      var toRC   = toKey.replace(/::RA$/, '::RC');
-      if (graphRC[fromRC] && graphRC[toRC]) {
-        try {
-          var rcPaths = yenKShortestUNIFIED(graphRC, fromRC, toRC, k, avoidEmpty) || [];
-          if (rcPaths.length) return { paths: rcPaths, fromKey: fromRC, toKey: toRC };
-        } catch(e) {}
+    // Candidati di un tratto di zona: percorsi solo RC (grafo RC), poi tutti
+    // quelli del grafo unificato (solo RA o misti), verso ogni layer del Nodo A1.
+    // Ordine: solo RC, solo RA, misti; dentro ogni gruppo per km, poi per tratte.
+    function zoneCandidates(fromKeys, toKeys) {
+      var out = [], seen = new Set();
+      function push(list) {
+        list.forEach(function(p) {
+          var sig = _uPathSig(p);
+          if (seen.has(sig)) return;
+          seen.add(sig);
+          if (!_uPathAvoidsLinks(p)) return;
+          p._rtnCls = _rtnSegClass(p.edges);
+          p._rtnKm = _rtnKm(p.edges);
+          out.push(p);
+        });
       }
-      // 2. Fallback: grafo Unified (può includere RA)
-      try {
-        var paths = yenKShortestUNIFIED(graph, fromKey, toKey, k, avoidEmpty) || [];
-        if (paths.length) return { paths: paths, fromKey: fromKey, toKey: toKey };
-      } catch(e) {}
-      return { paths: [], fromKey: fromKey, toKey: toKey };
+      var fRC = uniq(fromKeys.map(function(k) { return k.replace(/::RA$/, '::RC'); }));
+      var tRC = uniq(toKeys.map(function(k) { return k.replace(/::RA$/, '::RC'); }));
+      fRC.forEach(function(f) { tRC.forEach(function(t) { push(yen(graphRC, f, t)); }); });
+      fromKeys.forEach(function(f) { toKeys.forEach(function(t) { push(yen(graph, f, t)); }); });
+      out.sort(function(a, b) {
+        var k = _uKmCmp(a._rtnKm, b._rtnKm);
+        if (k) return k;
+        if (a._rtnCls !== b._rtnCls) return a._rtnCls - b._rtnCls;
+        return (a.edges || []).length - (b.edges || []).length;
+      });
+      return out.slice(0, kZone);
     }
 
-    // Segmento 1: Start → A1_start
-    var seg1Paths = [];
-    if (startBase === a1Start) {
-      seg1Paths = [{ nodes: [startKey], edges: [] }];
-    } else {
-      var r1 = searchSegment(startKey, a1StartKey, Math.min(maxResults*2, 20));
-      seg1Paths = r1.paths;
-      a1StartKey = r1.toKey;
-      if (!seg1Paths.length) {
-        // Prova layer alternativo del Nodo A1
-        var altA1StartKey = a1Start + (a1StartKey.endsWith('::RC') ? '::RA' : '::RC');
-        var r1b = searchSegment(startKey, altA1StartKey, Math.min(maxResults*2, 20));
-        seg1Paths = r1b.paths;
-        if (seg1Paths.length) a1StartKey = r1b.toKey;
-      }
-    }
+    // Zona A: Start → Nodo A1 di partenza
+    var seg1Paths = (startBase === a1Start)
+      ? [{ nodes: [startKey], edges: [], _rtnCls: 0, _rtnKm: 0 }]
+      : zoneCandidates([startKey], layers(a1Start));
+    // Zona B: Nodo A1 di arrivo → End
+    var seg2Paths = (endBase === a1End)
+      ? [{ nodes: [endKey], edges: [], _rtnCls: 0, _rtnKm: 0 }]
+      : zoneCandidates(layers(a1End), [endKey]);
 
-    // Segmento 2: A1_end → End
-    var seg2Paths = [];
-    if (endBase === a1End) {
-      seg2Paths = [{ nodes: [endKey], edges: [] }];
-    } else {
-      var r2 = searchSegment(a1EndKey, endKey, Math.min(maxResults*2, 20));
-      seg2Paths = r2.paths;
-      a1EndKey = r2.fromKey;
-      if (!seg2Paths.length) {
-        var altA1EndKey = a1End + (a1EndKey.endsWith('::RC') ? '::RA' : '::RC');
-        var r2b = searchSegment(altA1EndKey, endKey, Math.min(maxResults*2, 20));
-        seg2Paths = r2b.paths;
-        if (seg2Paths.length) a1EndKey = r2b.fromKey;
-      }
-    }
-
+    window._uRtnLastZoneCounts = { A: seg1Paths.length, B: seg2Paths.length, k: kZone };
     if (!seg1Paths.length || !seg2Paths.length) return [];
 
-    // Combina i segmenti inserendo il gateway RTN
-    var combined = [];
-    var lim1 = Math.min(seg1Paths.length, maxResults);
-    var lim2 = Math.min(seg2Paths.length, maxResults);
+    // Combinazioni ordinate: prima meno tratti misti, poi meno tratti solo RA,
+    // poi km totali e numero di tratte. Si costruiscono solo le prime maxResults.
+    var n1 = seg1Paths.length, n2 = seg2Paths.length;
+    var maxPairs = 250000;
+    var lim1 = Math.min(n1, Math.max(1, Math.floor(maxPairs / n2)));
+    var pairs = [];
     for (var a = 0; a < lim1; a++) {
-      for (var b = 0; b < lim2; b++) {
-        var p1 = seg1Paths[a];
-        var p2 = seg2Paths[b];
-        var rtnEdge = {
-          id: 'RTN_BACKBONE',
-          arco: 'RTN_BACKBONE',
-          source: 'RTN',
-          weight: 0,
-          raw: { transfer: true, rtn: true, from: a1Start, to: a1End },
-          from: a1StartKey,
-          to: a1EndKey,
-          rtnGateway: true,
-          t1Start: a1Start,
-          t1End: a1End
-        };
-        // p1.nodes termina con a1StartKey, p2.nodes inizia con a1EndKey:
-        // evita duplicati concatenando solo i nodi intermedi del gateway RTN
-        var p1Nodes = p1.nodes || [];
-        var p2Nodes = p2.nodes || [];
-        // Rimuovi l'ultimo nodo di p1 se coincide con a1StartKey (già è il termine del seg1)
-        // e il primo nodo di p2 se coincide con a1EndKey (già è l'inizio del seg2)
-        var p1NodesClean = (p1Nodes.length && p1Nodes[p1Nodes.length-1] === a1StartKey)
-          ? p1Nodes : p1Nodes.concat([a1StartKey]);
-        var p2NodesClean = (p2Nodes.length && p2Nodes[0] === a1EndKey)
-          ? p2Nodes : [a1EndKey].concat(p2Nodes);
-        var combinedNodes = p1NodesClean.concat(p2NodesClean);
-        var combinedEdges = (p1.edges||[]).concat([rtnEdge]).concat(p2.edges||[]);
-        combined.push({ nodes: combinedNodes, edges: combinedEdges });
-        if (combined.length >= maxResults) break;
+      for (var b = 0; b < n2; b++) {
+        var c1 = seg1Paths[a]._rtnCls, c2 = seg2Paths[b]._rtnCls;
+        pairs.push({
+          a: a, b: b,
+          mix: (c1 === 2 ? 1 : 0) + (c2 === 2 ? 1 : 0),
+          ra:  (c1 === 1 ? 1 : 0) + (c2 === 1 ? 1 : 0),
+          km:  seg1Paths[a]._rtnKm + seg2Paths[b]._rtnKm,
+          hops: (seg1Paths[a].edges || []).length + (seg2Paths[b].edges || []).length
+        });
       }
-      if (combined.length >= maxResults) break;
     }
-    // Filtra: se esistono percorsi pure RC (nessun edge RA né XFER nei segmenti),
-    // scarta quelli misti RA+RC. Solo se non rimangono percorsi, usa tutti.
-    var pureRC = combined.filter(function(p) {
-      return !(p.edges||[]).some(function(e){ return e.source==='RA' || e.source==='XFER'; });
+    pairs.sort(function(x, y) {
+      var k = _uKmCmp(x.km, y.km);
+      if (k) return k;
+      if (x.mix !== y.mix) return x.mix - y.mix;
+      if (x.ra !== y.ra) return x.ra - y.ra;
+      return x.hops - y.hops;
     });
-    if (pureRC.length > 0) combined = pureRC;
 
-    // Sort RC-first: percorsi senza edge RA precedono quelli con RA
-    combined.sort(function(a, b) {
-      var aHasRA = (a.edges||[]).some(function(e){ return e.source === 'RA'; }) ? 1 : 0;
-      var bHasRA = (b.edges||[]).some(function(e){ return e.source === 'RA'; }) ? 1 : 0;
-      if (aHasRA !== bHasRA) return aHasRA - bHasRA;
-      var dA = (a.edges||[]).reduce(function(s,e){ return s+(e.source!=='XFER'&&e.source!=='RTN'?Number(e.weight)||0:0); }, 0);
-      var dB = (b.edges||[]).reduce(function(s,e){ return s+(e.source!=='XFER'&&e.source!=='RTN'?Number(e.weight)||0:0); }, 0);
-      return dA - dB;
-    });
+    var combined = [];
+    for (var q = 0; q < pairs.length && combined.length < maxResults; q++) {
+      var p1 = seg1Paths[pairs[q].a], p2 = seg2Paths[pairs[q].b];
+      var p1Nodes = p1.nodes || [], p2Nodes = p2.nodes || [];
+      var fromK = p1Nodes[p1Nodes.length - 1] || (a1Start + '::RC');
+      var toK = p2Nodes[0] || (a1End + '::RC');
+      var rtnEdge = {
+        id: 'RTN_BACKBONE',
+        arco: 'RTN_BACKBONE',
+        source: 'RTN',
+        weight: 0,
+        raw: { transfer: true, rtn: true, from: a1Start, to: a1End },
+        from: fromK,
+        to: toK,
+        rtnGateway: true,
+        t1Start: a1Start,
+        t1End: a1End
+      };
+      combined.push({
+        nodes: p1Nodes.concat(p2Nodes),
+        edges: (p1.edges || []).concat([rtnEdge]).concat(p2.edges || [])
+      });
+    }
     return combined;
   }
 
@@ -64141,45 +64323,19 @@ div[style*="background:#f3f4f6"] label:hover span {
     window._uRtnForceA1Persistent = { start: newA1Start, end: newA1End };
 
     closeCROPopup();
-    if (typeof window.showLoading === 'function') {
-      window.showLoading('Ricalcolo percorso RTN...', 'Aggiornamento interconnessione backbone');
-    }
-
-    setTimeout(function() {
-      try {
-        var newPaths = runRtnRouteSearch(
-          params.startKey, params.endKey, params.graph, params.nodeInfo,
-          params.maxResults, params.avoidNodes,
-          { start: newA1Start, end: newA1End }
-        );
-
-        if (!newPaths || !newPaths.length) {
-          if (typeof window.showAlert === 'function') {
-            showAlert('Nessun percorso trovato con l\'interconnessione RTN selezionata. Riprova con un\'altra combinazione di Nodi A1.', 'warning');
-          }
-          return;
-        }
-
-        _baseRoutesUNIFIED = newPaths;
-        window._baseRoutesUNIFIED = _baseRoutesUNIFIED;
-        renderBaseTableUNIFIED();
-        window._altRoutesUNIFIED = []; window._uStatsDivForIdx = -1;
-        if (typeof window.uUpdateStatsPanel === 'function') window.uUpdateStatsPanel();
-        try { if (typeof _renderTop4UNIFIED === 'function') _renderTop4UNIFIED(); } catch(e) { console.warn('[Top4U]', e); }
-
-        var divMsg = (newDivStart || newDivEnd)
-          ? ' | Div: ' + (newDivStart || '—') + '→' + (newDivEnd || '—')
-          : '';
-        if (typeof showToast === 'function') {
-          showToast('🌐 RTN aggiornato — Std: ' + newA1Start + '→' + newA1End + divMsg, 'success');
-        }
-      } catch (err) {
-        console.error('[RTN] Errore ricalcolo interconnessione:', err);
-        if (typeof window.showAlert === 'function') showAlert('Errore durante il ricalcolo. Apri console per dettagli.', 'error');
-      } finally {
-        if (typeof window.hideLoading === 'function') window.hideLoading();
+    // Il ricalcolo passa dalla ricerca completa: i Nodi A1 scelti sono in
+    // _uRtnForceA1Persistent e vengono applicati con tutti i vincoli e i filtri
+    // (collegamenti obbligatori e da evitare, limiti di km e tratte, gateway,
+    // centrali da evitare, ordine per regole di rete)
+    if (typeof window.runUnifiedRouteSearch === 'function') {
+      window.runUnifiedRouteSearch();
+      var divMsg = (newDivStart || newDivEnd)
+        ? ' | Div: ' + (newDivStart || '—') + '→' + (newDivEnd || '—')
+        : '';
+      if (typeof showToast === 'function') {
+        showToast('🌐 RTN aggiornato — Std: ' + newA1Start + '→' + newA1End + divMsg, 'success');
       }
-    }, 60);
+    }
   };
 
   /* ═══════════════════════════════════════════════════════════════════════
@@ -64632,7 +64788,7 @@ div[style*="background:#f3f4f6"] label:hover span {
     var scores = routes.map(function(r){ return _routeScore(r.edges||[], getKm(r), mKm); });
     var order = [];
     for(var ii=0; ii<routes.length; ii++) order.push(ii);
-    order.sort(function(a,b){ return scores[a]-scores[b]; });
+    order.sort(function(a,b){ return (scores[a]-scores[b]) || _uNetCompare(routes[a], routes[b]); });
 
     // In RTN mode: calcola anche ranking separato per Zona A e Zona B
     var orderA = [], orderB = [];
@@ -64646,8 +64802,8 @@ div[style*="background:#f3f4f6"] label:hover span {
       var scoresA = routes.map(function(r){ var sp=_rtnSplitEdges(r.edges||[]); return _rtnZoneScore(sp.a, getZoneKm(r.edges||[],'a'), mKmA); });
       var scoresB = routes.map(function(r){ var sp=_rtnSplitEdges(r.edges||[]); return _rtnZoneScore(sp.b, getZoneKm(r.edges||[],'b'), mKmB); });
       for(var jj=0; jj<routes.length; jj++){ orderA.push(jj); orderB.push(jj); }
-      orderA.sort(function(a,b){ return scoresA[a]-scoresA[b]; });
-      orderB.sort(function(a,b){ return scoresB[a]-scoresB[b]; });
+      orderA.sort(function(a,b){ return (scoresA[a]-scoresA[b]) || (_rtnSegClass(_rtnSplitEdges(routes[a].edges||[]).a) - _rtnSegClass(_rtnSplitEdges(routes[b].edges||[]).a)); });
+      orderB.sort(function(a,b){ return (scoresB[a]-scoresB[b]) || (_rtnSegClass(_rtnSplitEdges(routes[a].edges||[]).b) - _rtnSegClass(_rtnSplitEdges(routes[b].edges||[]).b)); });
     }
 
     // Contatore
@@ -66134,6 +66290,9 @@ div[style*="background:#f3f4f6"] label:hover span {
         const startRaw = document.getElementById('uRouteStartInput')?.value || '';
         const endRaw = document.getElementById('uRouteEndInput')?.value || '';
 
+        // Vincoli dei campi singoli: vale quello che si vede nel campo
+        _uSyncSingleFieldsUNIFIED();
+
         if (!startRaw.trim() || !endRaw.trim()) {
           if (infoEl) infoEl.textContent = 'Imposta una centrale di Partenza e una di Arrivo.';
           if (typeof showToast === 'function') {
@@ -66304,6 +66463,17 @@ div[style*="background:#f3f4f6"] label:hover span {
           rawPaths = yenKShortestUNIFIED(graph, startKey, endKey, Math.min(maxResults * 3, 9000), avoidNodes);
           window._uRtnLastSearchParams = null;
         }
+
+        // Regola di rete dell'Unificato, con o senza RTN: prima i percorsi solo RC,
+        // poi solo RA, poi misti RA+RC (una sola scheda transponder invece di due);
+        // a parita' per km. Senza RTN e senza centrali obbligatorie si aggiungono i
+        // percorsi su una sola rete che la ricerca per km avrebbe lasciato fuori.
+        if (rawPaths && rawPaths.length && waypointCLLIs.length === 0 && !rawPaths.some(p => _rtnPathRank(p))) {
+          const _haveSig = new Set(rawPaths.map(_uPathSig));
+          const _extraNet = _uSingleNetCandidates(graph, startKey, endKey, maxResults, avoidNodes, _haveSig);
+          if (_extraNet.length) rawPaths = rawPaths.concat(_extraNet);
+        }
+        if (rawPaths && rawPaths.length) rawPaths = _uSortByNetwork(rawPaths);
         
         if (!rawPaths || !rawPaths.length) {
           // Se RTN non attivo e aree diverse → suggerisci di abilitarlo
@@ -66578,11 +66748,16 @@ div[style*="background:#f3f4f6"] label:hover span {
           return true;
         });
         
-        // Ordina percorsi Std per distanza totale (km) crescente, poi per n° hop crescente
+        // Ordina percorsi Std per distanza totale (km); a parita' di km la regola di
+        // rete: senza RTN solo RC, solo RA, misti; con RTN meno tratti di zona misti,
+        // poi meno tratti solo RA. Poi n° hop
         _baseRoutesUNIFIED.sort((a, b) => {
           const dA = (a.edges || []).reduce((s, e) => s + (Number(e.weight) || 0), 0);
           const dB = (b.edges || []).reduce((s, e) => s + (Number(e.weight) || 0), 0);
-          if (Math.abs(dA - dB) > 0.001) return dA - dB;
+          const kd = _uKmCmp(dA, dB);
+          if (kd) return kd;
+          const rk = _uNetCompare(a, b);
+          if (rk) return rk;
           return (a.edges || []).length - (b.edges || []).length;
         });
         
@@ -66628,6 +66803,7 @@ div[style*="background:#f3f4f6"] label:hover span {
   // === PERCORSI DIVERSIFICATI ===
   window.runAltRoutesSearchUNIFIED = function(baseIndex, rtnZona) {
     if (typeof window.showLoading === 'function') {
+      _uSyncSingleFieldsUNIFIED();
       var loadMsg = rtnZona ? 'Calcolo Div RTN Zona ' + rtnZona + '...' : 'Calcolo percorsi diversificati...';
       window.showLoading(loadMsg, 'Ricerca percorsi alternativi');
     }
@@ -66853,6 +67029,8 @@ div[style*="background:#f3f4f6"] label:hover span {
         });
       }
       cands = cands.filter(p => isValidGatewayPath(p));
+      // Collegamenti obbligatori e da evitare: stesse regole della ricerca principale
+      cands = cands.filter(p => _uPathAvoidsLinks(p) && _uPathHasMustLinks(p));
       return cands.filter(p => {
         const nodes = p.nodes || [];
         for (let i = 1; i < nodes.length - 1; i++) {
@@ -67064,6 +67242,11 @@ div[style*="background:#f3f4f6"] label:hover span {
           }
         }
 
+        // Vincoli sui collegamenti; ordine per km e, a parita' di km, regola di rete
+        // (prima tratti di zona solo RC, poi solo RA, poi misti)
+        zonaDivRaw = zonaDivRaw.filter(p => _uPathAvoidsLinks(p) && _uPathHasMustLinks(p));
+        zonaDivRaw.sort((x, y) => _uKmCmp(_rtnKm(x.edges), _rtnKm(y.edges)) || _rtnCompareRank(x, y));
+
         // Valida e deduplica per firma edge
         const seenSigZ = new Set();
         const uniqueZonaDiv = [];
@@ -67117,7 +67300,7 @@ div[style*="background:#f3f4f6"] label:hover span {
           : yenKShortestUNIFIED(graphRC2Fb, segStartFb, segEndFb, kDiv, avoidNodes)) || [];
         const rawFb2 = yenKShortestUNIFIED(graphFbNoBase, segStartFb, segEndFb, kDiv, avoidNodes) || [];
         const rawFb3 = yenKShortestUNIFIED(graph, segStartFb, segEndFb, kDiv, avoidNodes) || [];
-        const allFb = [...rawFb1, ...rawFb2, ...rawFb3];
+        const allFb = [...rawFb1, ...rawFb2, ...rawFb3].filter(p => _uPathAvoidsLinks(p));
         // Filtra: scarta chi condivide il 100% degli edge col segmento base
         const seg2FixedEdgesFb = (rtnZona === 'A'
           ? (seg2FixedPath ? seg2FixedPath.edges || [] : [])
@@ -67156,6 +67339,7 @@ div[style*="background:#f3f4f6"] label:hover span {
               combined = { nodes: stdSeg1NodesB.concat(p2Clean), edges: stdSeg1EdgesB.concat([rtnEdgeFb]).concat(p.edges||[]) };
             }
             if (!isValidGatewayPath(combined)) continue;
+            if (!_uPathAvoidsLinks(combined) || !_uPathHasMustLinks(combined)) continue;
             const ep = expandRAT3InPath(combined, niZona);
             ep._overlapPct = _calcOverlapPct(combined.edges||[], baseRoute.edges||[]);
             ep._isPartialDiv = true;
@@ -67214,6 +67398,14 @@ div[style*="background:#f3f4f6"] label:hover span {
 
     // Primo tentativo: evita edge E centrali del percorso base
     let rawPaths = yenKShortestUNIFIED(graphNoBase, startAlt, endAlt, kDiv, avoidNodes);
+    // Regola di rete anche nelle Div: si aggiungono le alternative su una sola rete
+    // (solo RC, solo RA) che la ricerca per km avrebbe lasciato fuori
+    if (rawPaths && rawPaths.length) {
+      const _haveSigDiv = new Set(rawPaths.map(_uPathSig));
+      rawPaths = rawPaths.concat(_uSingleNetCandidates(graphNoBase, startAlt, endAlt, kDiv, avoidNodes, _haveSigDiv));
+    } else {
+      rawPaths = _uSingleNetCandidates(graphNoBase, startAlt, endAlt, kDiv, avoidNodes, new Set());
+    }
     let diversified = _applyFilters(rawPaths);
 
     // Fallback: grafo completo con avoid centrali
@@ -67301,7 +67493,7 @@ div[style*="background:#f3f4f6"] label:hover span {
     // (variabile rawPaths non più usata dopo questo punto)
     
     // Ordina per distanza
-    diversified.sort((a, b) => a.dist - b.dist || a.hops - b.hops);
+    diversified.sort((a, b) => _uKmCmp(a.dist, b.dist) || _uNetCompare(a, b) || a.hops - b.hops);
     
     // Rimuovi duplicati e prendi max 10
     const { nodeInfo } = buildUnifiedLabelsAndInfo();
