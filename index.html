@@ -28,8 +28,8 @@
 ║     lunghi compaiono una volta sola nel dizionario, e in testa a ogni blocco ci  ║
 ║     sono file di origine, data di generazione, record e le date "Aggiornati al"  ║
 ║     trovate in Altro1 e Altro2                                                   ║
-║   • CONVERTITORE DB CRO: pagina separata (Convertitore_DB_CRO.html) che legge il ║
-║     template Excel CRO_DB_Template.xlsx o un JSON, compatta, ricontrolla i       ║
+║   • CONVERTITORE CRONAT: pagina separata (CRONAT_Convertitore_DB.html) che legge ║
+║     il template Excel CRO_DB_Template.xlsx o un JSON, compatta, ricontrolla i    ║
 ║     record, mostra le differenze rispetto al tool e scarica il tool aggiornato.  ║
 ║     I blocchi stanno fra i marcatori INIZIO DB e FINE DB, uno per RC e uno per   ║
 ║     RA                                                                           ║
@@ -70,6 +70,11 @@
 ║     centrali e collegamenti gia' nella ricerca invece di scartarli dopo; Cambia  ║
 ║     interconnessione RTN rilancia la ricerca completa con i Nodi A1 scelti, con  ║
 ║     tutti i vincoli e i filtri                                                   ║
+║   • TAB RC, ETICHETTE: l'intestazione dice ora fino a 3000 Percorsi Standard     ║
+║     (default 100), come il campo Max risultati e il codice; prima diceva default ║
+║     30. Stessa correzione nella scheda Rete Core delle Funzionalita' Principali, ║
+║     nella Guida (Routing e Algoritmi) e nel glossario. Il limite di 10 Div per   ║
+║     ogni Std era gia' corretto                                                   ║
 ║                                                                                  ║
 ║   CHANGELOG V60.09.25 | Set 2026:                                                ║
 ║   ─────────────────────────                                                      ║
@@ -19528,7 +19533,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <h3 class="feature-title" style="color: #ea580c;">Algoritmo Dijkstra Avanzato</h3>
                         <span class="feature-badge" style="background: #fff7ed; color: #ea580c;">Core Engine</span>
                     </div>
-                    <p class="feature-desc">Calcolo automatico fino a <strong>3000 percorsi primari (Std)</strong> (default 30) ottimizzati per distanza e <strong>10 alternativi diversificati (Div)</strong> per ciascuno. Vincoli configurabili: centrali obbligatorie (selezione multipla), centrali da evitare (multipla), distanza min/max km, numero collegamenti. <strong>Esclusione Data Center</strong>: 17 sedi IDC/housing escluse di default dal routing (toggle [DC]). <strong>Overlay di caricamento</strong> visualizzato durante l'elaborazione dei percorsi. I <strong>migliori tre percorsi</strong> sono segnalati da un nastro colorato sopra la riga, oro argento e bronzo, e dalle card <em>Analisi Percorsi</em> cliccabili che portano alla riga.</p>
+                    <p class="feature-desc">Calcolo automatico fino a <strong>3000 percorsi primari (Std)</strong> (default 100) ottimizzati per distanza e <strong>10 alternativi diversificati (Div)</strong> per ciascuno. Vincoli configurabili: centrali obbligatorie (selezione multipla), centrali da evitare (multipla), distanza min/max km, numero collegamenti. <strong>Esclusione Data Center</strong>: 17 sedi IDC/housing escluse di default dal routing (toggle [DC]). <strong>Overlay di caricamento</strong> visualizzato durante l'elaborazione dei percorsi. I <strong>migliori tre percorsi</strong> sono segnalati da un nastro colorato sopra la riga, oro argento e bronzo, e dalle card <em>Analisi Percorsi</em> cliccabili che portano alla riga.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #fff7ed; color: #ea580c;">Dijkstra</span>
                         <span class="spec-tag" style="background: #fff7ed; color: #ea580c;">Max 3000+10 Paths</span>
@@ -19545,7 +19550,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <h3 class="feature-title" style="color: #059669;">Database Enterprise RC + RA Italia</h3>
                         <span class="feature-badge" style="background: #ecfdf5; color: #059669;">Professional</span>
                     </div>
-                    <p class="feature-desc">Database dei collegamenti di <strong>RC Italia</strong> (rete core) e <strong>RA Italia</strong> (rete aggregation), con le date di aggiornamento nel bottone <strong>Database</strong> e i conteggi nelle Statistiche. Nel file sono scritti in forma compatta <strong>CROPACK</strong> e si aggiornano con il <strong>Convertitore DB CRO</strong>. Metadati completi (GAT, CLLI, coordinate WGS84, zona, area, regione, stato operativo). Ricerca full-text <strong>case-insensitive</strong>. <strong>Filtri Stati</strong> costruiti sui dati: le pastiglie seguono gli stati presenti nel database in uso e si adeguano a ogni aggiornamento dei DB. <strong>Filtri Sedi</strong>: Solo NODO A1 [T1], Solo Data Center [DC]. Colorazione automatica: <span style="color:#0066CC;font-weight:600;">A1</span> blu, <span style="color:#d1008f;font-weight:600;">DC</span> magenta. Export CSV.</p>
+                    <p class="feature-desc">Database dei collegamenti di <strong>RC Italia</strong> (rete core) e <strong>RA Italia</strong> (rete aggregation), con le date di aggiornamento nel bottone <strong>Database</strong> e i conteggi nelle Statistiche. Nel file sono scritti in forma compatta <strong>CROPACK</strong> e si aggiornano con il <strong>Convertitore CRONAT</strong>. Metadati completi (GAT, CLLI, coordinate WGS84, zona, area, regione, stato operativo). Ricerca full-text <strong>case-insensitive</strong>. <strong>Filtri Stati</strong> costruiti sui dati: le pastiglie seguono gli stati presenti nel database in uso e si adeguano a ogni aggiornamento dei DB. <strong>Filtri Sedi</strong>: Solo NODO A1 [T1], Solo Data Center [DC]. Colorazione automatica: <span style="color:#0066CC;font-weight:600;">A1</span> blu, <span style="color:#d1008f;font-weight:600;">DC</span> magenta. Export CSV.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #ecfdf5; color: #059669;">RC+RA</span>
                         <span class="spec-tag" style="background: #ecfdf5; color: #059669;">Filtri Sedi</span>
@@ -19564,7 +19569,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <h3 class="feature-title" style="color: #0066cc;">🔄 Aggiornamento dei database</h3>
                         <span class="feature-badge" style="background: #eff6ff; color: #0066cc;">Nuovo V60.10.26</span>
                     </div>
-                    <p class="feature-desc">I database RC e RA si aggiornano con la pagina <strong>Convertitore DB CRO</strong>, senza toccare il codice. Si compila il template Excel <strong>CRO_DB_Template.xlsx</strong> (fogli <em>Collegamenti_RC</em> e <em>Collegamenti_RA</em>) e lo si trascina nel convertitore insieme al file del tool: la pagina riconosce RC e RA dalle intestazioni, scrive i dati in forma compatta <strong>CROPACK</strong>, li rimonta e li confronta con la sorgente record per record, poi mostra record, stati e differenze rispetto al tool (modificati, nuovi, tolti) e scarica il tool aggiornato. Funziona senza rete, nel browser. Le date nel bottone <strong>Database</strong> e nel tab Database si aggiornano a parte.</p>
+                    <p class="feature-desc">I database RC e RA si aggiornano con la pagina <strong>Convertitore CRONAT</strong>, senza toccare il codice. Si compila il template Excel <strong>CRO_DB_Template.xlsx</strong> (fogli <em>Collegamenti_RC</em> e <em>Collegamenti_RA</em>) e lo si trascina nel convertitore insieme al file del tool: la pagina riconosce RC e RA dalle intestazioni, scrive i dati in forma compatta <strong>CROPACK</strong>, li rimonta e li confronta con la sorgente record per record, poi mostra record, stati e differenze rispetto al tool (modificati, nuovi, tolti) e scarica il tool aggiornato. Funziona senza rete, nel browser. Le date nel bottone <strong>Database</strong> e nel tab Database si aggiornano a parte.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #eff6ff; color: #0066cc;">Excel / JSON</span>
                         <span class="spec-tag" style="background: #eff6ff; color: #0066cc;">CROPACK 1</span>
@@ -20137,12 +20142,13 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <li><strong>🗜️ Database più leggeri</strong>: RC e RA sono scritti in forma compatta: le chiavi una volta sola, i valori in colonna, e i testi che si ripetono identici (stati, zone, vendor, le note di <em>Altro1</em>, <em>Altro2</em> e <em>Info Extra</em>) scritti una volta e richiamati per indice. Sui dati del 24/09/2026 il blocco dei database è sceso da 8,06 a 1,71 MB e il file da 13,09 a 6,74 MB</li>
     <li><strong>✅ Dati identici</strong>: all'apertura il tool rimonta <code>RAW_DB</code> e <code>RAW_DB_RA</code> come se fossero scritti per esteso, campo per campo, compresi i <code>-</code>. Il confronto su 1.205 record RC e 6.651 RA, fatto con i dati del 24/09/2026, non ha trovato differenze, e Overview e Statistiche del Database davano gli stessi numeri</li>
     <li><strong>⏱️ Apertura più rapida</strong>: la decodifica costa circa 35 ms, ma il browser legge 1,7 MB di dati invece di 8: in prova l'apertura è scesa da circa 1,2 a 0,8 secondi</li>
-    <li><strong>🔄 Convertitore DB CRO</strong>: i database si aggiornano con una pagina a parte: trascini il template Excel <em>CRO_DB_Template.xlsx</em> (o un JSON) insieme al file del tool, controlli record, stati e differenze rispetto al tool, e scarichi il tool aggiornato. Funziona senza rete e ogni blocco viene ricontrollato prima della consegna</li>
+    <li><strong>🔄 Convertitore CRONAT</strong>: i database si aggiornano con una pagina a parte: trascini il template Excel <em>CRO_DB_Template.xlsx</em> (o un JSON) insieme al file del tool, controlli record, stati e differenze rispetto al tool, e scarichi il tool aggiornato. Funziona senza rete e ogni blocco viene ricontrollato prima della consegna</li>
     <li><strong>📘 Overview e Guida</strong>: nuova scheda <em>Aggiornamento dei database</em> fra le Funzionalità Principali; la scheda <em>Database Enterprise</em> non cita più numeri superati; la Guida spiega il formato CROPACK e la procedura di aggiornamento nella sezione Database, e aggiorna Architettura, Guida per Tab e la nota sul Confronto DB Excel</li>
     <li><strong>🔢 Card dell'Overview calcolate dai dati</strong>: nella card <em>Centrali Univoche</em> della RA la riga <em>Nodi di Rete divisi</em> diceva 5083, un numero scritto a mano e rimasto indietro. Ora lo calcola il tool a ogni apertura, contando le coppie centrale + TipoSede 1, 2 o 3 come la ricerca RA: con i dati del 01/10/2026 sono 5.077. Dai dati nascono ora anche la riga dei tipi e gli elenchi delle zone nelle card <em>Zone Geografiche</em> RA e RC, quindi tutti i valori delle 8 card seguono gli aggiornamenti dei database</li>
     <li><strong>🌐 Regola di rete nell'Unificato</strong>: con RTN acceso o spento i percorsi restano ordinati per km; a parità di km vengono prima i solo RC, poi i solo RA, poi i misti RA+RC, perché una sola rete vuol dire un solo tipo di scheda transponder invece di due. Senza RTN vale per il percorso intero, con RTN per ogni tratto di zona. Vale per tabella, Div e migliori tre</li>
     <li><strong>🔢 RTN, varianti per zona</strong>: ogni zona calcola tante varianti quanto <em>Max risultati</em> (100 se vuoto), prima al massimo 20</li>
     <li><strong>🚫 Esclusioni sempre applicate</strong>: vale quello che si vede nei campi singoli, anche scritto a mano; le Div rispettano i collegamenti obbligatori e da evitare; i tratti RTN escludono centrali e collegamenti già nella ricerca; <em>Cambia interconnessione RTN</em> passa da tutti i vincoli e filtri</li>
+    <li><strong>🏷️ Tab RC</strong>: l'intestazione dice ora default 100 Percorsi Standard, come il campo <em>Max risultati</em>; prima diceva 30</li>
                   </ul>
                 </div>
               </details>
@@ -20407,7 +20413,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
            - Funzionalità integrate:
              * Forzatura di passaggio su centrali obbligatorie (selezione multipla)
              * Forzatura di esclusione centrali (blacklist)
-             * Calcolo fino a 3000 percorsi Std (default: 30) e fino a 10 percorsi Div per ogni Std
+             * Calcolo fino a 3000 percorsi Std (default: 100) e fino a 10 percorsi Div per ogni Std
              * Vincoli di distanza, numero collegamenti, filtri stati
       -->
 
@@ -20417,7 +20423,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 		    <h2 class="section-title">Ricerca Percorso RC</h2>
             <h3 class="nat-map-title">Impostazione Ricerca Percorsi Standard e Percorsi Diversificati sulla Rete RC Italia</h3>
             <p class="db-subtitle">
-              Imposta i parametri di ricerca per ottenere fino a <strong>3000 Percorsi Standard (Std)</strong> (default: 30)
+              Imposta i parametri di ricerca per ottenere fino a <strong>3000 Percorsi Standard (Std)</strong> (default: 100)
 			  e, per ciascuno di essi, fino a <strong>10 Percorsi Diversificati (Div)</strong>.<br>
               I percorsi saranno calcolati sulla base del DB RC Italia, tenendo conto di Stati, Distanze e Vincoli.
             </p>
@@ -33812,7 +33818,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <strong style="color: #0066CC; font-size: 1.05rem;">🧮 Motore di Routing DWDM</strong>
                 <p style="margin: 0.75rem 0 0 0; color: #1e40af;">
                   <strong>Core computazionale</strong> basato su <strong>algoritmo Dijkstra</strong>, esteso con logiche proprietarie per la gestione di vincoli avanzati di rete.
-                  Supporta il <strong>calcolo parallelo</strong> fino a <strong>3000 percorsi primari (Std)</strong> (default: 30), ottimizzati per distanza minima, e fino a
+                  Supporta il <strong>calcolo parallelo</strong> fino a <strong>3000 percorsi primari (Std)</strong> (default: 100), ottimizzati per distanza minima, e fino a
                   <strong>10 percorsi alternativi diversificati (Div)</strong> con overlap massimo configurabile.
                   Integra un <strong>motore intelligente di eliminazione duplicati</strong> e un modulo di
                   <strong>validazione topologica in tempo reale</strong>, garantendo coerenza e affidabilità dei risultati.
@@ -33825,7 +33831,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   Collegamenti e centrali della <strong>rete core (RC)</strong> e della <strong>rete aggregation (RA)</strong>, con metadati estesi
                   (coordinate GPS, CLLI, tipo sede, zone, stati operativi, progressivi di rete). I due database sono scritti nel file in forma compatta
                   <strong>CROPACK</strong> e all'avvio diventano gli array <code>RAW_DB</code> e <code>RAW_DB_RA</code>. Si aggiornano con il
-                  <strong>Convertitore DB CRO</strong>; i conteggi aggiornati sono nell'Overview e nelle Statistiche del Database.
+                  <strong>Convertitore CRONAT</strong>; i conteggi aggiornati sono nell'Overview e nelle Statistiche del Database.
                 </p>
               </div>
 
@@ -34082,7 +34088,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><strong>Scopo:</strong> Consultazione diretta dei database dei collegamenti RC e RA. Ricerca per CLLI, nome sede, ID collegamento, stato e altri campi.</p>
                   <p><strong>Come si usa:</strong> Seleziona il database (RA/RC) con i bottoni in alto, inserisci il termine di ricerca nella barra di ricerca, filtra per stato usando i badge colorati. Le colonne visibili si personalizzano dal pannello <strong>Colonne</strong>.</p>
                   <p><strong>Cosa fare:</strong> Verifica l'esistenza di un collegamento, controlla coordinate e stato operativo, esporta in Excel tramite <strong>Confronta DB Excel</strong> per comparazione con sorgenti ufficiali TIM.</p>
-                  <p><strong>Data dei dati:</strong> l'intestazione delle sezioni RA e RC dice a quando risale il database in uso, e la stessa data compare nel bottone <strong>Database</strong> dell'Overview. Per aggiornare i dati si usa il <strong>Convertitore DB CRO</strong>, descritto nella sezione <em>Database</em> della Guida.</p>
+                  <p><strong>Data dei dati:</strong> l'intestazione delle sezioni RA e RC dice a quando risale il database in uso, e la stessa data compare nel bottone <strong>Database</strong> dell'Overview. Per aggiornare i dati si usa il <strong>Convertitore CRONAT</strong>, descritto nella sezione <em>Database</em> della Guida.</p>
                 </div>
               </details>
 
@@ -34499,7 +34505,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 <p>
   Motore di calcolo basato su <strong>algoritmo Dijkstra</strong> con <strong>estensioni proprietarie</strong> per la gestione
   di vincoli avanzati di rete. Supporta il <strong>calcolo parallelo</strong> fino a
-  <strong>3000 percorsi primari (Std)</strong> (default 30), ottimizzati per distanza minima, e fino a
+  <strong>3000 percorsi primari (Std)</strong> (default 100), ottimizzati per distanza minima, e fino a
   <strong>10 percorsi alternativi diversificati (Div)</strong> con overlap massimo configurabile.
 </p>
 <ul class="docs-list docs-list-bullets">
@@ -34585,7 +34591,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               <div style="background:#eff6ff;padding:1rem;border-radius:8px;border-left:4px solid #16a34a;margin-top:1rem;">
                 <strong style="color:#16a34a;">💡 Best Practice:</strong>
                 <p style="margin:0.5rem 0 0 0;font-size:0.9rem;">
-                  Prima di aggiornare il DB in produzione, utilizza sempre il Confronto DB Excel per verificare che non siano state rimosse accidentalmente centrali o collegamenti essenziali. La verifica GAT è particolarmente utile per controllare la consistenza delle centrali di interconnessione. Il passo successivo è il <strong>Convertitore DB CRO</strong>, che genera i blocchi da mettere nel tool e mostra di nuovo le differenze rispetto ai dati in uso (vedi la sezione <em>Database</em>).
+                  Prima di aggiornare il DB in produzione, utilizza sempre il Confronto DB Excel per verificare che non siano state rimosse accidentalmente centrali o collegamenti essenziali. La verifica GAT è particolarmente utile per controllare la consistenza delle centrali di interconnessione. Il passo successivo è il <strong>Convertitore CRONAT</strong>, che genera i blocchi da mettere nel tool e mostra di nuovo le differenze rispetto ai dati in uso (vedi la sezione <em>Database</em>).
                 </p>
               </div>
 
@@ -35803,7 +35809,7 @@ var RAW_DB_RA = [
               <h4 class="docs-section-title">Aggiornare i database</h4>
               <ol class="docs-list" style="padding-left:1.25rem;line-height:1.8;">
                 <li>Aggiorna il template Excel <em>CRO_DB_Template.xlsx</em>: fogli <em>Collegamenti_RC</em> (26 colonne) e <em>Collegamenti_RA</em> (30 colonne), una riga per collegamento, intestazioni in riga 1 da non cambiare.</li>
-                <li>Apri <em>Convertitore_DB_CRO.html</em> e trascinaci insieme l'Excel e il file HTML del tool.</li>
+                <li>Apri <em>CRONAT_Convertitore_DB.html</em> e trascinaci insieme l'Excel e il file HTML del tool.</li>
                 <li>Controlla il riepilogo: record, centrali, stati, e le differenze rispetto al tool con i campi cambiati e alcuni esempi. Il convertitore rimonta ogni blocco e lo confronta con l'Excel; se non coincide non lo consegna.</li>
                 <li>Premi <em>Scarica il tool con i DB aggiornati</em>: il convertitore sostituisce i blocchi fra i marcatori e ricontrolla il risultato. In alternativa scarichi o copi il solo blocco e lo incolli al posto del vecchio, marcatori compresi.</li>
                 <li>Aggiorna a mano le date nel bottone <em>Database</em> dell'Overview e nelle intestazioni RA e RC del tab Database: il convertitore non le tocca.</li>
@@ -36252,7 +36258,7 @@ PERCORSI ALTERNATIVI (Div):
                 <dd>Organismo standardizzazione internazionale telecomunicazioni. Standard rilevanti: G.652 (fibra), G.694.1 (DWDM)</dd>
 
                 <dt><strong>K-Shortest Paths</strong></dt>
-                <dd>Algoritmo per trovare K percorsi più corti (non solo il migliore). CRO: fino a K=300 per primari (default: 30), K=10 per alternativi</dd>
+                <dd>Algoritmo per trovare K percorsi più corti (non solo il migliore). CRO: fino a K=300 per primari (default: 100), K=10 per alternativi</dd>
 
                 <dt><strong>Leaflet</strong></dt>
                 <dd>Libreria JavaScript open-source per mappe interattive. Lightweight (39 KB gzipped)</dd>
@@ -36273,7 +36279,7 @@ PERCORSI ALTERNATIVI (Div):
               <h4 class="docs-section-title">P-Z</h4>
               <dl style="line-height:2;">
                 <dt><strong>Percorso Primario (Std)</strong></dt>
-                <dd>Percorso ottimizzato per distanza minima senza penalizzazioni. CRO calcola fino a 3000 percorsi Std (default: 30)</dd>
+                <dd>Percorso ottimizzato per distanza minima senza penalizzazioni. CRO calcola fino a 3000 percorsi Std (default: 100)</dd>
 
                 <dt><strong>Percorso Alternativo (Div)</strong></dt>
                 <dd>Percorso diversificato con overlap <30% vs 1.1. Per ridondanza e disaster recovery</dd>
@@ -36361,7 +36367,7 @@ PERCORSI ALTERNATIVI (Div):
 
         <details open style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
-            🗜️ V60.10.26 | Database compatti, Convertitore DB CRO e dati al 01/10/2026
+            🗜️ V60.10.26 | Database compatti, Convertitore CRONAT e dati al 01/10/2026
           </summary>
           <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
             <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
@@ -36370,13 +36376,14 @@ PERCORSI ALTERNATIVI (Div):
               <li><strong>📦 Il formato CROPACK 1</strong>: chiavi una volta sola, una colonna per chiave, dizionario e indice per le colonne con pochi valori distinti, nome della colonna in un commento. È descritto nella sezione <em>Database</em> della Guida</li>
               <li><strong>🔁 La decodifica</strong>: <code>__croUnpackDB</code> rimonta <code>RAW_DB</code> e <code>RAW_DB_RA</code> con le chiavi nello stesso ordine e gli stessi valori testuali; la normalizzazione della RA che segue lavora sugli stessi oggetti di prima, quindi il resto del tool non è cambiato. Costa circa 35 ms</li>
               <li><strong>🔎 Come è stato verificato</strong>: sui dati del 24/09/2026: confronto campo per campo di 1.205 record RC e 6.651 RA prima e dopo, con chiavi, ordine e tipi, tutti identici; stessa impronta di <code>RAW_DB</code> e <code>RAW_DB_RA</code> a tool aperto; stesso testo in Overview e Statistiche del Database</li>
-              <li><strong>🔄 Il Convertitore DB CRO</strong>: pagina a parte, senza librerie esterne e senza rete. Legge il template Excel o un JSON, riconosce RC e RA dalle intestazioni, compatta, rimonta e confronta con la sorgente, mostra le differenze rispetto al tool e scarica il tool aggiornato sostituendo i blocchi fra i marcatori. Le date nel bottone Database e nel tab Database restano da aggiornare a mano</li>
+              <li><strong>🔄 Il Convertitore CRONAT</strong>: pagina a parte, senza librerie esterne e senza rete. Legge il template Excel o un JSON, riconosce RC e RA dalle intestazioni, compatta, rimonta e confronta con la sorgente, mostra le differenze rispetto al tool e scarica il tool aggiornato sostituendo i blocchi fra i marcatori. Le date nel bottone Database e nel tab Database restano da aggiornare a mano</li>
               <li><strong>📝 Cosa ha insegnato il primo aggiornamento</strong>: nel template del 01/10 15 distanze RC erano celle di testo con la virgola (il tool le avrebbe lette come numeri interi, per esempio 15 km invece di 15,474) e 7 erano numeri con decimali spuri invisibili in Excel. Sono state corrette prima della conversione. Le regole per l'Excel sono ora nella sezione <em>Database</em> della Guida</li>
               <li><strong>📘 Overview e Guida</strong>: nuova scheda <em>Aggiornamento dei database</em>; scheda <em>Database Enterprise</em> e riquadro <em>Database</em> dell'Architettura riscritti senza i vecchi numeri (500+ centrali, 5.700+ collegamenti); nella Guida per Tab il Database spiega dove si legge la data dei dati; la nota sul Confronto DB Excel rimanda al convertitore</li>
               <li><strong>🔢 Card dell'Overview calcolate dai dati</strong>: gli elenchi delle zone nelle card <em>Zone Geografiche</em> RA e RC e la riga dei tipi della card <em>Centrali Univoche</em> RA erano testo fisso; ora li scrive la funzione delle card in base ai dati. La riga <em>Nodi di Rete divisi</em> della card <em>Centrali Univoche</em> RA era testo fisso (5083) e non seguiva gli aggiornamenti dei DB. Ora la calcola la funzione delle card dell'Overview, con la stessa regola di <code>buildCentralLabelsRA</code>: centrale (GAT e CLLI) più TipoSede 1, 2 o 3, contate una volta per coppia. Con i dati del 01/10/2026 il risultato è 5.077, lo stesso numero che la ricerca RA scrive in console; 1.023 centrali compaiono con più di un tipo, per questo i nodi sono più delle 4.054 centrali univoche</li>
               <li><strong>🌐 Regola di rete nell'Unificato</strong>: con RTN acceso o spento ogni percorso viene classificato solo RC, solo RA o misto RA+RC in base ai collegamenti (un passaggio di layer RA↔RC nella stessa centrale non rende misto un percorso fatto di collegamenti di una sola rete). L'ordine resta per km; a parità di km, cioè quando le distanze coincidono al centesimo come in tabella, vengono prima i solo RC, poi i solo RA, poi i misti, perché una sola rete vuol dire un solo tipo di scheda transponder invece di due; poi conta il numero di tratte. Senza RTN la classe è quella del percorso intero, con RTN quella di ciascun tratto di zona: a parità di km totali prima le combinazioni con meno tratti misti, poi con meno tratti solo RA. Oltre alla ricerca per km il tool cerca anche i percorsi su una sola rete fra le due centrali, così a parità di km ci sono tutti; nelle Div questo trova anche alternative che prima mancavano. La regola vale per la tabella dei percorsi Std, per le Div (normali e RTN di zona) e per i migliori tre del nastro, dove decide a parità di punteggio. Prima la tabella era ordinata solo per km e, con RTN, un tratto RC puro escludeva del tutto i misti anche più corti. Con centrali obbligatorie la ricerca resta quella per tappe</li>
               <li><strong>🔢 RTN, varianti per zona</strong>: ogni zona calcola tante varianti quanto il campo <em>Max risultati</em> (100 se vuoto), prima al massimo 20. Con collegamenti da evitare ne cerca il doppio, così gli scarti non tolgono posto. La tabella mostra le migliori combinazioni fino a <em>Max risultati</em>: per vedere più varianti di zona si alza quel campo o si usano le Div di zona</li>
               <li><strong>🚫 Esclusioni sempre applicate</strong>: i campi singoli di centrali e collegamenti obbligatori o da evitare vengono letti al momento della ricerca, quindi vale quello che si vede anche se scritto a mano o arrivato dal Rilancio RC (prima contava solo la voce scelta dalla tendina). Le Div, normali e RTN di zona A, B e A+B, rispettano i collegamenti obbligatori e da evitare. I tratti RTN escludono centrali e collegamenti già durante la ricerca: prima i 20 percorsi per zona venivano scartati dopo e con una centrale esclusa si poteva scendere da 100 a 32 risultati. <em>Cambia interconnessione RTN</em> rilancia la ricerca completa con i Nodi A1 scelti, passando da tutti i vincoli e filtri</li>
+              <li><strong>🏷️ Tab RC, default dei Percorsi Standard</strong>: l'intestazione del tab RC dice ora <em>fino a 3000 Percorsi Standard (default: 100)</em>, come il campo <em>Max risultati</em> (che parte da 100) e il codice di ricerca, che usa 100 se il campo è vuoto. Prima diceva default 30. Stessa correzione nella scheda <em>Rete Core</em> delle Funzionalità Principali, nella Guida (sezioni Routing e Algoritmi) e nel glossario (Yen e Percorso Standard). Il limite di 10 Div per ogni Std era già corretto</li>
             </ul>
           </div>
         </details>
@@ -38363,7 +38370,7 @@ Pannello 📊 Analisi Percorsi: 4 card classificate 🏆🥇🥈🥉 + scoring o
 // DECODIFICA CROPACK 1 (database compattati). Rimonta RAW_DB e RAW_DB_RA come
 // array di oggetti identici ai precedenti: stesse chiavi, stesso ordine, stesse
 // stringhe. I blocchi fra i marcatori >>> INIZIO DB e <<< FINE DB si rigenerano
-// con la pagina "Convertitore DB CRO".
+// con la pagina "Convertitore CRONAT".
 // ============================================================================
 function __croUnpackDB(p) {
   var t0 = (typeof performance !== 'undefined') ? performance.now() : Date.now();
