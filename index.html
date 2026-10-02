@@ -28,11 +28,11 @@
 ║     lunghi compaiono una volta sola nel dizionario, e in testa a ogni blocco ci  ║
 ║     sono file di origine, data di generazione, record e le date "Aggiornati al"  ║
 ║     trovate in Altro1 e Altro2                                                   ║
-║   • CONVERTITORE CRONAT: pagina separata (CRONAT_Convertitore_DB.html) che legge ║
-║     il template Excel CRO_DB_Template.xlsx o un JSON, compatta, ricontrolla i    ║
-║     record, mostra le differenze rispetto al tool e scarica il tool aggiornato.  ║
-║     I blocchi stanno fra i marcatori INIZIO DB e FINE DB, uno per RC e uno per   ║
-║     RA                                                                           ║
+║   • CRONAT DATABASE MANAGER: pagina separata (CRONAT_Database_Manager.html) che  ║
+║     legge il template Excel CRO_DB_Template.xlsx o un JSON, compatta,            ║
+║     ricontrolla i record, mostra le differenze rispetto al tool e scarica il     ║
+║     tool aggiornato. I blocchi stanno fra i marcatori INIZIO DB e FINE DB, uno   ║
+║     per RC e uno per RA                                                          ║
 ║   • DATABASE AGGIORNATI AL 01/10/2026, generati con il Convertitore: RA 6.642    ║
 ║     record, 1.627 attivi, 4.054 centrali; RC 1.205 record, 719 attivi, 809       ║
 ║     centrali                                                                     ║
@@ -19550,7 +19550,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <h3 class="feature-title" style="color: #059669;">Database Enterprise RC + RA Italia</h3>
                         <span class="feature-badge" style="background: #ecfdf5; color: #059669;">Professional</span>
                     </div>
-                    <p class="feature-desc">Database dei collegamenti di <strong>RC Italia</strong> (rete core) e <strong>RA Italia</strong> (rete aggregation), con le date di aggiornamento nel bottone <strong>Database</strong> e i conteggi nelle Statistiche. Nel file sono scritti in forma compatta <strong>CROPACK</strong> e si aggiornano con il <strong>Convertitore CRONAT</strong>. Metadati completi (GAT, CLLI, coordinate WGS84, zona, area, regione, stato operativo). Ricerca full-text <strong>case-insensitive</strong>. <strong>Filtri Stati</strong> costruiti sui dati: le pastiglie seguono gli stati presenti nel database in uso e si adeguano a ogni aggiornamento dei DB. <strong>Filtri Sedi</strong>: Solo NODO A1 [T1], Solo Data Center [DC]. Colorazione automatica: <span style="color:#0066CC;font-weight:600;">A1</span> blu, <span style="color:#d1008f;font-weight:600;">DC</span> magenta. Export CSV.</p>
+                    <p class="feature-desc">Database dei collegamenti di <strong>RC Italia</strong> (rete core) e <strong>RA Italia</strong> (rete aggregation), con le date di aggiornamento nel bottone <strong>Database</strong> e i conteggi nelle Statistiche. Nel file sono scritti in forma compatta <strong>CROPACK</strong> e si aggiornano con il <strong>CRONAT Database Manager</strong>. Metadati completi (GAT, CLLI, coordinate WGS84, zona, area, regione, stato operativo). Ricerca full-text <strong>case-insensitive</strong>. <strong>Filtri Stati</strong> costruiti sui dati: le pastiglie seguono gli stati presenti nel database in uso e si adeguano a ogni aggiornamento dei DB. <strong>Filtri Sedi</strong>: Solo NODO A1 [T1], Solo Data Center [DC]. Colorazione automatica: <span style="color:#0066CC;font-weight:600;">A1</span> blu, <span style="color:#d1008f;font-weight:600;">DC</span> magenta. Export CSV.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #ecfdf5; color: #059669;">RC+RA</span>
                         <span class="spec-tag" style="background: #ecfdf5; color: #059669;">Filtri Sedi</span>
@@ -19569,7 +19569,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                         <h3 class="feature-title" style="color: #0066cc;">🔄 Aggiornamento dei database</h3>
                         <span class="feature-badge" style="background: #eff6ff; color: #0066cc;">Nuovo V60.10.26</span>
                     </div>
-                    <p class="feature-desc">I database RC e RA si aggiornano con la pagina <strong>Convertitore CRONAT</strong>, senza toccare il codice. Si compila il template Excel <strong>CRO_DB_Template.xlsx</strong> (fogli <em>Collegamenti_RC</em> e <em>Collegamenti_RA</em>) e lo si trascina nel convertitore insieme al file del tool: la pagina riconosce RC e RA dalle intestazioni, scrive i dati in forma compatta <strong>CROPACK</strong>, li rimonta e li confronta con la sorgente record per record, poi mostra record, stati e differenze rispetto al tool (modificati, nuovi, tolti) e scarica il tool aggiornato. Funziona senza rete, nel browser. Le date nel bottone <strong>Database</strong> e nel tab Database si aggiornano a parte.</p>
+                    <p class="feature-desc">I database RC e RA si aggiornano con la pagina <strong>CRONAT Database Manager</strong>, senza toccare il codice. Si compila il template Excel <strong>CRO_DB_Template.xlsx</strong> (fogli <em>Collegamenti_RC</em> e <em>Collegamenti_RA</em>) e lo si trascina nel convertitore insieme al file del tool: la pagina riconosce RC e RA dalle intestazioni, scrive i dati in forma compatta <strong>CROPACK</strong>, li rimonta e li confronta con la sorgente record per record, poi mostra record, stati e differenze rispetto al tool (modificati, nuovi, tolti) e scarica il tool aggiornato. Funziona senza rete, nel browser. Le date nel bottone <strong>Database</strong> e nel tab Database si aggiornano a parte.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #eff6ff; color: #0066cc;">Excel / JSON</span>
                         <span class="spec-tag" style="background: #eff6ff; color: #0066cc;">CROPACK 1</span>
@@ -20142,7 +20142,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <li><strong>🗜️ Database più leggeri</strong>: RC e RA sono scritti in forma compatta: le chiavi una volta sola, i valori in colonna, e i testi che si ripetono identici (stati, zone, vendor, le note di <em>Altro1</em>, <em>Altro2</em> e <em>Info Extra</em>) scritti una volta e richiamati per indice. Sui dati del 24/09/2026 il blocco dei database è sceso da 8,06 a 1,71 MB e il file da 13,09 a 6,74 MB</li>
     <li><strong>✅ Dati identici</strong>: all'apertura il tool rimonta <code>RAW_DB</code> e <code>RAW_DB_RA</code> come se fossero scritti per esteso, campo per campo, compresi i <code>-</code>. Il confronto su 1.205 record RC e 6.651 RA, fatto con i dati del 24/09/2026, non ha trovato differenze, e Overview e Statistiche del Database davano gli stessi numeri</li>
     <li><strong>⏱️ Apertura più rapida</strong>: la decodifica costa circa 35 ms, ma il browser legge 1,7 MB di dati invece di 8: in prova l'apertura è scesa da circa 1,2 a 0,8 secondi</li>
-    <li><strong>🔄 Convertitore CRONAT</strong>: i database si aggiornano con una pagina a parte: trascini il template Excel <em>CRO_DB_Template.xlsx</em> (o un JSON) insieme al file del tool, controlli record, stati e differenze rispetto al tool, e scarichi il tool aggiornato. Funziona senza rete e ogni blocco viene ricontrollato prima della consegna</li>
+    <li><strong>🔄 CRONAT Database Manager</strong>: i database si aggiornano con una pagina a parte: trascini il template Excel <em>CRO_DB_Template.xlsx</em> (o un JSON) insieme al file del tool, controlli record, stati e differenze rispetto al tool, e scarichi il tool aggiornato. Funziona senza rete e ogni blocco viene ricontrollato prima della consegna</li>
     <li><strong>📘 Overview e Guida</strong>: nuova scheda <em>Aggiornamento dei database</em> fra le Funzionalità Principali; la scheda <em>Database Enterprise</em> non cita più numeri superati; la Guida spiega il formato CROPACK e la procedura di aggiornamento nella sezione Database, e aggiorna Architettura, Guida per Tab e la nota sul Confronto DB Excel</li>
     <li><strong>🔢 Card dell'Overview calcolate dai dati</strong>: nella card <em>Centrali Univoche</em> della RA la riga <em>Nodi di Rete divisi</em> diceva 5083, un numero scritto a mano e rimasto indietro. Ora lo calcola il tool a ogni apertura, contando le coppie centrale + TipoSede 1, 2 o 3 come la ricerca RA: con i dati del 01/10/2026 sono 5.077. Dai dati nascono ora anche la riga dei tipi e gli elenchi delle zone nelle card <em>Zone Geografiche</em> RA e RC, quindi tutti i valori delle 8 card seguono gli aggiornamenti dei database</li>
     <li><strong>🌐 Regola di rete nell'Unificato</strong>: con RTN acceso o spento i percorsi restano ordinati per km; a parità di km vengono prima i solo RC, poi i solo RA, poi i misti RA+RC, perché una sola rete vuol dire un solo tipo di scheda transponder invece di due. Senza RTN vale per il percorso intero, con RTN per ogni tratto di zona. Vale per tabella, Div e migliori tre</li>
@@ -33831,7 +33831,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   Collegamenti e centrali della <strong>rete core (RC)</strong> e della <strong>rete aggregation (RA)</strong>, con metadati estesi
                   (coordinate GPS, CLLI, tipo sede, zone, stati operativi, progressivi di rete). I due database sono scritti nel file in forma compatta
                   <strong>CROPACK</strong> e all'avvio diventano gli array <code>RAW_DB</code> e <code>RAW_DB_RA</code>. Si aggiornano con il
-                  <strong>Convertitore CRONAT</strong>; i conteggi aggiornati sono nell'Overview e nelle Statistiche del Database.
+                  <strong>CRONAT Database Manager</strong>; i conteggi aggiornati sono nell'Overview e nelle Statistiche del Database.
                 </p>
               </div>
 
@@ -34088,7 +34088,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><strong>Scopo:</strong> Consultazione diretta dei database dei collegamenti RC e RA. Ricerca per CLLI, nome sede, ID collegamento, stato e altri campi.</p>
                   <p><strong>Come si usa:</strong> Seleziona il database (RA/RC) con i bottoni in alto, inserisci il termine di ricerca nella barra di ricerca, filtra per stato usando i badge colorati. Le colonne visibili si personalizzano dal pannello <strong>Colonne</strong>.</p>
                   <p><strong>Cosa fare:</strong> Verifica l'esistenza di un collegamento, controlla coordinate e stato operativo, esporta in Excel tramite <strong>Confronta DB Excel</strong> per comparazione con sorgenti ufficiali TIM.</p>
-                  <p><strong>Data dei dati:</strong> l'intestazione delle sezioni RA e RC dice a quando risale il database in uso, e la stessa data compare nel bottone <strong>Database</strong> dell'Overview. Per aggiornare i dati si usa il <strong>Convertitore CRONAT</strong>, descritto nella sezione <em>Database</em> della Guida.</p>
+                  <p><strong>Data dei dati:</strong> l'intestazione delle sezioni RA e RC dice a quando risale il database in uso, e la stessa data compare nel bottone <strong>Database</strong> dell'Overview. Per aggiornare i dati si usa il <strong>CRONAT Database Manager</strong>, descritto nella sezione <em>Database</em> della Guida.</p>
                 </div>
               </details>
 
@@ -34591,7 +34591,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               <div style="background:#eff6ff;padding:1rem;border-radius:8px;border-left:4px solid #16a34a;margin-top:1rem;">
                 <strong style="color:#16a34a;">💡 Best Practice:</strong>
                 <p style="margin:0.5rem 0 0 0;font-size:0.9rem;">
-                  Prima di aggiornare il DB in produzione, utilizza sempre il Confronto DB Excel per verificare che non siano state rimosse accidentalmente centrali o collegamenti essenziali. La verifica GAT è particolarmente utile per controllare la consistenza delle centrali di interconnessione. Il passo successivo è il <strong>Convertitore CRONAT</strong>, che genera i blocchi da mettere nel tool e mostra di nuovo le differenze rispetto ai dati in uso (vedi la sezione <em>Database</em>).
+                  Prima di aggiornare il DB in produzione, utilizza sempre il Confronto DB Excel per verificare che non siano state rimosse accidentalmente centrali o collegamenti essenziali. La verifica GAT è particolarmente utile per controllare la consistenza delle centrali di interconnessione. Il passo successivo è il <strong>CRONAT Database Manager</strong>, che genera i blocchi da mettere nel tool e mostra di nuovo le differenze rispetto ai dati in uso (vedi la sezione <em>Database</em>).
                 </p>
               </div>
 
@@ -35809,7 +35809,7 @@ var RAW_DB_RA = [
               <h4 class="docs-section-title">Aggiornare i database</h4>
               <ol class="docs-list" style="padding-left:1.25rem;line-height:1.8;">
                 <li>Aggiorna il template Excel <em>CRO_DB_Template.xlsx</em>: fogli <em>Collegamenti_RC</em> (26 colonne) e <em>Collegamenti_RA</em> (30 colonne), una riga per collegamento, intestazioni in riga 1 da non cambiare.</li>
-                <li>Apri <em>CRONAT_Convertitore_DB.html</em> e trascinaci insieme l'Excel e il file HTML del tool.</li>
+                <li>Apri <em>CRONAT_Database_Manager.html</em> e trascinaci insieme l'Excel e il file HTML del tool.</li>
                 <li>Controlla il riepilogo: record, centrali, stati, e le differenze rispetto al tool con i campi cambiati e alcuni esempi. Il convertitore rimonta ogni blocco e lo confronta con l'Excel; se non coincide non lo consegna.</li>
                 <li>Premi <em>Scarica il tool con i DB aggiornati</em>: il convertitore sostituisce i blocchi fra i marcatori e ricontrolla il risultato. In alternativa scarichi o copi il solo blocco e lo incolli al posto del vecchio, marcatori compresi.</li>
                 <li>Aggiorna a mano le date nel bottone <em>Database</em> dell'Overview e nelle intestazioni RA e RC del tab Database: il convertitore non le tocca.</li>
@@ -36367,7 +36367,7 @@ PERCORSI ALTERNATIVI (Div):
 
         <details open style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
-            🗜️ V60.10.26 | Database compatti, Convertitore CRONAT e dati al 01/10/2026
+            🗜️ V60.10.26 | Database compatti, CRONAT Database Manager e dati al 01/10/2026
           </summary>
           <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
             <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
@@ -36376,7 +36376,7 @@ PERCORSI ALTERNATIVI (Div):
               <li><strong>📦 Il formato CROPACK 1</strong>: chiavi una volta sola, una colonna per chiave, dizionario e indice per le colonne con pochi valori distinti, nome della colonna in un commento. È descritto nella sezione <em>Database</em> della Guida</li>
               <li><strong>🔁 La decodifica</strong>: <code>__croUnpackDB</code> rimonta <code>RAW_DB</code> e <code>RAW_DB_RA</code> con le chiavi nello stesso ordine e gli stessi valori testuali; la normalizzazione della RA che segue lavora sugli stessi oggetti di prima, quindi il resto del tool non è cambiato. Costa circa 35 ms</li>
               <li><strong>🔎 Come è stato verificato</strong>: sui dati del 24/09/2026: confronto campo per campo di 1.205 record RC e 6.651 RA prima e dopo, con chiavi, ordine e tipi, tutti identici; stessa impronta di <code>RAW_DB</code> e <code>RAW_DB_RA</code> a tool aperto; stesso testo in Overview e Statistiche del Database</li>
-              <li><strong>🔄 Il Convertitore CRONAT</strong>: pagina a parte, senza librerie esterne e senza rete. Legge il template Excel o un JSON, riconosce RC e RA dalle intestazioni, compatta, rimonta e confronta con la sorgente, mostra le differenze rispetto al tool e scarica il tool aggiornato sostituendo i blocchi fra i marcatori. Le date nel bottone Database e nel tab Database restano da aggiornare a mano</li>
+              <li><strong>🔄 Il CRONAT Database Manager</strong>: pagina a parte, senza librerie esterne e senza rete. Legge il template Excel o un JSON, riconosce RC e RA dalle intestazioni, compatta, rimonta e confronta con la sorgente, mostra le differenze rispetto al tool e scarica il tool aggiornato sostituendo i blocchi fra i marcatori. Le date nel bottone Database e nel tab Database restano da aggiornare a mano</li>
               <li><strong>📝 Cosa ha insegnato il primo aggiornamento</strong>: nel template del 01/10 15 distanze RC erano celle di testo con la virgola (il tool le avrebbe lette come numeri interi, per esempio 15 km invece di 15,474) e 7 erano numeri con decimali spuri invisibili in Excel. Sono state corrette prima della conversione. Le regole per l'Excel sono ora nella sezione <em>Database</em> della Guida</li>
               <li><strong>📘 Overview e Guida</strong>: nuova scheda <em>Aggiornamento dei database</em>; scheda <em>Database Enterprise</em> e riquadro <em>Database</em> dell'Architettura riscritti senza i vecchi numeri (500+ centrali, 5.700+ collegamenti); nella Guida per Tab il Database spiega dove si legge la data dei dati; la nota sul Confronto DB Excel rimanda al convertitore</li>
               <li><strong>🔢 Card dell'Overview calcolate dai dati</strong>: gli elenchi delle zone nelle card <em>Zone Geografiche</em> RA e RC e la riga dei tipi della card <em>Centrali Univoche</em> RA erano testo fisso; ora li scrive la funzione delle card in base ai dati. La riga <em>Nodi di Rete divisi</em> della card <em>Centrali Univoche</em> RA era testo fisso (5083) e non seguiva gli aggiornamenti dei DB. Ora la calcola la funzione delle card dell'Overview, con la stessa regola di <code>buildCentralLabelsRA</code>: centrale (GAT e CLLI) più TipoSede 1, 2 o 3, contate una volta per coppia. Con i dati del 01/10/2026 il risultato è 5.077, lo stesso numero che la ricerca RA scrive in console; 1.023 centrali compaiono con più di un tipo, per questo i nodi sono più delle 4.054 centrali univoche</li>
@@ -38370,7 +38370,7 @@ Pannello 📊 Analisi Percorsi: 4 card classificate 🏆🥇🥈🥉 + scoring o
 // DECODIFICA CROPACK 1 (database compattati). Rimonta RAW_DB e RAW_DB_RA come
 // array di oggetti identici ai precedenti: stesse chiavi, stesso ordine, stesse
 // stringhe. I blocchi fra i marcatori >>> INIZIO DB e <<< FINE DB si rigenerano
-// con la pagina "Convertitore CRONAT".
+// con la pagina "CRONAT Database Manager".
 // ============================================================================
 function __croUnpackDB(p) {
   var t0 = (typeof performance !== 'undefined') ? performance.now() : Date.now();
@@ -38400,7 +38400,7 @@ function __croUnpackDB(p) {
 }
 
 // >>> INIZIO DB RC (CROPACK 1: chiavi una volta, valori in colonna, dizionario per colonna)
-//     Generato dal Convertitore DB CRO il 01/10/2026 da: CRO_DB_Template_01_10_26__Agg_DB_29_09_26__corretto.xlsx, foglio "Collegamenti_RC"
+//     Generato con CRONAT Database Manager il 01/10/2026 da: CRO_DB_Template_01_10_26__Agg_DB_29_09_26__corretto.xlsx, foglio "Collegamenti_RC"
 //     Record: 1205 | Chiavi: 26 | Colonne a dizionario: 17
 //     Date "Aggiornati al" nella colonna Altro1/Altro2: 30/09/2026 (791 record)
 //     Per aggiornare: rigenera questo blocco con il Convertitore, non modificarlo a mano.
@@ -38460,7 +38460,7 @@ c:[
 
 
 // >>> INIZIO DB RA (CROPACK 1: chiavi una volta, valori in colonna, dizionario per colonna)
-//     Generato dal Convertitore DB CRO il 01/10/2026 da: CRO_DB_Template_01_10_26__Agg_DB_29_09_26__corretto.xlsx, foglio "Collegamenti_RA"
+//     Generato con CRONAT Database Manager il 01/10/2026 da: CRO_DB_Template_01_10_26__Agg_DB_29_09_26__corretto.xlsx, foglio "Collegamenti_RA"
 //     Record: 6642 | Chiavi: 30 | Colonne a dizionario: 28
 //     Date "Aggiornati al" nella colonna Altro1/Altro2: 30/09/2026 (6642 record)
 //     Per aggiornare: rigenera questo blocco con il Convertitore, non modificarlo a mano.
