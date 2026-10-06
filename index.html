@@ -14,6 +14,22 @@
 ║                                                                                  ║
 ║   CHANGELOG V60.10.26 | Ott 2026:                                                ║
 ║   ─────────────────────────                                                      ║
+║   • IL DIV DI ZONA NON RIPROPONE PIU' IL PERCORSO DI RIFERIMENTO: quando il      ║
+║     grafo senza i collegamenti dello Std non dava risultati, il calcolo          ║
+║     ripiegava sul grafo completo, dove il percorso piu' corto e' proprio         ║
+║     quello di riferimento. Il Div B usciva quindi come copia dello Std,          ║
+║     stesso collegamento e stessi km. Ora i percorsi che riusano collegamenti     ║
+║     del riferimento vengono scartati e, se non ne resta nessuno, il Div dice     ║
+║     che non ha trovato alternative                                               ║
+║   • NODO A1 FORZATO PER I DIV, ANCHE SE UGUALE A QUELLO STD: nella finestra      ║
+║     Cambia Interconnessione RTN si sceglie il Nodo A1 anche per i percorsi       ║
+║     Div. Se la scelta coincideva con quella dello Std veniva buttata via, e i    ║
+║     Div ripescavano tutti gli altri A1 dell'area: con Div Zona B impostato su    ║
+║     MILANO BERSAGLIO, uguale allo Std, uscivano percorsi che passavano da COMO   ║
+║     DANTE e BERGAMO CAMPAGNOLA, nodi mai chiesti. Ora la scelta vale sempre:     ║
+║     il Div resta sullo stesso nodo di interconnessione e diversifica il resto    ║
+║     del segmento. Corretti i due punti che leggevano la scelta, il ramo per      ║
+║     zona (Div A, Div B, Div A+B) e il Div B interno                              ║
 ║   • DATABASE RC E RA IN FORMA COMPATTA (CROPACK 1): le chiavi sono scritte una   ║
 ║     volta sola e i valori stanno in colonna. Le colonne con pochi valori         ║
 ║     distinti (stati, zone, vendor, Altro1, Altro2, Info Extra) hanno un          ║
@@ -20138,6 +20154,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🌐 Nodo A1 forzato anche se uguale allo Std</strong>: nella finestra <em>Cambia Interconnessione RTN</em> si sceglie il Nodo A1 anche per i Div. Se la scelta coincideva con quella dello Std veniva ignorata e i Div ripescavano tutti gli altri A1 dell'area, mostrando percorsi passanti da nodi mai chiesti. Ora la scelta vale sempre: il Div resta sullo stesso nodo e diversifica il resto del segmento</li>
     <li><strong>📅 Database aggiornati al 01/10/2026</strong>: RA 6.642 record, 1.627 attivi e 4.054 centrali; RC 1.205 record, 719 attivi e 809 centrali. Le date compaiono nel bottone <em>Database</em> qui sopra e nelle intestazioni RA e RC del tab Database</li>
     <li><strong>🗜️ Database più leggeri</strong>: RC e RA sono scritti in forma compatta: le chiavi una volta sola, i valori in colonna, e i testi che si ripetono identici (stati, zone, vendor, le note di <em>Altro1</em>, <em>Altro2</em> e <em>Info Extra</em>) scritti una volta e richiamati per indice. Sui dati del 24/09/2026 il blocco dei database è sceso da 8,06 a 1,71 MB e il file da 13,09 a 6,74 MB</li>
     <li><strong>✅ Dati identici</strong>: all'apertura il tool rimonta <code>RAW_DB</code> e <code>RAW_DB_RA</code> come se fossero scritti per esteso, campo per campo, compresi i <code>-</code>. Il confronto su 1.205 record RC e 6.651 RA, fatto con i dati del 24/09/2026, non ha trovato differenze, e Overview e Statistiche del Database davano gli stessi numeri</li>
@@ -36371,6 +36388,7 @@ PERCORSI ALTERNATIVI (Div):
           </summary>
           <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
             <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+                            <li><strong>🌐 Il Nodo A1 forzato per i Div</strong>: la finestra <em>Cambia Interconnessione RTN</em> permette di scegliere il Nodo A1 di ciascuna zona sia per il percorso Standard sia per i Div. La scelta fatta per i Div veniva però presa in considerazione solo se <em>diversa</em> da quella dello Standard: se coincideva, il codice la buttava via e tornava all'elenco automatico, cioè tutti gli altri Nodi A1 della stessa area, escluso quello dello Standard. Chiedendo per esempio <em>Div Zona B</em> su <strong>MILANO BERSAGLIO</strong>, lo stesso nodo dello Standard, uscivano percorsi che passavano da <strong>COMO DANTE</strong> o <strong>BERGAMO CAMPAGNOLA</strong>, nodi che nessuno aveva chiesto. Ora la scelta vale sempre: se il Nodo A1 del Div coincide con quello dello Standard, il Div resta su quel nodo di interconnessione e diversifica il resto del segmento, cioè i collegamenti fra il Nodo A1 e la centrale di arrivo. Se su quel nodo non esistono alternative il Div non trova percorsi e lo dice, invece di proporne altri presi da nodi diversi. La correzione tocca i due punti che leggevano la scelta: il ramo per zona, usato da <em>Div A</em>, <em>Div B</em> e <em>Div A+B</em>, e il calcolo interno del <em>Div B</em>.</li>
               <li><strong>📅 Database aggiornati al 01/10/2026</strong>: generati con il Convertitore dal template del 01/10/2026: RA 6.642 record (1.627 attivi, 4.054 centrali), RC 1.205 record (719 attivi, 809 centrali). Le date sono aggiornate nel bottone <em>Database</em> dell'Overview (RA 01/10/26, RC 01/10/26) e nelle intestazioni RA e RC del tab Database</li>
               <li><strong>🗜️ Perché i database compatti</strong>: con i dati del 24/09/2026 i due database occupavano 8,06 MB su 13,09, il 62% del file. Quasi tutto era ripetizione: le stesse 26 chiavi RC e 30 chiavi RA scritte a ogni record (2,85 MB), gli spazi della RA scritta con una chiave per riga (1,62 MB) e le stesse note lunghe ripetute migliaia di volte. In forma compatta il blocco è sceso a 1,71 MB e il file a 6,74 MB</li>
               <li><strong>📦 Il formato CROPACK 1</strong>: chiavi una volta sola, una colonna per chiave, dizionario e indice per le colonne con pochi valori distinti, nome della colonna in un commento. È descritto nella sezione <em>Database</em> della Guida</li>
@@ -65512,8 +65530,10 @@ div[style*="background:#f3f4f6"] label:hover span {
 
     // Candidati A1 zona B: stessa area dell'arrivo, diversi da quello usato dal Div A.
     // Se l'utente ha forzato la scelta dal popup "Cambia interconnessione RTN", usa quella.
+    /* come sopra: la scelta dell'utente vale anche se coincide con il Nodo A1
+       gia' in uso, e il Div diversifica il resto del segmento */
     const _forceDEB = (window._uRtnForceA1DivEnd || '').toUpperCase();
-    const altCandB = _forceDEB && _forceDEB !== a1AltEnd
+    const altCandB = _forceDEB
       ? [_forceDEB]  // forzato dall'utente
       : findA1NodesSameArea(endNodeKey.replace(/::(?:RA|RC)$/,'')).filter(c => c.toUpperCase() !== a1AltEnd);
 
@@ -67075,10 +67095,15 @@ div[style*="background:#f3f4f6"] label:hover span {
         // usa le sue scelte (window._uRtnForceA1DivStart/End) con priorità
         const _forceDS = (window._uRtnForceA1DivStart || '').toUpperCase();
         const _forceDE = (window._uRtnForceA1DivEnd   || '').toUpperCase();
-        const altCandS = _forceDS && _forceDS !== a1StdStart
+        /* La scelta fatta nella finestra vale sempre, anche quando coincide
+           con il Nodo A1 dello Std: in quel caso il Div resta sullo stesso
+           nodo di interconnessione e diversifica il resto del segmento.
+           Prima la condizione !== la buttava via, e il Div ripescava tutti
+           gli altri A1 dell'area, cioe' nodi che l'utente non aveva chiesto. */
+        const altCandS = _forceDS
           ? [_forceDS]  // forzato dall'utente
           : findA1NodesSameArea(startAlt.replace(/::(?:RA|RC)$/,'')).filter(c => c.toUpperCase() !== a1StdStart);
-        const altCandE = _forceDE && _forceDE !== a1StdEnd
+        const altCandE = _forceDE
           ? [_forceDE]  // forzato dall'utente
           : findA1NodesSameArea(endAlt.replace(/::(?:RA|RC)$/,'')).filter(c => c.toUpperCase() !== a1StdEnd);
 
@@ -67153,13 +67178,22 @@ div[style*="background:#f3f4f6"] label:hover span {
           const graphNoBaseB = buildGraphWithoutEdges(graph, baseEdgesB);
 
           const a1eToTry = altCandE.length ? altCandE : [a1StdEnd];
+          /* I collegamenti del percorso di riferimento non si riusano: senza
+             questo filtro il ripiego sul grafo completo restituiva proprio il
+             percorso di riferimento, e il Div B compariva come copia dello Std. */
+          const idBaseB = new Set(
+            baseEdgesB.map(e => String(e.id || e.arco || '')).filter(Boolean)
+          );
+          const senzaBase = (lista) => (lista || []).filter(p =>
+            !(p.edges || []).some(e => idBaseB.has(String(e.id || e.arco || '')))
+          );
           for (const a1E of a1eToTry) {
             const a1EKey = bestRtnKey(a1E);
             let seg2Div = [];
             // Prova grafo senza edge base, poi grafo completo
             for (const g_ of [graphNoBaseB, graph]) {
               for (const tryK of [a1EKey, a1E+(a1EKey.endsWith('::RC')?'::RA':'::RC')].filter(k=>g_[k]||k===a1EKey)) {
-                seg2Div = yenKShortestUNIFIED(g_, tryK, endAlt, kDiv, avoidNodes) || [];
+                seg2Div = senzaBase(yenKShortestUNIFIED(g_, tryK, endAlt, kDiv, avoidNodes));
                 if (seg2Div.length) break;
               }
               if (seg2Div.length) break;
