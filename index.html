@@ -4,7 +4,7 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 10.26 | 10  (rev. pubblicata: V10.26 | 10 | Ott 2026)                ║
+║   Versione: 10.26 | 11  (rev. pubblicata: V10.26 | 11 | Ott 2026)                ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
@@ -12,9 +12,18 @@
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
 ║                                                                                  ║
+║   CHANGELOG V10.26 | 11 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • CAMPI DEI VINCOLI IN RC E UNIFICATO: sotto ogni campo il bottone del         ║
+║     pannello, l'interruttore Entrambi / Solo Std / Solo Div e Sel. Multipla non  ║
+║     entravano su una riga; il pannello andava a capo dentro di se' e la riga     ║
+║     copriva l'etichetta del campo sotto. Ora restano su una riga con testi piu'  ║
+║     piccoli; se lo spazio manca si accorcia solo il testo del pannello, con i    ║
+║     puntini                                                                      ║
+║                                                                                  ║
 ║   CHANGELOG V10.26 | 10 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
-║   • GOOGLE EARTH ANCHE NEL TAB RA: il bottone 🌍 compare sotto il 🔗 anche nelle ║
+║   • GOOGLE EARTH ANCHE NEL TAB RA: il bottone 🌍 compare sotto il 🔗 anche nelle   ║
 ║     righe Std, Div, Multi-Path e Div Multi-Path del tab RA, con gli stessi       ║
 ║     percorsi urbani delle C-FOS                                                  ║
 ║   • DOCUMENTAZIONE DEL BOTTONE GOOGLE EARTH: scheda Percorsi su Google Earth     ║
@@ -32,7 +41,7 @@
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 08 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
-║   • BOTTONI 🔗 E 🌍: il 🌍 prende la stessa misura del 🔗 e gli sta sotto, nella║
+║   • BOTTONI 🔗 E 🌍: il 🌍 prende la stessa misura del 🔗 e gli sta sotto, nella     ║
 ║     mini colonna a destra della cella ID. Affiancati, il secondo copriva gli     ║
 ║     ultimi ID della riga                                                         ║
 ║   • ETICHETTE: nella finestra e nel KML "a piedi" diventa "percorso urbano"      ║
@@ -41,8 +50,8 @@
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 07 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
-║   • BOTTONE GOOGLE EARTH: accanto a ogni bottone 🔗, sulle righe Std e Div di RC ║
-║     e Unificato (anche Zona A e Zona B), un bottone 🌍 costruisce il KML del     ║
+║   • BOTTONE GOOGLE EARTH: accanto a ogni bottone 🔗, sulle righe Std e Div di RC  ║
+║     e Unificato (anche Zona A e Zona B), un bottone 🌍 costruisce il KML del      ║
 ║     percorso e lo copia negli appunti: in Google Earth Pro si incolla con Ctrl+V ║
 ║     nel pannello Luoghi. Una cartella per collegamento, una linea per tratta     ║
 ║     C-FOS con il suo nome, le centrali come punti; dalla finestra si puo' anche  ║
@@ -504,7 +513,7 @@
 ║     cinque nastri su otto righe meta' tabella sarebbe premiata                   ║
 ║   • MEDAGLIE AL POSTO GIUSTO: oro il primo, argento il secondo, bronzo il        ║
 ║     terzo. Prima il trofeo viola stava davanti all'oro e il numero dentro        ║
-║     la medaglia era quello del percorso, non della posizione: 🥈 #1              ║
+║     la medaglia era quello del percorso, non della posizione: 🥈 #1               ║
 ║     voleva dire "terzo classificato, percorso numero 1"                          ║
 ║   • ZNA E ZNB a tre posizioni come la classifica generale, erano quattro         ║
 ║   • CARD ANALISI PERCORSI da quattro a tre, con gli stessi colori dei            ║
@@ -19651,7 +19660,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V10.26 | 10 | Ott 2026</div>
+<div class="version-tag">V10.26 | 11 | Ott 2026</div>
       </div>
     </div>
   </header>
@@ -20493,10 +20502,20 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #0891b2;">
+              <details class="cl-item" open style="--cl-accent: #6d28d9;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🎯 Novità V10.26 | 11 | Ott 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🎯 Campi dei vincoli in ordine</strong>: nei tab RC e Unificato, sotto ogni campo vincolo, il bottone del pannello, l'interruttore <em>Entrambi / Solo Std / Solo Div</em> e <em>Sel. Multipla</em> non stavano su una riga e la riga finiva sopra l'etichetta del campo successivo. Ora restano su una riga, con testi più piccoli: pannello a sinistra, poi interruttore e Sel. Multipla. Se lo spazio non basta, si accorcia solo il testo del pannello, con i puntini (il numero resta nel suggerimento al passaggio del mouse e nel pannello)</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0891b2;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🌍 Novità V10.26 | 10 | Ott 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -36887,7 +36906,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 10 | Ott 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 11 | Ott 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -36905,7 +36924,18 @@ PERCORSI ALTERNATIVI (Div):
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #0891b2;border-radius:12px;overflow:hidden;background:#f0fdfa;">
+        <details open style="border:1px solid #6d28d9;border-radius:12px;overflow:hidden;background:#faf8ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
+            🎯 V10.26 | 11 | Ott 2026 | Campi dei vincoli su una riga
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🎯 Riga sotto il campo</strong>: la riga <code>.rc-selmulti</code> dei quattro campi vincolo resta su una riga senza a capo; testi a 0,58-0,64 rem, Sel. Multipla senza la larghezza minima di 134 px, e il bottone del pannello che si accorcia con i puntini se lo spazio manca (foglio <code>croVincRiga2</code>)</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0891b2;border-radius:12px;overflow:hidden;background:#f0fdfa;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0e7490;display:flex;align-items:center;gap:0.5rem;background:#cffafe;">
             🌍 V10.26 | 10 | Ott 2026 | Google Earth nel tab RA e documentazione
           </summary>
@@ -83657,6 +83687,42 @@ body.dark-mode .cro-earth-box { background: #1e293b; color: #e2e8f0; }
 .cro-btn-wrap > .cro-earth-btn { justify-content: center; margin: 0 !important; }
 </style>
 
+<style id="croVincRiga2">
+/* V10.26 | 11 · Sotto ogni campo vincolo, su UNA riga: bottone del pannello
+   ("📋 Obbligatorie (n)"), interruttore Entrambi / Solo Std / Solo Div e
+   Sel. Multipla. Prima non ci stavano: il pannello andava a capo dentro di se'
+   e la riga, piu' alta, usciva dal campo (alto 100 px fissi) fino a coprire
+   l'etichetta del campo sotto. Ora testi piu' piccoli, niente a capo, e se lo
+   spazio manca si accorcia solo il testo del pannello, con i puntini. */
+.ra-cols .ra-col-vincoli .route-field > .rc-selmulti {
+  flex-wrap: nowrap !important;
+  gap: 6px !important;
+  min-width: 0;
+}
+#tab-search .ra-col-vincoli .rc-selmulti > .cro-mp-badge.cro-mp-vedi,
+#tab-search-unified .ra-col-vincoli .rc-selmulti > .cro-mp-badge.cro-mp-vedi {
+  display: inline-block !important;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.64rem !important;
+  padding: 3px 8px !important;
+  line-height: 1.4 !important;
+  margin-right: auto;
+}
+.ra-cols .ra-col-vincoli .route-field > .rc-selmulti > .cro-vsc { flex-shrink: 0; }
+.ra-cols .ra-col-vincoli .route-field > .rc-selmulti .cro-vsc-b { font-size: 0.58rem; padding: 3px 5px; }
+.ra-cols .ra-col-vincoli .route-field > .rc-selmulti > button[id$="MultiBtn"] {
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-width: 0 !important;
+  padding: 3px 10px !important;
+  font-size: 0.64rem !important;
+}
+</style>
+
 <style id="croUndoStile">
 /* niente qui: il riparo sopra la barra ferma sta nel foglio della barra */
 </style>
@@ -85645,7 +85711,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V10.26 | 10';
+  var REVISIONE = 'V10.26 | 11';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
