@@ -4,13 +4,32 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 10.26 | 11  (rev. pubblicata: V10.26 | 11 | Ott 2026)                ║
+║   Versione: 10.26 | 13  (rev. pubblicata: V10.26 | 13 | Ott 2026)                ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V10.26 | 13 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • COLONNA ID DELL'UNIFICATO: con meno di 6 collegamenti RC (meno di 4 sulla    ║
+║     riga del raccordo) la riga cominciava con una freccia. Nella 12 la freccia   ║
+║     di continuazione si decideva dalla lunghezza del blocco invece che dalla sua ║
+║     posizione, e un blocco corto sembrava una seconda riga. Ora la freccia apre  ║
+║     solo le righe che continuano la precedente                                   ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 12 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • ANALISI COSTI: nel DB dei costi le voci nuove (L14 dopo L2, L15 dopo L6,     ║
+║     A4New dopo A4, A12New dopo A12, A16New dopo A16, A16dNew dopo A16d) non      ║
+║     comparivano perche' in tutte le voci mancava la virgola prima di             ║
+║     InfoAggiuntive: l'errore di sintassi fermava l'intero blocco di codice.      ║
+║     Aggiunte le 62 virgole, senza toccare i valori                               ║
+║   • INFO AGGIUNTIVE: quando una voce ha un testo vero (non "--"), la riga mostra ║
+║     una icona info accanto alla descrizione e il testo compare passando il mouse ║
+║     sulla riga. Scorta Inclusa resta nel DB, per ora non mostrata                ║
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 11 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
@@ -23,7 +42,7 @@
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 10 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
-║   • GOOGLE EARTH ANCHE NEL TAB RA: il bottone 🌍 compare sotto il 🔗 anche nelle   ║
+║   • GOOGLE EARTH ANCHE NEL TAB RA: il bottone 🌍 compare sotto il 🔗 anche nelle ║
 ║     righe Std, Div, Multi-Path e Div Multi-Path del tab RA, con gli stessi       ║
 ║     percorsi urbani delle C-FOS                                                  ║
 ║   • DOCUMENTAZIONE DEL BOTTONE GOOGLE EARTH: scheda Percorsi su Google Earth     ║
@@ -41,7 +60,7 @@
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 08 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
-║   • BOTTONI 🔗 E 🌍: il 🌍 prende la stessa misura del 🔗 e gli sta sotto, nella     ║
+║   • BOTTONI 🔗 E 🌍: il 🌍 prende la stessa misura del 🔗 e gli sta sotto, nella║
 ║     mini colonna a destra della cella ID. Affiancati, il secondo copriva gli     ║
 ║     ultimi ID della riga                                                         ║
 ║   • ETICHETTE: nella finestra e nel KML "a piedi" diventa "percorso urbano"      ║
@@ -50,8 +69,8 @@
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 07 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
-║   • BOTTONE GOOGLE EARTH: accanto a ogni bottone 🔗, sulle righe Std e Div di RC  ║
-║     e Unificato (anche Zona A e Zona B), un bottone 🌍 costruisce il KML del      ║
+║   • BOTTONE GOOGLE EARTH: accanto a ogni bottone 🔗, sulle righe Std e Div di RC ║
+║     e Unificato (anche Zona A e Zona B), un bottone 🌍 costruisce il KML del     ║
 ║     percorso e lo copia negli appunti: in Google Earth Pro si incolla con Ctrl+V ║
 ║     nel pannello Luoghi. Una cartella per collegamento, una linea per tratta     ║
 ║     C-FOS con il suo nome, le centrali come punti; dalla finestra si puo' anche  ║
@@ -513,7 +532,7 @@
 ║     cinque nastri su otto righe meta' tabella sarebbe premiata                   ║
 ║   • MEDAGLIE AL POSTO GIUSTO: oro il primo, argento il secondo, bronzo il        ║
 ║     terzo. Prima il trofeo viola stava davanti all'oro e il numero dentro        ║
-║     la medaglia era quello del percorso, non della posizione: 🥈 #1               ║
+║     la medaglia era quello del percorso, non della posizione: 🥈 #1              ║
 ║     voleva dire "terzo classificato, percorso numero 1"                          ║
 ║   • ZNA E ZNB a tre posizioni come la classifica generale, erano quattro         ║
 ║   • CARD ANALISI PERCORSI da quattro a tre, con gli stessi colori dei            ║
@@ -19660,7 +19679,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V10.26 | 11 | Ott 2026</div>
+<div class="version-tag">V10.26 | 13 | Ott 2026</div>
       </div>
     </div>
   </header>
@@ -20502,10 +20521,31 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #6d28d9;">
+              <details class="cl-item" open style="--cl-accent: #15803d;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🔢 Novità V10.26 | 13 | Ott 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🔢 Freccia iniziale nella colonna ID</strong>: nell'Unificato, i percorsi con meno di 6 collegamenti RC cominciavano con "→" (per esempio "→ CRM200 → CRM210 → CRM170 → CRM206"). La freccia di continuazione ora compare solo all'inizio delle righe che proseguono quella sopra</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b45309;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">💶 Novità V10.26 | 12 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>💶 Nuove voci in Analisi Costi</strong>: L14 (dopo L2), L15 (dopo L6), A4New (dopo A4), A12New (dopo A12), A16New (dopo A16) e A16dNew (dopo A16d). Nel DB dei costi mancava la virgola prima di <em>InfoAggiuntive</em> in tutte le voci: l'errore fermava l'intero blocco di codice e le tabelle non si aggiornavano</li>
+    <li><strong>ℹ️ Info aggiuntive</strong>: quando una voce ha un'informazione aggiuntiva, accanto alla descrizione compare ℹ️ e il testo si legge passando il mouse sulla riga</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #6d28d9;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🎯 Novità V10.26 | 11 | Ott 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -36906,7 +36946,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 11 | Ott 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 13 | Ott 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -36924,7 +36964,31 @@ PERCORSI ALTERNATIVI (Div):
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #6d28d9;border-radius:12px;overflow:hidden;background:#faf8ff;">
+        <details open style="border:1px solid #15803d;border-radius:12px;overflow:hidden;background:#f6fef9;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#166534;display:flex;align-items:center;gap:0.5rem;background:#dcfce7;">
+            🔢 V10.26 | 13 | Ott 2026 | Freccia iniziale nella colonna ID dell'Unificato
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🔢 Prefisso di continuazione</strong>: nel renderer della colonna ID la freccia iniziale si decideva con <code>indice - chunk.length</code>, che per un blocco più corto della riga (meno di 6, o di 4 con il raccordo) risultava maggiore di zero anche sul primo blocco. Ora si usa la posizione d'inizio del blocco, <code>indice - n</code></li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b45309;border-radius:12px;overflow:hidden;background:#fffbeb;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
+            💶 V10.26 | 12 | Ott 2026 | Analisi Costi: nuove voci e info aggiuntive
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧩 Sintassi del DB</strong>: in <code>COST_LINK_DB</code>, <code>COST_CODA_DB</code> e <code>COST_APP_DB</code> mancava la virgola dopo <code>"group"</code>, prima del nuovo campo <code>"InfoAggiuntive"</code>: 62 voci. L'errore impediva di eseguire l'intero blocco <code>&lt;script&gt;</code> del modulo costi</li>
+              <li><strong>📋 Ordine</strong>: le tabelle filtrano il DB per gruppo e mantengono l'ordine dell'array, quindi le voci nuove compaiono dove sono state scritte (L14 dopo L2, L15 dopo L6, A4New dopo A4 e così via)</li>
+              <li><strong>ℹ️ InfoAggiuntive</strong>: <code>_costInfoAggiuntive()</code> mette il testo come suggerimento sulla riga e una ℹ️ accanto alla descrizione; un osservatore la rimette quando le tabelle si ridisegnano. Il campo <code>"Scorta Inclusa"</code> resta nel DB e per ora non è mostrato</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #6d28d9;border-radius:12px;overflow:hidden;background:#faf8ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
             🎯 V10.26 | 11 | Ott 2026 | Campi dei vincoli su una riga
           </summary>
@@ -57023,7 +57087,8 @@ window.runUnifiedClientToClient = function() {
     "hwHuawei": "LDX di Rigenerazione su tratte lunghe",
     "valorizzatore": "--",
     "rigeneratore": "NO",
-    "group": "LINK_CLIENT_RA"
+    "group": "LINK_CLIENT_RA",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "L1",
@@ -57031,10 +57096,12 @@ window.runUnifiedClientToClient = function() {
     "rete": "RA",
     "costoTotale": 5200.0,
     "costoTotaleScontato": 4680.0,
+    "Scorta Inclusa": 1300.0,	
     "hwHuawei": "ELOM OCH 8x1G",
     "valorizzatore": "1/4*%occ",
     "rigeneratore": "NO",
-    "group": "LINK_RA"
+    "group": "LINK_RA",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "L2",
@@ -57042,10 +57109,25 @@ window.runUnifiedClientToClient = function() {
     "rete": "RA",
     "costoTotale": 6400.0,
     "costoTotaleScontato": 5640.0,
+	"Scorta Inclusa": 1700.0,	
     "hwHuawei": "LDX 1 CLIENT OCH 10G",
     "valorizzatore": "Totale",
     "rigeneratore": "NO",
-    "group": "LINK_RA"
+    "group": "LINK_RA",
+	"InfoAggiuntive": "Si può fare 1 Accesso a 10G + il 2ndo con 2.900€ in più"
+  },
+  {
+    "id": "L14",
+    "link": "10G",
+    "rete": "RA",
+    "costoTotale": 19700.0,
+    "costoTotaleScontato": 19700.0,
+	"Scorta Inclusa": 5200.0,	
+    "hwHuawei": "LTX OCH 100G > 4x10G",
+    "valorizzatore": "Totale",
+    "rigeneratore": "NO",
+    "group": "LINK_RA",
+	"InfoAggiuntive": "Fino a 10 x 10G come su RC"
   },
   {
     "id": "L3",
@@ -57053,10 +57135,12 @@ window.runUnifiedClientToClient = function() {
     "rete": "RA",
     "costoTotale": 27600.0,
     "costoTotaleScontato": 25560.0,
+	"Scorta Inclusa": 6300.0,	
     "hwHuawei": "LDC OCH 100G",
     "valorizzatore": "Totale",
     "rigeneratore": "NO",
-    "group": "LINK_RA"
+    "group": "LINK_RA",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "L4",
@@ -57064,10 +57148,12 @@ window.runUnifiedClientToClient = function() {
     "rete": "RC",
     "costoTotale": 21650.0,
     "costoTotaleScontato": 19200.0,
+	"Scorta Inclusa": 5650.0,	
     "hwHuawei": "ELOM IN CASCATA A LTX OCH 100G",
     "valorizzatore": "1/40*%occ",
     "rigeneratore": "NO",
-    "group": "LINK_RC"
+    "group": "LINK_RC",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "L5",
@@ -57075,10 +57161,12 @@ window.runUnifiedClientToClient = function() {
     "rete": "RC",
     "costoTotale": 19700.0,
     "costoTotaleScontato": 17400.0,
-    "hwHuawei": "LTX OCH 100G -> 4x10G",
+	"Scorta Inclusa": 5200.0,	
+    "hwHuawei": "LTX OCH 100G > 4x10G",
     "valorizzatore": "1/10*%occ",
     "rigeneratore": "NO",
-    "group": "LINK_RC"
+    "group": "LINK_RC",
+	"InfoAggiuntive": "19.700€ fino a 4 linee, dalla 5a alla 10ma + 800€ a linea aggiuntiva"
   },
   {
     "id": "L6",
@@ -57086,43 +57174,61 @@ window.runUnifiedClientToClient = function() {
     "rete": "RC",
     "costoTotale": 32600.0,
     "costoTotaleScontato": 31560.0,
+	"Scorta Inclusa": 6300.0,	
     "hwHuawei": "LDC OCH 200G -> 1X100G",
     "valorizzatore": "x% (70%)?",
     "rigeneratore": "NO",
-    "group": "LINK_RC"
+    "group": "LINK_RC",
+	"InfoAggiuntive": "32.600€ 1a linea + 9.600€ per la 2a linea aggiuntiva"
+  },
+   {
+    "id": "L15",
+    "link": "100G",
+    "rete": "RC",
+    "costoTotale": 44700.0,
+    "costoTotaleScontato": 43200.0,
+	"Scorta Inclusa": 8700.0,	
+    "hwHuawei": "LDCD",
+    "valorizzatore": "--",
+    "rigeneratore": "NO",
+    "group": "LINK_RC",
+	"InfoAggiuntive": "la sk permette di fare 4x100G con 2 canali a 200G, costi (senza scorta): 1° canale a 200G + 1° 100G 36.000€ - 2° 100G + 8.200€. 2° canale a 200G + 3° 100G 15.000€ - 4° 100G + 8.200€."
   },
   {
     "id": "L7",
     "link": "1G",
     "rete": "RC",
     "costoTotale": 32952.0,
-    "costoTotaleScontato": 32762.399999999998,
+    "costoTotaleScontato": 32762.40,
     "hwHuawei": "ELOM IN CASCATA A LTX OCH 100G",
     "valorizzatore": "1/40*%occ",
     "rigeneratore": "SI",
-    "group": "LINK_RC_RIG"
+    "group": "LINK_RC_RIG",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "L8",
     "link": "10G",
     "rete": "RC",
     "costoTotale": 31002.0,
-    "costoTotaleScontato": 30962.399999999998,
+    "costoTotaleScontato": 30962.40,
     "hwHuawei": "LTX OCH 100G -> 4x10G",
     "valorizzatore": "1/10*%occ",
     "rigeneratore": "SI",
-    "group": "LINK_RC_RIG"
+    "group": "LINK_RC_RIG",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "L9",
     "link": "100G",
     "rete": "RC",
     "costoTotale": 43902.0,
-    "costoTotaleScontato": 45122.4,
+    "costoTotaleScontato": 45122.40,
     "hwHuawei": "LDC OCH 200G -> 1X100G",
     "valorizzatore": "x% (70%)?",
     "rigeneratore": "SI",
-    "group": "LINK_RC_RIG"
+    "group": "LINK_RC_RIG",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "L11",
@@ -57130,7 +57236,8 @@ window.runUnifiedClientToClient = function() {
     "rete": "RC",
     "costoTotale": 2725.2,
 	"hwHuawei": " ",
-    "group": "NODI_RA_RC"
+    "group": "NODI_RA_RC",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "L12",
@@ -57138,7 +57245,8 @@ window.runUnifiedClientToClient = function() {
     "rete": "RC",
     "costoTotale": 22200.0,
 	"hwHuawei": " ",
-    "group": "NODI_RA_RC"
+    "group": "NODI_RA_RC",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "L13",
@@ -57146,7 +57254,8 @@ window.runUnifiedClientToClient = function() {
     "rete": "RA",
     "costoTotale": 20000.0,
 	"hwHuawei": " ",
-    "group": "NODI_RA_RC"
+    "group": "NODI_RA_RC",
+	"InfoAggiuntive": "--"
   },
   // ── NORD OVEST – RETE AGGREGATION ─────────────────────────────────────────
   {
@@ -57156,7 +57265,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 10532.0,
     "costoTotaleScontato": 10532.0,
     "hwAdva": "1063701044-01 (F7/16TCC-PCN-4GUS+10G) + 1061702000-02 (SFP+/11GU/DCTV/SM/LC) + 0061705824 (SFP/HS/1310S/SM/LC)",
-    "group": "LINK_NO_RA"
+    "group": "LINK_NO_RA",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "LNO2",
@@ -57165,7 +57275,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 9181.0,
     "costoTotaleScontato": 9181.0,
     "hwAdva": "BC00000637 (F7/4WCC-PCN-10G&1P-H) + 1061702000-02 (SFP+/11GU/DCTV/SM/LC) + 1061701850-03 (SFP+/11GU/1310S/SM/LC)",
-    "group": "LINK_NO_RA"
+    "group": "LINK_NO_RA",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "LNO3",
@@ -57174,7 +57285,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 23542.0,
     "costoTotaleScontato": 23542.0,
     "hwAdva": "1063700023-01 (F7/WCC-PCN-100GB) + 1061700635-01 (CFP/112G/#DCTCA/SM/LC) + 1061800720-01 (QSFP28/112G/LR4/SM/LC)",
-    "group": "LINK_NO_RA"
+    "group": "LINK_NO_RA",
+	"InfoAggiuntive": "--"
   },
   // ── NORD OVEST – RETE AGGREGATION CON RIGENERATORE (placeholder) ──────────
   {
@@ -57184,7 +57296,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 0.0,
     "costoTotaleScontato": 0.0,
     "hwAdva": "🔧 Da configurare",
-    "group": "LINK_NO_RA_RIG"
+    "group": "LINK_NO_RA_RIG",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "LNO5",
@@ -57193,7 +57306,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 0.0,
     "costoTotaleScontato": 0.0,
     "hwAdva": "🔧 Da configurare",
-    "group": "LINK_NO_RA_RIG"
+    "group": "LINK_NO_RA_RIG",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "LNO6",
@@ -57202,7 +57316,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 0.0,
     "costoTotaleScontato": 0.0,
     "hwAdva": "🔧 Da configurare",
-    "group": "LINK_NO_RA_RIG"
+    "group": "LINK_NO_RA_RIG",
+	"InfoAggiuntive": "--"
   },
   // ── NORD OVEST – RETE CORE ────────────────────────────────────────────────
   {
@@ -57212,7 +57327,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 32336.0,
     "costoTotaleScontato": 32336.0,
     "hwAdva": "BC00000799 (F8/MA-B5LT/200G) + BC00001483 (F8/QSFP10/11G/4LR) + 1091802124-01 (F8/TIM/LIC/10G/200G/OF) + 1063701044-01 (F7/16TCC-PCN-4GUS+10G) + 1061701850-03 (SFP+) + 0061705824 (SFP PLUG)",
-    "group": "LINK_NO_RC"
+    "group": "LINK_NO_RC",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "LNO8",
@@ -57221,7 +57337,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 23135.0,
     "costoTotaleScontato": 23135.0,
     "hwAdva": "BC00000799 (F8/MA-B5LT/200G) + BC00001483 (F8/QSFP10/11G/4LR) + 1091802124-01 (F8/TIM/LIC/10G/200G/OF)",
-    "group": "LINK_NO_RC"
+    "group": "LINK_NO_RC",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "LNO9",
@@ -57230,7 +57347,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 28717.0,
     "costoTotaleScontato": 28717.0,
     "hwAdva": "BC00000799 (F8/MA-B5LT/200G) + BC00000849 (QSFP28/112G/LR4/SM/LC + Activation License 100G)",
-    "group": "LINK_NO_RC"
+    "group": "LINK_NO_RC",
+	"InfoAggiuntive": "--"
   },
   // ── NORD OVEST – RETE CORE CON RIGENERATORE (placeholder) ────────────────
   {
@@ -57240,7 +57358,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 0.0,
     "costoTotaleScontato": 0.0,
     "hwAdva": "🔧 Da configurare",
-    "group": "LINK_NO_RC_RIG"
+    "group": "LINK_NO_RC_RIG",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "LNO11",
@@ -57249,7 +57368,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 0.0,
     "costoTotaleScontato": 0.0,
     "hwAdva": "🔧 Da configurare",
-    "group": "LINK_NO_RC_RIG"
+    "group": "LINK_NO_RC_RIG",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "LNO12",
@@ -57258,7 +57378,8 @@ window.runUnifiedClientToClient = function() {
     "costoTotale": 0.0,
     "costoTotaleScontato": 0.0,
     "hwAdva": "🔧 Da configurare",
-    "group": "LINK_NO_RC_RIG"
+    "group": "LINK_NO_RC_RIG",
+	"InfoAggiuntive": "--"
   }
 ];
 
@@ -57270,7 +57391,8 @@ window.runUnifiedClientToClient = function() {
     "costoNuovaConnRif": 9800.0,
     "hwHuawei": "9HU (Cestello Grande) + 4CSM (filtro 4ch×10G/dir) + MAP (modulo amplif. ottico)",
     "note": "Cestelli c.le/cliente Grande Completo di Amplificazione",
-    "group": "APPARATO"
+    "group": "APPARATO",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "C2",
@@ -57279,7 +57401,8 @@ window.runUnifiedClientToClient = function() {
     "costoNuovaConnRif": 3100.0,
     "hwHuawei": "2TWCC (Trasponder 1G, max 2 linee)",
     "note": "Trasponder",
-    "group": "APPARATO"
+    "group": "APPARATO",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "C3",
@@ -57289,7 +57412,8 @@ window.runUnifiedClientToClient = function() {
     "hwHuawei": "4WCC (Trasponder 10G, 4 linee/1 attiva)",
     "note": "Trasponder",
     "note2": "11600 X VIA + SPLITTER 250€ x DWDM CURRENT tipo DC Poste Eur",
-    "group": "APPARATO"
+    "group": "APPARATO",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "C4",
@@ -57298,7 +57422,8 @@ window.runUnifiedClientToClient = function() {
     "costoNuovaConnRif": 19600.0,
     "hwHuawei": "WCC-100 (Trasponder 100G, 1 linea)",
     "note": "Trasponder",
-    "group": "APPARATO"
+    "group": "APPARATO",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "C7",
@@ -57308,7 +57433,8 @@ window.runUnifiedClientToClient = function() {
     "costoNuovaConnRif": 5710.8,
     "hwHuawei": "1HU (Cestello Compatto) + 9HU (Cestello Grande)",
     "note": "Cestelli Cliente piccolo",
-    "group": "CODA_RETAIL"
+    "group": "CODA_RETAIL",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "C8",
@@ -57317,7 +57443,8 @@ window.runUnifiedClientToClient = function() {
     "costoNuovaConn": 9430.8,
     "costoNuovaConnRif": 9430.8,
     "hwHuawei": "2TWCC (Trasponder 1G, max 2 linee)",
-    "group": "CODA_RETAIL"
+    "group": "CODA_RETAIL",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "C9",
@@ -57326,7 +57453,8 @@ window.runUnifiedClientToClient = function() {
     "costoNuovaConn": 14890.8,
     "costoNuovaConnRif": 14890.8,
     "hwHuawei": "4WCC (Trasponder 10G, 4 linee/1 attiva)",
-    "group": "CODA_RETAIL"
+    "group": "CODA_RETAIL",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "C10",
@@ -57335,7 +57463,8 @@ window.runUnifiedClientToClient = function() {
     "costoNuovaConn": 29230.8,
     "costoNuovaConnRif": 29230.8,
     "hwHuawei": "WCC-100 (Trasponder 100G, 1 linea)",
-    "group": "CODA_RETAIL"
+    "group": "CODA_RETAIL",
+	"InfoAggiuntive": "--"
   }
 ];
 
@@ -57348,7 +57477,8 @@ window.runUnifiedClientToClient = function() {
     "dettaglio": "1HU - F + I Compreso Scorte",
     "note1": "app. Senza Filtro Canali",
     "note2": "sia 220V che 48V",
-    "group": "CESTELLO_1HU"
+    "group": "CESTELLO_1HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A4b",
@@ -57357,8 +57487,9 @@ window.runUnifiedClientToClient = function() {
     "custom": "",
     "note1": "4 canali (utilizza 2 fo ed equivale a 8 fibre di accesso)",
     "note2": "",
-    "costoInstallazione": 600.0,
-    "group": "CESTELLO_1HU"
+    "costoInstallazione": 750.0,
+    "group": "CESTELLO_1HU",
+	"InfoAggiuntive": "--"
   },  
   {
     "id": "A2b",
@@ -57368,7 +57499,8 @@ window.runUnifiedClientToClient = function() {
     "note1": "8x1G",
     "note2": "",
     "costoInstallazione": 5000.0,
-    "group": "CESTELLO_1HU"
+    "group": "CESTELLO_1HU",
+	"InfoAggiuntive": "--"
   },  
   {
     "id": "A2",
@@ -57378,7 +57510,8 @@ window.runUnifiedClientToClient = function() {
     "dettaglio": "2TWCC",
     "note1": "max 2 linee con filtro",
     "note2": "",
-    "group": "CESTELLO_1HU"
+    "group": "CESTELLO_1HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A3",
@@ -57388,7 +57521,8 @@ window.runUnifiedClientToClient = function() {
     "dettaglio": "4WCC",
     "note1": "max 4 linee con filtro",
     "note2": "1 Tasponder",
-    "group": "CESTELLO_1HU"
+    "group": "CESTELLO_1HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A4",
@@ -57396,9 +57530,21 @@ window.runUnifiedClientToClient = function() {
     "custom": "1 Trasp 100G",
     "costoInstallazione": 11600.0,
     "dettaglio": "WCC100",
-    "note1": "Max 1 linea",
+    "note1": "Max 1 linea con scorta",
     "note2": "",
-    "group": "CESTELLO_1HU"
+    "group": "CESTELLO_1HU",
+	"InfoAggiuntive": "--"
+  },
+  {
+    "id": "A4New",
+    "cestello": "1HU",
+    "custom": "1 Trasp 100G",
+    "costoInstallazione": 9600.0,
+    "dettaglio": "WCC100",
+    "note1": "Max 1 linea senza scorta",
+    "note2": "",
+    "group": "CESTELLO_1HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A7",
@@ -57407,7 +57553,8 @@ window.runUnifiedClientToClient = function() {
     "costoInstallazione": 2300.0,
     "dettaglio": "7HU",
     "note1": "differenza tra 7HU e 9HU sta nella Dissipazione",
-    "group": "CESTELLO_7HU"
+    "group": "CESTELLO_7HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A9b",
@@ -57416,8 +57563,9 @@ window.runUnifiedClientToClient = function() {
     "custom": "",
     "note1": "1 filtro x 4 canali 10G x direzione, utilizza 2 fo ed equivale a 8 fibre di accesso. Inoltre, i filtri 4CSM possono essere messi in cascata, condividendo la stessa cp di fo",
     "note2": "",
-    "costoInstallazione": 600.0,
-    "group": "CESTELLO_7HU"
+    "costoInstallazione": 500.0,
+    "group": "CESTELLO_7HU",
+	"InfoAggiuntive": "--"
   },  
   {
     "id": "A9c",
@@ -57426,8 +57574,9 @@ window.runUnifiedClientToClient = function() {
     "custom": "",
     "note1": "1 filtro x 40 canali x direzione",
     "note2": "",
-    "costoInstallazione": 915.0,
-    "group": "CESTELLO_7HU"
+    "costoInstallazione": 650.0,
+    "group": "CESTELLO_7HU",
+	"InfoAggiuntive": "--"
   },  
   {
     "id": "A7b",
@@ -57437,7 +57586,8 @@ window.runUnifiedClientToClient = function() {
     "note1": "8x1G",
     "note2": "occupa 2 slot del cestello",
     "costoInstallazione": 5000.0,
-    "group": "CESTELLO_7HU"
+    "group": "CESTELLO_7HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A8",
@@ -57447,7 +57597,8 @@ window.runUnifiedClientToClient = function() {
     "note1": "2x1G",
     "note2": "sia 220V che 48V",
     "costoInstallazione": 2100.0,
-    "group": "CESTELLO_7HU"
+    "group": "CESTELLO_7HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A9",
@@ -57456,8 +57607,9 @@ window.runUnifiedClientToClient = function() {
     "costoInstallazione": 4600.0,
     "dettaglio": "4WCC",
     "note1": "4 linee potenziali, configurata solo 1",
-    "note2": "Fino a 16 Trasponder (3400 + 1200 linea (fino a 4))",
-    "group": "CESTELLO_7HU"
+    "note2": "Fino a 16 Trasponder (3.400€ + 1.200€ linea (fino a 4))",
+    "group": "CESTELLO_7HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A9d",
@@ -57467,7 +57619,8 @@ window.runUnifiedClientToClient = function() {
     "note1": "Amplificatore x filtri in cascata",
     "note2": "occupa 2 slot del cestello",
     "costoInstallazione": 1120.0,
-    "group": "CESTELLO_7HU"
+    "group": "CESTELLO_7HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A9e",
@@ -57477,7 +57630,8 @@ window.runUnifiedClientToClient = function() {
     "note1": "Si utilizza x collegamenti protetti 1+1",
     "note2": "splitter ottico",
     "costoInstallazione": 250.0,
-    "group": "CESTELLO_7HU"
+    "group": "CESTELLO_7HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A12",
@@ -57485,19 +57639,32 @@ window.runUnifiedClientToClient = function() {
     "custom": "",
     "costoInstallazione": 3100.0,
     "dettaglio": "9HU",
-    "note1": "Fino a 16 Trasponder (sia 220V che 48V)",
-    "note2": "il secondo costa 2500",	
-    "group": "CESTELLO_9HU"
+    "note1": "Con Scorta - Fino a 16 Trasponder (sia 220V che 48V)",
+    "note2": "il secondo costa 2.500€ ed è Senza Scorta",	
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
+  },
+  {
+    "id": "A12New",
+    "cestello": "9HU",
+    "custom": "",
+    "costoInstallazione": 2500.0,
+    "dettaglio": "9HU",
+    "note1": "Senza Scorta - Fino a 16 Trasponder (sia 220V che 48V)",
+    "note2": "--",	
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A13",
     "cestello": "9HU",
     "custom": "Filtro",
-    "costoInstallazione": 600.0,
+    "costoInstallazione": 500.0,
     "dettaglio": "4CSM",
     "note1": "1 filtro x 4 canali 10G x direzione, utilizza 2 fo ed equivale a 8 fibre di accesso. Inoltre, i filtri 4CSM possono essere messi in cascata, condividendo la stessa cp di fo",
     "note2": "",
-    "group": "CESTELLO_9HU"
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A16b",
@@ -57506,8 +57673,9 @@ window.runUnifiedClientToClient = function() {
     "custom": "",
     "note1": "1 filtro x 40 canali x direzione",
     "note2": "",
-    "costoInstallazione": 915.0,
-    "group": "CESTELLO_9HU"
+    "costoInstallazione": 650.0,
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A13b",
@@ -57517,7 +57685,8 @@ window.runUnifiedClientToClient = function() {
     "note1": "8x1G",
     "note2": "occupa 2 slot del cestello",
     "costoInstallazione": 5000.0,
-    "group": "CESTELLO_9HU"
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A14",
@@ -57527,7 +57696,8 @@ window.runUnifiedClientToClient = function() {
     "dettaglio": "2TWCC",
     "note1": "2x1G",
     "note2": "Dedicata Cliente",
-    "group": "CESTELLO_9HU"
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A15",
@@ -57536,8 +57706,9 @@ window.runUnifiedClientToClient = function() {
     "costoInstallazione": 4600.0,
     "dettaglio": "4WCC",
     "note1": "4 linee potenziali, configurata solo 1",
-    "note2": "Fino a 16 Trasponder (3400 + 1200 linea (fino a 4))",
-    "group": "CESTELLO_9HU"
+    "note2": "Fino a 16 Trasponder (3.400€ + 1.200€ linea (fino a 4))",
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A16",
@@ -57545,10 +57716,20 @@ window.runUnifiedClientToClient = function() {
     "custom": "1 Trasp 100G",
     "costoInstallazione": 11600.0,
     "dettaglio": "WCC100",
-    "note2": "Dedicata Cliente",
-    "group": "CESTELLO_9HU"
+    "note2": "Con Scorta - Dedicata Cliente",
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
   },
-
+  {
+    "id": "A16New",
+    "cestello": "9HU",
+    "custom": "1 Trasp 100G",
+    "costoInstallazione": 9600.0,
+    "dettaglio": "WCC100",
+    "note2": "Senza Scorta - Dedicata Cliente",
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
+  },
   {
     "id": "A16c",
     "cestello": "9HU",
@@ -57557,7 +57738,8 @@ window.runUnifiedClientToClient = function() {
     "note1": "amplificatore x filtri in cascata",
     "note2": "occupa 2 slot del cestello",
     "costoInstallazione": 1120.0,
-    "group": "CESTELLO_9HU"
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
   },
   {
     "id": "A16d",
@@ -57567,7 +57749,19 @@ window.runUnifiedClientToClient = function() {
     "note1": "x collegamenti protetti 1+1",
     "note2": "splitter ottico",
     "costoInstallazione": 250.0,
-    "group": "CESTELLO_9HU"
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
+  },
+    {
+    "id": "A16dNew",
+    "cestello": "9HU",
+    "dettaglio": "F7/MAP-OSC-C",
+    "custom": "",
+    "note1": "Amplificatore da abbinare al 40CSM",
+    "note2": "MAP OSC",
+    "costoInstallazione": 2317.0,
+    "group": "CESTELLO_9HU",
+	"InfoAggiuntive": "--"
   }
 ];
 
@@ -58239,6 +58433,33 @@ function handleCheckboxChange(evt) {
 
   window._COST_LINK_DB = COST_LINK_DB;
 
+  /* V10.26|12: "InfoAggiuntive" delle voci di costo. Se c'e' un testo vero
+     (non "--"), la riga mostra una ℹ️ accanto alla descrizione e il testo
+     compare passando il mouse sulla riga. Si rifa' a ogni ridisegno delle
+     tabelle, che riscrivono le righe da zero. */
+  function _costInfoAggiuntive() {
+    var tab = document.getElementById('tab-costi');
+    if (!tab) return;
+    var per = {};
+    [].concat(COST_LINK_DB, COST_CODA_DB, COST_APP_DB).forEach(function (r) { if (r && r.id) per[r.id] = r; });
+    tab.querySelectorAll('input[data-id]').forEach(function (cb) {
+      var r = per[cb.getAttribute('data-id')];
+      if (!r) return;
+      var info = String(r.InfoAggiuntive == null ? '' : r.InfoAggiuntive).trim();
+      if (!info || /^-+$/.test(info)) return;
+      var tr = cb.closest('tr');
+      if (!tr || tr.querySelector('.cost-info-i')) return;
+      tr.title = info;
+      var cella = tr.cells.length > 1 ? tr.cells[1] : tr.cells[0];
+      var i = document.createElement('span');
+      i.className = 'cost-info-i';
+      i.textContent = 'ℹ️';
+      i.title = info;
+      cella.appendChild(i);
+    });
+  }
+  window._costInfoAggiuntive = _costInfoAggiuntive;
+
   window.initCostModule = function() {
     if (initialized) {
       updateTotals();
@@ -58283,6 +58504,16 @@ function handleCheckboxChange(evt) {
     renderTable('app', app7HU, 'cost-table-app-7hu-body');
     renderTable('app', app9HU, 'cost-table-app-9hu-body');
     renderTable('app', appFut, 'cost-table-app-fut-body');
+    _costInfoAggiuntive();
+    /* le tabelle si ridisegnano anche dopo: la ℹ️ si rimette ogni volta */
+    (function () {
+      var t = document.getElementById('tab-costi'), att = null;
+      if (!t || t._costInfoObs) return;
+      t._costInfoObs = true;
+      new MutationObserver(function () {
+        if (!att) att = setTimeout(function () { att = null; _costInfoAggiuntive(); }, 80);
+      }).observe(t, { childList: true, subtree: true });
+    })();
 
     const tab = document.getElementById('tab-costi');
     if (tab) {
@@ -64602,7 +64833,7 @@ div[style*="background:#f3f4f6"] label:hover span {
             const _n = (currentRCIds[_i] && currentRCIds[_i].indexOf('RACCORDO') !== -1) ? 4 : 6;
             const chunk = currentRCIds.slice(_i, _i + _n);
             _i += _n;
-            const prefisso = (_i - chunk.length > 0) ? '<span style="color:#9ca3af;">→</span> ' : '';
+            const prefisso = (_i - _n > 0) ? '<span style="color:#9ca3af;">→</span> ' : '';   // V10.26|13: posizione d'inizio, non lunghezza
             lines.push(prefisso + chunk.join(' <span style="color:#9ca3af;">→</span> '));
           }
           currentRCIds = [];
@@ -64624,7 +64855,7 @@ div[style*="background:#f3f4f6"] label:hover span {
             const _n = (currentRCIds[_i] && currentRCIds[_i].indexOf('RACCORDO') !== -1) ? 4 : 6;
             const chunk = currentRCIds.slice(_i, _i + _n);
             _i += _n;
-            const prefisso = (_i - chunk.length > 0) ? '<span style="color:#9ca3af;">→</span> ' : '';
+            const prefisso = (_i - _n > 0) ? '<span style="color:#9ca3af;">→</span> ' : '';   // V10.26|13: posizione d'inizio, non lunghezza
             lines.push(prefisso + chunk.join(' <span style="color:#9ca3af;">→</span> '));
           }
           currentRCIds = [];
@@ -64679,7 +64910,7 @@ div[style*="background:#f3f4f6"] label:hover span {
         const _m = (currentRCIds[_j] && currentRCIds[_j].indexOf('RACCORDO') !== -1) ? 4 : 6;
         const chunk = currentRCIds.slice(_j, _j + _m);
         _j += _m;
-        const prefisso = (_j - chunk.length > 0) ? '<span style="color:#9ca3af;">→</span> ' : '';
+        const prefisso = (_j - _m > 0) ? '<span style="color:#9ca3af;">→</span> ' : '';   // V10.26|13: posizione d'inizio, non lunghezza
         lines.push(prefisso + chunk.join(' <span style="color:#9ca3af;">→</span> '));
       }
     }
@@ -83723,6 +83954,12 @@ body.dark-mode .cro-earth-box { background: #1e293b; color: #e2e8f0; }
 }
 </style>
 
+<style id="croCostInfo">
+/* V10.26 | 12 · icona delle InfoAggiuntive nel tab Analisi Costi */
+#tab-costi .cost-info-i { margin-left: 6px; cursor: help; font-size: 0.85em; vertical-align: middle; }
+#tab-costi tr[title] { cursor: help; }
+</style>
+
 <style id="croUndoStile">
 /* niente qui: il riparo sopra la barra ferma sta nel foglio della barra */
 </style>
@@ -85711,7 +85948,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V10.26 | 11';
+  var REVISIONE = 'V10.26 | 13';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
