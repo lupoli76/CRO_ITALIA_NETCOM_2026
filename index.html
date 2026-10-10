@@ -4,13 +4,104 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 10.26 | 13  (rev. pubblicata: V10.26 | 13 | Ott 2026)                ║
+║   Versione: 10.26 | 20  (rev. pubblicata: V10.26 | 20 | Ott 2026)                ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V10.26 | 20 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • TEMPI DEI DIV NEL TAB RC: fino a N° Risultati 150 il tool esamina 300        ║
+║     candidati come prima della 19 (circa 7 secondi invece di 13); sopra 150 i    ║
+║     candidati crescono con N° Risultati, il triplo fino a 3.000, per cercare     ║
+║     piu' a fondo                                                                 ║
+║   • AVVISO SUI DIV TUTTI PARZIALI, in RC e Unificato: se con N° Risultati sotto  ║
+║     300 tutti i Div trovati sono parziali, il tool suggerisce di portarlo a 300  ║
+║     e ricalcolare i Div. Uso consigliato: 150 di base, 300 quando escono solo    ║
+║     parziali                                                                     ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 19 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • REGOLA DI DIVERSIFICAZIONE: un Div e' completo solo se non ha collegamenti,  ║
+║     C-FOS ne' centrali delle C-FOS in comune con lo Std; altrimenti e' un Div    ║
+║     parziale, con la nota e [DIV PARZIALE] nel TXT. Vale per tutti i Div di RC e ║
+║     Unificato. Nei Div Zona A e Zona B la zona non ricalcolata non conta. In     ║
+║     tabella prima i completi, poi i parziali dal meno al piu' condiviso          ║
+║   • CANDIDATI DEI DIV: crescono con N° Risultati (il triplo, fino a 3.000) anche ║
+║     oltre i 100 Div mostrati. Con 300 il tool esamina 900 candidati per tratto   ║
+║     invece di 300 e trova piu' Div completi quando ci sono                       ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 18 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • DIV RTN DI ZONA (Zona A, Zona B, A+B): ora escludono le centrali intermedie  ║
+║     dello Std, come gia' facevano i Div senza RTN. Prima evitavano solo i suoi   ║
+║     collegamenti, e un Div poteva passare da una centrale dello Std con un altro ║
+║     collegamento (esempio: CRM050 in CORVIALE, ROMAITDM, centrale di CRM088 e    ║
+║     CRM145 dello Std). Fra i Div trovati vengono prima quelli senza C-FOS e      ║
+║     senza centrali delle C-FOS in comune con lo Std. Il ripiego sui Div parziali ║
+║     resta, con la sua nota                                                       ║
+║   • DIV A+B SENZA SOLUZIONE PULITA: se nessun Div A+B evita tutte le centrali    ║
+║     dello Std, il tool propone quelli che ne evitano almeno i collegamenti, come ║
+║     Div parziali con la nota delle centrali in comune, prima quelli che ne       ║
+║     toccano meno                                                                 ║
+║   • DIV ZONA A, RIPIEGO PARZIALE: quando non esisteva un Div Zona A completo, il ║
+║     calcolo andava in errore (variabile del ramo Zona A usata fuori dal suo      ║
+║     blocco) e non compariva nulla. Ora compaiono i Div parziali con la loro nota ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 17 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • NOTA DI DIVERSIFICAZIONE ANCHE SUI DIV COMPLETI, in RC e Unificato: quando   ║
+║     un Div non ha collegamenti in comune ma condivide C-FOS, centrali delle      ║
+║     C-FOS o centrali di percorso con lo Std, sotto il percorso compare la nota   ║
+║     con il dettaglio, senza aprire la pastiglia. La stessa nota va nel TXT del   ║
+║     Div. I Div parziali hanno gia' la loro                                       ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 16 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • DIV A+B: il bottone Div A+B dava Div con la Zona A uguale allo Std, come Div ║
+║     Zona B. La ricerca completa scartava tutte le coppie di tratti perche' il    ║
+║     passaggio RA-RC compariva in tutti e due e veniva preso per un collegamento  ║
+║     in comune. Ora si confrontano solo i collegamenti veri. Se un Div A+B        ║
+║     completo non esiste, il parziale usa comunque un tratto di Zona A diverso    ║
+║     dallo Std quando c'e'. Vengono prima i Div A+B che non attraversano nessuna  ║
+║     centrale intermedia dello Std                                                ║
+║   • NOTA DEL DIV PARZIALE, in tabella e nel TXT, in RC e Unificato: elenca tutto ║
+║     quello che il Div ha in comune con lo Std, senza puntini. Collegamenti       ║
+║     interi in comune; collegamenti in comune solo in parte, con le C-FOS o le    ║
+║     centrali delle C-FOS condivise; centrali di percorso in comune. Nel TXT il   ║
+║     simbolo di avviso non e' piu' doppio                                         ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 15 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • NOTA SUBPATH SEMPRE PRESENTE nei TXT di RA, RC e Unificato, con i Subpath    ║
+║     NON ATTIVI su una riga e quelli DA VERIFICARE SU NNI (stato o note),         ║
+║     potenzialmente non attivi, su un'altra. La frase da aggiungere in IRP li     ║
+║     comprende tutti; con soli DA VERIFICARE vale se la verifica li conferma non  ║
+║     attivi. Senza Subpath da segnalare la nota compare con xxx, yyy da compilare ║
+║     a mano                                                                       ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 14 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • EXPORT TXT, RIQUADRO DELLE SEQUENZE: Sequenza Unica diventa Sequenza         ║
+║     Routing; si aggiungono Sequenza Somma (separatore +) e Sequenza Elenco       ║
+║     (separatore virgola). Resta Sequenza Segmentata con i passaggi di rete       ║
+║   • EXPORT TXT, ROUTING CLLI DELLE C-FOS PER COLLEGAMENTO: per i collegamenti RA ║
+║     l'ID completo (arco, ramo, SubPath, progressivo) invece del solo SubPath,    ║
+║     con la colonna allineata alla voce piu' lunga                                ║
+║   • EXPORT TXT, SPAZI: due righe vuote dopo CENTRALI, dopo ROUTING CLLI DELLE    ║
+║     C-FOS e dopo VERIFICA & INFO NNI; una riga vuota prima del Totale dei costi  ║
+║   • EXPORT TXT, NOTA SUBPATH: in RA, RC e Unificato e' sempre l'ultima sezione   ║
+║     del percorso, dopo VERIFICA & INFO NNI o, se ci sono, dopo i costi (prima    ║
+║     stava sopra i costi). La frase per l'offerta concorda: del Subpath ... che   ║
+║     e' / dei Subpath ... che sono                                                ║
+║   • ID COLLEGAMENTI RC, 5 PER RIGA: nella colonna ID dei tab RC e Unificato i    ║
+║     collegamenti RC vanno a capo ogni 5 (Unificato prima 6, tab RC prima 4);     ║
+║     nell'Unificato 3 sulla riga che apre con il raccordo. Anche nel tab RC la    ║
+║     freccia di continuazione apre la riga successiva, e gli ID non si spezzano   ║
+║     piu' a meta'                                                                 ║
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 13 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
@@ -19679,7 +19770,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V10.26 | 13 | Ott 2026</div>
+<div class="version-tag">V10.26 | 20 | Ott 2026</div>
       </div>
     </div>
   </header>
@@ -20521,10 +20612,90 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #15803d;">
+              <details class="cl-item" open style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">⏱️ Novità V10.26 | 20 | Ott 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>⏱️ Tempi dei Div nel tab RC</strong>: fino a N° Risultati 150 il tool esamina 300 candidati, come prima della 19, e i Div tornano a circa 7 secondi invece di 13. Sopra 150 i candidati crescono con N° Risultati (il triplo, fino a 3.000) per cercare più a fondo</li>
+    <li><strong>💡 Quando escono solo Div parziali</strong>: nei tab RC e Unificato, se con N° Risultati sotto 300 tutti i Div trovati sono parziali, un avviso suggerisce di portarlo a 300 e ricalcolare i Div. Uso consigliato: 150 di base, 300 solo quando servono più tentativi</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #15803d;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">✅ Novità V10.26 | 19 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>✅ Regola di diversificazione</strong>: un Div è <em>completo</em> solo se non ha collegamenti, C-FOS né centrali delle C-FOS in comune con lo Std. Altrimenti è un <em>Div parziale</em>, con la nota in tabella e [DIV PARZIALE] nel TXT, e si può proporre come tale se il cliente accetta una diversificazione parziale. Vale per tutti i Div dei tab RC e Unificato; nei Div Zona A e Zona B la zona non ricalcolata non conta. In tabella vengono prima i completi, poi i parziali dal meno al più condiviso</li>
+    <li><strong>🔢 Più candidati con N° Risultati</strong>: i Div mostrati restano al massimo 100, ma i candidati esaminati crescono con N° Risultati (il triplo, fino a 3.000). Con 300 il tool ne esamina 900 per tratto invece di 300 e trova più Div completi, quando esistono</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #dc2626;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🛑 Novità V10.26 | 18 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🛑 Div di zona senza centrali dello Std</strong>: i Div <em>Zona A</em>, <em>Zona B</em> e <em>A+B</em> escludono ora le centrali intermedie dello Std, come già facevano i Div senza RTN. Prima evitavano solo i suoi collegamenti, e un Div poteva attraversare una centrale dello Std con un collegamento diverso: per esempio CRM050 in Corviale (ROMAITDM), centrale di CRM088 e CRM145 dello Std</li>
+    <li><strong>🧵 Prima i Div puliti</strong>: fra i Div trovati vengono prima quelli senza C-FOS e senza centrali delle C-FOS in comune con lo Std, lo stesso controllo della pastiglia. Se un Div completo non esiste, il tool propone ancora i Div parziali, con la nota che dice cosa resta in comune</li>
+    <li><strong>🔀 Div A+B senza soluzione pulita</strong>: se nessun Div A+B riesce a evitare tutte le centrali dello Std, il tool propone quelli che ne evitano almeno i collegamenti, come <em>Div parziali</em> con la nota che dice quali centrali restano in comune, prima quelli che ne toccano meno. Esempio: da Aranova ogni uscita alternativa passa da Corviale (ROMAITDM)</li>
+    <li><strong>🔧 Div Zona A parziali</strong>: quando un Div Zona A completo non esisteva, il calcolo si fermava con un errore e la tabella restava vuota, senza avviso. Ora compaiono i Div parziali con la loro nota</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b45309;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧵 Novità V10.26 | 17 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧵 Nota di diversificazione anche sui Div completi</strong>: nei tab RC e Unificato, quando un Div non ha collegamenti in comune con lo Std ma condivide C-FOS, centrali delle C-FOS o centrali di percorso, sotto il percorso compare la nota con il dettaglio, per esempio "Collegamenti tutti diversi dallo Std — in comune solo in parte: CRM050 (centrale ROMAITDM) — centrale di percorso in comune: ROMAITDM". Si legge senza aprire la pastiglia, e la stessa nota va nel TXT del Div. I Div parziali hanno già la loro nota completa</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #dc2626;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🔀 Novità V10.26 | 16 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🔀 Div A+B corretto</strong>: il bottone <em>Div A+B</em> restituiva Div con la Zona A identica allo Std, come se fosse <em>Div Zona B</em>. La ricerca completa scartava ogni coppia di tratti perché il passaggio RA↔RC, presente in entrambi, veniva scambiato per un collegamento in comune. Ora si confrontano solo i collegamenti veri e i Div A+B diversificano tutte e due le zone. Vengono prima i Div A+B che non attraversano nessuna centrale intermedia dello Std, per esempio il suo Nodo A1. Se un Div A+B completo non esiste, anche il Div parziale usa un tratto di Zona A diverso dallo Std quando c'è</li>
+    <li><strong>⚠️ Nota del Div parziale completa</strong>: in tabella e nel TXT, nei tab RC e Unificato, la nota elenca tutto quello che il Div ha in comune con lo Std, senza puntini: i collegamenti interi in comune; i collegamenti in comune solo in parte, con le C-FOS o le centrali delle C-FOS condivise; le centrali di percorso in comune. Nel TXT il simbolo di avviso non è più doppio</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b45309;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">⚠️ Novità V10.26 | 15 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>⚠️ Nota Subpath sempre presente</strong>: nei TXT di RA, RC e Unificato la <em>NOTA SUBPATH</em> c'è sempre. Su una riga i Subpath NON ATTIVI, su un'altra quelli <em>DA VERIFICARE SU NNI</em> (nello stato o nelle note), potenzialmente non attivi; la frase da aggiungere in IRP li comprende tutti. Se ci sono solo Subpath da verificare, la frase vale quando la verifica li conferma non attivi. Se il percorso ha solo collegamenti attivi (anche IN VARIAZIONE o IN REINSTRADAMENTO), la nota compare con <em>xxx, yyy</em> al posto degli ID, pronta da compilare a mano</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📄 Novità V10.26 | 14 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📄 Sequenze nel TXT</strong>: nel riquadro sotto i collegamenti, oltre alla <em>Sequenza Segmentata</em>, ci sono la <em>Sequenza Routing</em> (prima Sequenza Unica, con le frecce), la <em>Sequenza Somma</em> (con il +) e la <em>Sequenza Elenco</em> (con la virgola), pronte da copiare</li>
+    <li><strong>🔗 ID completi RA nel routing delle C-FOS</strong>: nella sezione <em>ROUTING CLLI DELLE C-FOS PER COLLEGAMENTO</em> i collegamenti RA compaiono con l'ID completo, per esempio <code>RMLA_arco_1020 | RMLA_401 | ARM001 | 2</code>, invece del solo SubPath</li>
+    <li><strong>↕️ Più spazio</strong>: due righe vuote dopo Centrali, dopo Routing CLLI delle C-FOS e dopo Verifica &amp; Info NNI; una riga vuota prima del Totale dei costi</li>
+    <li><strong>🔢 ID Collegamenti RC, 5 per riga</strong>: nella colonna ID dei tab RC e Unificato i collegamenti RC vanno a capo ogni 5 (nell'Unificato prima 6, nel tab RC prima 4); nell'Unificato la riga che apre con il raccordo ne ha 3. Anche nel tab RC la freccia di continuazione apre la riga successiva invece di chiudere quella prima, e un ID non si spezza più a metà (prima poteva comparire "CRM0" su una riga e "50" sotto)</li>
+    <li><strong>⚠️ Nota Subpath in fondo</strong>: nei TXT di RA, RC e Unificato la <em>NOTA SUBPATH</em> chiude sempre il percorso, dopo Verifica &amp; Info NNI o dopo i costi quando ci sono. La frase per l'offerta concorda con il numero: "a causa del Subpath CLO063 che è…" oppure "a causa dei Subpath CLO063, CLO062 che sono…"</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #15803d;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🔢 Novità V10.26 | 13 | Ott 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -21327,7 +21498,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       se valorizzati; in caso contrario usa i nodi dello Std. Serve per ottenere alternative e migliorare la
       <strong>ridondanza</strong> del routing.</p>
     </li>
-                  <li><strong style="color: #004C99;">🔢 Quanti Div</strong>: per ogni Std escono tanti Div quanto <em>N° Risultati</em>, al massimo 100 (30 se il campo è vuoto). Con il default 150 sono 100. Per risposte più rapide abbassa <em>N° Risultati</em>: il numero vale sia per gli Std sia per i Div.</li>
+                  <li><strong style="color: #004C99;">🔢 Quanti Div</strong>: per ogni Std escono tanti Div quanto <em>N° Risultati</em>, al massimo 100 (30 se il campo è vuoto). Con il default 150 sono 100. Per risposte più rapide abbassa <em>N° Risultati</em>: il numero vale sia per gli Std sia per i Div. Più alto è <em>N° Risultati</em>, più candidati il tool esamina (il triplo, fino a 3.000) e più Div completi può trovare, anche se ne mostra al massimo 100. Uso consigliato: 150 di base; se escono solo Div parziali, 300 e ricalcola i Div (tempi circa doppi). Nel tab RC fino a 150 i candidati restano 300.</li>
                   <li><p style="margin-top: 0.25rem;">
     <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo.</p>
     </li>
@@ -21419,7 +21590,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       <strong>“🔁 Reset Campi”</strong> non cancellano la cronologia.</p>
     </li>
                 
-                  <li><strong style="color: #004C99;">🧵 Verifica C-FOS sui Div</strong>: ogni riga Div porta una pastiglia che la confronta con il suo percorso Std guardando le tratte <strong>C-FOS</strong> dei collegamenti, cioè le centrali che la fibra attraversa e che nel percorso non si vedono. Quattro stati: <em>C-FOS OK</em> nessuna centrale in comune, <em>N CLLI</em> con l'elenco nel suggerimento, <em>N C-FOS</em> quando è condivisa una fibra intera, <em>PARZIALE</em> quando su qualche collegamento il dato manca. Cliccando la pastiglia si apre il confronto completo, che si può spostare, bloccare e ridurre. L'interruttore <strong>Solo C-FOS OK</strong> sopra la tabella lascia i soli Div senza condivisioni e ne mostra il conteggio. Partenza e arrivo sono esclusi dal confronto: sono in comune per forza. Nel confronto, a destra di ogni collegamento, in rosso ci sono le C-FOS condivise per intero e in ambra quelle che passano da una centrale condivisa.</li>
+                  <li><strong style="color: #004C99;">🧵 Verifica C-FOS sui Div</strong>: ogni riga Div porta una pastiglia che la confronta con il suo percorso Std guardando le tratte <strong>C-FOS</strong> dei collegamenti, cioè le centrali che la fibra attraversa e che nel percorso non si vedono. Quattro stati: <em>C-FOS OK</em> nessuna centrale in comune, <em>N CLLI</em> con l'elenco nel suggerimento, <em>N C-FOS</em> quando è condivisa una fibra intera, <em>PARZIALE</em> quando su qualche collegamento il dato manca. Cliccando la pastiglia si apre il confronto completo, che si può spostare, bloccare e ridurre. L'interruttore <strong>Solo C-FOS OK</strong> sopra la tabella lascia i soli Div senza condivisioni e ne mostra il conteggio. Partenza e arrivo sono esclusi dal confronto: sono in comune per forza. Nel confronto, a destra di ogni collegamento, in rosso ci sono le C-FOS condivise per intero e in ambra quelle che passano da una centrale condivisa. Nei tab RC e Unificato un Div con una C-FOS o una centrale di C-FOS in comune con lo Std è un <strong>Div parziale</strong>: compare dopo i Div completi, con la nota e con [DIV PARZIALE] nel TXT.</li>
                   <li><strong style="color: #004C99;">🧵 Filtro Solo C-FOS OK</strong>: resta acceso anche fra una ricerca e l'altra. Quando nasconde dei Div, una riga gialla prima del primo Div dice quanti sono nascosti; il bottone <em>Mostra tutti i Div</em> spegne il filtro. Con i Div Zona A e Zona B il filtro di solito li nasconde tutti, perché la zona non ridiscussa coincide con lo Std e ne condivide le C-FOS. Anche le righe Zona A e Zona B sotto un Div si confrontano con lo Std.</li>
                   <li><strong style="color: #004C99;">🎯 Ambito dei vincoli</strong>: accanto a ogni <em>Sel. Multipla</em> c'è un interruttore a tre stati. <em>Entrambi</em>, il default, applica il vincolo allo Std e ai Div; <em>Solo Std</em> lo applica solo allo Std; <em>Solo Div</em> solo ai Div. Il campo con ambito ristretto ha il bordo a sinistra e l'etichetta <em>SOLO STD</em> (blu) o <em>SOLO DIV</em> (viola), e una riga accanto al conteggio dei percorsi li elenca. I Div usano i vincoli e gli ambiti della ricerca Std: se cambi un interruttore, rilancia <strong>Calcola</strong>. I Div rispettano anche i vincoli sui collegamenti, che prima non arrivavano al loro calcolo. Un obbligo su <em>Entrambi</em> porta Std e Div sullo stesso punto, quindi i Div escono parziali o non escono: per obbligare lo Std e lasciare libero il Div si usa <em>Solo Std</em>.</li>
                   <li><strong style="color: #004C99;">🌍 Google Earth</strong>: sotto il 🔗 di ogni percorso c'è il 🌍. Copia negli appunti il KML del percorso, da incollare in Google Earth Pro con Ctrl+V nel pannello Luoghi; dalla finestra si può anche scaricare KMZ o KML. Ogni tratta C-FOS è disegnata come percorso urbano più breve (pedonale, senza sensi unici) fra le sue due centrali: non è il tracciato reale del cavo. Dorsale RTN, collegamenti senza C-FOS e le poche coppie senza percorso sono linee dirette.</li>
@@ -22920,7 +23091,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <strong>“🔁 Reset Campi”</strong> non cancella la cronologia delle ricerche.</p>
   </li>
                 
-                  <li><strong style="color: #004C99;">🧵 Verifica C-FOS sui Div</strong>: ogni riga Div porta una pastiglia che la confronta con il suo percorso Std guardando le tratte <strong>C-FOS</strong> dei collegamenti, cioè le centrali che la fibra attraversa e che nel percorso non si vedono. Quattro stati: <em>C-FOS OK</em> nessuna centrale in comune, <em>N CLLI</em> con l'elenco nel suggerimento, <em>N C-FOS</em> quando è condivisa una fibra intera, <em>PARZIALE</em> quando su qualche collegamento il dato manca. Cliccando la pastiglia si apre il confronto completo, che si può spostare, bloccare e ridurre. L'interruttore <strong>Solo C-FOS OK</strong> sopra la tabella lascia i soli Div senza condivisioni e ne mostra il conteggio. Partenza e arrivo sono esclusi dal confronto: sono in comune per forza. Nel confronto, a destra di ogni collegamento, in rosso ci sono le C-FOS condivise per intero e in ambra quelle che passano da una centrale condivisa.</li>
+                  <li><strong style="color: #004C99;">🧵 Verifica C-FOS sui Div</strong>: ogni riga Div porta una pastiglia che la confronta con il suo percorso Std guardando le tratte <strong>C-FOS</strong> dei collegamenti, cioè le centrali che la fibra attraversa e che nel percorso non si vedono. Quattro stati: <em>C-FOS OK</em> nessuna centrale in comune, <em>N CLLI</em> con l'elenco nel suggerimento, <em>N C-FOS</em> quando è condivisa una fibra intera, <em>PARZIALE</em> quando su qualche collegamento il dato manca. Cliccando la pastiglia si apre il confronto completo, che si può spostare, bloccare e ridurre. L'interruttore <strong>Solo C-FOS OK</strong> sopra la tabella lascia i soli Div senza condivisioni e ne mostra il conteggio. Partenza e arrivo sono esclusi dal confronto: sono in comune per forza. Nel confronto, a destra di ogni collegamento, in rosso ci sono le C-FOS condivise per intero e in ambra quelle che passano da una centrale condivisa. Nei tab RC e Unificato un Div con una C-FOS o una centrale di C-FOS in comune con lo Std è un <strong>Div parziale</strong>: compare dopo i Div completi, con la nota e con [DIV PARZIALE] nel TXT.</li>
                   <li><strong style="color: #004C99;">🌍 Google Earth</strong>: sotto il 🔗 di ogni percorso c'è il 🌍. Copia negli appunti il KML del percorso, da incollare in Google Earth Pro con Ctrl+V nel pannello Luoghi; dalla finestra si può anche scaricare KMZ o KML. Ogni tratta C-FOS è disegnata come percorso urbano più breve (pedonale, senza sensi unici) fra le sue due centrali: non è il tracciato reale del cavo. Dorsale RTN, collegamenti senza C-FOS e le poche coppie senza percorso sono linee dirette.</li>
                 </ul>
 
@@ -23602,7 +23773,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     Se non trova percorsi al primo tentativo, attiva automaticamente un <strong>fallback</strong>: aggiunge i nodi intermedi dello Std
     agli evitare e riesegue la ricerca con candidati pari al triplo dei Div richiesti, consentendo percorsi RC↔RA↔RC su assi geografici complessi.</p>
   </li>
-                  <li><strong style="color: #004C99;">🔢 Quanti Div</strong>: per ogni Std escono tanti Div quanto <em>N° Risultati</em>, al massimo 100 (30 se il campo è vuoto). Con il default 150 sono 100. Per risposte più rapide abbassa <em>N° Risultati</em>: il numero vale sia per gli Std sia per i Div.</li>
+                  <li><strong style="color: #004C99;">🔢 Quanti Div</strong>: per ogni Std escono tanti Div quanto <em>N° Risultati</em>, al massimo 100 (30 se il campo è vuoto). Con il default 150 sono 100. Per risposte più rapide abbassa <em>N° Risultati</em>: il numero vale sia per gli Std sia per i Div. Più alto è <em>N° Risultati</em>, più candidati il tool esamina (il triplo, fino a 3.000) e più Div completi può trovare, anche se ne mostra al massimo 100. Uso consigliato: 150 di base; se escono solo Div parziali, 300 e ricalcola i Div (tempi circa doppi). Nel tab RC fino a 150 i candidati restano 300.</li>
                   <li><p style="margin-top: 0.25rem;">
     <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince; a parità di punteggio vale la regola di rete (solo RC, poi solo RA, poi misti RA+RC; con RTN per ciascuna zona). Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza e, a parità di km, la regola di rete, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo. Nel calcolo il salto sul backbone <strong>RTN</strong> viene ignorato: non conta come collegamento e non produce un passaggio di rete. In modalità RTN, sotto il numero del percorso, <strong>ZNA</strong> e <strong>ZNB</strong> segnalano i migliori tre per la sola Zona A e per la sola Zona B, calcolati con lo stesso punteggio sui rispettivi segmenti.</p>
     </li>
@@ -23737,7 +23908,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <strong>🕓 Ultime ricerche</strong>: sotto <em>Posizione Cliente</em> restano le ultime due ricerche di centrale vicina, con coordinate, indirizzo, centrale trovata, distanza, destinazione e data-ora al secondo. La stessa cosa sotto <em>Modalità Cliente</em> per la Sede A e la Sede Z. Restano anche dopo la chiusura del tool e si cancellano solo dal bottone <em>Cancella cronologia</em> della scheda, che chiede conferma con un secondo clic.</p>
     </li>
                 
-                  <li><strong style="color: #004C99;">🧵 Verifica C-FOS sui Div</strong>: ogni riga Div porta una pastiglia che la confronta con il suo percorso Std guardando le tratte <strong>C-FOS</strong> dei collegamenti, cioè le centrali che la fibra attraversa e che nel percorso non si vedono. Quattro stati: <em>C-FOS OK</em> nessuna centrale in comune, <em>N CLLI</em> con l'elenco nel suggerimento, <em>N C-FOS</em> quando è condivisa una fibra intera, <em>PARZIALE</em> quando su qualche collegamento il dato manca. Cliccando la pastiglia si apre il confronto completo, che si può spostare, bloccare e ridurre. L'interruttore <strong>Solo C-FOS OK</strong> sopra la tabella lascia i soli Div senza condivisioni e ne mostra il conteggio. Partenza e arrivo sono esclusi dal confronto: sono in comune per forza. Nel confronto, a destra di ogni collegamento, in rosso ci sono le C-FOS condivise per intero e in ambra quelle che passano da una centrale condivisa.</li>
+                  <li><strong style="color: #004C99;">🧵 Verifica C-FOS sui Div</strong>: ogni riga Div porta una pastiglia che la confronta con il suo percorso Std guardando le tratte <strong>C-FOS</strong> dei collegamenti, cioè le centrali che la fibra attraversa e che nel percorso non si vedono. Quattro stati: <em>C-FOS OK</em> nessuna centrale in comune, <em>N CLLI</em> con l'elenco nel suggerimento, <em>N C-FOS</em> quando è condivisa una fibra intera, <em>PARZIALE</em> quando su qualche collegamento il dato manca. Cliccando la pastiglia si apre il confronto completo, che si può spostare, bloccare e ridurre. L'interruttore <strong>Solo C-FOS OK</strong> sopra la tabella lascia i soli Div senza condivisioni e ne mostra il conteggio. Partenza e arrivo sono esclusi dal confronto: sono in comune per forza. Nel confronto, a destra di ogni collegamento, in rosso ci sono le C-FOS condivise per intero e in ambra quelle che passano da una centrale condivisa. Nei tab RC e Unificato un Div con una C-FOS o una centrale di C-FOS in comune con lo Std è un <strong>Div parziale</strong>: compare dopo i Div completi, con la nota e con [DIV PARZIALE] nel TXT.</li>
                   <li><strong style="color: #004C99;">🧵 Filtro Solo C-FOS OK</strong>: resta acceso anche fra una ricerca e l'altra. Quando nasconde dei Div, una riga gialla prima del primo Div dice quanti sono nascosti; il bottone <em>Mostra tutti i Div</em> spegne il filtro. Con i Div Zona A e Zona B il filtro di solito li nasconde tutti, perché la zona non ridiscussa coincide con lo Std e ne condivide le C-FOS. Anche le righe Zona A e Zona B sotto un Div si confrontano con lo Std.</li>
                   <li><strong style="color: #004C99;">🎯 Ambito dei vincoli</strong>: accanto a ogni <em>Sel. Multipla</em> c'è un interruttore a tre stati. <em>Entrambi</em>, il default, applica il vincolo allo Std e a tutti i Div; <em>Solo Std</em> lo applica solo allo Std; <em>Solo Div</em> solo ai Div, compresi Div Zona A, Zona B, A+B, le righe Zona A e Zona B sotto un Div e i Div parziali. Il campo con ambito ristretto ha il bordo a sinistra e l'etichetta <em>SOLO STD</em> (blu) o <em>SOLO DIV</em> (viola), e una riga accanto al conteggio dei percorsi li elenca. I vincoli dei Div si rileggono a ogni clic su un bottone Div: se nel frattempo hai cambiato un interruttore, la riga lo segnala con <em>Div calcolati con</em>. Un obbligo su <em>Entrambi</em> porta Std e Div sullo stesso punto, quindi i Div escono parziali o non escono: per obbligare lo Std e lasciare libero il Div si usa <em>Solo Std</em>.</li>
                   <li><strong style="color: #004C99;">🌍 Google Earth</strong>: sotto il 🔗 di ogni percorso c'è il 🌍. Copia negli appunti il KML del percorso, da incollare in Google Earth Pro con Ctrl+V nel pannello Luoghi; dalla finestra si può anche scaricare KMZ o KML. Ogni tratta C-FOS è disegnata come percorso urbano più breve (pedonale, senza sensi unici) fra le sue due centrali: non è il tracciato reale del cavo. Dorsale RTN, collegamenti senza C-FOS e le poche coppie senza percorso sono linee dirette.</li>
@@ -36946,7 +37117,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 13 | Ott 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 20 | Ott 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -36964,7 +37135,92 @@ PERCORSI ALTERNATIVI (Div):
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #15803d;border-radius:12px;overflow:hidden;background:#f6fef9;">
+        <details open style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            ⏱️ V10.26 | 20 | Ott 2026 | Tempi dei Div e avviso sui parziali
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>⏱️ Candidati nel tab RC</strong>: <code>kDivRC = 300</code> fino a N° Risultati 150, poi <code>min(N° Risultati × 3, 3000)</code>. Nell'Unificato resta <code>min(N° Risultati × 3, 3000)</code>, che con 150 vale 450 e costa poco</li>
+              <li><strong>💡 Avviso</strong>: dopo la classificazione, se tutti i Div sono parziali e N° Risultati è sotto 300, <code>showAlert</code> suggerisce di portarlo a 300 e ricalcolare</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #15803d;border-radius:12px;overflow:hidden;background:#f6fef9;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#166534;display:flex;align-items:center;gap:0.5rem;background:#dcfce7;">
+            ✅ V10.26 | 19 | Ott 2026 | Div completo solo senza C-FOS in comune; più candidati
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>✅ croClassificaDiv(base, lista, zona)</strong>: per ogni Div conta collegamenti identici (1000 punti), C-FOS in comune (100) e centrali delle C-FOS in comune (1) con <code>croConfrontaCfos</code>; con punti &gt; 0 il Div diventa parziale e prende la nota di <code>croNotaDivParziale</code> se non l'ha già. Nei Div Zona A e Zona B gli elementi che stanno solo nei collegamenti della zona fissa non contano. La lista si riordina: completi, poi parziali per punti, a parità nell'ordine del calcolo. Nel tab RC si applica prima del disegno; nell'Unificato dopo il calcolo, con un nuovo disegno se i Div sono a video</li>
+              <li><strong>🔢 Candidati</strong>: <code>kDiv = min(N° Risultati × 3, 3000)</code> nell'Unificato e <code>min(max(300, N° Risultati × 3), 3000)</code> nel tab RC, indipendenti dal tetto di 100 Div mostrati</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #dc2626;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#b91c1c;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🛑 V10.26 | 18 | Ott 2026 | Div di zona senza centrali dello Std
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🛑 avoidZona</strong>: nel calcolo Div dell'Unificato i rami RTN di zona (A, B, A+B) cercano i tratti con <code>avoidZona</code>, cioè i nodi da evitare più le centrali intermedie dello Std in tutte e due le reti (<code>::RA</code> e <code>::RC</code>). Il ripiego sui parziali usa ancora <code>avoidNodes</code></li>
+              <li><strong>🧵 Ordine</strong>: <code>zonaDivRaw</code> si ordina per centrali dello Std attraversate, poi per C-FOS e centrali delle C-FOS in comune (<code>croConfrontaCfos</code>, 100 punti per C-FOS e 1 per centrale), poi per km e regola di rete</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b45309;border-radius:12px;overflow:hidden;background:#fffbeb;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
+            🧵 V10.26 | 17 | Ott 2026 | Nota di diversificazione sui Div completi
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧵 Dove nasce</strong>: quando la pastiglia C-FOS di una riga Div viene calcolata, se il Div non ha già una nota di Div parziale, <code>croNotaDivParziale</code> elenca cosa resta in comune con lo Std; se c'è qualcosa, la nota (classe <code>cro-div-comune</code>) va sotto il percorso e in <code>_divComune</code>, che il TXT scrive nella testa del Div</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #dc2626;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#b91c1c;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🔀 V10.26 | 16 | Ott 2026 | Div A+B corretto e nota del Div parziale completa
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🔀 Div A+B</strong>: nel ramo <code>rtnZona === 'AB'</code> il controllo di sovrapposizione fra tratto di Zona A e tratto di Zona B considerava anche gli archi XFER (RA↔RC), presenti in entrambi quando la partenza e l'arrivo sono RA: nessuna coppia passava e si cadeva nel ripiego, che per A+B usava il tratto di Zona A dello Std. Ora XFER, RTN e raccordo sono esclusi dal controllo; nel ripiego A+B il tratto di Zona A è il più corto che evita i collegamenti dello Std, se esiste. L'ordine dei Div A+B mette prima quelli senza centrali intermedie dello Std fra i propri nodi intermedi</li>
+              <li><strong>⚠️ Nota del Div parziale</strong>: <code>croNotaDivParziale(base, div, testa)</code> la costruisce per RC e Unificato. Collegamenti interi in comune per ID; parti in comune da <code>croConfrontaCfos</code> (C-FOS condivise e centrali delle C-FOS), escluse partenza e arrivo; centrali di percorso in comune fra i nodi intermedi dello Std</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b45309;border-radius:12px;overflow:hidden;background:#fffbeb;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
+            ⚠️ V10.26 | 15 | Ott 2026 | Nota Subpath sempre presente nei TXT
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>⚠️ Regola</strong>: in <code>croTxtBlocco</code> un Subpath è NON ATTIVO se lo stato contiene NON ATTIVO, è da verificare se lo stato o le note dicono DA VERIFICARE SU NNI. Tre forme: con NON ATTIVI (ed eventuali da verificare con "Inoltre"), con soli da verificare ("Nessun Subpath NON ATTIVO", frase condizionata alla verifica), senza nessuno (segnaposto <code>xxx, yyy</code>). La frase per IRP concorda con il numero</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            📄 V10.26 | 14 | Ott 2026 | Export TXT: sequenze, ID RA completi, spazi; 5 ID per riga
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📄 Sequenze</strong>: in <code>croTxtBlocco</code> la stessa lista di collegamenti (senza passaggi di rete) si scrive tre volte: <code>→</code> (Sequenza Routing), <code>+</code> (Sequenza Somma) e <code>,</code> (Sequenza Elenco). Vale per i TXT di RA, RC e Unificato, che usano lo stesso corpo</li>
+              <li><strong>🔗 ID RA</strong>: nel routing delle C-FOS l'ID dei collegamenti RA è <code>IdCollegamento</code> completo; la colonna si allinea alla voce più lunga, con spazi e non tabulazioni, così resta in colonna in qualsiasi editor</li>
+              <li><strong>↕️ Spazi</strong>: due righe vuote dopo CENTRALI, ROUTING CLLI e VERIFICA &amp; INFO NNI; una prima del Totale in <code>_buildUnifiedCostBlock</code></li>
+              <li><strong>🔢 ID per riga</strong>: Unificato 5 per riga e 3 sulla riga del raccordo (prima 6 e 4); tab RC 5 per riga in <code>renderRouteIds</code> (prima 4), con la freccia all'inizio della riga successiva; gli ID non vanno a capo al loro interno (<code>white-space: nowrap</code>) e, se la riga non entra, si va a capo prima di una freccia (foglio <code>croIdNoSpezza</code>)</li>
+              <li><strong>⚠️ Nota Subpath</strong>: <code>croTxtBlocco</code> la scrive in fondo al suo corpo; nei due export dell'Unificato, dopo aver aggiunto i costi, <code>croTxtNotaInFondo</code> la riporta in coda. Compare quando almeno un collegamento del percorso è NON ATTIVO</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #15803d;border-radius:12px;overflow:hidden;background:#f6fef9;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#166534;display:flex;align-items:center;gap:0.5rem;background:#dcfce7;">
             🔢 V10.26 | 13 | Ott 2026 | Freccia iniziale nella colonna ID dell'Unificato
           </summary>
@@ -37504,7 +37760,7 @@ PERCORSI ALTERNATIVI (Div):
               <li><strong>Note IRP</strong>: all'import del TXT la nota viene riconosciuta e aggiunta da sola a Nota Lavorante e Nota File Condiviso.</li>
               <li><strong>Selezione persistente</strong>: dopo un export le spunte restano, si può esportare di nuovo in un altro formato.</li>
               <li><strong>FIX export TXT RC</strong>: il solo percorso Div selezionato produceva un file con la sola intestazione.</li>
-              <li><strong>ID Collegamenti</strong>: 8 per riga nel tab Unificato, 6 sulla riga che apre con il raccordo (dalla V10.26 | 09: 6 e 4); Top 4 allineata alla tabella Std in entrambi i tab.</li>
+              <li><strong>ID Collegamenti</strong>: 8 per riga nel tab Unificato, 6 sulla riga che apre con il raccordo (dalla V10.26 | 09: 6 e 4; dalla V10.26 | 14: 5 e 3, e 5 anche nel tab RC); Top 4 allineata alla tabella Std in entrambi i tab.</li>
             </ul>
           </div>
         </details>
@@ -44256,8 +44512,9 @@ let dbState = null;
       parts.push('<span class="' + cls + '">' + formattedId + _note302 + _noteNNI + '</span>');
       if (idx < edges.length - 1) {
         const arrow = '<span class="route-id-sep">→</span>';
-        if ((idx + 1) % 4 === 0) {
-          parts.push(arrow + '<br>');
+        /* V10.26|14: 5 per riga (prima 4); la freccia apre la riga dopo */
+        if ((idx + 1) % 5 === 0) {
+          parts.push('<br>' + arrow);
         } else {
           parts.push(arrow);
         }
@@ -48371,7 +48628,9 @@ window.runBaseRoutesSearch = function() {
     const _rawDivRC = parseInt(_maxDivElRC?.value || '', 10);
     const _baseDivRC = Number.isFinite(_rawDivRC) ? _rawDivRC : 30;
     const maxDivRC = _baseDivRC <= 100 ? Math.max(1, _baseDivRC) : 100;
-    const kDivRC = Math.min(Math.max(300, maxDivRC * 3), 3000);
+    /* V10.26|20: 300 candidati fino a N° Risultati 150 (come prima della 19,
+       tempi bassi); oltre, il triplo di N° Risultati fino a 3.000 */
+    const kDivRC = _baseDivRC <= 150 ? 300 : Math.min(_baseDivRC * 3, 3000);
     const rawPaths = yenKShortest(graph, startAlt, endAlt, kDivRC, blockedNodes);
     if (!rawPaths.length) {
       if (altInfo) {
@@ -48534,14 +48793,13 @@ window.runBaseRoutesSearch = function() {
           ep._isPartialDiv = true;
           const sharedEdges = (p.edges||[]).filter(e=>e.source!=='XFER').filter(e=>baseEdgeIds2.has(e.id||e.arco||''));
           const sharedNodes = (p.nodes||[]).slice(1,-1).filter(n=>baseIntermediateCentrals.has(n));
-          ep._divNote = '⚠️ Div parziale (' + (100-ep._overlapPct) + '% diversificato)'
-            + (sharedNodes.length ? ' — centrali: ' + sharedNodes.join(', ') : '')
-            + (sharedEdges.length ? ' — subpath: ' + sharedEdges.slice(0,3).map(e=>e.id||e.arco||'').join(', ') + (sharedEdges.length>3?'...':'') : '');
+          ep._divNote = window.croNotaDivParziale(baseRoute, ep, '⚠️ Div parziale (' + (100-ep._overlapPct) + '% diversificato');
           return ep;
         });
         showAlert('⚠️ Nessun Div al 100% per il percorso 1.' + (idx+1) + '.' + _maxWarn
           + '\n\nVengono proposti ' + partialEnriched.length + ' percorsi Div parziali con la nota di overlap.', 'warning');
-        altRoutes = partialEnriched;
+        altRoutes = (typeof window.croClassificaDiv === 'function')
+          ? window.croClassificaDiv(baseRoute, partialEnriched, null) : partialEnriched;   /* V10.26|19 */
         inlineAltBaseIndex = idx;
         renderAltTable();
         if (altInfo) altInfo.textContent = partialEnriched.length + ' percorsi Div parziali trovati.';
@@ -48565,11 +48823,18 @@ window.runBaseRoutesSearch = function() {
       enriched.forEach(function(p){ window.croRaccordoApply(p, _racInfo); });
     }
 
-    altRoutes = enriched;
+    /* V10.26|19: C-FOS o centrali delle C-FOS in comune = Div parziale;
+       prima i completi */
+    altRoutes = (typeof window.croClassificaDiv === 'function') ? window.croClassificaDiv(baseRoute, enriched, null) : enriched;
     inlineAltBaseIndex = idx;
 
     if (typeof window.syncRoutesMapData === 'function') {
       window.syncRoutesMapData();
+    }
+    /* V10.26|20: tutti parziali con N° Risultati sotto 300: suggerisci di cercare piu' a fondo */
+    if (altRoutes.length && altRoutes.every(function (r) { return r._isPartialDiv; }) && _baseDivRC < 300
+        && typeof showAlert === 'function') {
+      showAlert('Tutti i Div trovati sono parziali (C-FOS o centrali in comune con lo Std). ' + 'Per cercare piu\' a fondo porta N\u00b0 Risultati a 300 e ricalcola i Div: ' + 'il tool esamina piu\' candidati, con tempi circa doppi.', 'info');
     }
 
     if (altInfo) {
@@ -52672,7 +52937,7 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
       
       routes.forEach((route, idx) => {
         if (selIdx && !selIdx.has(idx)) return;
-        txt += (typeof window.croTxtBlocco === 'function')
+        var _blkStd = (typeof window.croTxtBlocco === 'function')
           ? window.croTxtBlocco('STD ' + (idx + 1), route, 'UNI')
           : '';
 
@@ -52683,7 +52948,7 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
           var _edg    = (route && route.edges) ? route.edges : [];
           var _zone    = window._detectRouteZone(_edg);
           var _rigInfo = window._calcRigSegments(_edg, _co.threshold || 250);
-          txt += window._buildUnifiedCostBlock({
+          _blkStd += window._buildUnifiedCostBlock({
             enabled:   true,
             capacity:  _co.capacity,
             threshold: _co.threshold || 250,
@@ -52694,6 +52959,8 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
             edges:     _edg
           });
         }
+        /* V10.26|14: la nota sui Subpath va in fondo, dopo i costi */
+        txt += (typeof window.croTxtNotaInFondo === 'function') ? window.croTxtNotaInFondo(_blkStd) : _blkStd;
 
         txt += '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n\n';
       });
@@ -52845,6 +53112,8 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
             segments:  _rigInfo3.segments
           });
         }
+        /* V10.26|14: la nota sui Subpath va in fondo, dopo i costi */
+        if (typeof window.croTxtNotaInFondo === 'function') block = window.croTxtNotaInFondo(block);
 
         block += '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n\n';
         
@@ -64829,8 +65098,8 @@ div[style*="background:#f3f4f6"] label:hover span {
         if (currentRCIds.length > 0) {
           let _i = 0;
           while (_i < currentRCIds.length) {
-            // V10.26|09: 6 per riga, 4 sulla riga che apre con il raccordo (prima 8 e 6)
-            const _n = (currentRCIds[_i] && currentRCIds[_i].indexOf('RACCORDO') !== -1) ? 4 : 6;
+            // V10.26|14: 5 per riga, 3 sulla riga che apre con il raccordo (prima 6 e 4)
+            const _n = (currentRCIds[_i] && currentRCIds[_i].indexOf('RACCORDO') !== -1) ? 3 : 5;
             const chunk = currentRCIds.slice(_i, _i + _n);
             _i += _n;
             const prefisso = (_i - _n > 0) ? '<span style="color:#9ca3af;">→</span> ' : '';   // V10.26|13: posizione d'inizio, non lunghezza
@@ -64851,8 +65120,8 @@ div[style*="background:#f3f4f6"] label:hover span {
         if (currentRCIds.length > 0) {
           let _i = 0;
           while (_i < currentRCIds.length) {
-            // V10.26|09: 6 per riga, 4 sulla riga che apre con il raccordo (prima 8 e 6)
-            const _n = (currentRCIds[_i] && currentRCIds[_i].indexOf('RACCORDO') !== -1) ? 4 : 6;
+            // V10.26|14: 5 per riga, 3 sulla riga che apre con il raccordo (prima 6 e 4)
+            const _n = (currentRCIds[_i] && currentRCIds[_i].indexOf('RACCORDO') !== -1) ? 3 : 5;
             const chunk = currentRCIds.slice(_i, _i + _n);
             _i += _n;
             const prefisso = (_i - _n > 0) ? '<span style="color:#9ca3af;">→</span> ' : '';   // V10.26|13: posizione d'inizio, non lunghezza
@@ -64903,11 +65172,11 @@ div[style*="background:#f3f4f6"] label:hover span {
       }
     });
     
-    // Flush RC finali - V10.26|09: 6 per riga, 4 sulla riga che apre con il raccordo
+    // Flush RC finali - V10.26|14: 5 per riga, 3 sulla riga che apre con il raccordo
     if (currentRCIds.length > 0) {
       let _j = 0;
       while (_j < currentRCIds.length) {
-        const _m = (currentRCIds[_j] && currentRCIds[_j].indexOf('RACCORDO') !== -1) ? 4 : 6;
+        const _m = (currentRCIds[_j] && currentRCIds[_j].indexOf('RACCORDO') !== -1) ? 3 : 5;
         const chunk = currentRCIds.slice(_j, _j + _m);
         _j += _m;
         const prefisso = (_j - _m > 0) ? '<span style="color:#9ca3af;">→</span> ' : '';   // V10.26|13: posizione d'inizio, non lunghezza
@@ -68534,6 +68803,24 @@ div[style*="background:#f3f4f6"] label:hover span {
        liste; la fotografia resta sui Div trovati e aggiorna la riga */
     var _fotoDiv = _uVincFoto();
     var _r = _runAltRoutesSearchInternalUNIFIEDCore(baseIndex, rtnZona);
+    /* V10.26|19: C-FOS o centrali delle C-FOS in comune = Div parziale; prima i
+       completi. Si ridisegna solo se i Div di questo Std sono a video */
+    try {
+      if (_altRoutesUNIFIED && _altRoutesUNIFIED.length && typeof window.croClassificaDiv === 'function'
+          && document.querySelector('tr[id^="uAltRow_' + baseIndex + '_"]')) {
+        var _base = _baseRoutesUNIFIED[baseIndex];
+        var _ord = window.croClassificaDiv(_base, _altRoutesUNIFIED, rtnZona || null);
+        _altRoutesUNIFIED.length = 0;
+        Array.prototype.push.apply(_altRoutesUNIFIED, _ord);
+        window._altRoutesUNIFIED = _altRoutesUNIFIED;
+        renderInlineAltRoutesUNIFIED(baseIndex);
+        /* V10.26|20: tutti parziali con N° Risultati sotto 300: suggerisci di cercare piu' a fondo */
+        var _nU = parseInt((document.getElementById('uRouteMaxResultsInput') || {}).value || '30', 10) || 30;
+        if (_ord.every(function (r) { return r._isPartialDiv; }) && _nU < 300 && typeof showAlert === 'function') {
+          showAlert('Tutti i Div trovati sono parziali (C-FOS o centrali in comune con lo Std). ' + 'Per cercare piu\' a fondo porta N\u00b0 Risultati a 300 e ricalcola i Div: ' + 'il tool esamina piu\' candidati, con tempi circa doppi.', 'info');
+        }
+      }
+    } catch (e) { console.error('[V10.26|19] classificazione Div', e); }
     if (typeof window.croVincMarca === 'function') window.croVincMarca(_altRoutesUNIFIED, _fotoDiv, 'div');
     if (typeof window.croVincUltima === 'function') {
       var _u = window.croVincUltima('U') || { std: [], div: null };
@@ -68617,6 +68904,15 @@ div[style*="background:#f3f4f6"] label:hover span {
     // nel Div (es. TORINO LANCIA come destinazione Std non può essere un nodo
     // intermedio del percorso Div). Li escludiamo come intermedi del Div,
     // ma il Div può comunque iniziare/terminare sugli stessi endpoint dello Std.
+    /* V10.26|16→18: i Div RTN di zona (A, B, A+B) devono evitare anche le
+       centrali intermedie dello Std, come i Div normali: un Div che passa da
+       una centrale dello Std non e' diversificato, anche se usa collegamenti
+       diversi. avoidZona = nodi da evitare + centrali intermedie dello Std,
+       in tutte e due le reti (::RA e ::RC). Il ripiego parziale usa ancora
+       avoidNodes: i parziali sono ammessi e portano la loro nota. */
+    const avoidZona = new Set(avoidNodes);
+    baseIntermediateCentrals.forEach(c => { avoidZona.add(c + '::RA'); avoidZona.add(c + '::RC'); });
+
     // ── Raccordo in fibra per DC con una sola via IN/OUT ──────────────────
     const _racInfoU = window._croRaccordoPending || null;
     if (!_racInfoU && typeof window.croRaccordoCheck === 'function'){
@@ -68678,7 +68974,9 @@ div[style*="background:#f3f4f6"] label:hover span {
     // Div A+B: default 30, cap a 100 (oltre 100 risultati di input ne calcola 100)
     const _rawDiv = Number.isFinite(maxResultsRawDiv) ? maxResultsRawDiv : 30;
     const maxResultsDiv = _rawDiv <= 100 ? Math.max(1, _rawDiv) : 100;
-    const kDiv = Math.min(maxResultsDiv * 3, 3000);
+    /* V10.26|19: i candidati crescono con N° Risultati anche oltre i 100 Div
+       mostrati: con 300 se ne esaminano 900, e i Div completi aumentano */
+    const kDiv = Math.min(Math.max(1, _rawDiv) * 3, 3000);
 
     // ── RTN mode: Div Zona A o Zona B ────────────────────────────────────────────
     // Zona A = segmento Start → Nodo A1 (con A1 alternativo)
@@ -68718,6 +69016,8 @@ div[style*="background:#f3f4f6"] label:hover span {
                     : rtnZona === 'B' ? 'uRouteAltBtnB_' + baseIndex
                     :                   'uRouteAltBtnAB_' + baseIndex;
         const { nodeInfo: niZona } = buildUnifiedLabelsAndInfo();
+        /* V10.26|18: servono anche al ripiego parziale, fuori da questo ramo */
+        let seg2FixedPath = null, a1StdEndKeyBest = null;
 
         if (rtnZona === 'A') {
           // Div Zona A: diversifica segmento Start → A1_alt
@@ -68731,7 +69031,7 @@ div[style*="background:#f3f4f6"] label:hover span {
           let seg2Fixed = [];
           const a1StdEndKeyRC = a1StdEnd + '::RC';
           const a1StdEndKeyRA = a1StdEnd + '::RA';
-          const a1StdEndKeyBest = graphRC2[a1StdEndKeyRC] ? a1StdEndKeyRC
+          a1StdEndKeyBest = graphRC2[a1StdEndKeyRC] ? a1StdEndKeyRC
                                 : graphRC2[a1StdEndKeyRA] ? a1StdEndKeyRA
                                 : graph[a1StdEndKeyRC]    ? a1StdEndKeyRC : a1StdEndKeyRA;
           if (a1StdEnd.toUpperCase() === endAlt.replace(/::(?:RA|RC)$/,'').toUpperCase()) {
@@ -68742,7 +69042,7 @@ div[style*="background:#f3f4f6"] label:hover span {
               seg2Fixed = yenKShortestUNIFIED(graph, a1StdEndKeyBest, endAlt, 1, new Set()) || [];
             }
           }
-          const seg2FixedPath = seg2Fixed[0] || { nodes: [endAlt], edges: [] };
+          seg2FixedPath = seg2Fixed[0] || { nodes: [endAlt], edges: [] };
 
           // Usa sempre grafo Unified (no RC-only forzato): startAlt può essere ::RA
           // RC-only viene rispettato solo se il toggle Solo RC è attivo
@@ -68753,8 +69053,8 @@ div[style*="background:#f3f4f6"] label:hover span {
           for (const a1S of a1sToTry) {
             const a1SKey = bestRtnKey(a1S);
             // Prima senza edge base, poi con grafo completo
-            const seg1Div = yenKShortestUNIFIED(graphNoBaseA, startAlt, a1SKey, kDiv, avoidNodes) ||
-                            yenKShortestUNIFIED(graph, startAlt, a1SKey, kDiv, avoidNodes) || [];
+            const seg1Div = yenKShortestUNIFIED(graphNoBaseA, startAlt, a1SKey, kDiv, avoidZona) ||
+                            yenKShortestUNIFIED(graph, startAlt, a1SKey, kDiv, avoidZona) || [];
             for (let a = 0; a < Math.min(seg1Div.length, kDiv); a++) {
               const p1 = seg1Div[a];
               const rtnEdgeDiv = {
@@ -68799,7 +69099,7 @@ div[style*="background:#f3f4f6"] label:hover span {
             // Prova grafo senza edge base, poi grafo completo
             for (const g_ of [graphNoBaseB, graph]) {
               for (const tryK of [a1EKey, a1E+(a1EKey.endsWith('::RC')?'::RA':'::RC')].filter(k=>g_[k]||k===a1EKey)) {
-                seg2Div = senzaBase(yenKShortestUNIFIED(g_, tryK, endAlt, kDiv, avoidNodes));
+                seg2Div = senzaBase(yenKShortestUNIFIED(g_, tryK, endAlt, kDiv, avoidZona));
                 if (seg2Div.length) break;
               }
               if (seg2Div.length) break;
@@ -68850,22 +69150,26 @@ div[style*="background:#f3f4f6"] label:hover span {
 
           for (const a1S of a1sToTryAB) {
             const a1SKey = bestRtnKey(a1S);
-            const seg1AB = yenKShortestUNIFIED(graphNoBaseAB, startAlt, a1SKey, kDiv, avoidNodes) ||
-                           yenKShortestUNIFIED(graph, startAlt, a1SKey, kDiv, avoidNodes) || [];
+            const seg1AB = yenKShortestUNIFIED(graphNoBaseAB, startAlt, a1SKey, kDiv, avoidZona) ||
+                           yenKShortestUNIFIED(graph, startAlt, a1SKey, kDiv, avoidZona) || [];
 
             for (const a1E of a1eToTryAB) {
               const a1EKey = bestRtnKey(a1E);
-              let seg2AB = yenKShortestUNIFIED(graphNoBaseAB, a1EKey, endAlt, kDiv, avoidNodes) || [];
-              if (!seg2AB.length) seg2AB = yenKShortestUNIFIED(graphRC2AB, a1EKey, endAlt, kDiv, avoidNodes) || [];
-              if (!seg2AB.length) seg2AB = yenKShortestUNIFIED(graph, a1EKey, endAlt, kDiv, avoidNodes) || [];
+              let seg2AB = yenKShortestUNIFIED(graphNoBaseAB, a1EKey, endAlt, kDiv, avoidZona) || [];
+              if (!seg2AB.length) seg2AB = yenKShortestUNIFIED(graphRC2AB, a1EKey, endAlt, kDiv, avoidZona) || [];
+              if (!seg2AB.length) seg2AB = yenKShortestUNIFIED(graph, a1EKey, endAlt, kDiv, avoidZona) || [];
               if (!seg2AB.length) continue;
 
               for (let a = 0; a < Math.min(seg1AB.length, kDiv) && zonaDivRaw.length < kDiv; a++) {
                 const p1 = seg1AB[a];
                 for (let b = 0; b < Math.min(seg2AB.length, kDiv) && zonaDivRaw.length < kDiv; b++) {
                   const p2 = seg2AB[b];
-                  const seg1Ids = new Set((p1.edges||[]).map(e => e.id).filter(Boolean));
-                  const hasOverlap = (p2.edges||[]).some(e => e.id && seg1Ids.has(e.id));
+                  /* V10.26|16: XFER (RA-RC), RTN e raccordo non sono collegamenti:
+                     prima il passaggio RA-RC presente in tutti e due i tratti
+                     faceva scartare ogni coppia e il Div A+B ricadeva sul parziale */
+                  const _vero = e => e && e.id && e.source !== 'XFER' && e.source !== 'RTN' && e.source !== 'RACC';
+                  const seg1Ids = new Set((p1.edges||[]).filter(_vero).map(e => e.id));
+                  const hasOverlap = (p2.edges||[]).filter(_vero).some(e => seg1Ids.has(e.id));
                   if (hasOverlap) continue;
                   const rtnEdgeAB = {
                     id: 'RTN_BACKBONE', arco: 'RTN_BACKBONE', source: 'RTN', weight: 0,
@@ -68889,10 +69193,59 @@ div[style*="background:#f3f4f6"] label:hover span {
           }
         }
 
+        /* V10.26|18: se nessun Div A+B evita tutte le centrali dello Std, si
+           cercano quelli che ne evitano almeno i collegamenti. Non sono Div
+           completi: escono come Div parziali, con la nota delle parti in comune,
+           e vengono prima quelli con meno centrali dello Std */
+        if (rtnZona === 'AB' && !zonaDivRaw.length) {
+          const graphNoBaseAB2 = buildGraphWithoutEdges(graph, (baseRoute.edges||[]).filter(e => e.source !== 'XFER' && e.source !== 'RTN'));
+          const _vero2 = e => e && e.id && e.source !== 'XFER' && e.source !== 'RTN' && e.source !== 'RACC';
+          for (const a1S of (altCandS.length ? altCandS : [a1StdStart])) {
+            const a1SKey = bestRtnKey(a1S);
+            const s1 = yenKShortestUNIFIED(graphNoBaseAB2, startAlt, a1SKey, kDiv, avoidNodes) || [];
+            for (const a1E of (altCandE.length ? altCandE : [a1StdEnd])) {
+              const a1EKey = bestRtnKey(a1E);
+              const s2 = yenKShortestUNIFIED(graphNoBaseAB2, a1EKey, endAlt, kDiv, avoidNodes) || [];
+              for (let a = 0; a < s1.length && zonaDivRaw.length < kDiv; a++) {
+                const p1 = s1[a];
+                const ids1 = new Set((p1.edges||[]).filter(_vero2).map(e => e.id));
+                for (let b = 0; b < s2.length && zonaDivRaw.length < kDiv; b++) {
+                  const p2 = s2[b];
+                  if ((p2.edges||[]).filter(_vero2).some(e => ids1.has(e.id))) continue;
+                  const rtnE = { id: 'RTN_BACKBONE', arco: 'RTN_BACKBONE', source: 'RTN', weight: 0,
+                    raw: { transfer: true, rtn: true, from: a1S, to: a1E },
+                    from: a1SKey, to: a1EKey, rtnGateway: true, t1Start: a1S, t1End: a1E };
+                  const n1 = p1.nodes || [], n2 = p2.nodes || [];
+                  zonaDivRaw.push({
+                    nodes: (n1.length && n1[n1.length - 1] === a1SKey ? n1 : n1.concat([a1SKey]))
+                      .concat(n2.length && n2[0] === a1EKey ? n2 : [a1EKey].concat(n2)),
+                    edges: (p1.edges||[]).concat([rtnE]).concat(p2.edges||[]),
+                    _nonStretto: true
+                  });
+                }
+              }
+            }
+          }
+        }
+
         // Vincoli sui collegamenti; ordine per km e, a parita' di km, regola di rete
         // (prima tratti di zona solo RC, poi solo RA, poi misti)
         zonaDivRaw = zonaDivRaw.filter(p => _uDivOk(p));
-        zonaDivRaw.sort((x, y) => _uKmCmp(_rtnKm(x.edges), _rtnKm(y.edges)) || _rtnCompareRank(x, y));
+        /* V10.26|16: per A+B vengono prima i Div che non attraversano centrali
+           intermedie dello Std (per esempio il suo Nodo A1 di arrivo), poi gli altri */
+        const _condStd = p => (rtnZona === 'AB')
+          ? (p.nodes||[]).slice(1, -1).filter(n => baseIntermediateCentrals.has(String(n).replace(/::(RA|RC)$/, ''))).length
+          : 0;
+        /* V10.26|18: a parita', prima i Div senza C-FOS e senza centrali delle
+           C-FOS in comune con lo Std (stesso confronto della pastiglia) */
+        const _cfPunti = new Map();
+        zonaDivRaw.forEach(p => {
+          let v = 0;
+          try { const R = window.croConfrontaCfos(baseRoute, p); v = R.cfosComuni.length * 100 + R.clliComuni.length; } catch (e) { v = 0; }
+          _cfPunti.set(p, v);
+        });
+        zonaDivRaw.sort((x, y) => (_condStd(x) - _condStd(y)) || (_cfPunti.get(x) - _cfPunti.get(y))
+          || _uKmCmp(_rtnKm(x.edges), _rtnKm(y.edges)) || _rtnCompareRank(x, y));
 
         // Valida e deduplica per firma edge
         const seenSigZ = new Set();
@@ -68904,7 +69257,13 @@ div[style*="background:#f3f4f6"] label:hover span {
             .map(e => e.id || e.arco || '').join('|');
           if (!seenSigZ.has(sig)) {
             seenSigZ.add(sig);
-            uniqueZonaDiv.push(expandRAT3InPath(p, niZona));
+            const _epZ = expandRAT3InPath(p, niZona);
+            if (p._nonStretto) {   /* V10.26|18: Div A+B che non evita tutte le centrali dello Std */
+              _epZ._isPartialDiv = true;
+              _epZ._divNote = window.croNotaDivParziale(baseRoute, _epZ,
+                '⚠️ Div parziale Zona AB (collegamenti tutti diversi, ma nessun Div A+B evita tutte le centrali dello Std');
+            }
+            uniqueZonaDiv.push(_epZ);
             if (uniqueZonaDiv.length >= maxResultsDiv) break;
           }
         }
@@ -68961,6 +69320,10 @@ div[style*="background:#f3f4f6"] label:hover span {
         if (partialFb.length > 0) {
           const seenFb = new Set();
           const zonaDivPartial = [];
+          /* V10.26|16: per A+B il tratto di Zona A non resta quello dello Std */
+          const _abSeg1 = (rtnZona === 'AB')
+            ? ((yenKShortestUNIFIED(graphFbNoBase, startAlt, bestRtnKey(a1StdStart), 1, avoidNodes) || [])[0] || null)
+            : null;
           for (const p of partialFb) {
             const sig = (p.edges||[]).filter(e=>e.source!=='XFER'&&e.source!=='RTN').map(e=>e.id||e.arco||'').join('|');
             if (seenFb.has(sig)) continue;
@@ -68983,7 +69346,9 @@ div[style*="background:#f3f4f6"] label:hover span {
               const rtnEdgeFb = { id:'RTN_BACKBONE', arco:'RTN_BACKBONE', source:'RTN', weight:0,
                 raw:{transfer:true,rtn:true}, from:bestRtnKey(a1StdStart), to:a1FbKey, rtnGateway:true,
                 t1Start:a1StdStart, t1End:a1StdEnd };
-              combined = { nodes: stdSeg1NodesB.concat(p2Clean), edges: stdSeg1EdgesB.concat([rtnEdgeFb]).concat(p.edges||[]) };
+              combined = _abSeg1
+                ? { nodes: (_abSeg1.nodes || []).concat(p2Clean), edges: (_abSeg1.edges || []).concat([rtnEdgeFb]).concat(p.edges||[]) }
+                : { nodes: stdSeg1NodesB.concat(p2Clean), edges: stdSeg1EdgesB.concat([rtnEdgeFb]).concat(p.edges||[]) };
             }
             if (!isValidGatewayPath(combined)) continue;
             if (!_uDivOk(combined)) continue;
@@ -68992,9 +69357,8 @@ div[style*="background:#f3f4f6"] label:hover span {
             ep._isPartialDiv = true;
             const baseEdgeIdsSet = new Set(baseEdgesFb.map(e=>e.id||e.arco||''));
             const sharedEdges = (combined.edges||[]).filter(e=>e.source!=='XFER'&&e.source!=='RTN').filter(e=>baseEdgeIdsSet.has(e.id||e.arco||''));
-            ep._divNote = '⚠️ Div parziale Zona ' + rtnZona + ' (' + (100-ep._overlapPct) + '% diversificato'
-              + (altCandS.length===0&&rtnZona==='A' ? ' — unico Nodo A1, solo routing alternativo verso ' + a1StdStart : '')
-              + (sharedEdges.length ? ' — subpath in comune: ' + sharedEdges.slice(0,3).map(e=>e.id||e.arco||'').join(', ') + (sharedEdges.length>3?'...':'') : '') + ')';
+            ep._divNote = window.croNotaDivParziale(baseRoute, ep, '⚠️ Div parziale Zona ' + rtnZona + ' (' + (100-ep._overlapPct) + '% diversificato'
+              + (altCandS.length===0&&rtnZona==='A' ? ' — unico Nodo A1, solo routing alternativo verso ' + a1StdStart : ''));
             zonaDivPartial.push(ep);
             if (zonaDivPartial.length >= maxResultsDiv) break;
           }
@@ -69101,9 +69465,7 @@ div[style*="background:#f3f4f6"] label:hover span {
           const baseEdgeIds = new Set((baseRoute.edges||[]).filter(e=>e.source!=='XFER'&&e.source!=='RTN').map(e=>e.id||e.arco||''));
           const sharedEdges = (p.edges||[]).filter(e=>e.source!=='XFER'&&e.source!=='RTN').filter(e=>baseEdgeIds.has(e.id||e.arco||''));
           const sharedNodes = (p.nodes||[]).slice(1,-1).map(n=>n.replace(/::(?:RA|RC)$/,'')).filter(n=>baseIntermediateCentrals.has(n));
-          ep._divNote = '⚠️ Div parziale (' + (100 - ep._overlapPct) + '% diversificato)'
-            + (sharedNodes.length ? ' — centrali: ' + sharedNodes.join(', ') : '')
-            + (sharedEdges.length ? ' — subpath: ' + sharedEdges.slice(0,3).map(e=>e.id||e.arco||'').join(', ') + (sharedEdges.length>3?'...':'') : '');
+          ep._divNote = window.croNotaDivParziale(baseRoute, ep, '⚠️ Div parziale (' + (100 - ep._overlapPct) + '% diversificato');
           _partialDiv.push(ep);
           if (_partialDiv.length >= maxResultsDiv) break;
         }
@@ -73173,6 +73535,7 @@ window._buildUnifiedCostBlock = function(opts) {
     }
   });
   if (totale > 0) {
+    L.push('');   /* V10.26|14: una riga vuota prima del Totale */
     var etT = 'Totale';
     while (etT.length < largh) etT += ' ';
     L.push(' ' + etT + '  ' + fmtNum(totale) + ' \u20ac  -->  ' + Math.round(totale));
@@ -81215,6 +81578,18 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
     return righe;
   }
 
+  /* V10.26|14: la NOTA SUBPATH chiude sempre il percorso. croTxtBlocco la
+     scrive in fondo al suo corpo; dove dopo si aggiungono i costi, questa
+     funzione la riporta in coda, dopo i costi. */
+  window.croTxtNotaInFondo = function (testo) {
+    var i = testo.indexOf('\u26a0 NOTA SUBPATH');
+    if (i < 0) return testo;
+    var f = testo.indexOf('\n\n', i);
+    var nota = f < 0 ? testo.slice(i) : testo.slice(i, f + 1);
+    var resto = testo.slice(0, i) + (f < 0 ? '' : testo.slice(f + 2));
+    return resto.replace(/\s*$/, '') + '\n\n\n' + nota.replace(/\s*$/, '') + '\n';   /* due righe vuote prima della nota */
+  };
+
   window.croTxtBlocco = function (label, route, rete) {
     var edges = (route.edges || []).slice();
     var reteDef = (rete === 'RA') ? 'RA' : 'RC';
@@ -81246,7 +81621,8 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
       + ' \u00b7 ' + nodes.length + ' centrali'
       + (route._divNote ? '   [DIV PARZIALE]' : ''));
     out.push(new Array(LARGA + 1).join('─'));
-    if (route._divNote) out.push('  \u26a0  ' + route._divNote);
+    if (route._divNote) out.push('  ' + String(route._divNote).replace(/^\s*\u26a0\ufe0f?\s*/, '\u26a0  '));   /* V10.26|16: un solo simbolo */
+    else if (route._divComune) out.push('  \u26a0  ' + route._divComune);   /* V10.26|17: Div completo con parti in comune */
     if (typeof window._croRaccordoTxtLines === 'function') {
       window._croRaccordoTxtLines(route, '  ').forEach(function (l) { out.push(l); });
     }
@@ -81321,6 +81697,7 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
       });
     }
     out.push('');
+    out.push('');   /* V10.26|14: due righe vuote fra le sezioni */
 
     /* ── COLLEGAMENTI: una tabella sola ─────────────────────────────────── */
     var etSeg = [], iSeg = -1, raN = 0, rcN = 0;
@@ -81349,7 +81726,7 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
     /* Tabella unica. Le colonne si misurano sul contenuto, cosi' nessuna
        invade quella accanto: con stati lunghi come DA VERIFICARE SU NNI la
        nota finiva dentro la colonna della verifica. */
-    var righeTab = [], ids = [], cfosPerLink = [], num = 0, subNonAttivi = [], notePerLink = [];
+    var righeTab = [], ids = [], cfosPerLink = [], num = 0, subNonAttivi = [], subDaVerificare = [], notePerLink = [];
     var cPeso = false;
     edges.forEach(function (e, i2) {
       if (e.source === 'RTN') { righeTab.push({ sep: 'RTN', testo: RTN_TESTO }); return; }
@@ -81372,8 +81749,15 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
                       stato: st, peso: peso, nni: /NON ATTIVO/.test(st) ? 'verifica obbligatoria' : croNniBreve(raw) });
       if (sub && sub !== '-' && ids.indexOf(sub) < 0) ids.push(sub);
       if (/NON ATTIVO/.test(st) && subNonAttivi.indexOf(sub) < 0) subNonAttivi.push(sub);
+      /* V10.26|15: DA VERIFICARE SU NNI (stato o note) vale come potenzialmente non attivo */
+      if (!/NON ATTIVO/.test(st) && (/DA VERIFICARE/.test(st) || /DA VERIFICARE SU NNI/i.test(String(raw.Note || '')))) {
+        if (subNonAttivi.indexOf(sub) < 0) subNonAttivi.push(sub);
+        if (subDaVerificare.indexOf(sub) < 0) subDaVerificare.push(sub);
+      }
       var cavo = (raw.IdCavo || raw.Id_Cavo || raw.ID_CAVO || '').toString().trim();
-      cfosPerLink.push({ id: sub, da: nodes[i2], a: nodes[i2 + 1], cavo: cavo });
+      cfosPerLink.push({ id: sub, da: nodes[i2], a: nodes[i2 + 1], cavo: cavo,
+        /* V10.26|14: nel routing delle C-FOS i collegamenti RA si scrivono per intero */
+        pieno: (src === 'RA') ? String(raw.IdCollegamento || e.id || sub).trim() : sub });
       notePerLink.push({ id: sub, nota: (raw.Altro1 || '').toString().trim() });
     });
 
@@ -81413,7 +81797,9 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
     });
     out.push('\u2554' + new Array(LARGA).join(SEP));
     out.push('\u2551 Sequenza Segmentata: ' + seqSeg.join(' \u2192 '));
-    out.push('\u2551 Sequenza Unica: ' + seqUni.join(' \u2192 '));
+    out.push('\u2551 Sequenza Routing: ' + seqUni.join(' \u2192 '));
+    out.push('\u2551 Sequenza Somma: ' + seqUni.join(' + '));
+    out.push('\u2551 Sequenza Elenco: ' + seqUni.join(', '));
     out.push('\u255a' + new Array(LARGA).join(SEP));
     out.push('');
     out.push('');
@@ -81432,11 +81818,14 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
 
       out.push('');
       out.push('ROUTING CLLI DELLE C-FOS PER COLLEGAMENTO');
+      var wPieno = 22;
+      conCavo.forEach(function (x) { wPieno = Math.max(wPieno, String(x.pieno || x.id).length); });
       conCavo.forEach(function (x, i3) {
-        out.push(' .' + n2(i3 + 1) + '. ' + pad(x.id, Math.min(W.id, 22)) + '  '
+        out.push(' .' + n2(i3 + 1) + '. ' + pad(x.pieno || x.id, wPieno) + '  '
           + croEtichettaCentrale(x.da) + ' \u2192 ' + croEtichettaCentrale(x.a));
         croCatenaCfos(x.cavo, x.da).forEach(function (r) { out.push('       ' + r); });
       });
+      out.push('');
       out.push('');
     }
 
@@ -81452,13 +81841,39 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
         out.push(' .' + n2(i3 + 1) + '. ' + pad(x.id, Math.min(wId, 30)) + '  ' + x.nota);
       });
       out.push('');
+      out.push('');
     }
 
-    if (subNonAttivi.length) {
+    /* V10.26|15: la nota c'e' sempre. Tre casi:
+       - NON ATTIVI (certi) e/o DA VERIFICARE SU NNI (potenziali), ciascuno
+         sulla sua riga; la frase per IRP li comprende tutti;
+       - solo DA VERIFICARE: la frase vale se la verifica li conferma non attivi;
+       - nessuno: segnaposto xxx, yyy da compilare a mano. */
+    {
+      var _certi = subNonAttivi.filter(function (s) { return subDaVerificare.indexOf(s) < 0; });
+      var _tutti = _certi.concat(subDaVerificare);
+      var _plur = function (n, uno, piu) { return n === 1 ? uno : piu; };
+      var _frase = function (lista, n) {
+        return '"180 Giorni a causa ' + _plur(n, 'del', 'dei') + ' Subpath ' + lista + ' che '
+          + _plur(n, '\u00e8', 'sono') + ' in fase di realizzazione".';
+      };
       out.push('\u26a0 NOTA SUBPATH');
-      out.push('  Subpath NON ATTIVI su questo percorso: ' + subNonAttivi.join(', ') + '.');
-      out.push('  Da aggiungere in offerta: "180 Giorni a causa del/dei Subpath '
-        + subNonAttivi.join(', ') + ' che \u00e8/sono in fase di realizzazione".');
+      if (!_tutti.length) {
+        out.push('  Subpath NON ATTIVI su questo percorso: xxx, yyy.');
+        out.push('  Da aggiungere in IRP: ' + _frase('xxx, yyy', 2));
+      } else {
+        if (_certi.length) {
+          out.push('  Subpath NON ' + _plur(_certi.length, 'ATTIVO', 'ATTIVI') + ' su questo percorso: ' + _certi.join(', ') + '.');
+        } else {
+          out.push('  Nessun Subpath NON ATTIVO su questo percorso.');
+        }
+        if (subDaVerificare.length) {
+          out.push('  ' + (_certi.length ? 'Inoltre ' : '') + _plur(subDaVerificare.length, 'Subpath DA VERIFICARE', 'Subpath DA VERIFICARE')
+            + ' SU NNI (potenzialmente non ' + _plur(subDaVerificare.length, 'attivo', 'attivi') + '): ' + subDaVerificare.join(', ') + '.');
+        }
+        out.push('  Da aggiungere in IRP' + (_certi.length ? '' : ', se la verifica li conferma non attivi')
+          + ': ' + _frase(_tutti.join(', '), _tutti.length));
+      }
       out.push('');
     }
 
@@ -83960,6 +84375,20 @@ body.dark-mode .cro-earth-box { background: #1e293b; color: #e2e8f0; }
 #tab-costi tr[title] { cursor: help; }
 </style>
 
+<style id="croIdNoSpezza">
+/* V10.26 | 14 · colonna ID del tab RC: gli ID non si spezzano a meta';
+   se la riga non entra si va a capo prima di una freccia */
+#routeBaseBody .route-id, #routeAltBody .route-id { white-space: nowrap; }
+#routeBaseBody .route-id-sep::before, #routeAltBody .route-id-sep::before { content: "\200B"; }
+</style>
+
+<style id="croDivComune">
+/* V10.26 | 17 · nota sotto i Div completi che condividono qualcosa con lo Std,
+   stesso aspetto della nota dei Div parziali */
+.cro-div-comune { margin-top: 3px; font-size: 0.68rem; color: #b45309; background: #fef3c7;
+  border: 1px solid #fde68a; border-radius: 3px; padding: 2px 6px; line-height: 1.35; }
+</style>
+
 <style id="croUndoStile">
 /* niente qui: il riparo sopra la barra ferma sta nel foglio della barra */
 </style>
@@ -85948,7 +86377,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V10.26 | 13';
+  var REVISIONE = 'V10.26 | 20';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
@@ -88288,6 +88717,106 @@ window.updateSDFSelectionCount = window.updateSDFSelectionCount || function () {
 
   /* Confronto fra due percorsi. Partenza e arrivo restano fuori: sono in
      comune per forza e non dicono niente sulla diversificazione. */
+
+  /* V10.26|16: nota del Div parziale. Elenca TUTTO quello che il Div ha in
+     comune con lo Std, senza puntini:
+     - collegamenti interi in comune (stesso ID);
+     - collegamenti in comune solo in parte: per ognuno le C-FOS condivise
+       oppure le centrali delle C-FOS condivise;
+     - centrali di percorso in comune (nodi intermedi dello Std).
+     testa e' l'inizio della nota, per esempio
+     "⚠️ Div parziale Zona AB (69% diversificato"; la funzione chiude la parentesi. */
+  window.croNotaDivParziale = function (base, div, testa) {
+    var vera = function (e) { return e && e.source !== 'XFER' && e.source !== 'RTN' && e.source !== 'RACC'; };
+    var idDi = function (e) { return _s(e.id || e.arco || ''); };
+    var clliDi = function (n) {
+      var t = _s(n).replace(/::(?:RA|RC)$/, '');
+      var m = t.match(/\(([A-Za-z0-9]+)\)\s*(?:\[[^\]]*\])?\s*$/);
+      return (m ? m[1] : t).toUpperCase();
+    };
+    var baseIds = {};
+    ((base && base.edges) || []).filter(vera).forEach(function (e) { baseIds[idDi(e)] = 1; });
+    var interi = [];
+    ((div && div.edges) || []).filter(vera).forEach(function (e) {
+      var i = idDi(e);
+      if (i && baseIds[i] && interi.indexOf(i) < 0) interi.push(i);
+    });
+    var parti = {}, ordine = [];
+    function segna(link, cosa) {
+      link = _s(link).trim();
+      if (!link || interi.indexOf(link) >= 0) return;
+      if (!parti[link]) { parti[link] = []; ordine.push(link); }
+      if (parti[link].indexOf(cosa) < 0) parti[link].push(cosa);
+    }
+    try {
+      var R = window.croConfrontaCfos(base, div);
+      (R.cfosComuni || []).forEach(function (c) {
+        var nome = 'C-FOS ' + (c.coppia ? c.coppia + '/' + c.num : c.chiave);
+        _s(c.inB).split(/,\s*/).forEach(function (l) { segna(l, nome); });
+      });
+      (R.clliComuni || []).forEach(function (x) {
+        (x.inB || []).forEach(function (l) { segna(l, 'centrale ' + x.clli); });
+      });
+    } catch (e) { /* senza dati C-FOS restano i collegamenti interi */ }
+    var bn = ((base && base.nodes) || []).map(clliDi);
+    var interm = {};
+    bn.slice(1, -1).forEach(function (c) { interm[c] = 1; });
+    var centrali = [];
+    ((div && div.nodes) || []).map(clliDi).slice(1, -1).forEach(function (c) {
+      if (interm[c] && centrali.indexOf(c) < 0) centrali.push(c);
+    });
+    var pezzi = [];
+    if (interi.length) pezzi.push((interi.length === 1 ? 'collegamento in comune: ' : 'collegamenti in comune: ') + interi.join(', '));
+    if (ordine.length) pezzi.push('in comune solo in parte: ' + ordine.map(function (l) {
+      return l + ' (' + parti[l].join(', ') + ')';
+    }).join('; '));
+    if (centrali.length) pezzi.push((centrali.length === 1 ? 'centrale di percorso in comune: ' : 'centrali di percorso in comune: ') + centrali.join(', '));
+    return testa + (pezzi.length ? ' \u2014 ' + pezzi.join(' \u2014 ') : '') + ')';
+  };
+
+
+  /* V10.26|19: regola di diversificazione. Un Div e' COMPLETO solo se non ha
+     collegamenti, C-FOS ne' centrali delle C-FOS in comune con lo Std;
+     altrimenti e' PARZIALE e porta la nota. Nei Div di Zona A o Zona B la
+     zona non ricalcolata e' uguale allo Std per scelta: i suoi collegamenti
+     (identici allo Std) non contano. Restituisce la lista riordinata: prima i
+     completi, poi i parziali dal meno al piu' condiviso, ognuno nell'ordine
+     che aveva. */
+  window.croClassificaDiv = function (base, lista, zona) {
+    if (!base || !lista || !lista.length) return lista;
+    var vera = function (e) { return e && e.source !== 'XFER' && e.source !== 'RTN' && e.source !== 'RACC'; };
+    var idsBase = {};
+    (base.edges || []).filter(vera).forEach(function (e) { idsBase[_s(e.id || e.arco)] = 1; });
+    var fissa = (zona === 'A' || zona === 'B');
+    var righe = lista.map(function (d, i) {
+      var interi = {};
+      (d.edges || []).filter(vera).forEach(function (e) { var k = _s(e.id || e.arco); if (idsBase[k]) interi[k] = 1; });
+      var punti = 0, R = null;
+      try { R = window.croConfrontaCfos(base, d); } catch (e) { R = null; }
+      if (R) {
+        var conta = function (links) {
+          var l = Array.isArray(links) ? links : _s(links).split(/,\s*/);
+          /* nei Div di zona, cio' che sta solo nei collegamenti della zona fissa non conta */
+          return !fissa || l.some(function (x) { return x && !interi[_s(x).trim()]; });
+        };
+        (R.cfosComuni || []).forEach(function (c) { if (conta(c.inB)) punti += 100; });
+        (R.clliComuni || []).forEach(function (x) { if (conta(x.inB)) punti += 1; });
+      }
+      if (!fissa) punti += Object.keys(interi).length * 1000;
+      if (d._isPartialDiv && !punti) punti = 1;   /* parziale per altri motivi */
+      if (punti && !d._divNote && typeof window.croNotaDivParziale === 'function') {
+        d._isPartialDiv = true;
+        d._divNote = window.croNotaDivParziale(base, d, '\u26a0\ufe0f Div parziale' + (zona ? ' Zona ' + zona : '')
+          + ' (collegamenti diversi dallo Std, ma con C-FOS o centrali delle C-FOS in comune');
+      } else if (punti) {
+        d._isPartialDiv = true;
+      }
+      return { d: d, i: i, p: punti };
+    });
+    righe.sort(function (a, b) { return ((a.p > 0) - (b.p > 0)) || (a.p - b.p) || (a.i - b.i); });
+    return righe.map(function (r) { return r.d; });
+  };
+
   window.croConfrontaCfos = function (routeA, routeB) {
     var A = window.croCfosDiPercorso(routeA);
     var B = window.croCfosDiPercorso(routeB);
@@ -88477,6 +89006,24 @@ table.cro-cf-tab tr:first-child td { border-top: 0; }
     s.setAttribute('data-cro-cf', tr.id);
     cella.appendChild(document.createElement('br'));
     cella.appendChild(s);
+    /* V10.26|17: sui Div completi la nota dice cosa resta in comune con lo
+       Std (i parziali hanno gia' la loro nota) */
+    try {
+      if (!cp.div._divNote && typeof window.croNotaDivParziale === 'function' && tr.cells[1]
+          && !tr.cells[1].querySelector('.cro-div-comune')) {
+        var det = window.croNotaDivParziale(cp.base, cp.div, '').replace(/^\s*\u2014\s*/, '').replace(/\)\s*$/, '');
+        if (det) {
+          var tutti = !/^collegament[oi] in comune/.test(det);
+          var nota = tutti ? 'Collegamenti tutti diversi dallo Std \u2014 ' + det
+                           : det.charAt(0).toUpperCase() + det.slice(1);
+          cp.div._divComune = nota;
+          var d = document.createElement('div');
+          d.className = 'cro-div-comune';
+          d.textContent = '\u26a0\ufe0f ' + nota;
+          tr.cells[1].appendChild(d);
+        }
+      }
+    } catch (e) { /* la nota e' un di piu': senza dati resta solo la pastiglia */ }
   }
 
   function passa() {
