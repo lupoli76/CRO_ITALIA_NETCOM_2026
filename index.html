@@ -4,13 +4,60 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 10.26 | 20  (rev. pubblicata: V10.26 | 20 | Ott 2026)                ║
+║   Versione: 10.26 | 22  (rev. pubblicata: V10.26 | 22 | Ott 2026)                ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V10.26 | 22 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • DOCUMENTAZIONE SENZA NUMERI INVENTATI. Overview: Metriche di Performance     ║
+║     (~200ms, 500+ centrali, 5.700+ collegamenti, 18 livelli di zoom) sostituite  ║
+║     da Il tool in numeri, con i conteggi letti dai DB caricati. Guida: nella     ║
+║     complessita' tolti K=30, |E|=5700, |V|=500, ~6KB e ~200/150ms, messi i tempi ║
+║     misurati; in sicurezza tolte Rate Limiting e Data Validation; in             ║
+║     Scalabilita' tolte Lazy Loading, Memoization, Web Workers, Virtual           ║
+║     Scrolling, IndexedDB e Service Workers; nella tabella delle variabili tolte  ║
+║     LINKS, NODES, currentRoutes e le altre che il codice non ha, messe quelle    ║
+║     vere                                                                         ║
+║   • GUIDA, PERFORMANCE TUNING: tolti Benchmark Reference, Ottimizzazioni         ║
+║     Implementate con percentuali, Best Practices (~150MB RAM, browser 20% piu'   ║
+║     veloci, vincoli +15%, mappa 3x, ecc.) e il finto config.js; al loro posto    ║
+║     Tempi misurati, Cosa incide sui tempi, Uso consigliato                       ║
+║   • GUIDA, INTEGRAZIONI: tolti l'esempio TXT inventato, lo schema CSV non        ║
+║     prodotto dal tool, la tabella dei tool esterni, la roadmap API (Previsto Q2  ║
+║     2026) e l'esempio Python; al loro posto i formati di export reali e dove si  ║
+║     aprono. Il testo tolto e' riassunto nei commenti V10.26|22 accanto a ogni    ║
+║     punto                                                                        ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 21 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • LIBRERIE TOLTE: React, ReactDOM e Babel standalone (unpkg), vis-network JS e ║
+║     CSS (cdnjs) e lo script Cloudflare email-decode (/cdn-cgi/...). Nessun       ║
+║     riferimento nel codice. Testo originale dei tag nel commento V10.26|21       ║
+║     subito dopo i link delle icone, nella head                                   ║
+║   • DIALOGHI DEL BROWSER: i 6 confirm() e il prompt() diventano finestre in      ║
+║     pagina. natExportSelectionCSV: tre pulsanti (Percorso visualizzato,          ║
+║     Collegamenti selezionati, Annulla che non esporta).                          ║
+║     deleteSelectedHistoryItem, resetHistoryFromModal, natResetAll,               ║
+║     resetSearchHistoryRA, resetSearchHistoryUNIFIED (solo il ramo di riserva):   ║
+║     Conferma/Annulla con showCROConfirm. promptLoadCode: casella di testo in     ║
+║     pagina. Testo originale di ogni dialogo nel commento V10.26|21 accanto       ║
+║   • ALERT: l'override di alert() (sistema POPUP) manda in toast tutti i messaggi ║
+║     brevi, anche avvisi ed errori (7 s invece di 4); i messaggi lunghi o su piu' ║
+║     righe restano nella finestra in pagina. Riga originale: const useToast =     ║
+║     isShortMessage && (type === 'success' || type === 'info') && typeof          ║
+║     showToast === 'function';                                                    ║
+║   • CRO_DEBUG: interruttore all'inizio del primo script. Spento, console.log non ║
+║     scrive; console.error e console.warn restano. Si accende con croDebug(true)  ║
+║     dalla console, con ?debug=1 nell'indirizzo o con localStorage CRO_DEBUG =    ║
+║     '1'                                                                          ║
+║   • AVVISO LIBRERIE CDN: a pagina caricata controlla Leaflet, ExcelJS, JSZip,    ║
+║     FileSaver, Chart.js e Tailwind; se una manca mostra in cima un avviso con il ║
+║     sito bloccato e le funzioni che non andranno                                 ║
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 20 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
@@ -2214,6 +2261,86 @@
 
 <script>
 /* ═══════════════════════════════════════════════════════════════════════════
+   V10.26|21 · INTERRUTTORE CRO_DEBUG
+   Con CRO_DEBUG spento console.log non scrive niente; console.error e
+   console.warn restano attivi. Si accende in tre modi:
+   - dalla console del browser:  croDebug(true)   (resta acceso, ricarica la pagina)
+                                 croDebug(false)  (lo rispegne)
+   - aggiungendo ?debug=1 all'indirizzo della pagina (solo per quella apertura)
+   - con localStorage CRO_DEBUG = '1'
+   ═══════════════════════════════════════════════════════════════════════════ */
+window.CRO_DEBUG = (function () {
+  try {
+    if (/[?&]debug=1\b/.test(location.search)) return true;
+    return localStorage.getItem('CRO_DEBUG') === '1';
+  } catch (e) { return false; }
+})();
+window._croConsoleLog = console.log;
+if (!window.CRO_DEBUG) console.log = function () {};
+window.croDebug = function (acceso) {
+  try { localStorage.setItem('CRO_DEBUG', acceso ? '1' : '0'); } catch (e) {}
+  window._croConsoleLog.call(console, '[CRO_DEBUG] ' + (acceso ? 'acceso' : 'spento') + ': ricarico la pagina');
+  location.reload();
+};
+
+/* V10.26|22 · numeri dell'Overview letti dai DB caricati, non scritti a mano */
+window.addEventListener('load', function () {
+  try {
+    var n = { rc: (window.RAW_DB || []).length, ra: (window.RAW_DB_RA || []).length };
+    Array.prototype.forEach.call(document.querySelectorAll('[data-cro-conta]'), function (el) {
+      var v = n[el.getAttribute('data-cro-conta')];
+      if (v) el.textContent = v.toLocaleString('it-IT');
+    });
+  } catch (e) { /* restano i numeri scritti nella pagina */ }
+});
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   V10.26|21 · AVVISO LIBRERIE CDN
+   A pagina caricata controlla le librerie prese da internet. Se una manca
+   (rete aziendale che blocca il sito, PC offline) mostra in cima alla pagina
+   quale manca, da dove arriva e quali funzioni non andranno, invece di
+   lasciare che si rompano in silenzio.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+  var LIB = [
+    { nome: 'Leaflet', da: 'unpkg.com', ok: function () { return typeof window.L !== 'undefined' && !!window.L.map; },
+      usi: 'Mappa Topografica, mappe dei percorsi, bottoni Maps' },
+    { nome: 'ExcelJS', da: 'cdn.jsdelivr.net', ok: function () { return typeof window.ExcelJS !== 'undefined'; },
+      usi: 'export XLSX, statistiche in Excel, lettura dei file Excel' },
+    { nome: 'JSZip', da: 'cdnjs.cloudflare.com', ok: function () { return typeof window.JSZip !== 'undefined'; },
+      usi: 'export KMZ (Google Earth e Tracciato)' },
+    { nome: 'FileSaver', da: 'cdnjs.cloudflare.com', ok: function () { return typeof window.saveAs === 'function'; },
+      usi: 'salvataggio di alcuni file esportati' },
+    { nome: 'Chart.js', da: 'cdn.jsdelivr.net', ok: function () { return typeof window.Chart !== 'undefined'; },
+      usi: 'grafici delle Statistiche' },
+    { nome: 'Tailwind', da: 'cdn.tailwindcss.com', ok: function () { return typeof window.tailwind !== 'undefined'; },
+      usi: 'parte della grafica (alcuni pannelli possono apparire senza stile)' }
+  ];
+  function controlla() {
+    var manca = LIB.filter(function (l) { try { return !l.ok(); } catch (e) { return true; } });
+    window.CRO_LIBRERIE_MANCANTI = manca.map(function (l) { return l.nome; });
+    var vecchio = document.getElementById('croAvvisoCdn');
+    if (vecchio) vecchio.remove();
+    if (!manca.length) return;
+    var d = document.createElement('div');
+    d.id = 'croAvvisoCdn';
+    d.setAttribute('role', 'alert');
+    var righe = manca.map(function (l) {
+      return '<li><strong>' + l.nome + ' non disponibile</strong>: la rete blocca ' + l.da + '. Non funziona: ' + l.usi + '.</li>';
+    }).join('');
+    d.innerHTML = '<div class="cro-cdn-testo"><strong>\u26a0\ufe0f Alcune librerie non si sono caricate.</strong>'
+      + ' Il calcolo dei percorsi funziona lo stesso; queste funzioni no:<ul>' + righe + '</ul>'
+      + 'Se lavori dalla rete aziendale, prova da un\'altra rete o chiedi di sbloccare questi siti.</div>'
+      + '<button type="button" class="cro-cdn-chiudi" aria-label="Chiudi avviso">\u2715</button>';
+    d.querySelector('.cro-cdn-chiudi').addEventListener('click', function () { d.remove(); });
+    document.body.insertBefore(d, document.body.firstChild);
+  }
+  window.croControllaLibrerie = controlla;
+  if (document.readyState === 'complete') setTimeout(controlla, 800);
+  else window.addEventListener('load', function () { setTimeout(controlla, 800); });
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
    REGOLA UNICA: quando uno stato conta come ATTIVO
    Sta qui, prima di tutto il resto, perche' la usano il routing, i contatori
    dei percorsi, le caselle dell'Overview, la mappa NAT, il pannello
@@ -2290,12 +2417,19 @@ window.croStatoAttivo = function (stato) {
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2310b981'/%3E%3Ctext x='50' y='70' font-size='70' text-anchor='middle'%3E🟦%3C/text%3E%3C/svg%3E">
 <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2310b981'/%3E%3Ctext x='50' y='70' font-size='70' text-anchor='middle'%3E🟦%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2310b981'/%3E%3Ctext x='50' y='70' font-size='70' text-anchor='middle'%3E🟦%3C/text%3E%3C/svg%3E">
+<!-- V10.26|21 · LIBRERIE TOLTE (nessun riferimento nel codice a React., ReactDOM,
+     Babel, vis., text/babel; nessun indirizzo email offuscato da Cloudflare).
+     Per tornare indietro, rimettere qui sotto le righe originali:
 <script crossorigin="" src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin="" src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.6/dist/vis-network.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.6/dist/vis-network.min.css" rel="stylesheet"/>
+     e, intorno alla riga 39.000, davanti al tag di apertura del blocco che
+     segue il commento "V10.26|21 · tolto lo script Cloudflare":
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+-->
+<script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -3110,12 +3244,15 @@ window.alert = function(message) {
   // Determina se usare Toast o Popup:
   // - Toast: solo per SUCCESS e INFO brevi (feedback non critico)
   // - Popup: per WARNING, ERROR, e messaggi lunghi (richiede attenzione)
-  const useToast = isShortMessage && (type === 'success' || type === 'info') && typeof showToast === 'function';
+  /* V10.26|21: tutti i messaggi brevi in toast, anche avvisi ed errori; i lunghi
+     restano nella finestra in pagina. Prima: const useToast = isShortMessage &&
+     (type === 'success' || type === 'info') && typeof showToast === 'function'; */
+  const useToast = isShortMessage && typeof showToast === 'function';
   
   if (useToast) {
     // Toast per feedback rapido (success/info brevi)
     const cleanMsg = msgStr.replace(/^[✅❌⚠️ℹ️]\s*/, '').replace(/\n/g, ' ');
-    showToast(cleanMsg, type, { duration: 4000 });
+    showToast(cleanMsg, type, { duration: (type === 'error' || type === 'warning') ? 7000 : 4000 });
   } else {
     // Popup per messaggi importanti (warning/error) o lunghi
     const htmlMessage = msgStr.replace(/\n/g, '<br>');
@@ -3562,8 +3699,14 @@ window.deleteSelectedHistoryItem = function() {
   
   if (idx < 0) return;
   
-  // Conferma eliminazione
-  if (!confirm('Eliminare questa ricerca dalla cronologia?')) return;
+  // Conferma eliminazione (V10.26|21: in pagina; prima confirm('Eliminare questa ricerca dalla cronologia?'))
+  if (!window._croOkElimina) {
+    showCROConfirm('Elimina ricerca', 'Eliminare questa ricerca dalla cronologia?', function () {
+      window._croOkElimina = true;
+      try { window.deleteSelectedHistoryItem(); } finally { window._croOkElimina = false; }
+    });
+    return;
+  }
   
   // Rimuovi dall'array
   let history = window._historyModalData || [];
@@ -3605,7 +3748,15 @@ window.resetHistoryFromModal = function() {
     return;
   }
   
-  if (!confirm('Sei sicuro di voler cancellare TUTTA la cronologia?\n\nVerranno eliminate ' + count + ' ricerche salvate.\n\nQuesta azione NON può essere annullata.')) {
+  /* V10.26|21: conferma in pagina. Prima: confirm('Sei sicuro di voler cancellare TUTTA la
+     cronologia?\n\nVerranno eliminate ' + count + ' ricerche salvate.\n\nQuesta azione NON può
+     essere annullata.') */
+  if (!window._croOkSvuota) {
+    showCROConfirm('Cancella cronologia', 'Sei sicuro di voler cancellare TUTTA la cronologia?<br><br>Verranno eliminate '
+      + count + ' ricerche salvate.<br><br>Questa azione NON può essere annullata.', function () {
+      window._croOkSvuota = true;
+      try { window.resetHistoryFromModal(); } finally { window._croOkSvuota = false; }
+    });
     return;
   }
   
@@ -19770,7 +19921,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V10.26 | 20 | Ott 2026</div>
+<div class="version-tag">V10.26 | 22 | Ott 2026</div>
       </div>
     </div>
   </header>
@@ -20612,10 +20763,36 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #0066cc;">
+              <details class="cl-item" open style="--cl-accent: #475569;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📚 Novità V10.26 | 22 | Ott 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📚 Documentazione solo con dati veri</strong>: tolti tempi, percentuali e funzioni che il tool non ha (benchmark su Intel i5, cache dei percorsi, caricamento a blocchi, browser "20% più veloci", roadmap delle API "Q2 2026" e altro). Al loro posto il comportamento reale, i tempi misurati e l'uso consigliato di N° Risultati</li>
+    <li><strong>🔢 Numeri dei DB aggiornati da soli</strong>: nell'Overview i collegamenti RC e RA si leggono dai database caricati, quindi restano giusti a ogni aggiornamento</li>
+    <li><strong>📤 Formati di export reali</strong>: la Guida elenca TXT, XLSX, KMZ/KML, CSV e DOCX come li produce davvero il tool, con il consiglio di usare la copia negli appunti sul PC di lavoro</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #475569;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧹 Novità V10.26 | 21 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧹 Librerie inutilizzate tolte</strong>: React, ReactDOM, Babel e vis-network non erano usate da nessuna funzione, e lo script di Cloudflare non si caricava né da disco né da GitHub Pages. La pagina scarica meno e non dipende più da quei siti</li>
+    <li><strong>💬 Niente dialoghi del browser</strong>: le conferme e la richiesta del codice condivisibile sono finestre in pagina. L'export CSV della Mappa Topografica chiede con tre pulsanti: <em>Percorso visualizzato</em>, <em>Collegamenti selezionati</em> o <em>Annulla</em>, che ora non esporta niente (prima esportava i collegamenti selezionati)</li>
+    <li><strong>🔔 Messaggi brevi in toast</strong>: anche avvisi ed errori brevi compaiono in basso a destra e spariscono da soli (7 secondi); i messaggi lunghi restano nella finestra in pagina con il bottone OK</li>
+    <li><strong>⚠️ Avviso librerie</strong>: se la rete blocca una delle librerie prese da internet (mappa, Excel, KMZ, grafici, grafica), in cima alla pagina compare quale manca e quali funzioni non andranno</li>
+    <li><strong>🔇 Console più pulita</strong>: i messaggi di diagnostica sono spenti; si riaccendono con <code>croDebug(true)</code> nella console del browser o con <code>?debug=1</code> nell'indirizzo</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
                 <summary class="cl-sum">
                   <span class="cl-ver">⏱️ Novità V10.26 | 20 | Ott 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -34627,23 +34804,25 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 </tbody>
               </table>
 
-              <h4 class="docs-section-title">Metriche di Performance</h4>
+              <h4 class="docs-section-title">Il tool in numeri</h4>
+              <!-- V10.26|22: prima "~200ms Tempo calcolo 30 percorsi", "500+ Centrali in database",
+                   "5.700+ Collegamenti mappati", "18 Livelli zoom mappa": numeri non misurati o superati -->
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1rem;">
                 <div style="background:#f9fafb;padding:1rem;border-radius:8px;border:2px solid #e5e7eb;text-align:center;">
-                  <div style="font-size:2rem;font-weight:bold;color:#0066CC;">~200ms</div>
-                  <div style="font-size:0.875rem;color:#6b7280;margin-top:0.25rem;">Tempo calcolo 30 percorsi</div>
+                  <div style="font-size:2rem;font-weight:bold;color:#0066CC;" data-cro-conta="rc">1.205</div>
+                  <div style="font-size:0.875rem;color:#6b7280;margin-top:0.25rem;">Collegamenti RC nel DB</div>
                 </div>
                 <div style="background:#f9fafb;padding:1rem;border-radius:8px;border:2px solid #e5e7eb;text-align:center;">
-                  <div style="font-size:2rem;font-weight:bold;color:#10b981;">500+</div>
-                  <div style="font-size:0.875rem;color:#6b7280;margin-top:0.25rem;">Centrali in database</div>
+                  <div style="font-size:2rem;font-weight:bold;color:#10b981;" data-cro-conta="ra">6.642</div>
+                  <div style="font-size:0.875rem;color:#6b7280;margin-top:0.25rem;">Collegamenti RA nel DB</div>
                 </div>
                 <div style="background:#f9fafb;padding:1rem;border-radius:8px;border:2px solid #e5e7eb;text-align:center;">
-                  <div style="font-size:2rem;font-weight:bold;color:#f59e0b;">5.700+</div>
-                  <div style="font-size:0.875rem;color:#6b7280;margin-top:0.25rem;">Collegamenti mappati</div>
+                  <div style="font-size:2rem;font-weight:bold;color:#f59e0b;">3.000</div>
+                  <div style="font-size:0.875rem;color:#6b7280;margin-top:0.25rem;">Percorsi Std al massimo per ricerca</div>
                 </div>
                 <div style="background:#f9fafb;padding:1rem;border-radius:8px;border:2px solid #e5e7eb;text-align:center;">
-                  <div style="font-size:2rem;font-weight:bold;color:#8b5cf6;">18</div>
-                  <div style="font-size:0.875rem;color:#6b7280;margin-top:0.25rem;">Livelli zoom mappa</div>
+                  <div style="font-size:2rem;font-weight:bold;color:#8b5cf6;">100</div>
+                  <div style="font-size:0.875rem;color:#6b7280;margin-top:0.25rem;">Div al massimo per ogni Std</div>
                 </div>
               </div>
 
@@ -35290,7 +35469,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 
               <h4 class="docs-section-title">2. Database Enterprise RC Italia</h4>
               <p>
-                Repository con <strong>500+ centrali</strong> e metadati completi. Funzionalità:
+                Repository dei collegamenti RC (<strong data-cro-conta="rc">1.205</strong> nel database caricato) con centrali, coordinate e metadati. Funzionalità:
               </p>
               <ul class="docs-list docs-list-bullets">
                 <li>Ricerca case-insensitive su ID, GAT, CLLI, Nome</li>
@@ -35905,15 +36084,16 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               <h4 class="docs-section-title">Algoritmo Dijkstra Modificato</h4>
               <p>
                 Il core di CRO utilizza una <strong>variante ottimizzata dell'algoritmo di Dijkstra</strong> per trovare 
-                i K-shortest paths (K=30) in un grafo pesato rappresentante la rete RC Italia.
+                i K-shortest paths (K fino a 3.000, secondo N° Risultati) in un grafo pesato rappresentante la rete RC Italia.
               </p>
 
               <div style="background:#f9fafb;padding:1.5rem;border-radius:10px;border:2px solid #e5e7eb;margin:1.5rem 0;">
                 <strong style="font-size:1.05rem;color:#374151;">📐 Complessità Computazionale</strong>
+                <!-- V10.26|22: prima K=30, |E|=5700, |V|=500, "~6KB per grafo", "~200ms su Chrome/Firefox,
+                     ~150ms su Safari": valori superati o mai misurati -->
                 <ul style="margin-top:0.75rem;margin-bottom:0;">
-                  <li><strong>Tempo:</strong> O(K × (|E| + |V|log|V|)) dove K=30, |E|=5700, |V|=500</li>
-                  <li><strong>Spazio:</strong> O(|V| + |E|) = O(6200) ~ 6KB per grafo in memoria</li>
-                  <li><strong>Performance reale:</strong> ~200ms su Chrome/Firefox, ~150ms su Safari</li>
+                  <li><strong>Tempo:</strong> O(K × (|E| + |V|log|V|)), con K pari ai percorsi cercati (fino a 3.000) e |E|, |V| pari a collegamenti e centrali del DB usato (RC, RA o tutti e due nell'Unificato)</li>
+                  <li><strong>Tempi misurati</strong> (ottobre 2026, Milano Bersaglio → Settimo Milanese): Div del tab RC circa 6-10 s con N° Risultati 150 e circa 28 s con 300; Div dell'Unificato circa 3,5 s con 150 e 7 s con 300. Sono misure su un solo percorso: altri percorsi, soprattutto con RTN, possono richiedere di più</li>
                 </ul>
               </div>
 
@@ -36205,40 +36385,47 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   </tr>
                 </thead>
                 <tbody>
+                  <!-- V10.26|22: prima LINKS (5.700+), NODES (500+), currentRoutes, selectedRoutes,
+                       mapInstance, routeLayers: variabili che il codice non ha -->
                   <tr>
-                    <td><code>LINKS</code></td>
+                    <td><code>RAW_DB</code></td>
                     <td>Array</td>
-                    <td>Database collegamenti (5.700+ records)</td>
+                    <td>Collegamenti RC del database (una riga per collegamento)</td>
                   </tr>
                   <tr>
-                    <td><code>NODES</code></td>
+                    <td><code>RAW_DB_RA</code></td>
                     <td>Array</td>
-                    <td>Database centrali (500+ records)</td>
+                    <td>Collegamenti RA del database</td>
                   </tr>
                   <tr>
-                    <td><code>currentRoutes</code></td>
+                    <td><code>_baseRoutesRC</code></td>
                     <td>Array</td>
-                    <td>Percorsi calcolati (Std + Div)</td>
+                    <td>Percorsi Std dell'ultima ricerca del tab RC</td>
                   </tr>
                   <tr>
-                    <td><code>selectedRoutes</code></td>
-                    <td>Set</td>
-                    <td>Percorsi selezionati per export</td>
+                    <td><code>_baseRoutesUNIFIED</code></td>
+                    <td>Array</td>
+                    <td>Percorsi Std dell'ultima ricerca dell'Unificato</td>
                   </tr>
                   <tr>
-                    <td><code>mapInstance</code></td>
-                    <td>Leaflet.Map</td>
-                    <td>Istanza mappa interattiva</td>
-                  </tr>
-                  <tr>
-                    <td><code>routeLayers</code></td>
-                    <td>Map</td>
-                    <td>Layer mappa per percorsi disegnati</td>
+                    <td><code>_croDivRighe</code></td>
+                    <td>Object</td>
+                    <td>Per ogni riga Div a video: il Div e lo Std con cui si confronta</td>
                   </tr>
                   <tr>
                     <td><code>searchHistory</code></td>
                     <td>Array</td>
-                    <td>Storico ricerche per undo/redo</td>
+                    <td>Cronologia delle ricerche del tab RC (Undo)</td>
+                  </tr>
+                  <tr>
+                    <td><code>CRO_PEDONALE</code></td>
+                    <td>Object</td>
+                    <td>Percorsi urbani precalcolati delle tratte C-FOS per Google Earth</td>
+                  </tr>
+                  <tr>
+                    <td><code>CRO_DEBUG</code></td>
+                    <td>Boolean</td>
+                    <td>Interruttore dei messaggi console.log (croDebug(true) / croDebug(false))</td>
                   </tr>
                 </tbody>
               </table>
@@ -36250,20 +36437,20 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <li><strong>SQL Injection Prevention</strong> - N/A (no backend SQL, solo JSON client-side)</li>
                 <li><strong>XSS Protection</strong> - textContent invece di innerHTML per user input</li>
                 <li><strong>CSRF Protection</strong> - N/A (applicazione stateless senza autenticazione)</li>
-                <li><strong>Rate Limiting</strong> - Throttling ricerche (max 1/secondo) per prevenire abuse</li>
-                <li><strong>Data Validation</strong> - Schema validation per tutti i record database</li>
+                <!-- V10.26|22: tolte "Rate Limiting - Throttling ricerche (max 1/secondo)" e
+                     "Data Validation - Schema validation per tutti i record database": non esistono nel codice -->
               </ul>
 
               <h4 class="docs-section-title">Scalabilità e Performance</h4>
               <div style="background:#f0f9ff;padding:1.5rem;border-radius:10px;border-left:4px solid #0066CC;margin:1.5rem 0;">
-                <p style="margin:0;"><strong>Ottimizzazioni implementate per performance:</strong></p>
+                <p style="margin:0;"><strong>Come il tool tiene bassi i tempi:</strong></p>
+                <!-- V10.26|22: prima Lazy Loading a blocchi da 1000, Memoization, Web Workers, Virtual
+                     Scrolling, IndexedDB "future release", Service Workers "roadmap": nessuno esiste -->
                 <ul style="margin-top:0.75rem;margin-bottom:0;">
-                  <li><strong>Lazy Loading</strong> - Caricamento progressivo database (chunk 1000 records)</li>
-                  <li><strong>Memoization</strong> - Cache risultati Dijkstra per query ripetute</li>
-                  <li><strong>Web Workers</strong> - Calcolo percorsi in background thread (opzionale)</li>
-                  <li><strong>Virtual Scrolling</strong> - Rendering only visible rows in tabelle (>1000 items)</li>
-                  <li><strong>IndexedDB</strong> - Persistenza locale per offline mode (future release)</li>
-                  <li><strong>Service Workers</strong> - PWA capabilities per caching aggressivo (roadmap)</li>
+                  <li><strong>DB compatti</strong> - I database RC e RA sono scritti in forma compatta e rimontati all'apertura (circa 35 ms); l'apertura del file è passata da circa 1,2 a 0,8 secondi</li>
+                  <li><strong>Percorsi pedonali precalcolati</strong> - I percorsi per Google Earth sono già nel file: nessuna chiamata a servizi esterni</li>
+                  <li><strong>Tutto nel browser</strong> - Nessun server; nel browser restano solo cronologia e preferenze (localStorage)</li>
+                  <li><strong>Candidati regolabili</strong> - N° Risultati decide quanti percorsi e quanti candidati Div il tool esamina: più alto, più tempo</li>
                 </ul>
               </div>
 
@@ -36730,129 +36917,41 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
             <div class="db-header">
               <h3 class="db-title">⚡ Performance Tuning</h3>
               <p class="db-subtitle">
-                Ottimizzazioni, benchmark e best practices per massime prestazioni
+                Tempi misurati e uso consigliato per tenere bassi i tempi di calcolo
               </p>
             </div>
             <div class="db-card-body">
+              <!-- V10.26|22: questa sezione conteneva "Benchmark Reference" (tempi su Intel i5 mai misurati),
+                   "Ottimizzazioni Implementate" (Lazy Loading, Memoization, Virtual Scrolling, Debouncing con
+                   percentuali di risparmio), "Best Practices Utilizzo" (~150MB RAM, Chrome/Firefox 20% più
+                   veloci, vincoli +15%, mappa off 3x, localStorage ogni 50 ricerche, ricarica dopo 100+
+                   operazioni) e un finto config.js. Nessuna di queste affermazioni era verificata -->
 
-              <h4 class="docs-section-title">Benchmark Reference</h4>
-              <p><strong>Tempi medi su hardware standard (Intel i5, 8GB RAM, Chrome):</strong></p>
-
+              <h4 class="docs-section-title">Tempi misurati</h4>
+              <p>Misure di ottobre 2026, dal clic sul bottone Div alla comparsa delle righe. Servono come ordine di grandezza: dipendono dal percorso e dal PC.</p>
               <table class="docs-table">
-                <thead>
-                  <tr>
-                    <th>Operazione</th>
-                    <th>Tempo Medio</th>
-                    <th>Worst Case</th>
-                    <th>Best Case</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>Caso</th><th>N° Risultati 150</th><th>N° Risultati 300</th></tr></thead>
                 <tbody>
-                  <tr>
-                    <td>Caricamento Database</td>
-                    <td>150ms</td>
-                    <td>300ms</td>
-                    <td>80ms</td>
-                  </tr>
-                  <tr>
-                    <td>Calcolo 30 Percorsi</td>
-                    <td>200ms</td>
-                    <td>800ms</td>
-                    <td>120ms</td>
-                  </tr>
-                  <tr>
-                    <td>Rendering Mappa (30 routes)</td>
-                    <td>400ms</td>
-                    <td>1200ms</td>
-                    <td>250ms</td>
-                  </tr>
-                  <tr>
-                    <td>Export TXT</td>
-                    <td>50ms</td>
-                    <td>150ms</td>
-                    <td>20ms</td>
-                  </tr>
-                  <tr>
-                    <td>Ricerca Database</td>
-                    <td>5ms</td>
-                    <td>20ms</td>
-                    <td>1ms</td>
-                  </tr>
-                  <tr>
-                    <td>Geocoding Indirizzo</td>
-                    <td>500ms</td>
-                    <td>3000ms</td>
-                    <td>200ms</td>
-                  </tr>
+                  <tr><td>Tab RC, Div, Milano Bersaglio → Settimo Milanese</td><td>circa 6-10 s</td><td>circa 28 s</td></tr>
+                  <tr><td>Unificato, Div, stesso percorso</td><td>circa 3,5 s</td><td>circa 7 s</td></tr>
+                  <tr><td>Unificato con RTN, Div A+B, Milano Bersaglio → Lanciani</td><td>circa 13 s</td><td>circa 36 s</td></tr>
+                  <tr><td>Unificato con RTN, Div A+B, Aranova → Milano Marittima</td><td>circa 17 s</td><td>circa 43 s</td></tr>
                 </tbody>
               </table>
 
-              <h4 class="docs-section-title">Ottimizzazioni Implementate</h4>
+              <h4 class="docs-section-title">Cosa incide sui tempi</h4>
+              <ul class="docs-list docs-list-bullets">
+                <li><strong>N° Risultati</strong> - Decide quanti percorsi Std cercare e quanti candidati Div esaminare (il triplo, fino a 3.000). Nel tab RC fino a 150 i candidati Div restano 300</li>
+                <li><strong>RTN e Div di zona</strong> - I Div Zona A, Zona B e A+B combinano più tratti e richiedono più tempo dei Div normali</li>
+                <li><strong>Regola di diversificazione</strong> - Ogni Div viene confrontato con lo Std sulle C-FOS: è un controllo in più, utile, che costa qualche secondo</li>
+              </ul>
 
-              <div style="background:#f0f9ff;padding:1.5rem;border-radius:10px;border-left:4px solid #0066CC;margin:1.5rem 0;">
-                <strong style="color:#0066CC;font-size:1.05rem;">✅ 1. Lazy Loading Database</strong>
-                <p style="margin-top:0.75rem;margin-bottom:0;">
-                  Database caricato progressivamente in chunk da 1000 records. Interfaccia disponibile immediatamente, 
-                  popolamento database in background. <strong>Risparmio: 80% perceived load time.</strong>
-                </p>
-              </div>
-
-              <div style="background:#ecfdf5;padding:1.5rem;border-radius:10px;border-left:4px solid #10b981;margin:1.5rem 0;">
-                <strong style="color:#1e40af;font-size:1.05rem;">✅ 2. Memoization Dijkstra</strong>
-                <p style="margin-top:0.75rem;margin-bottom:0;">
-                  Cache dei risultati Dijkstra per query identiche. Hash basato su (start, end, constraints). 
-                  <strong>Hit rate: 35% su utilizzo tipico. Risparmio: 200ms per hit.</strong>
-                </p>
-              </div>
-
-              <div style="background:#fef3c7;padding:1.5rem;border-radius:10px;border-left:4px solid #f59e0b;margin:1.5rem 0;">
-                <strong style="color:#92400e;font-size:1.05rem;">✅ 3. Virtual Scrolling Tabelle</strong>
-                <p style="margin-top:0.75rem;margin-bottom:0;">
-                  Rendering solo righe visibili in viewport. Per tabelle >1000 righe. 
-                  <strong>Risparmio: 90% DOM nodes, 70% render time.</strong>
-                </p>
-              </div>
-
-              <div style="background:#f3e8ff;padding:1.5rem;border-radius:10px;border-left:4px solid #8b5cf6;margin:1.5rem 0;">
-                <strong style="color:#5b21b6;font-size:1.05rem;">✅ 4. Debouncing Input</strong>
-                <p style="margin-top:0.75rem;margin-bottom:0;">
-                  Search input con debounce 300ms. Previene ricerche continue durante digitazione. 
-                  <strong>Riduzione: 80% query inutili.</strong>
-                </p>
-              </div>
-
-              <h4 class="docs-section-title">Best Practices Utilizzo</h4>
-
-              <ol class="docs-list" style="line-height:2;">
-                <li><strong>Chiudi tab non utilizzati</strong> - CRO usa ~150MB RAM, libera risorse</li>
-                <li><strong>Usa Chrome o Firefox</strong> - Engine JavaScript 20% più veloce di Safari/Edge</li>
-                <li><strong>Limita vincoli</strong> - Ogni vincolo aggiuntivo aumenta complessità ~15%</li>
-                <li><strong>Calcola percorsi in batch</strong> - Evita calcoli singoli ripetuti</li>
-                <li><strong>Disabilita rendering mappa durante batch</strong> - 3x speedup su operazioni massive</li>
-                <li><strong>Clear localStorage periodicamente</strong> - Ogni 50 ricerche per prevenire slow-down</li>
-                <li><strong>Ricarica pagina dopo 100+ operazioni</strong> - Memory leaks minimi ma presenti</li>
-              </ol>
-
-              <h4 class="docs-section-title">Configurazioni Avanzate (Sviluppatori)</h4>
-
-              <pre style="background:#1f2937;color:#f9fafb;padding:1.5rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;"><code>// File: config.js - Performance Tuning
-
-// Numero max percorsi da calcolare (default: 30)
-const MAX_PRIMARY_ROUTES = 30; // Riduci a 10 per +70% speed
-
-// Timeout calcolo (default: 30000ms)
-const CALCULATION_TIMEOUT = 30000; // Aumenta se network complex
-
-// Cache size (default: 100)
-const CACHE_SIZE = 100; // Aumenta a 500 per +10% hit rate
-
-// Virtual scrolling threshold (default: 1000)
-const VIRTUAL_SCROLL_THRESHOLD = 1000; // Riduci a 500 per low-end
-
-// Debounce delay (default: 300ms)
-const DEBOUNCE_DELAY = 300; // Riduci a 150ms per UX più reattiva
-</code></pre>
-
+              <h4 class="docs-section-title">Uso consigliato</h4>
+              <ul class="docs-list docs-list-bullets">
+                <li>N° Risultati a 150 per il lavoro di tutti i giorni</li>
+                <li>Se escono solo Div parziali, portalo a 300 e ricalcola i Div: il tool esamina più candidati, con tempi circa doppi</li>
+                <li>Per la diagnostica, i messaggi della console si accendono con <code>croDebug(true)</code> e si spengono con <code>croDebug(false)</code></li>
+              </ul>
             </div>
           </div>
         </section>
@@ -36863,117 +36962,34 @@ const DEBOUNCE_DELAY = 300; // Riduci a 150ms per UX più reattiva
             <div class="db-header">
               <h3 class="db-title">🔗 Integrazioni</h3>
               <p class="db-subtitle">
-                Export formati, tool esterni compatibili e API endpoints
+                Formati di export e programmi con cui aprirli
               </p>
             </div>
             <div class="db-card-body">
+              <!-- V10.26|22: questa sezione conteneva un esempio TXT inventato (ROMA001, LINK001, "Overlap:
+                   15%"), uno schema CSV che il tool non produce, una tabella di tool esterni generica, la
+                   roadmap "API Endpoints (Future Release) - Previsto Q2 2026" con quattro endpoint REST e un
+                   esempio Python su routes.csv. Nulla corrispondeva al tool -->
 
-              <h4 class="docs-section-title">Formati Export Supportati</h4>
+              <h4 class="docs-section-title">Formati di export</h4>
+              <ul class="docs-list docs-list-bullets">
+                <li><strong>TXT</strong> - Una scheda per percorso: testata con segmenti e distanze, CENTRALI, COLLEGAMENTI con stato e verifica NNI, le quattro sequenze (Segmentata, Routing, Somma, Elenco), C-FOS dei collegamenti, routing CLLI delle C-FOS, VERIFICA &amp; INFO NNI, eventuali COSTI e la NOTA SUBPATH</li>
+                <li><strong>XLSX</strong> - Export dei percorsi selezionati, statistiche del database e tracciati KMZ per archi DWDM (richiede la libreria ExcelJS)</li>
+                <li><strong>KMZ / KML</strong> - Tracciati per Google Earth; dal bottone 🌍 il KML del percorso, con il percorso urbano delle tratte C-FOS, va negli appunti</li>
+                <li><strong>CSV</strong> - Dalla Mappa Topografica (percorso visualizzato o collegamenti selezionati, separatore punto e virgola), elenco dei collegamenti non attivi, DB RC o RA</li>
+                <li><strong>DOCX</strong> - Info per KMZ e manuale utente</li>
+              </ul>
 
-              <div style="background:#f9fafb;padding:1.5rem;border-radius:10px;border:2px solid #e5e7eb;margin:1.5rem 0;">
-                <strong style="font-size:1.05rem;">📄 TXT (Text)</strong>
-                <p style="margin-top:0.75rem;"><strong>Descrizione:</strong> Formato human-readable CR/GI compliant</p>
-                <p><strong>Struttura:</strong></p>
-                <pre style="background:#1f2937;color:#f9fafb;padding:1rem;border-radius:6px;overflow-x:auto;font-size:0.85rem;"><code>PERCORSI PRIMARI (Std):
-===================================
-1.1 | ROMA SUD → FIRENZE NORD → MILANO CENTRO | 476.32 km | 2 hop
-    Collegamenti: LINK001, LINK045
-    ID: ROMA001-FIRENZE001-MILANO001
-
-PERCORSI ALTERNATIVI (Div):
-===================================
-2.1 | ROMA SUD → BOLOGNA EST → MILANO CENTRO | 512.10 km | 2 hop
-    Collegamenti: LINK078, LINK123
-    Overlap: 15%
-</code></pre>
-                <p><strong>Encoding:</strong> UTF-8 with BOM</p>
-                <p><strong>Use Case:</strong> Report cartacei, email, documentazione</p>
-              </div>
-
-              <div style="background:#f9fafb;padding:1.5rem;border-radius:10px;border:2px solid #e5e7eb;margin:1.5rem 0;">
-                <strong style="font-size:1.05rem;">📊 CSV (Comma-Separated)</strong>
-                <p style="margin-top:0.75rem;"><strong>Descrizione:</strong> Formato machine-readable per elaborazioni</p>
-                <p><strong>Schema:</strong></p>
-                <pre style="background:#1f2937;color:#f9fafb;padding:1rem;border-radius:6px;overflow-x:auto;font-size:0.85rem;"><code>ID,Tipo,Centrali,Collegamenti,Distanza_km,Hop
-1.1,Primario,"ROMA SUD|FIRENZE NORD|MILANO","LINK001|LINK045",476.32,2
-2.1,Alternativo,"ROMA SUD|BOLOGNA EST|MILANO","LINK078|LINK123",512.10,2
-</code></pre>
-                <p><strong>Delimiter:</strong> Virgola (,) | Separator interno: Pipe (|)</p>
-                <p><strong>Use Case:</strong> Import Excel, elaborazioni Python, database</p>
-              </div>
-
-              <h4 class="docs-section-title">Tool Esterni Compatibili</h4>
-
-              <table class="docs-table">
-                <thead>
-                  <tr>
-                    <th>Tool</th>
-                    <th>Formato</th>
-                    <th>Procedura Import</th>
-                    <th>Use Case</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><strong>Microsoft Excel</strong></td>
-                    <td>CSV</td>
-                    <td>Data → From Text/CSV → Import</td>
-                    <td>Analisi statistica, pivot tables</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Python Pandas</strong></td>
-                    <td>CSV</td>
-                    <td><code>pd.read_csv('routes.csv')</code></td>
-                    <td>Machine learning, data science</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Google Sheets</strong></td>
-                    <td>CSV</td>
-                    <td>File → Import → Upload CSV</td>
-                    <td>Collaborazione team, report online</td>
-                  </tr>
-                  <tr>
-                    <td><strong>QGIS</strong></td>
-                    <td>JSON + Coordinates</td>
-                    <td>Custom script Python</td>
-                    <td>GIS analysis, mapping avanzato</td>
-                  </tr>
-                  <tr>
-                    <td><strong>Power BI</strong></td>
-                    <td>CSV</td>
-                    <td>Get Data → Text/CSV</td>
-                    <td>Business intelligence, dashboard</td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <h4 class="docs-section-title">API Endpoints (Future Release)</h4>
-              <p><strong>Roadmap per integrazione backend:</strong></p>
-
-              <div style="background:#fef3c7;padding:1.5rem;border-radius:10px;border-left:4px solid #f59e0b;margin:1.5rem 0;">
-                <p style="margin:0;"><strong>⏳ Previsto Q2 2026:</strong></p>
-                <ul style="margin-top:0.75rem;margin-bottom:0;">
-                  <li><code>POST /api/v1/routes/calculate</code> - Calcolo percorsi via REST</li>
-                  <li><code>GET /api/v1/database/nodes</code> - Query centrali</li>
-                  <li><code>GET /api/v1/database/links</code> - Query collegamenti</li>
-                  <li><code>POST /api/v1/export</code> - Export programmato batch</li>
-                </ul>
-              </div>
-
-              <h4 class="docs-section-title">Workflow Integrazione Tipico</h4>
-              
               <div class="docs-callout docs-callout-note">
-                <strong>📋 Esempio: Analisi Statistica con Python</strong>
-                <ol style="margin-top:0.75rem;margin-bottom:0;line-height:1.8;">
-                  <li>Esegui ricerca percorsi in CRO con vincoli desiderati</li>
-                  <li>Export CSV → Salva come <code>routes.csv</code></li>
-                  <li>Import in Python: <code>df = pd.read_csv('routes.csv')</code></li>
-                  <li>Analizza: <code>df['Distanza_km'].describe()</code></li>
-                  <li>Visualizza: <code>df['Distanza_km'].plot.hist()</code></li>
-                  <li>Report: Generate PDF con matplotlib</li>
-                </ol>
+                <strong>📋 Sul PC di lavoro</strong>
+                <p style="margin:0.5rem 0 0 0;">Il software di sicurezza può bloccare i file creati dal browser (Excel compreso). Dove c'è, usa la copia negli appunti: TXT e KML si incollano senza scaricare nulla. Se una libreria non si carica, l'avviso in cima alla pagina dice quali export non sono disponibili.</p>
               </div>
 
+              <h4 class="docs-section-title">Dove si aprono</h4>
+              <ul class="docs-list docs-list-bullets">
+                <li>TXT, CSV e XLSX in Excel o in un editor di testo</li>
+                <li>KMZ e KML in Google Earth Pro (il KML si incolla nel pannello Luoghi con Ctrl+V)</li>
+              </ul>
             </div>
           </div>
         </section>
@@ -37117,7 +37133,7 @@ PERCORSI ALTERNATIVI (Div):
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 20 | Ott 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 22 | Ott 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -37135,7 +37151,34 @@ PERCORSI ALTERNATIVI (Div):
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
+        <details open style="border:1px solid #64748b;border-radius:12px;overflow:hidden;background:#f8fafc;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#334155;display:flex;align-items:center;gap:0.5rem;background:#e2e8f0;">
+            📚 V10.26 | 22 | Ott 2026 | Documentazione senza numeri inventati
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📚 Cosa è stato tolto</strong>: Overview "Metriche di Performance"; in Architettura la complessità con valori del 2025, Rate Limiting, Data Validation e le ottimizzazioni inesistenti; le sezioni Performance Tuning e Integrazioni quasi per intero. Ogni punto ha accanto un commento <code>V10.26|22</code> con il riassunto del testo tolto</li>
+              <li><strong>🔢 data-cro-conta</strong>: gli elementi con <code>data-cro-conta="rc"</code> o <code>"ra"</code> prendono a pagina caricata il numero di righe di <code>RAW_DB</code> e <code>RAW_DB_RA</code></li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #475569;border-radius:12px;overflow:hidden;background:#f8fafc;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#334155;display:flex;align-items:center;gap:0.5rem;background:#e2e8f0;">
+            🧹 V10.26 | 21 | Ott 2026 | Librerie, dialoghi in pagina, CRO_DEBUG, avviso CDN
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧹 Librerie</strong>: tolti i tag di React 18, ReactDOM 18, Babel standalone, vis-network 9.1.6 (JS e CSS) e lo script Cloudflare <code>email-decode</code>. Prima di toglierli: nessuna occorrenza di <code>React.</code>, <code>ReactDOM</code>, <code>Babel</code>, <code>vis.</code>, <code>text/babel</code>. I tag originali sono nel commento <em>V10.26|21 · LIBRERIE TOLTE</em> nella head</li>
+              <li><strong>💬 Dialoghi</strong>: <code>confirm()</code> e <code>prompt()</code> sostituiti da <code>showCROConfirm</code> e <code>showCROPopup</code>. Le funzioni che chiedevano conferma si richiamano da sole dopo il clic su Conferma, con un indicatore che salta la domanda (<code>_croOkElimina</code>, <code>_croOkSvuota</code>, <code>_croOkResetNat</code>); <code>natExportSelectionCSV(scelta)</code> riceve <em>percorso</em> o <em>selezione</em>. Accanto a ogni punto c'è il testo originale</li>
+              <li><strong>🔔 alert()</strong>: era già sostituito da un override che non usa la finestra del browser. Ora l'override manda in toast tutti i messaggi brevi (meno di 150 caratteri e di 3 righe), anche avvisi ed errori</li>
+              <li><strong>🔇 CRO_DEBUG</strong>: definito all'inizio del primo blocco <code>&lt;script&gt;</code>; spento sostituisce <code>console.log</code> con una funzione vuota. <code>croDebug(true)</code> lo accende e ricarica, <code>croDebug(false)</code> lo spegne; <code>?debug=1</code> vale per una sola apertura</li>
+              <li><strong>⚠️ Avviso CDN</strong>: <code>croControllaLibrerie()</code>, eseguito a pagina caricata, controlla Leaflet (<code>L</code>), ExcelJS, JSZip, FileSaver (<code>saveAs</code>), Chart.js e Tailwind; la lista di quelle mancanti resta in <code>CRO_LIBRERIE_MANCANTI</code></li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
             ⏱️ V10.26 | 20 | Ott 2026 | Tempi dei Div e avviso sui parziali
           </summary>
@@ -39371,7 +39414,7 @@ Pannello 📊 Analisi Percorsi: 4 card classificate 🏆🥇🥈🥉 + scoring o
 
 
 <!-- BLOCCO 1: Data layer RC_Italia da template Excel -->
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<!-- V10.26|21 · tolto lo script Cloudflare email-decode (testo nel commento in head) --><script>
 // 1) QUI incollerai il DB completo convertito da Excel.
 //    Ogni riga del foglio "Collegamenti_RC" diventa un oggetto.
 //    DB RC AGGIORNATO LO STATO DEI COLLEGAMENTI IL 23_12_25.
@@ -42027,15 +42070,23 @@ window.natZoomToAll = function() {
 };
 
 // Export selected links to CSV
-window.natExportSelectionCSV = function() {
+window.natExportSelectionCSV = function(scelta) {
   // Se c'è un percorso visualizzato, chiedi cosa esportare
   const hasPath = natPathLayer && natMap && natMap.hasLayer(natPathLayer);
   
+  /* V10.26|21: tre pulsanti in pagina. Prima: confirm('Vuoi esportare il PERCORSO
+     visualizzato?\n\nOK = Percorso visualizzato\nAnnulla = Collegamenti selezionati'),
+     con cui Annulla esportava comunque i collegamenti selezionati */
   let exportPath = false;
-  if (hasPath) {
-    const choice = confirm('Vuoi esportare il PERCORSO visualizzato?\n\nOK = Percorso visualizzato\nAnnulla = Collegamenti selezionati');
-    exportPath = choice;
+  if (hasPath && scelta !== 'percorso' && scelta !== 'selezione') {
+    showCROPopup('Esporta CSV', 'Cosa vuoi esportare?', 'info', { buttons: [
+      { text: 'Annulla', type: 'secondary', onclick: 'closeCROPopup()' },
+      { text: 'Collegamenti selezionati', type: 'secondary', onclick: "closeCROPopup(); natExportSelectionCSV('selezione')" },
+      { text: 'Percorso visualizzato', type: 'primary', onclick: "closeCROPopup(); natExportSelectionCSV('percorso')" }
+    ] });
+    return;
   }
+  if (hasPath) exportPath = (scelta === 'percorso');
   
   if (exportPath) {
     // Esporta percorso visualizzato
@@ -42536,7 +42587,16 @@ window.natClearPath = function() {
 window.natResetAll = function() {
   console.log('[NAT] Reset All - Clearing everything');
   
-  if (!confirm('Vuoi resettare tutto nella Mappa Topografica?\n\n- Percorsi visualizzati\n- Misurazioni\n- Selezioni\n- Filtri\n- Campi di ricerca\n\nLa mappa tornerà allo stato iniziale.')) {
+  /* V10.26|21: conferma in pagina. Prima: confirm('Vuoi resettare tutto nella Mappa
+     Topografica?\n\n- Percorsi visualizzati\n- Misurazioni\n- Selezioni\n- Filtri\n- Campi di
+     ricerca\n\nLa mappa tornerà allo stato iniziale.') */
+  if (!window._croOkResetNat) {
+    showCROConfirm('Reset Mappa Topografica', 'Vuoi resettare tutto nella Mappa Topografica?<br><br>'
+      + '- Percorsi visualizzati<br>- Misurazioni<br>- Selezioni<br>- Filtri<br>- Campi di ricerca<br><br>'
+      + 'La mappa tornerà allo stato iniziale.', function () {
+      window._croOkResetNat = true;
+      try { window.natResetAll(); } finally { window._croOkResetNat = false; }
+    });
     return;
   }
   
@@ -54269,10 +54329,11 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
   
   // Reset cronologia RA
   window.resetSearchHistoryRA = function() {
-    if (confirm('Vuoi cancellare tutta la cronologia ricerche RA?')) {
+    /* V10.26|21: conferma in pagina. Prima: if (confirm('Vuoi cancellare tutta la cronologia ricerche RA?')) */
+    showCROConfirm('Cancella cronologia RA', 'Vuoi cancellare tutta la cronologia ricerche RA?', function () {
       localStorage.removeItem(SEARCH_HISTORY_KEY_RA);
       updateHistoryPanelRA();
-    }
+    });
   };
   
   // Chiudi panel quando si clicca fuori
@@ -70276,7 +70337,8 @@ div[style*="background:#f3f4f6"] label:hover span {
         onConfirm: doReset
       });
     } else {
-      if (confirm(msg)) doReset();
+      /* V10.26|21: in pagina. Prima: if (confirm(msg)) doReset(); */
+      showCROConfirm('Conferma Reset Cronologia', String(msg).replace(/\n/g, '<br>'), doReset);
     }
   };
 
@@ -72884,10 +72946,16 @@ div[style*="background:#f3f4f6"] label:hover span {
   
   // Richiede codice da caricare
   window.promptLoadCode = function() {
-    const code = prompt('Incolla il codice condivisibile (inizia con "CRO:"):');
-    if (code) {
-      loadShareCode(code.trim());
-    }
+    /* V10.26|21: casella di testo in pagina. Prima:
+       const code = prompt('Incolla il codice condivisibile (inizia con "CRO:"):');
+       if (code) { loadShareCode(code.trim()); } */
+    showCROPopup('Carica codice condivisibile',
+      '<label for="croCodiceCondiviso" style="display:block;margin-bottom:6px;">Incolla il codice condivisibile (inizia con "CRO:"):</label>'
+      + '<textarea id="croCodiceCondiviso" rows="4" style="width:100%;box-sizing:border-box;font-family:monospace;font-size:0.8rem;padding:6px;border:1px solid #cbd5e1;border-radius:6px;"></textarea>',
+      'info', { buttons: [
+        { text: 'Annulla', type: 'secondary', onclick: 'closeCROPopup()' },
+        { text: 'Carica', type: 'primary', onclick: "var _c=(document.getElementById('croCodiceCondiviso')||{}).value||''; closeCROPopup(); if(_c.trim()) loadShareCode(_c.trim());" }
+      ], onOpen: function () { setTimeout(function () { var t = document.getElementById('croCodiceCondiviso'); if (t) t.focus(); }, 50); } });
   };
   
   console.log('[SHARE CODE] ✅ Modulo caricato');
@@ -84389,6 +84457,16 @@ body.dark-mode .cro-earth-box { background: #1e293b; color: #e2e8f0; }
   border: 1px solid #fde68a; border-radius: 3px; padding: 2px 6px; line-height: 1.35; }
 </style>
 
+<style id="croAvvisoCdnStile">
+/* V10.26 | 21 · avviso librerie CDN mancanti */
+#croAvvisoCdn { position: sticky; top: 0; z-index: 99990; display: flex; gap: 12px; align-items: flex-start;
+  background: #fffbeb; border-bottom: 2px solid #f59e0b; color: #78350f; padding: 10px 16px; font-size: 0.82rem; line-height: 1.5; }
+#croAvvisoCdn ul { margin: 4px 0 4px 18px; padding: 0; }
+#croAvvisoCdn .cro-cdn-testo { flex: 1; }
+#croAvvisoCdn .cro-cdn-chiudi { border: 1px solid #f59e0b; background: #fff; color: #78350f; border-radius: 6px;
+  padding: 2px 9px; cursor: pointer; font-weight: 700; }
+</style>
+
 <style id="croUndoStile">
 /* niente qui: il riparo sopra la barra ferma sta nel foglio della barra */
 </style>
@@ -86377,7 +86455,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V10.26 | 20';
+  var REVISIONE = 'V10.26 | 22';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
