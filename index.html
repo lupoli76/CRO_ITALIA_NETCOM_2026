@@ -4,7 +4,7 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 10.26 | 70  (rev. pubblicata: V10.26 | 70 | Ott 2026)                ║
+║   Versione: 10.26 | 72  (rev. pubblicata: V10.26 | 72 | Ott 2026)                ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
@@ -12,12 +12,32 @@
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
 ║                                                                                  ║
+║   CHANGELOG V10.26 | 72 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • TOOL PIU' LEGGERO: alcuni controlli grafici periodici (angoli squadrati,     ║
+║     icone nei campi, intestazioni ferme delle tabelle) ripassavano tutta la      ║
+║     pagina ogni pochi decimi di secondo anche senza cambiamenti; con 150         ║
+║     percorsi a video erano decine di migliaia di elementi. Ora ripassano solo    ║
+║     quando la pagina cambia. Ricerca dei percorsi dell'Unificato piu' veloce,    ║
+║     con gli stessi risultati                                                     ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 71 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • TAB RA, RC E UNIFICATO, DISTANZE: nella colonna Distanza (km) anche la       ║
+║     ripartizione per rete (RA, RC, RA1, RC2...) ha due decimali come il totale;  ║
+║     due decimali anche nel titolo del dettaglio, nel podio, nella tabella dei    ║
+║     collegamenti RTN e nel confronto percorsi                                    ║
+║   • STATO IN CESSAZIONE: nella colonna ID Collegamenti dei tab RA e Unificato    ║
+║     l'etichetta [IN CESSAZIONE] non compariva; ora si vede, in rosa come nel tab ║
+║     Database, insieme a ogni altro stato non previsto. Colore rosa anche per gli ║
+║     ID RC e nella colonna Stato del dettaglio                                    ║
+║                                                                                  ║
 ║   CHANGELOG V10.26 | 70 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
 ║   • ANALISI FATTIBILITA' IN LAVORAZIONE: etichetta In lavorazione nel titolo del ║
-║     tab, voce del menu Analisi Extra con 🚧 e riquadro a righe gialle in testa   ║
-║     al tab, come in Analisi per Soluzioni Protette: regole, testi e funzioni     ║
-║     sono in aggiornamento continuo e vanno segnalati gli errori                  ║
+║     tab, voce del menu Analisi Extra con 🚧 e riquadro a righe gialle in testa al ║
+║     tab, come in Analisi per Soluzioni Protette: regole, testi e funzioni sono   ║
+║     in aggiornamento continuo e vanno segnalati gli errori                       ║
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 69 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
@@ -4684,6 +4704,36 @@ window.croCmp = (function () {
   }
   window.addEventListener('load', function () { try { if (el('cmpCatena')) { preparaNote(); ridisegna(); } } catch (e) { console.error('[Compositore]', e); } });
   return { diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   V10.26|72 · PAGINA CAMBIATA? Contatore che sale a ogni modifica della pagina
+   (elementi aggiunti o tolti, clic, digitazione, apertura di voci, resize),
+   esclusi orologio e messaggi. I controlli grafici periodici lo leggono e
+   ripassano la pagina solo se è cambiata dall'ultima volta.
+   ═══════════════════════════════════════════════════════════════════════════ */
+window.croDom = (function () {
+  var v = 1, ult = {};
+  function tocca() { v++; }
+  function avvia() {
+    try {
+      new MutationObserver(function (rec) {
+        for (var i = 0; i < rec.length; i++) {
+          var t = rec[i].target; if (t && t.nodeType !== 1) t = t.parentNode;
+          if (t && t.closest && t.closest('.top-bar, .toast-container, #toastContainer, .cro-toast')) continue;
+          v++; return;
+        }
+      }).observe(document.body, { childList: true, subtree: true });
+    } catch (e) { v = -1; }
+    ['click', 'input', 'change', 'toggle', 'keyup'].forEach(function (ev) { document.addEventListener(ev, tocca, true); });
+    window.addEventListener('resize', tocca);
+  }
+  if (document.body) avvia(); else document.addEventListener('DOMContentLoaded', avvia);
+  return {
+    /* true se la pagina è cambiata dall'ultima volta che «chi» ha chiesto */
+    cambiato: function (chi) { if (v < 0) return true; var o = ult[chi]; ult[chi] = v; return o !== v; },
+    tocca: tocca
+  };
 })();
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -17484,6 +17534,7 @@ body.dark-mode .loss-total-value {
 .route-id-attivo    { color: #166534; }
 .route-id-nonattivo { color: #991b1b; }
 .route-id-inattivazione { color: #f59e0b; }
+.route-id-incessazione { color: #be185d; } /* V10.26|71 */
 
 .route-id-invariazione {
   color: #1e40af;
@@ -22317,7 +22368,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V10.26 | 70 | Ott 2026</div>
+<div class="version-tag">V10.26 | 72 | Ott 2026</div>
       </div>
     </div>
   </header>
@@ -22563,7 +22614,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 70</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 72</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati. Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -22580,7 +22631,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 70</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 72</span>
                     </div>
                     <p class="feature-desc">Dal bottone <strong>💬</strong> in basso a sinistra (trasparente, si apre al passaggio del mouse), una chat locale che cerca nei dati e nei testi del tool. Scrivi un <strong>CLLI</strong> e mostra nome, zona, data center, mappa e tutti i collegamenti RC e RA; un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -22600,7 +22651,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 70</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 72</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -23237,10 +23288,32 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #f59e0b;">
+              <details class="cl-item" open style="--cl-accent: #16a34a;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">⚡ Novità V10.26 | 72 | Ott 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>⚡ Tool più leggero</strong>: alcuni controlli grafici periodici (angoli squadrati, icone nei campi, intestazioni ferme delle tabelle) ripassavano tutta la pagina ogni pochi decimi di secondo anche quando non cambiava nulla; con 150 percorsi a video erano decine di migliaia di elementi e rallentavano le ricerche e lo scorrimento. Ora ripassano solo quando la pagina cambia</li>
+    <li><strong>🔎 Ricerca dei percorsi più veloce</strong> nell’Unificato: meno lavoro ripetuto per scartare i percorsi doppi e per ogni collegamento esaminato; i risultati sono gli stessi</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #be185d;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📏 Novità V10.26 | 71 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📏 Distanze a due decimali</strong>: nei tab RA, RC e Unificato la colonna Distanza (km) mostra con due decimali anche la ripartizione per rete (per esempio RC 11,52 km); due decimali anche nel titolo del dettaglio, nel podio, nella tabella dei collegamenti RTN e nel confronto percorsi</li>
+    <li><strong>🩷 Stato IN CESSAZIONE visibile</strong>: nella colonna ID Collegamenti dei tab RA e Unificato l’etichetta [IN CESSAZIONE] non compariva; ora si vede, in rosa come nel tab Database. Rosa anche per gli ID RC e nella colonna Stato del dettaglio</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #f59e0b;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🚧 Novità V10.26 | 70 | Ott 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -40446,7 +40519,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 70 | Ott 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 72 | Ott 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -40464,7 +40537,32 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #f59e0b;border-radius:12px;overflow:hidden;background:#fffbeb;">
+        <details open style="border:1px solid #16a34a;border-radius:12px;overflow:hidden;background:#f0fdf4;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#047857;display:flex;align-items:center;gap:0.5rem;background:#d1fae5;">
+            ⚡ V10.26 | 72 | Ott 2026 | Tool più leggero
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>⚡ window.croDom</strong>: contatore delle modifiche della pagina (MutationObserver su aggiunte e rimozioni di elementi, esclusi orologio e messaggi, più clic, digitazione, apertura di voci e resize). <code>croDom.cambiato(chi)</code> dice se la pagina è cambiata dall’ultima richiesta di quel controllo</li>
+              <li><strong>🔁 Controlli periodici</strong>: angoli squadrati (ogni 1,2 s, ora segna anche gli elementi senza raggio per non riguardarli), icone nei campi di ricerca (1,2 s), intestazioni ferme e riparo delle tabelle (0,4 s e 0,7 s): girano solo se la pagina è cambiata; lo scorrimento resta gestito dagli eventi</li>
+              <li><strong>🔎 Ricerca</strong>: in <code>shortestPathWithAvoid</code> la chiave del collegamento bloccato si costruisce solo se ci sono collegamenti bloccati; in <code>yenKShortestUNIFIED</code> i percorsi già visti stanno in un insieme (<code>visti</code>) invece di essere ricostruiti e confrontati uno per uno. I risultati non cambiano</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #be185d;border-radius:12px;overflow:hidden;background:#fdf2f8;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#9d174d;display:flex;align-items:center;gap:0.5rem;background:#fce7f3;">
+            📏 V10.26 | 71 | Ott 2026 | Distanze a due decimali, stato IN CESSAZIONE visibile
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📏 toFixed(2)</strong>: ripartizione per rete della colonna Distanza, titolo del dettaglio RC e RA, podio, dettaglio RTN dell’Unificato, opzioni del confronto percorsi</li>
+              <li><strong>🩷 IN CESSAZIONE</strong>: <code>formatIdsWithColorsRA</code> e la sua copia dell’Unificato mostravano l’etichetta solo per ATTIVO, NON ATTIVO, DA VERIFICARE e gli stati con «Previsto»; ora mostrano qualsiasi stato. Classe <code>.route-id-incessazione</code> (#be185d) per gli ID RC e la colonna Stato dei dettagli; colore anche nella mappa degli ID RC dell’Unificato</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #f59e0b;border-radius:12px;overflow:hidden;background:#fffbeb;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
             🚧 V10.26 | 70 | Ott 2026 | Analisi Fattibilità in lavorazione
           </summary>
@@ -48427,6 +48525,8 @@ let dbState = null;
         cls += ' route-id-invariazione';
       } else if (stato === 'IN REINSTRADAMENTO') {
         cls += ' route-id-inreinstradamento';
+      } else if (stato === 'IN CESSAZIONE') {
+        cls += ' route-id-incessazione';
       } else if (stato === 'MISTO') {
         cls += ' route-id-misto';
       } else if (stato === 'SATURO') {
@@ -48462,7 +48562,7 @@ function renderRouteDetail(route) {
     const edges = route.edges || [];
     const nodes = route.nodes || [];
     const hops = route.hops || edges.filter(e => e.source !== 'XFER' && e.source !== 'RTN').length;
-    const km = (route.distanceKm || 0).toFixed(1).replace('.', ',');
+    const km = (route.distanceKm || 0).toFixed(2).replace('.', ',');
     // Mappa stato → classe CSS identica a renderRouteIds
     const statoClass = (s) => {
       const u = (s||'').toUpperCase().trim();
@@ -48471,6 +48571,7 @@ function renderRouteDetail(route) {
       if (u === 'IN ATTIVAZIONE')     return 'route-id-inattivazione';
       if (u === 'IN VARIAZIONE')      return 'route-id-invariazione';
       if (u === 'IN REINSTRADAMENTO') return 'route-id-inreinstradamento';
+      if (u === 'IN CESSAZIONE')      return 'route-id-incessazione';
       if (u === 'MISTO')              return 'route-id-misto';
       if (u === 'SATURO')             return 'route-id-saturo';
       if (window.croStatoAttivo(u))   return 'route-id-attivo';
@@ -48769,7 +48870,7 @@ function renderBaseTable() {
 
     var html = order.map(function(s, rank) {
       var route = baseRoutes[s.idx]; var idx = s.idx; var idx1 = idx+1;
-      var km = route.distanceKm.toFixed(1).replace('.',',');
+      var km = route.distanceKm.toFixed(2).replace('.',',');
       var c = cols[rank]; var bg = bgs[rank]; var m = medals[rank];
       var badge = '<span style="display:inline-flex;align-items:center;gap:3px;background:'+bg+';border:1.5px solid '+c+';border-radius:5px;padding:1px 6px;font-size:0.68rem;font-weight:700;color:'+c+';">'+m+' #'+idx1+'</span>';
       var pathBtn = '<div style="display:flex;justify-content:flex-end;margin-bottom:2px;"><button type="button" class="btn btn-chip" style="padding:2px 6px;font-size:0.7rem;" onclick="window.copyRouteFormattedRC('+idx+')" title="Copia Percorso Formattato">📋</button></div>';
@@ -54591,6 +54692,9 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
       } else if (stato === 'ATTIVO' || stato === 'NON ATTIVO') {
         // Stati senza previsto
         statusBadge = '<span style="color: var(--gray-700); font-size:0.85em; font-weight:600;">[' + stato + ']</span>';
+      } else if (stato) {
+        /* V10.26|71: ogni altro stato (IN CESSAZIONE e quelli nuovi dei DB) resta visibile */
+        statusBadge = '<span style="color: ' + (stato.indexOf('CESSAZ') >= 0 ? '#be185d' : 'var(--gray-700)') + '; font-size:0.85em; font-weight:600;">[' + stato + ']</span>';
       }
 
       if (color === 'green') {
@@ -54663,7 +54767,7 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
   function renderRouteDetailRA(route) {
     var edges = route.edges || [];
     var nodes = route.nodes || [];
-    var km = (route.distanceKm || 0).toFixed(1).replace('.', ',');
+    var km = (route.distanceKm || 0).toFixed(2).replace('.', ',');
     var statoClass = function (s) {
       var u = (s || '').toUpperCase().trim();
       if (u === 'ATTIVO')             return 'route-id-attivo';
@@ -54671,6 +54775,7 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
       if (u === 'IN ATTIVAZIONE')     return 'route-id-inattivazione';
       if (u === 'IN VARIAZIONE')      return 'route-id-invariazione';
       if (u === 'IN REINSTRADAMENTO') return 'route-id-inreinstradamento';
+      if (u === 'IN CESSAZIONE')      return 'route-id-incessazione';
       if (u === 'MISTO')              return 'route-id-misto';
       if (u === 'SATURO')             return 'route-id-saturo';
       if (window.croStatoAttivo(u))   return 'route-id-attivo';
@@ -68918,6 +69023,9 @@ div[style*="background:#f3f4f6"] label:hover span {
           (previsto ? ' • Previsto ' + escapeHtml(previsto) : '') + ']</span>';
       } else if (stato === 'ATTIVO' || stato === 'NON ATTIVO') {
         statusBadge = '<span style="color: var(--gray-700); font-size:0.85em; font-weight:600;">[' + escapeHtml(stato) + ']</span>';
+      } else if (stato) {
+        /* V10.26|71: ogni altro stato (IN CESSAZIONE e quelli nuovi dei DB) resta visibile */
+        statusBadge = '<span style="color: ' + (stato.indexOf('CESSAZ') >= 0 ? '#be185d' : 'var(--gray-700)') + '; font-size:0.85em; font-weight:600;">[' + escapeHtml(stato) + ']</span>';
       }
 
       // Alert dedicato AGGIUNTIVO (non sostituisce lo stato): il campo Note di
@@ -68968,7 +69076,8 @@ div[style*="background:#f3f4f6"] label:hover span {
         'NON ATTIVO': '#991b1b',
         'IN ATTIVAZIONE': '#f59e0b',
         'IN VARIAZIONE': '#1e40af',
-        'IN REINSTRADAMENTO': '#8b5cf6'
+        'IN REINSTRADAMENTO': '#8b5cf6',
+        'IN CESSAZIONE': '#be185d'
       };
       
       // Gestione colore per DA VERIFICARE SU NNI
@@ -69173,7 +69282,7 @@ div[style*="background:#f3f4f6"] label:hover span {
       }
       var l = (info.multiRA&&s.src==='RA') ? s.src+s.n : (info.multiRC&&s.src==='RC') ? s.src+s.n : s.src;
       var col = srcColor[s.src] || '#6b7280';
-      return '<span style="color:'+col+';font-weight:600;">'+l+'</span> '+s.dist.toFixed(1).replace('.',',')+'&nbsp;km';
+      return '<span style="color:'+col+';font-weight:600;">'+l+'</span> '+s.dist.toFixed(2).replace('.',',')+'&nbsp;km';
     }).join('<br>');
   }
 
@@ -71681,6 +71790,9 @@ div[style*="background:#f3f4f6"] label:hover span {
     
     results.push(first);
     const candidates = [];
+    /* V10.26|72: chiavi dei percorsi gia' visti in un insieme, invece di
+       ricostruirle confrontando ogni candidato con tutti i risultati */
+    const visti = new Set([(first.nodes || []).join('->')]);
     
     for (let k = 1; k < K; k++) {
       const prevPath = results[k - 1];
@@ -71715,9 +71827,10 @@ div[style*="background:#f3f4f6"] label:hover span {
           
           // Verifica duplicati
           const pathKey = totalNodes.join('->');
-          const isDup = candidates.some(c => c.key === pathKey) || results.some(r => (r.nodes || []).join('->') === pathKey);
+          const isDup = visti.has(pathKey);
           
           if (!isDup) {
+            visti.add(pathKey);
             candidates.push({
               nodes: totalNodes,
               edges: totalEdges,
@@ -71963,7 +72076,7 @@ div[style*="background:#f3f4f6"] label:hover span {
       const edges = graph[cur.n] || [];
       for (const e of edges) {
         if (avoid.has(e.to)) continue;
-        if (blocked.has(cur.n + '|' + e.to)) continue;
+        if (blocked.size && blocked.has(cur.n + '|' + e.to)) continue;   /* V10.26|72: la stringa solo se serve */
         
         const nd = cur.d + (Number(e.weight) || 0);
         const nh = cur.h + 1;
@@ -73631,7 +73744,7 @@ div[style*="background:#f3f4f6"] label:hover span {
             var fromDisp = dispNode(fromRaw);
             var toDisp   = dispNode(toRaw);
             var eRtn = (e.source === 'RTN');
-            var dist = eRtn ? '—' : (e.weight!=null ? e.weight.toFixed(1).replace('.',',')+' km' : '—');
+            var dist = eRtn ? '—' : (e.weight!=null ? e.weight.toFixed(2).replace('.',',')+' km' : '—');
             var eId  = eRtn
               ? '<span style="color:#0891b2;font-weight:700;">\uD83C\uDF10 RTN · Rete di Trasporto Nazionale</span>'
               : (e.id || e.arco || '—');
@@ -73672,6 +73785,7 @@ div[style*="background:#f3f4f6"] label:hover span {
       if (u === 'IN ATTIVAZIONE')     return 'route-id-inattivazione';
       if (u === 'IN VARIAZIONE')      return 'route-id-invariazione';
       if (u === 'IN REINSTRADAMENTO') return 'route-id-inreinstradamento';
+      if (u === 'IN CESSAZIONE')      return 'route-id-incessazione';
       if (u === 'MISTO')              return 'route-id-misto';
       if (u === 'SATURO')             return 'route-id-saturo';
       if (window.croStatoAttivo(u))   return 'route-id-attivo';
@@ -76010,9 +76124,9 @@ div[style*="background:#f3f4f6"] label:hover span {
       // Calcola distanza: prova distanceKm, totalKm, oppure somma degli edges
       let dist = '?';
       if (r.distanceKm != null && r.distanceKm > 0) {
-        dist = r.distanceKm.toFixed(1);
+        dist = r.distanceKm.toFixed(2).replace('.', ',');
       } else if (r.totalKm != null && r.totalKm > 0) {
-        dist = r.totalKm.toFixed(1);
+        dist = r.totalKm.toFixed(2).replace('.', ',');
       } else if (r.edges && r.edges.length > 0) {
         // Calcola dalla somma dei weight degli edges (escluso XFER)
         const totalDist = r.edges.reduce((sum, e) => {
@@ -76020,14 +76134,14 @@ div[style*="background:#f3f4f6"] label:hover span {
           const w = Number(e.weight) || Number(e.distanza) || Number(e.Distanza_km) || Number(e.km) || 0;
           return sum + w;
         }, 0);
-        if (totalDist > 0) dist = totalDist.toFixed(1);
+        if (totalDist > 0) dist = totalDist.toFixed(2).replace('.', ',');
       }
       // Se ancora '?', prova a calcolare dai links
       if (dist === '?' && r.links && r.links.length > 0) {
         const totalDist = r.links.reduce((sum, l) => {
           return sum + (Number(l.Distanza_km) || Number(l.weight) || Number(l.km) || 0);
         }, 0);
-        if (totalDist > 0) dist = totalDist.toFixed(1);
+        if (totalDist > 0) dist = totalDist.toFixed(2).replace('.', ',');
       }
       const hops = r.hops || (r.edges ? r.edges.filter(e => (e.source || '').toUpperCase() !== 'XFER').length : (r.nodes ? r.nodes.length - 1 : '?'));
       const path = r.nodes ? r.nodes.slice(0, 2).join(' → ') + '...' : 'Percorso ' + (i + 1);
@@ -85420,10 +85534,10 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
     radice.querySelectorAll('*').forEach(function (e) {
       if (e.dataset.croSq) return;
       var r = getComputedStyle(e).borderRadius;
-      if (!r) return;
+      if (!r) { e.dataset.croSq = '0'; return; }   /* V10.26|72: senza raggio non si riguarda */
       var pct = r.indexOf('%') >= 0;
       var v = parseFloat(r);
-      if (!pct && !(v >= 14)) return;
+      if (!pct && !(v >= 14)) { e.dataset.croSq = '0'; return; }
       var b = e.getBoundingClientRect();
       if (b.width < 3 || b.height < 3) return;
       /* cerchio vero: largo quanto alto */
@@ -85434,6 +85548,7 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
   }
 
   function giro() {
+    if (window.croDom && !window.croDom.cambiato('quadra')) return;   /* V10.26|72 */
     document.querySelectorAll('.tab-content').forEach(function (t) {
       if (t.classList.contains('hidden')) return;
       quadra(t);
@@ -87464,7 +87579,7 @@ body.dark-mode .cro-ico-wrap.cro-pieno > .cro-ico { border-right-color: var(--cr
 
   function accendi() {
     passata();
-    setInterval(passata, 1200);
+    setInterval(function () { if (!window.croDom || window.croDom.cambiato('icone')) passata(); }, 1200);   /* V10.26|72 */
     window.addEventListener('resize', passata);
   }
 
@@ -88249,8 +88364,8 @@ body.intro-complete { overflow: visible !important; }
     document.addEventListener('scroll', fermi, true);
     /* e una rete di sicurezza per i casi in cui non scatta nessun evento,
        per esempio quando la tabella viene ridisegnata sotto il cursore */
-    setInterval(fermi, 400);
-    setInterval(function () { sposta(); copriture(); aggiorna(); }, 700);
+    setInterval(function () { if (!window.croDom || window.croDom.cambiato('fermi')) fermi(); }, 400);   /* V10.26|72: lo scorrimento resta gestito dagli eventi */
+    setInterval(function () { if (!window.croDom || window.croDom.cambiato('sposta')) { sposta(); copriture(); aggiorna(); } }, 700);
     window.addEventListener('resize', aggiorna);
     if (window.ResizeObserver) {
       COPPIE.forEach(function (c) {
@@ -90773,7 +90888,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V10.26 | 70';
+  var REVISIONE = 'V10.26 | 72';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
