@@ -4,13 +4,20 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 10.26 | 69  (rev. pubblicata: V10.26 | 69 | Ott 2026)                ║
+║   Versione: 10.26 | 70  (rev. pubblicata: V10.26 | 70 | Ott 2026)                ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V10.26 | 70 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • ANALISI FATTIBILITA' IN LAVORAZIONE: etichetta In lavorazione nel titolo del ║
+║     tab, voce del menu Analisi Extra con 🚧 e riquadro a righe gialle in testa   ║
+║     al tab, come in Analisi per Soluzioni Protette: regole, testi e funzioni     ║
+║     sono in aggiornamento continuo e vanno segnalati gli errori                  ║
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 69 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
@@ -22310,7 +22317,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V10.26 | 69 | Ott 2026</div>
+<div class="version-tag">V10.26 | 70 | Ott 2026</div>
       </div>
     </div>
   </header>
@@ -22335,7 +22342,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
           Analisi Extra <span class="nav-dropdown-arrow">▼</span>
         </button>
         <div class="nav-dropdown-menu">
-          <button class="nav-dropdown-item" onclick="switchTab('analisi-fattibilita')">Analisi Fattibilità</button>
+          <button class="nav-dropdown-item" onclick="switchTab('analisi-fattibilita')" title="Sezione in lavorazione">Analisi Fattibilità 🚧</button>
           <button class="nav-dropdown-item" onclick="switchTab('soluzioni-protette')" title="Sezione in lavorazione">Analisi per Soluzioni Protette 🚧</button>
           <button class="nav-dropdown-item" onclick="switchTab('compositore')" title="Funzione sperimentale">Compositore di Fattibilità 🚧</button>
           <button class="nav-dropdown-item" onclick="switchTab('verifica-pxm')">Analisi e Verifica PXM</button>
@@ -22556,7 +22563,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 69</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 70</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati. Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -22573,7 +22580,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 69</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 70</span>
                     </div>
                     <p class="feature-desc">Dal bottone <strong>💬</strong> in basso a sinistra (trasparente, si apre al passaggio del mouse), una chat locale che cerca nei dati e nei testi del tool. Scrivi un <strong>CLLI</strong> e mostra nome, zona, data center, mappa e tutti i collegamenti RC e RA; un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -22593,7 +22600,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 69</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 70</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -23232,8 +23239,18 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #f59e0b;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">📥 Novità V10.26 | 69 | Ott 2026</span>
+                  <span class="cl-ver">🚧 Novità V10.26 | 70 | Ott 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🚧 Analisi Fattibilità in lavorazione</strong>: etichetta «In lavorazione» nel titolo del tab, 🚧 nella voce del menu Analisi Extra e riquadro a righe gialle in testa al tab, come in Analisi per Soluzioni Protette. Regole, testi e funzioni sono in aggiornamento continuo: segnalate le informazioni errate</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #f59e0b;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📥 Novità V10.26 | 69 | Ott 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -29172,9 +29189,14 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <div class="db-card af-intro-card">
       <div class="db-header">
         <div>
-          <h2 class="section-title" style="margin:0 0 0.2rem 0;">📋 Analisi Fattibilità</h2>
+          <h2 class="section-title" style="margin:0 0 0.2rem 0;">📋 Analisi Fattibilità <span class="af-wip-tag" title="Sezione in lavorazione">🚧 In lavorazione</span></h2>
           <p class="db-subtitle" style="margin:0;">Dalle note che arrivano da cliente e ingegneria alla nota tecnica per IRP, agli allegati KMZ e alle deleghe operative.</p>
         </div>
+      </div>
+      <!-- V10.26|70: avviso di sezione in lavorazione, come in Analisi per Soluzioni Protette -->
+      <div class="af-wip" role="note">
+        <span class="ico">🚧</span>
+        <div><strong>Sezione in lavorazione.</strong> Regole, testi e funzioni di questo tab sono in <strong>aggiornamento continuo</strong> e alcune informazioni potrebbero non essere corrette o complete. Se trovate un’informazione errata, segnalatela: sto correggendo, ottimizzando e arricchendo questa sezione.</div>
       </div>
     </div>
   </section>
@@ -40424,7 +40446,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 69 | Ott 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 70 | Ott 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -40443,6 +40465,17 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #f59e0b;border-radius:12px;overflow:hidden;background:#fffbeb;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
+            🚧 V10.26 | 70 | Ott 2026 | Analisi Fattibilità in lavorazione
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🚧 Avviso</strong>: <code>.af-wip-tag</code> nel titolo, <code>.af-wip</code> sotto l’intestazione del tab (stile <code>#croAfWipStile</code>, anche in modalità scura), voce di menu «Analisi Fattibilità 🚧»</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #f59e0b;border-radius:12px;overflow:hidden;background:#fffbeb;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
             📥 V10.26 | 69 | Ott 2026 | Compositore: tutti i percorsi da importare
           </summary>
@@ -88406,6 +88439,14 @@ body.dark-mode .cro-earth-box { background: #1e293b; color: #e2e8f0; }
   padding: 2px 9px; cursor: pointer; font-weight: 700; }
 </style>
 
+<style id="croAfWipStile">
+/* V10.26 | 70 · Analisi Fattibilità in lavorazione */
+#tab-analisi-fattibilita .af-wip-tag { display: inline-block; vertical-align: middle; margin-left: .5rem; font-size: .72rem; font-weight: 700; color: #92400e; background: #fef3c7; border: 1px solid #fcd34d; border-radius: 999px; padding: 2px 10px; }
+#tab-analisi-fattibilita .af-wip { display: flex; gap: .7rem; align-items: flex-start; margin: .3rem 0 0; padding: .65rem .9rem; border-radius: 10px; background: repeating-linear-gradient(135deg, #fffbeb 0 14px, #fef3c7 14px 28px); border: 1px solid #fcd34d; border-left: 5px solid #f59e0b; color: #78350f; font-size: .82rem; line-height: 1.55; }
+#tab-analisi-fattibilita .af-wip .ico { font-size: 1.4rem; line-height: 1; }
+body.dark-mode #tab-analisi-fattibilita .af-wip { background: repeating-linear-gradient(135deg, #3b2f12 0 14px, #45370f 14px 28px); color: #fde68a; border-color: #a16207; }
+</style>
+
 <style id="croCompositoreStile">
 /* V10.26 | 64 · Compositore di fattibilità */
 #tab-compositore .cmp-wip-tag { display: inline-block; vertical-align: middle; margin-left: .5rem; font-size: .72rem; font-weight: 700; color: #92400e; background: #fef3c7; border: 1px solid #fcd34d; border-radius: 999px; padding: 2px 10px; }
@@ -90732,7 +90773,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V10.26 | 69';
+  var REVISIONE = 'V10.26 | 70';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
