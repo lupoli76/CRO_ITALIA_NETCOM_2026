@@ -4,13 +4,56 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 10.26 | 72  (rev. pubblicata: V10.26 | 72 | Ott 2026)                ║
+║   Versione: 10.26 | 78  (rev. pubblicata: V10.26 | 78 | Ott 2026)                ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V10.26 | 78 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • TAB RC: il bottone Solo C-FOS OK sta nell'intestazione della tabella subito  ║
+║     dopo Percorso Centrali, come nell'Unificato, e non piu' nella riga sopra la  ║
+║     tabella. Stesso testo, stesso stato, stesso funzionamento; compare quando ci ║
+║     sono Div da filtrare                                                         ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 77 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • TAB RC E UNIFICATO: scorrendo, per un attimo si vedeva la tabella in una     ║
+║     fascia di 14 px tra la barra dei tab e l'intestazione ferma della tabella,   ║
+║     coperta solo dopo dallo script. Ora l'intestazione si ferma attaccata alla   ║
+║     barra dei tab, senza fascia; con la barra di export accesa resta sotto di    ║
+║     lei come prima                                                               ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 76 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • TAB UNIFICATO: il bottone Solo C-FOS OK sta sempre nell'intestazione della   ║
+║     tabella, accanto a Percorso Centrali, e non piu' nella riga sopra la         ║
+║     tabella, dove allargava lo spazio tra i bottoni di export e la tabella.      ║
+║     Compare quando ci sono i Div da filtrare, come prima                         ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 75 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • TAB UNIFICATO: la copia del bottone Solo C-FOS OK nell'intestazione della    ║
+║     tabella sta subito dopo Percorso Centrali, nella stessa riga del titolo,     ║
+║     invece che a destra nella colonna ID Collegamenti                            ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 74 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • TAB UNIFICATO, FILTRO C-FOS A PORTATA DI MANO: tolta la riga ferma della 73. ║
+║     Quando la riga sopra la tabella esce dallo schermo, il bottone Solo C-FOS OK ║
+║     compare piccolo nell'intestazione della tabella, nella colonna ID            ║
+║     Collegamenti, con lo stesso testo e lo stesso stato; un clic accende o       ║
+║     spegne il filtro come il bottone originale                                   ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 73 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • TAB UNIFICATO, BARRA SEMPRE VISIBILE: la riga sopra la tabella dei percorsi  ║
+║     (numero di percorsi trovati, Solo C-FOS OK, Cambia A1, Verifica Div, Pulisci ║
+║     Tabella) resta ferma in alto insieme all'intestazione della tabella mentre   ║
+║     si scorre: il filtro si usa anche dal percorso 90 senza tornare su           ║
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 72 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
@@ -4734,6 +4777,51 @@ window.croDom = (function () {
     cambiato: function (chi) { if (v < 0) return true; var o = ult[chi]; ult[chi] = v; return o !== v; },
     tocca: tocca
   };
+})();
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   V10.26|74-78 · FILTRO C-FOS NELL'INTESTAZIONE, tab Unificato e RC. Il bottone
+   «Solo C-FOS OK» creato dal tool nella riga sopra la tabella resta nascosto
+   (conta i Div e tiene lo stato); una sua copia sta nell'intestazione ferma
+   della tabella, subito dopo «Percorso Centrali», con lo stesso testo e lo
+   stesso stato. Il clic sulla copia preme l'originale.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function () {
+  var COPPIE = [
+    { tab: 'tab-search-unified', orig: 'croFiltroCfos_U', copia: 'croFiltroCfosCopia' },
+    { tab: 'tab-search', orig: 'croFiltroCfos_RC', copia: 'croFiltroCfosCopiaRC' }
+  ];
+  function th(tabId) {
+    var t = document.querySelector('#' + tabId + ' table.route-table-v2'); if (!t || !t.tHead) return null;
+    var c = t.tHead.rows[0] ? t.tHead.rows[0].cells : [];
+    for (var i = 0; i < c.length; i++) if (/Percorso Centrali/.test(c[i].textContent)) return c[i];
+    return null;
+  }
+  function una(cp) {
+    var orig = document.getElementById(cp.orig), cella = th(cp.tab);
+    if (!cella) return;
+    var copia = document.getElementById(cp.copia);
+    if (!copia || !cella.contains(copia)) {
+      if (copia) copia.remove();
+      copia = document.createElement('button'); copia.type = 'button'; copia.id = cp.copia;
+      copia.addEventListener('click', function (e) { e.stopPropagation(); var o = document.getElementById(cp.orig); if (o) o.click(); setTimeout(aggiorna, 50); });
+      cella.appendChild(copia);
+    }
+    var mostra = !!(orig && orig.isConnected && !orig.hidden && orig.style.display !== 'none');
+    if (mostra) {
+      if (copia.textContent !== orig.textContent) copia.textContent = orig.textContent;
+      var cls = orig.className + ' cro-cfos-copia';
+      if (copia.className !== cls) copia.className = cls;
+      copia.title = orig.title || '';
+    }
+    copia.style.display = mostra ? '' : 'none';
+  }
+  function aggiorna() { COPPIE.forEach(function (cp) { try { una(cp); } catch (e) {} }); }
+  var st = document.createElement('style'); st.id = 'croFiltroCfosCopiaStile';
+  st.textContent = '#croFiltroCfos_U,#croFiltroCfos_RC{display:none !important}'
+    + '.cro-cfos-copia{display:inline-block;vertical-align:middle;margin:-3px 0 -3px .8rem;padding:2px 8px !important;font-size:.72rem !important;line-height:1.3;font-weight:600}';
+  document.head.appendChild(st);
+  setInterval(function () { if (!window.croDom || window.croDom.cambiato('cfosCopia')) aggiorna(); }, 600);
 })();
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -22368,7 +22456,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V10.26 | 72 | Ott 2026</div>
+<div class="version-tag">V10.26 | 78 | Ott 2026</div>
       </div>
     </div>
   </header>
@@ -22614,7 +22702,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 72</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 78</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati. Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -22631,7 +22719,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 72</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 78</span>
                     </div>
                     <p class="feature-desc">Dal bottone <strong>💬</strong> in basso a sinistra (trasparente, si apre al passaggio del mouse), una chat locale che cerca nei dati e nei testi del tool. Scrivi un <strong>CLLI</strong> e mostra nome, zona, data center, mappa e tutti i collegamenti RC e RA; un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -22651,7 +22739,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 72</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 78</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -23288,10 +23376,70 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #16a34a;">
+              <details class="cl-item" open style="--cl-accent: #dc2626;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧵 Novità V10.26 | 78 | Ott 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧵 Filtro C-FOS anche nel tab RC</strong>: il bottone «Solo C-FOS OK» sta nell’intestazione della tabella subito dopo «Percorso Centrali», come nell’Unificato, e non più nella riga sopra la tabella. Stesso testo, stesso stato e stesso funzionamento; compare quando ci sono Div da filtrare</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📌 Novità V10.26 | 77 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📌 Intestazione delle tabelle attaccata alla barra dei tab</strong>: nei tab RC e Unificato, scorrendo, per un attimo si vedeva la tabella in una fascia sottile tra la barra dei tab e l’intestazione ferma. Ora l’intestazione si ferma attaccata alla barra dei tab, senza fascia; con la barra di export accesa resta sotto di lei come prima</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧵 Novità V10.26 | 76 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧵 Filtro C-FOS sempre accanto a Percorso Centrali</strong>: nel tab Unificato il bottone «Solo C-FOS OK» sta sempre nell’intestazione della tabella, subito dopo «Percorso Centrali», e non più nella riga sopra la tabella, dove allargava lo spazio tra i bottoni di export e la tabella. Compare quando ci sono Div da filtrare, come prima</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧵 Novità V10.26 | 75 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧵 Filtro C-FOS accanto a Percorso Centrali</strong>: nell’intestazione della tabella dell’Unificato la copia del bottone «Solo C-FOS OK» sta subito dopo il titolo «Percorso Centrali», invece che a destra nella colonna ID Collegamenti</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧵 Novità V10.26 | 74 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧵 Unificato, filtro C-FOS a portata di mano</strong>: tolta la riga ferma della 73. Quando scorri la tabella e la riga sopra esce dallo schermo, il bottone «Solo C-FOS OK» compare piccolo nell’intestazione della tabella, nella colonna ID Collegamenti, con lo stesso testo e lo stesso stato; un clic accende o spegne il filtro come il bottone originale</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📌 Novità V10.26 | 73 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📌 Unificato, barra sempre visibile</strong>: la riga sopra la tabella dei percorsi (percorsi trovati, Solo C-FOS OK, Cambia A1, Verifica Div, Pulisci Tabella) resta ferma in alto con l’intestazione della tabella mentre scorri: per esempio, dal percorso 90 si attiva il filtro senza tornare su</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #16a34a;">
                 <summary class="cl-sum">
                   <span class="cl-ver">⚡ Novità V10.26 | 72 | Ott 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -40519,7 +40667,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 72 | Ott 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 78 | Ott 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -40537,7 +40685,73 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #16a34a;border-radius:12px;overflow:hidden;background:#f0fdf4;">
+        <details open style="border:1px solid #dc2626;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#b91c1c;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🧵 V10.26 | 78 | Ott 2026 | Filtro C-FOS nell’intestazione anche nel tab RC
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧵 Coppie originale / copia</strong>: Unificato <code>#croFiltroCfos_U</code> → <code>#croFiltroCfosCopia</code>; RC <code>#croFiltroCfos_RC</code> → <code>#croFiltroCfosCopiaRC</code>. Originali nascosti, copie nella cella «Percorso Centrali» con la classe <code>.cro-cfos-copia</code></li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            📌 V10.26 | 77 | Ott 2026 | Intestazione attaccata alla barra dei tab
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📌 --cro-top-testata</strong>: senza barra di export vale il fondo della barra dei tab misurato a video (prima 156 px fissi, 14 px più in basso); la fascia di 14 px veniva coperta dal riparo solo dopo l’evento di scorrimento, quindi per un fotogramma si vedevano le righe. Con la barra di export accesa resta 156 px + altezza della barra</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            🧵 V10.26 | 76 | Ott 2026 | Filtro C-FOS sempre accanto a Percorso Centrali
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧵 Originale nascosto</strong>: <code>#croFiltroCfos_U</code> resta nel suo posto ma nascosto (continua a contare i Div e a tenere lo stato); <code>#croFiltroCfosCopia</code> nell’intestazione è sempre visibile quando l’originale esiste, e il clic preme l’originale</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            🧵 V10.26 | 75 | Ott 2026 | Filtro C-FOS accanto a Percorso Centrali
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧵 #croFiltroCfosCopia</strong>: ora nella cella «Percorso Centrali», in linea subito dopo il titolo (<code>display: inline-block</code>, niente più <code>float: right</code>)</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            🧵 V10.26 | 74 | Ott 2026 | Unificato: filtro C-FOS nell’intestazione della tabella
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧵 #croFiltroCfosCopia</strong>: copia del bottone <code>#croFiltroCfos_U</code> nella cella «ID Collegamenti» dell’intestazione ferma; visibile solo quando l’originale è passato sopra l’intestazione; testo, classi e stato copiati dall’originale; il clic preme l’originale. Tolto <code>.cro-barra-ferma</code> della 73</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            📌 V10.26 | 73 | Ott 2026 | Unificato: barra sopra la tabella sempre visibile
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📌 .cro-barra-ferma</strong>: il contenitore della riga <code>.db-table-info</code> che sta accanto alla tabella diventa <code>position: sticky</code> sotto la barra dei tab (misurata a video); le celle dell’intestazione si fermano subito sotto (<code>top</code> = barra dei tab + altezza della riga). Si ricalcola al resize e quando la pagina cambia</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #16a34a;border-radius:12px;overflow:hidden;background:#f0fdf4;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#047857;display:flex;align-items:center;gap:0.5rem;background:#d1fae5;">
             ⚡ V10.26 | 72 | Ott 2026 | Tool più leggero
           </summary>
@@ -88274,7 +88488,12 @@ body.intro-complete { overflow: visible !important; }
       var h = (barra && barra.classList.contains('active'))
         ? Math.round(barra.getBoundingClientRect().height)
         : 0;
-      var quota = (CIMA + h) + 'px';
+      /* V10.26|77: senza barra di export l'intestazione si ferma attaccata alla
+         barra dei tab, cosi' tra le due non resta una fascia in cui per un
+         attimo si vede scorrere la tabella */
+      var nav = document.querySelector('.nav-bar'), nb = nav ? Math.round(nav.getBoundingClientRect().bottom) : CIMA;
+      if (!(nb > 40 && nb <= CIMA)) nb = CIMA;
+      var quota = (h > 0 ? CIMA + h : nb) + 'px';
       if (tab.style.getPropertyValue('--cro-top-testata') !== quota) {
         tab.style.setProperty('--cro-top-testata', quota);
       }
@@ -90888,7 +91107,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V10.26 | 72';
+  var REVISIONE = 'V10.26 | 78';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
