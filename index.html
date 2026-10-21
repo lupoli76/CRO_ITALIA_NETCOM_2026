@@ -4,13 +4,33 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 10.26 | 66  (rev. pubblicata: V10.26 | 66 | Ott 2026)                ║
+║   Versione: 10.26 | 69  (rev. pubblicata: V10.26 | 69 | Ott 2026)                ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V10.26 | 69 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • COMPOSITORE, IMPORTA STD E DIV: la finestra mostra tutti i percorsi          ║
+║     dell'Unificato (prima solo i primi 50), con lo stesso numero dell'Unificato  ║
+║     e un filtro per numero, subpath o km                                         ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 68 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • COMPOSITORE: i due schemi sono bottoni separati, con icona, nome e numero di ║
+║     blocchi (Stessa regione 7 senza RTN, Interregionale 11 con RTN); il          ║
+║     diversificato su Rete RTR diventa una scelta a due bottoni, Solo Std oppure  ║
+║     Std + Div, al posto dell'interruttore                                        ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 67 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • COMPOSITORE: barra dei comandi rifatta in gruppi (Schema, Capacita', Rete    ║
+║     RTR, azioni), con bottoni a segmenti e l'interruttore Std + Div / Solo Std;  ║
+║     capacita' anche 100G. Le regole passano nel cassetto Note e regole, come nei ║
+║     tab RA, RC e Unificato, con 11 voci                                          ║
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 66 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
@@ -4394,13 +4414,25 @@ window.croCmp = (function () {
 
   /* ── catena ── */
   function nuovo(tipo) { return { id: ++seq, tipo: tipo, f: {} }; }
+  function capacita(c) {
+    el('cmpCap').value = c;
+    Array.prototype.forEach.call(document.querySelectorAll('#cmpSegCap button'), function (x) { x.classList.toggle('on', x.getAttribute('data-v') === c); });
+    disegnaRisultati();
+  }
+  function diversificato(si) {
+    el('cmpDiv').checked = !!si;
+    Array.prototype.forEach.call(document.querySelectorAll('#cmpSegDiv button'), function (x) { x.classList.toggle('on', x.getAttribute('data-v') === (si ? '1' : '0')); });
+    ridisegna();
+  }
+  function segna(sch) { Array.prototype.forEach.call(document.querySelectorAll('#cmpSegSchema button'), function (x) { x.classList.toggle('on', x.getAttribute('data-v') === sch); }); }
   function schema(s) {
+    segna(s);
     catena = (s === 'rtn' ? ['sedeA', 'codaA', 'centraleA', 'rtrA', 'nodoA', 'rtn', 'nodoZ', 'rtrZ', 'centraleZ', 'codaZ', 'sedeZ'] : ['sedeA', 'codaA', 'centraleA', 'rtr', 'centraleZ', 'codaZ', 'sedeZ']).map(nuovo);
     ridisegna();
   }
   function aggiungi(tipo) { catena.push(nuovo(tipo)); catena.sort(function (a, b) { return ORDINE.indexOf(a.tipo) - ORDINE.indexOf(b.tipo); }); ridisegna(); }
   function togli(id) { catena = catena.filter(function (b) { return b.id !== id; }); ridisegna(); }
-  function svuota() { catena = []; ridisegna(); }
+  function svuota() { catena = []; segna(''); ridisegna(); }
   function trova(tipo) { for (var i = 0; i < catena.length; i++) if (catena[i].tipo === tipo) return catena[i]; return null; }
   function campo(id, k, v) { var b = catena.filter(function (x) { return x.id === id; })[0]; if (!b) return; b.f[k] = v; if (k === 'manuale' || k === 'centrale' || k === 'coord') ridisegna(); else disegnaRisultati(); }
 
@@ -4463,10 +4495,21 @@ window.croCmp = (function () {
     if (!L.length) { if (typeof showAlert === 'function') showAlert(tipo === 'div' ? 'Nessun percorso Div nell’Unificato: seleziona prima un percorso Std nel tab Unificato, così il tool calcola i Div, poi torna qui.' : 'Nessun percorso Std nell’Unificato: premi prima «Cerca nell’Unificato».', 'warning'); return; }
     var s = el('uRouteStartInput'), e = el('uRouteEndInput');
     var avviso = (b.ep.a && s && s.value.indexOf(b.ep.a.clli) < 0) || (b.ep.z && e && e.value.indexOf(b.ep.z.clli) < 0) ? '<div class="cmp-avvisi"><div>\u26a0 I percorsi nell’Unificato sono di un’altra ricerca (' + esc(s ? s.value : '') + ' \u2192 ' + esc(e ? e.value : '') + '). Premi «Cerca nell’Unificato» dal blocco.</div></div>' : '';
-    var righe = L.slice(0, 50).map(function (r, i) { var q = riassunto(r);
+    /* V10.26|69: tutti i percorsi dell'Unificato, con lo stesso numero, e un filtro */
+    var righe = L.map(function (r, i) { var q = riassunto(r);
       return '<tr class="sc" data-i="' + i + '"><td>' + (i + 1) + '</td><td>' + km(q.km) + ' km</td><td>' + q.n + '</td><td>' + (q.non ? '<span class="cmp-tag dv">' + q.non + ' da verificare</span>' : '<span class="cmp-tag ok">tutti attivi</span>') + '</td><td>' + esc(q.ids.join(' \u2192 ')) + '</td></tr>'; }).join('');
     el('cmpModTit').textContent = (tipo === 'div' ? 'Importa un percorso Div' : 'Importa un percorso Std') + ' \u00b7 ' + TIPI[b.tipo].nome;
-    el('cmpModCorpo').innerHTML = avviso + '<p>Clic su una riga per usarla' + (L.length > 50 ? ' (i primi 50 di ' + L.length + ', nell’ordine dell’Unificato)' : '') + '.</p><table><tr><th>#</th><th>Km</th><th>Collegamenti</th><th>Stato</th><th>Subpath</th></tr>' + righe + '</table>';
+    el('cmpModCorpo').innerHTML = avviso + '<div class="cmp-mod-filtro"><span>' + L.length + ' percorsi, numerati come nell’Unificato. Clic su una riga per usarla.</span><input type="text" id="cmpModCerca" placeholder="Filtra: numero, subpath, km\u2026" autocomplete="off"></div><table><tr><th>#</th><th>Km</th><th>Collegamenti</th><th>Stato</th><th>Subpath</th></tr>' + righe + '</table><p class="cmp-mod-nessuno" hidden>Nessun percorso con questo filtro.</p>';
+    var cerca = el('cmpModCerca');
+    cerca.addEventListener('input', function () {
+      var f = cerca.value.trim().toUpperCase(), n = 0;
+      Array.prototype.forEach.call(el('cmpModCorpo').querySelectorAll('tr.sc'), function (tr) {
+        var num = tr.firstChild.textContent, vis = !f || (/^\d+$/.test(f) ? num === f : tr.textContent.toUpperCase().indexOf(f) >= 0);
+        tr.style.display = vis ? '' : 'none'; if (vis) n++;
+      });
+      el('cmpModCorpo').querySelector('.cmp-mod-nessuno').hidden = n > 0;
+    });
+    setTimeout(function () { cerca.focus(); }, 50);
     el('cmpModCorpo').onclick = function (ev) { var tr = ev.target.closest && ev.target.closest('tr.sc'); if (!tr) return;
       var r = L[+tr.getAttribute('data-i')]; if (!r || !r.edges) { if (typeof showAlert === 'function') showAlert('Questo percorso non ha i collegamenti leggibili: non si può importare.', 'warning'); return; }
       b.f[tipo] = { edges: r.edges, nodes: r.nodes, dist: r.dist, da: s ? s.value : '', a: e ? e.value : '' };
@@ -4600,8 +4643,40 @@ window.croCmp = (function () {
     var blob = new Blob(['\ufeff' + t.join('\n').replace(/\r?\n/g, '\r\n')], { type: 'text/plain;charset=utf-8' }), a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = 'CRO_Compositore_' + new Date().toISOString().slice(0, 10) + '.txt'; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 1000);
   }
-  window.addEventListener('load', function () { try { if (el('cmpCatena')) ridisegna(); } catch (e) { console.error('[Compositore]', e); } });
-  return { schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
+  /* V10.26|67: le regole stanno nel cassetto «Note e regole», come nei tab RA, RC e Unificato */
+  function preparaNote() {
+    var note = el('cmpNote'), tab = el('tab-compositore');
+    if (!note || !tab || tab.querySelector('.rn-btn')) return;
+    note.hidden = false;
+    var velo = document.createElement('div'); velo.className = 'rn-velo';
+    var drawer = document.createElement('aside'); drawer.className = 'rn-drawer';
+    drawer.setAttribute('role', 'dialog'); drawer.setAttribute('aria-label', 'Note sul Compositore di Fattibilità');
+    var head = document.createElement('div'); head.className = 'rn-head';
+    head.innerHTML = '<h4>Note e regole \u2014 Compositore di Fattibilit\u00e0</h4><button type="button" class="rn-chiudi" title="Chiudi">\u2715</button>';
+    drawer.appendChild(head);
+    var indice = document.createElement('div'); indice.className = 'rn-indice'; drawer.appendChild(indice);
+    var corpo = document.createElement('div'); corpo.className = 'rn-corpo'; corpo.appendChild(note); drawer.appendChild(corpo);
+    document.body.appendChild(velo); document.body.appendChild(drawer);
+    var voci = note.querySelectorAll(':scope > ul > li');
+    Array.prototype.forEach.call(voci, function (li, i) {
+      var s = li.querySelector('strong'); if (!s) return;
+      var t = s.textContent.replace(/:$/, '').trim(); li.id = 'cmp-nota-' + i;
+      var b = document.createElement('button'); b.type = 'button'; b.textContent = t.length > 26 ? t.slice(0, 26) + '\u2026' : t;
+      b.addEventListener('click', function () { li.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+      indice.appendChild(b);
+    });
+    var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'rn-btn';
+    btn.innerHTML = '\uD83D\uDCD8 Note e regole <span class="rn-btn-n">' + voci.length + '</span>';
+    var sott = tab.querySelector('.db-header .db-subtitle');
+    if (sott && sott.parentNode) { var riga = document.createElement('div'); riga.className = 'rn-riga'; sott.parentNode.insertBefore(riga, sott); riga.appendChild(sott); riga.appendChild(btn); }
+    var apri = function () { velo.classList.add('aperto'); drawer.classList.add('aperto'); corpo.scrollTop = 0; };
+    var chiudi = function () { velo.classList.remove('aperto'); drawer.classList.remove('aperto'); };
+    btn.addEventListener('click', apri); velo.addEventListener('click', chiudi);
+    head.querySelector('.rn-chiudi').addEventListener('click', chiudi);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && drawer.classList.contains('aperto')) chiudi(); });
+  }
+  window.addEventListener('load', function () { try { if (el('cmpCatena')) { preparaNote(); ridisegna(); } } catch (e) { console.error('[Compositore]', e); } });
+  return { diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
 })();
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -22235,7 +22310,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V10.26 | 66 | Ott 2026</div>
+<div class="version-tag">V10.26 | 69 | Ott 2026</div>
       </div>
     </div>
   </header>
@@ -22481,7 +22556,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 66</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 69</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati. Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -22498,7 +22573,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 66</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 69</span>
                     </div>
                     <p class="feature-desc">Dal bottone <strong>💬</strong> in basso a sinistra (trasparente, si apre al passaggio del mouse), una chat locale che cerca nei dati e nei testi del tool. Scrivi un <strong>CLLI</strong> e mostra nome, zona, data center, mappa e tutti i collegamenti RC e RA; un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -22518,7 +22593,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 66</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 69</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -23157,8 +23232,41 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #f59e0b;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🔧 Novità V10.26 | 66 | Ott 2026</span>
+                  <span class="cl-ver">📥 Novità V10.26 | 69 | Ott 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📥 Compositore, tutti i percorsi</strong>: «Importa Std» e «Importa Div» mostrano tutti i percorsi dell’Unificato (prima solo i primi 50), con lo stesso numero dell’Unificato; il filtro in alto trova un percorso per numero (per esempio 62), subpath o km</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #f59e0b;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🎛️ Novità V10.26 | 68 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🗺️ Schemi del Compositore</strong>: due bottoni separati con icona, nome e numero di blocchi (Stessa regione · 7 blocchi senza RTN; Interregionale · 11 blocchi con RTN); quello scelto ha il bordo blu</li>
+    <li><strong>🔀 Diversificato</strong>: scelta a due bottoni «➖ Solo Std» / «🔀 Std + Div» al posto dell’interruttore</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #f59e0b;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🎛️ Novità V10.26 | 67 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🎛️ Compositore, barra dei comandi</strong>: comandi in gruppi (Schema, Capacità, Rete RTR, azioni) con bottoni a segmenti; lo schema scelto resta evidenziato; l’interruttore Rete RTR passa da «Diversificato: Std + Div» a «Solo Std»</li>
+    <li><strong>💯 Capacità 100G</strong> per i costi delle reti RTR, oltre a 1G e 10G</li>
+    <li><strong>📘 Note e regole</strong>: le regole del compositore sono nel cassetto, come nei tab RA, RC e Unificato</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #f59e0b;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🔧 Novità V10.26 | 66 | Ott 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -28853,30 +28961,38 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       <div class="cmp-corpo">
         <div class="cmp-wip"><span>🚧</span><div><strong>Funzione sperimentale.</strong> I risultati sono indicativi e vanno sempre verificati. Se trovi un errore o hai un’idea per migliorarla, segnalala.</div></div>
         <div class="cmp-barra">
-          <span class="cmp-et">Schema</span>
-          <button type="button" class="btn btn-secondary" onclick="croCmp.schema('regione')">🗺️ Stessa regione</button>
-          <button type="button" class="btn btn-secondary" onclick="croCmp.schema('rtn')">🌐 Interregionale (RTN)</button>
-          <span class="cmp-sep"></span>
-          <label class="cmp-et">Capacità <select id="cmpCap" onchange="croCmp.ridisegna()"><option value="1G">1G</option><option value="10G">10G</option></select></label>
-          <label class="cmp-et"><input type="checkbox" id="cmpDiv" checked onchange="croCmp.ridisegna()"> Diversificato su RTR</label>
-          <span class="cmp-sep"></span>
-          <button type="button" class="btn btn-secondary" onclick="croCmp.esportaTxt()">⬇ Esporta TXT</button>
-          <button type="button" class="btn btn-secondary" onclick="croCmp.svuota()">↺ Svuota</button>
+          <div class="cmp-grp"><span class="cmp-et">Schema</span>
+            <div class="cmp-schemi" id="cmpSegSchema">
+              <button type="button" class="cmp-sch" data-v="regione" onclick="croCmp.schema('regione')"><span class="i">🗺️</span><span><b>Stessa regione</b><small>7 blocchi · senza RTN</small></span></button>
+              <button type="button" class="cmp-sch" data-v="rtn" onclick="croCmp.schema('rtn')"><span class="i">🌐</span><span><b>Interregionale</b><small>11 blocchi · con RTN</small></span></button>
+            </div></div>
+          <div class="cmp-grp"><span class="cmp-et">Capacità</span>
+            <div class="cmp-seg" id="cmpSegCap"><button type="button" data-v="1G" class="on" onclick="croCmp.capacita('1G')">1G</button><button type="button" data-v="10G" onclick="croCmp.capacita('10G')">10G</button><button type="button" data-v="100G" onclick="croCmp.capacita('100G')">100G</button></div>
+            <input type="hidden" id="cmpCap" value="1G"></div>
+          <div class="cmp-grp"><span class="cmp-et">Rete RTR</span>
+            <div class="cmp-seg cmp-seg-div" id="cmpSegDiv"><button type="button" data-v="0" onclick="croCmp.diversificato(false)">➖ Solo Std</button><button type="button" data-v="1" class="on" onclick="croCmp.diversificato(true)">🔀 Std + Div</button></div>
+            <input type="checkbox" id="cmpDiv" checked hidden></div>
+          <div class="cmp-grp cmp-azioni">
+            <button type="button" class="cmp-azb" onclick="croCmp.esportaTxt()">⬇ Esporta TXT</button>
+            <button type="button" class="cmp-azb" onclick="croCmp.svuota()">↺ Svuota</button></div>
         </div>
         <div class="cmp-pal" id="cmpPal"></div>
         <div class="cmp-catena" id="cmpCatena"></div>
         <div class="cmp-avvisi" id="cmpAvvisi"></div>
         <div class="cmp-riep" id="cmpRiep"></div>
-        <details class="cmp-regole"><summary>📐 Regole usate dal compositore</summary>
-          <ul>
-            <li><strong>Centrale di attestazione</strong>: se nella sede è indicata una centrale (per esempio la centrale Colt data dal cliente) si usa quella, senza calcolare distanze. Altrimenti, con le coordinate della sede, si sceglie la più vicina in linea d’aria tra le centrali RC e le centrali RA di tipo 1 o 2 (le RA di tipo 3 sono solo di transito). Il tragitto urbano dalla sede non è nei dati del tool: a parità di distanza scegli tu tra le alternative mostrate.</li>
-            <li><strong>Nodo A1 Zona A</strong>: il più vicino in linea d’aria alla Centrale A. <strong>Nodo A1 Zona Z</strong>: il più vicino alla Centrale Z.</li>
-            <li><strong>Rete RTR</strong>: i percorsi Std e Div si cercano nel tab Unificato con «Cerca nell’Unificato» e si portano qui con «Importa». Il blocco «Rete RTR» collega due centrali della stessa regione; «Rete RTR Zona A / Zona Z» collegano centrale e nodo A1.</li>
-            <li><strong>RTN</strong>: collega i due nodi A1; non si valorizza nei costi.</li>
-            <li><strong>Coda</strong>: si stima a mano nel blocco: km, costo in euro e note (per esempio la fonte del costo). Il costo entra nel riepilogo e nel totale.</li>
-            <li><strong>Costi</strong>: per ogni rete RTR, il blocco dei costi standard degli export dell’Unificato, con la capacità scelta qui.</li>
-          </ul>
-        </details>
+        <div id="cmpNote" hidden><ul>
+          <li><strong>Schema:</strong> «Stessa regione» prepara Sede A, Coda A, Centrale A, Rete RTR, Centrale Z, Coda Z, Sede Z; «Interregionale (RTN)» aggiunge le reti RTR Zona A e Z, i due nodi A1 e la RTN. I blocchi si aggiungono e si tolgono anche uno alla volta e restano nell’ordine da A a Z.</li>
+          <li><strong>Centrale di attestazione:</strong> se nella sede è indicata una centrale (per esempio la centrale Colt passata dal cliente) si usa quella, senza calcolare distanze. Altrimenti, con le coordinate della sede, la più vicina in linea d’aria tra le centrali RC e le centrali RA di tipo 1 o 2 (le RA di tipo 3 sono solo di transito). Il tragitto urbano dalla sede non è nei dati del tool: a parità di distanza scegli tu tra le alternative mostrate.</li>
+          <li><strong>Nodo A1:</strong> Zona A il più vicino in linea d’aria alla Centrale A, Zona Z il più vicino alla Centrale Z. Si può scegliere un’alternativa o scriverlo a mano.</li>
+          <li><strong>Estremi delle reti:</strong> per ogni rete (Rete RTR, Rete RTR Zona A o Z, RTN) partenza e arrivo sono la centrale o il nodo A1 compilati subito prima e subito dopo nella catena.</li>
+          <li><strong>Rete RTR:</strong> i percorsi si cercano nel tab Unificato con «Cerca nell’Unificato» (RTN spento) e si portano qui con «Importa Std» e «Importa Div». Per i Div va selezionato prima un percorso Std nell’Unificato, che calcola i suoi Div. Il blocco segnala le C-FOS in comune tra Std e Div.</li>
+          <li><strong>Diversificato:</strong> con «Std + Div» ogni rete RTR ha uno Std e un Div; con «Solo Std», solo lo Std.</li>
+          <li><strong>Capacità:</strong> 1G, 10G o 100G; vale per i costi standard di tutte le reti RTR.</li>
+          <li><strong>RTN:</strong> collega i due nodi A1; non si valorizza nei costi e la consegna va condivisa con Stefano Gentile.</li>
+          <li><strong>Coda:</strong> si stima a mano nel blocco: km, costo in euro e note. Il costo entra nel riepilogo e nel totale come stima.</li>
+          <li><strong>Costi:</strong> per ogni rete RTR, il blocco dei costi standard degli export dell’Unificato, con la capacità scelta. I costi protetti non sono ancora calcolati.</li>
+          <li><strong>Funzione sperimentale:</strong> la catena non si salva alla chiusura del tool; i risultati vanno sempre verificati.</li>
+        </ul></div>
       </div>
     </div>
   </section>
@@ -38171,13 +38287,14 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   🧩 Compositore di Fattibilità — collegamento a blocchi (sperimentale)
                 </summary>
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
-                  <p><strong>Dove si trova:</strong> menu Analisi Extra, «Compositore di Fattibilità 🚧». È sperimentale: i risultati vanno verificati.</p>
+                  <p><strong>Dove si trova:</strong> menu Analisi Extra, «Compositore di Fattibilità 🚧». È sperimentale: i risultati vanno verificati. Le regole sono nel cassetto «📘 Note e regole» accanto al sottotitolo.</p>
+                  <p><strong>Barra dei comandi:</strong> Schema con due bottoni separati (Stessa regione, 7 blocchi senza RTN; Interregionale, 11 blocchi con RTN), Capacità (1G, 10G, 100G, per i costi), Rete RTR con la scelta Solo Std oppure Std + Div, Esporta TXT e Svuota.</p>
                   <p><strong>Blocchi:</strong> 🏠 Sede cliente A e Z, 〰️ Coda (stima) Zona A e Z, 🏢 Centrale A e Z di attestazione (Colt), 🟢 Rete RTR (due centrali della stessa regione), 🟢 Rete RTR Zona A e Zona Z (centrale ↔ nodo A1), 🔀 Nodo A1 Zona A e Z, 🌐 RTN. I bottoni «Stessa regione» e «Interregionale (RTN)» preparano la catena; i blocchi si aggiungono e si tolgono anche uno alla volta e restano nell’ordine da A a Z.</p>
                   <p><strong>Sede:</strong> nome del cliente, coordinate (lat, lon) e centrale indicata. Se c’è la centrale indicata (per esempio la centrale Colt passata dal cliente) si usa quella, senza calcolare distanze.</p>
                   <p><strong>Centrale di attestazione automatica:</strong> la più vicina alle coordinate della sede in linea d’aria, tra le centrali RC e le centrali RA di tipo 1 o 2 (le RA di tipo 3 sono solo di transito). Il blocco mostra le alternative più vicine; se le distanze sono quasi uguali lo segnala. Il tragitto urbano dalla sede non è nei dati del tool, quindi a parità di distanza la scelta è dell’utente.</p>
                   <p><strong>Nodo A1 automatico:</strong> Zona A il più vicino alla Centrale A, Zona Z il più vicino alla Centrale Z, con le alternative.</p>
                   <p><strong>Estremi delle reti:</strong> per ogni blocco di rete (Rete RTR, Rete RTR Zona A o Z, RTN) partenza e arrivo sono la centrale o il nodo A1 compilati subito prima e subito dopo nella catena. Se ne manca uno, «Cerca nell’Unificato» lo dice.</p>
-                  <p><strong>Rete RTR:</strong> «Cerca nell’Unificato» apre l’Unificato con partenza e arrivo del blocco (RTN spento) e avvia la ricerca; «Importa Std» e «Importa Div» mostrano i percorsi trovati e si sceglie con un clic. Per i Div va selezionato prima un percorso Std nell’Unificato, che calcola i suoi Div. Il blocco mostra km, collegamenti, stati, costo standard (stesso calcolo degli export, con la capacità scelta) e se Std e Div hanno C-FOS in comune.</p>
+                  <p><strong>Rete RTR:</strong> «Cerca nell’Unificato» apre l’Unificato con partenza e arrivo del blocco (RTN spento) e avvia la ricerca; «Importa Std» e «Importa Div» mostrano tutti i percorsi trovati, con lo stesso numero dell’Unificato e un filtro per numero, subpath o km, e si sceglie con un clic. Per i Div va selezionato prima un percorso Std nell’Unificato, che calcola i suoi Div. Il blocco mostra km, collegamenti, stati, costo standard (stesso calcolo degli export, con la capacità scelta) e se Std e Div hanno C-FOS in comune.</p>
                   <p><strong>Code:</strong> nel blocco «Coda (stima)» si scrivono a mano km, costo stimato in euro (anche nella forma 18.580,00) e note, per esempio la fonte del costo.</p>
                   <p><strong>Riepilogo ed export:</strong> tabella con km e costi per tratta e totale (code stimate comprese, RTN non valorizzata); «Esporta TXT» scrive ogni blocco e, per le reti RTR, gli stessi blocchi del TXT dell’Unificato con i costi.</p>
                   <p><strong>Controlli:</strong> avvisa se manca un nodo A1 con la RTN, se si usa «Rete RTR» insieme alla RTN, se le due centrali di una «Rete RTR» sono in regioni diverse.</p>
@@ -40307,7 +40424,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 66 | Ott 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 69 | Ott 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -40326,6 +40443,42 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #f59e0b;border-radius:12px;overflow:hidden;background:#fffbeb;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
+            📥 V10.26 | 69 | Ott 2026 | Compositore: tutti i percorsi da importare
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📥 importa()</strong>: tolto il limite di 50 righe; filtro <code>#cmpModCerca</code> (un numero cerca quel percorso, un testo cerca in subpath, km e stato), riga del filtro ferma in alto</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #f59e0b;border-radius:12px;overflow:hidden;background:#fffbeb;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
+            🎛️ V10.26 | 68 | Ott 2026 | Compositore: schemi e diversificato come bottoni
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🗺️ .cmp-sch</strong>: bottoni degli schemi separati da uno spazio, con icona, nome e sottotitolo; <code>.on</code> per quello scelto</li>
+              <li><strong>🔀 croCmp.diversificato()</strong>: bottoni <code>#cmpSegDiv</code> che impostano il checkbox nascosto <code>#cmpDiv</code>, letto dal resto del codice come prima</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #f59e0b;border-radius:12px;overflow:hidden;background:#fffbeb;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
+            🎛️ V10.26 | 67 | Ott 2026 | Compositore: barra dei comandi, 100G, Note e regole
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🎛️ Barra</strong>: <code>.cmp-grp</code>, bottoni a segmenti <code>.cmp-seg</code> (schema e capacità, con <code>croCmp.capacita()</code> che scrive nel campo nascosto <code>#cmpCap</code>), interruttore <code>.cmp-switch</code> sul checkbox <code>#cmpDiv</code></li>
+              <li><strong>📘 Note e regole</strong>: <code>preparaNote()</code> sposta <code>#cmpNote</code> nel cassetto <code>.rn-drawer</code> con l’indice delle voci, come nel tab Soluzioni Protette</li>
+              <li><strong>🗄️ Base</strong>: costruita sul file con i DB RA e RC del 20/10/2026</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #f59e0b;border-radius:12px;overflow:hidden;background:#fffbeb;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
             🔧 V10.26 | 66 | Ott 2026 | Compositore: estremi delle reti, costi a sinistra
           </summary>
@@ -88259,10 +88412,34 @@ body.dark-mode .cro-earth-box { background: #1e293b; color: #e2e8f0; }
 #tab-compositore .cmp-corpo { padding: 0 1.5rem 1.4rem; }
 #tab-compositore .cmp-wip { display: flex; gap: .6rem; align-items: flex-start; padding: .55rem .85rem; border-radius: 10px; background: repeating-linear-gradient(135deg,#fffbeb 0 14px,#fef3c7 14px 28px); border: 1px solid #fcd34d; border-left: 5px solid #f59e0b; color: #78350f; font-size: .82rem; margin-bottom: .8rem; }
 #tab-compositore .cmp-wip span { font-size: 1.3rem; line-height: 1; }
-#tab-compositore .cmp-barra { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-bottom: .7rem; }
-#tab-compositore .cmp-et { font-size: .8rem; color: #475569; display: inline-flex; align-items: center; gap: .3rem; }
-#tab-compositore .cmp-et select { font-size: .8rem; padding: 2px 6px; border: 1px solid #cbd5e1; border-radius: 6px; }
-#tab-compositore .cmp-sep { width: 1px; height: 22px; background: #e2e8f0; margin: 0 .2rem; }
+#tab-compositore .cmp-barra { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.2rem; margin-bottom: .8rem; padding: .6rem .8rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; }
+#tab-compositore .cmp-grp { display: flex; align-items: center; gap: .45rem; }
+#tab-compositore .cmp-et { font-size: .74rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
+#tab-compositore .cmp-seg { display: inline-flex; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; background: #fff; }
+#tab-compositore .cmp-seg button { border: 0; border-right: 1px solid #e2e8f0; background: none; padding: .38rem .75rem; font-size: .8rem; font-weight: 600; color: #334155; cursor: pointer; }
+#tab-compositore .cmp-seg button:last-child { border-right: 0; }
+#tab-compositore .cmp-seg button:hover { background: #eff6ff; color: #0066CC; }
+#tab-compositore .cmp-seg button.on { background: #0066CC; color: #fff; }
+#tab-compositore .cmp-schemi { display: inline-flex; gap: .5rem; }
+#tab-compositore .cmp-sch { display: inline-flex; align-items: center; gap: .5rem; border: 1.5px solid #cbd5e1; background: #fff; border-radius: 10px; padding: .35rem .8rem .35rem .6rem; cursor: pointer; text-align: left; color: #1f2937; box-shadow: 0 1px 2px rgba(15,23,42,.06); transition: border-color .15s, background .15s; }
+#tab-compositore .cmp-sch .i { font-size: 1.2rem; line-height: 1; }
+#tab-compositore .cmp-sch b { display: block; font-size: .82rem; }
+#tab-compositore .cmp-sch small { display: block; font-size: .68rem; color: #64748b; }
+#tab-compositore .cmp-sch:hover { border-color: #0066CC; background: #f8fbff; }
+#tab-compositore .cmp-sch.on { border-color: #0066CC; background: #eff6ff; box-shadow: 0 0 0 3px rgba(0,102,204,.15); }
+#tab-compositore .cmp-sch.on b { color: #0066CC; }
+#tab-compositore .cmp-seg-div button.on[data-v="1"] { background: #16a34a; }
+#tab-compositore .cmp-seg-div button.on[data-v="0"] { background: #475569; }
+#tab-compositore .cmp-switch { display: inline-flex; align-items: center; gap: .45rem; cursor: pointer; font-size: .8rem; color: #334155; }
+#tab-compositore .cmp-switch input { position: absolute; opacity: 0; pointer-events: none; }
+#tab-compositore .cmp-sw { width: 34px; height: 18px; border-radius: 999px; background: #cbd5e1; position: relative; transition: background .15s; flex-shrink: 0; }
+#tab-compositore .cmp-sw::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.3); transition: left .15s; }
+#tab-compositore .cmp-switch input:checked + .cmp-sw { background: #16a34a; }
+#tab-compositore .cmp-switch input:checked + .cmp-sw::after { left: 18px; }
+#tab-compositore .cmp-switch input:focus-visible + .cmp-sw { outline: 2px solid #0066CC; outline-offset: 2px; }
+#tab-compositore .cmp-azioni { margin-left: auto; }
+#tab-compositore .cmp-azb { border: 1px solid #cbd5e1; background: #fff; border-radius: 8px; padding: .38rem .8rem; font-size: .8rem; font-weight: 600; color: #1f3864; cursor: pointer; }
+#tab-compositore .cmp-azb:hover { border-color: #0066CC; color: #0066CC; background: #eff6ff; }
 #tab-compositore .cmp-pal { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: .9rem; padding: .5rem; border: 1px dashed #cbd5e1; border-radius: 10px; background: #f8fafc; }
 #tab-compositore .cmp-pal::before { content: 'Aggiungi un blocco:'; font-size: .76rem; color: #64748b; align-self: center; margin-right: .3rem; }
 #tab-compositore .cmp-pal button { border: 1px solid #cbd5e1; background: #fff; border-radius: 999px; padding: 3px 10px; font-size: .76rem; cursor: pointer; color: #1f3864; }
@@ -88296,9 +88473,6 @@ body.dark-mode .cro-earth-box { background: #1e293b; color: #e2e8f0; }
 #tab-compositore .cmp-riep th, #tab-compositore .cmp-riep td { border: 1px solid #e2e8f0; padding: 4px 8px; text-align: left; }
 #tab-compositore .cmp-riep th { background: #f1f5f9; }
 #tab-compositore .cmp-riep td.n, #tab-compositore .cmp-riep th.n { text-align: left; white-space: nowrap; }
-#tab-compositore .cmp-regole { margin-top: 1rem; font-size: .8rem; color: #334155; }
-#tab-compositore .cmp-regole summary { cursor: pointer; font-weight: 700; color: #1f3864; }
-#tab-compositore .cmp-regole li { margin: .25rem 0; line-height: 1.5; }
 #tab-compositore pre.cmp-costo { font-size: .66rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: .4rem; max-height: 180px; overflow: auto; white-space: pre; margin: .2rem 0 0; }
 .cmp-modale { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
 .cmp-modale[hidden] { display: none; }
@@ -88310,6 +88484,11 @@ body.dark-mode .cro-earth-box { background: #1e293b; color: #e2e8f0; }
 .cmp-mod-c th, .cmp-mod-c td { border: 1px solid #e2e8f0; padding: 4px 6px; text-align: left; vertical-align: top; }
 .cmp-mod-c th { background: #f1f5f9; position: sticky; top: 0; }
 .cmp-mod-c tr.sc:hover { background: #eff6ff; cursor: pointer; }
+.cmp-mod-filtro { display: flex; align-items: center; gap: .8rem; margin-bottom: .5rem; position: sticky; top: -.7rem; background: #fff; padding: .4rem 0; z-index: 2; }
+.cmp-mod-filtro span { flex: 1; color: #475569; }
+.cmp-mod-filtro input { width: 260px; font-size: .8rem; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: none; }
+.cmp-mod-c th { top: 2.2rem !important; }
+.cmp-mod-nessuno { color: #64748b; padding: .5rem 0; }
 </style>
 
 <style id="croSoluzioniProtetteStile">
@@ -90553,7 +90732,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V10.26 | 66';
+  var REVISIONE = 'V10.26 | 69';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
