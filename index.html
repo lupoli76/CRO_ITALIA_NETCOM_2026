@@ -4,13 +4,58 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 10.26 | 81  (rev. pubblicata: V10.26 | 81 | Ott 2026)                ║
+║   Versione: 10.26 | 87  (rev. pubblicata: V10.26 | 87 | Ott 2026)                ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V10.26 | 87 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • VERIFICA RXMX E PXMX: nelle schede la frase sulla presenza di RXM1, RXM3 e   ║
+║     RXM5 e' in grassetto; le altezze dei telai sono in corsivo invece che in     ║
+║     grigio                                                                       ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 86 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • VERIFICA RXMX E PXMX: altezze anche per Nokia (PSS-4 2 U, PSS-8 3 U, PSS-32  ║
+║     14 U) e Huawei OSN 8800 (T16 9 U, T32 14 U, T64 21 U); per ZTE ZM721RA e     ║
+║     Nokia 1830 nelle RXM3 il telaio non e' indicato nel DB                       ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 85 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • VERIFICA RXMX E PXMX: nelle schede l'altezza dei telai in unita' rack. PXM1  ║
+║     e RXM1 telai piccoli (da 1 a 9 U: SH1HU, C7HU, C9HU, 7HU, 9HU, OSN 1800 I,   ║
+║     II, V); RXM3 e RXM5 telai medi (OSN 1800 V circa 5 U, FSP 3000 R7 7 o 9 U);  ║
+║     PXM3 telai piu' grandi                                                       ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 84 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • ASSISTENTE CRO, RISPOSTA PER UN CLLI IN TRE PARTI NUMERATE E SPIEGATE: la    ║
+║     centrale, i collegamenti che partono o arrivano li' (prima RC, poi RA, con   ║
+║     un messaggio se una rete non ne ha) e i collegamenti che usano i suoi cavi   ║
+║     C-FOS, con la spiegazione di cos'e' una C-FOS e un riepilogo in punti        ║
+║   • VERIFICA RXMX E PXMX: suggerimenti per la coda cliente salvo verifiche su    ║
+║     NNI (PXM1 1x 4WCC + 2 FO, PXM3 1x 4WCC + 1x 4CSM; RXM1, RXM3, RXM5 da        ║
+║     confermare su NNI); RXM classificate come telai compatti per code cliente,   ║
+║     di nodo RA e di nodo RC; filtri per tipo a selezione multipla, tolto         ║
+║     PXM1+PXM3 e la parola SOLO                                                   ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 83 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • ASSISTENTE CRO: dopo una domanda la chat non scorre piu' fino in fondo alla  ║
+║     risposta, ma si ferma all'inizio della domanda, cosi' la risposta si legge   ║
+║     dall'alto scendendo                                                          ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 82 | Ott 2026:                                              ║
+║   ─────────────────────────                                                      ║
+║   • ASSISTENTE CRO, CLLI E C-FOS: scrivendo un CLLI, oltre alla scheda della     ║
+║     centrale, l'Assistente elenca i collegamenti RC e RA che hanno nell'Id Cavo  ║
+║     una C-FOS con quel CLLI (per esempio PESCITAA in CAM010), anche se non       ║
+║     partono o non arrivano in quella centrale, con le C-FOS evidenziate, CSV e   ║
+║     apertura nel tab Database                                                    ║
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 81 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
@@ -3708,6 +3753,13 @@ window.croChat = (function () {
     + '#croChat .cc-card{border:1px solid #e2e8f0;border-left:3px solid #0066CC;border-radius:6px;padding:.4rem .6rem;margin:.35rem 0;background:#f8fafc}'
     + '#croChat .cc-card.ra{border-left-color:#16a34a}#croChat .cc-card.gl{border-left-color:#7c3aed}#croChat .cc-card.tx{border-left-color:#64748b}'
     + '#croChat table{border-collapse:collapse;width:100%;font-size:.76rem;margin:.25rem 0}#croChat td,#croChat th{border:1px solid #e2e8f0;padding:2px 5px;text-align:left;vertical-align:top}#croChat th{background:#f1f5f9}'
+    + '#croChat .cc-sez{border:1px solid #e2e8f0;border-left:4px solid var(--sez);border-radius:8px;padding:.5rem .65rem .55rem;margin:.6rem 0;background:#fff}'
+    + '#croChat .cc-sez-h{display:flex;align-items:center;gap:.45rem;font-weight:700;color:#1f2937;font-size:.84rem;margin-bottom:.25rem}'
+    + '#croChat .cc-sez-n{display:inline-flex;align-items:center;justify-content:center;width:1.3rem;height:1.3rem;border-radius:50%;background:var(--sez);color:#fff;font-size:.72rem}'
+    + '#croChat .cc-sez-sp{font-size:.78rem;color:#475569;background:#f8fafc;border-radius:6px;padding:.35rem .5rem;margin-bottom:.35rem;line-height:1.5}'
+    + '#croChat .cc-sub{font-weight:700;color:#1f3864;font-size:.78rem;margin:.4rem 0 .15rem}'
+    + '#croChat .cc-vuoto{font-size:.78rem;color:#64748b;font-style:italic;padding:.2rem 0}'
+    + '#croChat .cc-punti{margin:.2rem 0 .4rem 1rem;padding:0;font-size:.78rem;line-height:1.55;color:#1f2937}'
     + '#croChat .cc-k{color:#64748b;font-size:.74rem}'
     + '#croChat .cc-ok{color:#166534;font-weight:700}#croChat .cc-ko{color:#b91c1c;font-weight:700}#croChat .cc-dv{color:#b45309;font-weight:700}#croChat .cc-i input{text-transform:none}'
     + '#croChat .cc-web{margin-top:.45rem;padding-top:.4rem;border-top:1px dashed #cbd5e1;font-size:.75rem;color:#64748b}'
@@ -3800,6 +3852,13 @@ window.croChat = (function () {
       + (r.Altro1 ? '<tr><th>NNI</th><td>' + esc(r.Altro1) + (r.Altro2 ? '<br>' + esc(r.Altro2) : '') + '</td></tr>' : '')
       + '</table></div>';
   }
+  /* V10.26|84: risposta per un CLLI in tre parti numerate e spiegate:
+     1) la centrale, 2) i collegamenti che partono o arrivano qui (prima RC, poi RA),
+     3) i collegamenti che usano cavi C-FOS di questa centrale */
+  function sezione(n, colore, titolo, spiega, corpo) {
+    return '<div class="cc-sez" style="--sez:' + colore + '"><div class="cc-sez-h"><span class="cc-sez-n">' + n + '</span>' + titolo + '</div>'
+      + (spiega ? '<div class="cc-sez-sp">' + spiega + '</div>' : '') + corpo + '</div>';
+  }
   function rispostaCLLI(clli) {
     var R = rc().filter(function (r) { return r.CLLI_A === clli || r.CLLI_Z === clli; });
     var A = ra().filter(function (r) { return r.CLLI_A === clli || r.CLLI_Z === clli; });
@@ -3808,23 +3867,78 @@ window.croChat = (function () {
       if (r.CLLI_A === clli) { nomi[r.GAT_A] = 1; p = p || r; } else { nomi[r.GAT_Z] = 1; p = p || r; }
     });
     var d = dc()[clli];
-    if (!R.length && !A.length && !d) return '';
+    var cf = cfosConClli(clli);
+    if (!R.length && !A.length && !d && !cf) return '';
+    var nome = Object.keys(nomi).join(' / ') || (cf && cf.nome) || '';
     var lat = p ? (p.CLLI_A === clli ? p.Lat_GAT_A : p.Lat_GAT_Z) : '', lon = p ? (p.CLLI_A === clli ? p.Lon_GAT_A : p.Lon_GAT_Z) : '';
-    var h = '<h6>\uD83C\uDFE2 Centrale ' + esc(clli) + '</h6><div class="cc-card"><table>'
-      + '<tr><th>Nome</th><td>' + esc(Object.keys(nomi).join(' / ') || '\u2014') + mappa(lat, lon) + '</td></tr>'
+    var h = '<h6>\uD83C\uDFE2 ' + esc(clli) + (nome ? ' \u00b7 ' + esc(nome) : '') + '</h6>'
+      + '<div class="cc-k" style="margin-bottom:.3rem">La risposta \u00e8 in tre parti: \u2460 la centrale, \u2461 i collegamenti che partono o arrivano qui, \u2462 i collegamenti che usano i suoi cavi.</div>';
+    /* ① centrale */
+    h += sezione('1', '#0066CC', 'La centrale', '', '<table>'
+      + '<tr><th>Nome</th><td>' + esc(nome || '\u2014') + mappa(lat, lon) + '</td></tr>'
       + (p ? '<tr><th>Zona</th><td>' + esc(p.Zona) + ' \u00b7 ' + esc(p.Regione) + ' \u00b7 ' + esc(p.Area) + '</td></tr>' : '')
       + (d ? '<tr><th>Data center</th><td>' + esc(d) + '</td></tr>' : '')
-      + '<tr><th>Collegamenti</th><td>' + R.length + ' nella rete RC \u00b7 ' + A.length + ' nella rete RA</td></tr></table></div>';
+      + '<tr><th>Nodo della rete</th><td>' + (R.length && A.length ? 'RC e RA' : R.length ? 'solo RC' : A.length ? 'solo RA' : 'non \u00e8 estremo di nessun collegamento RC o RA') + '</td></tr></table>');
+    /* ② collegamenti che partono o arrivano qui */
     var riga = function (r, tipo) {
       var altro = r.CLLI_A === clli ? r.GAT_Z + ' (' + r.CLLI_Z + ')' : r.GAT_A + ' (' + r.CLLI_A + ')';
       var id = tipo === 'RC' ? r.IdCollegamento : r.SubPath;
-      return '<tr><td><button type="button" data-q="' + esc(id) + '" style="border:0;background:none;color:#0066CC;cursor:pointer;padding:0;font-weight:700">' + esc(id) + '</button></td><td>' + esc(altro) + '</td><td>' + num(r.Distanza_km) + ' km</td><td>' + statoHtml(r.Stato_IdCollegamento) + '</td></tr>';
+      var sotto = tipo === 'RA' ? '<div class="cc-k">' + esc(r.Arco || '') + ' \u00b7 prog. ' + esc(r['Prog (Ramo/Arco)'] || '') + '</div>' : '';
+      return '<tr><td><button type="button" data-q="' + esc(id) + '" style="border:0;background:none;color:' + (tipo === 'RC' ? '#0066CC' : '#16a34a') + ';cursor:pointer;padding:0;font-weight:700">' + esc(id) + '</button>' + sotto + '</td><td>' + esc(altro) + '</td><td>' + num(r.Distanza_km) + ' km</td><td>' + statoHtml(r.Stato_IdCollegamento) + '</td></tr>';
     };
-    if (R.length) h += '<b>Rete RC</b><div class="cc-lunga"><table><tr><th>Subpath</th><th>Verso</th><th>Km</th><th>Stato</th></tr>' + R.map(function (r) { return riga(r, 'RC'); }).join('') + '</table></div>';
-    if (A.length) h += '<b>Rete RA</b><div class="cc-lunga"><table><tr><th>Subpath</th><th>Verso</th><th>Km</th><th>Stato</th></tr>' + A.map(function (r) { return riga(r, 'RA'); }).join('') + '</table></div>';
-    if (R.length || A.length) h += azioniLista(R.map(function (r) { return { rete: 'RC', r: r }; }).concat(A.map(function (r) { return { rete: 'RA', r: r }; })), 'Centrale ' + clli);
-    return h + '<div class="cc-k">Clic su un subpath per la sua scheda.</div>';
+    var tab = function (L, tipo) { return '<div class="cc-lunga"><table><tr><th>Subpath</th><th>Verso (l\u2019altra centrale)</th><th>Km</th><th>Stato</th></tr>' + L.map(function (r) { return riga(r, tipo); }).join('') + '</table></div>'; };
+    var c2 = '<div class="cc-sub">Rete RC</div>' + (R.length ? tab(R, 'RC') : '<div class="cc-vuoto">Nessun collegamento RC parte o arriva in questa centrale.</div>')
+      + '<div class="cc-sub">Rete RA</div>' + (A.length ? tab(A, 'RA') + (A.length > 1 ? '<div class="cc-k">Lo stesso subpath RA pu\u00f2 comparire pi\u00f9 volte: ogni riga \u00e8 una tratta diversa (arco e progressivo sotto il nome).</div>' : '') : '<div class="cc-vuoto">Nessuna tratta RA parte o arriva in questa centrale.</div>');
+    if (R.length || A.length) c2 += azioniLista(R.map(function (r) { return { rete: 'RC', r: r }; }).concat(A.map(function (r) { return { rete: 'RA', r: r }; })), 'Centrale ' + clli);
+    h += sezione('2', '#16a34a', 'Collegamenti che partono o arrivano in ' + esc(clli),
+      'Sono i subpath che hanno questa centrale come estremo A o Z: ' + R.length + (R.length === 1 ? ' collegamento' : ' collegamenti') + ' nella rete RC e ' + A.length + (A.length === 1 ? ' tratta' : ' tratte') + ' nella rete RA.', c2);
+    /* ③ cavi */
+    if (cf) h += cf.html;
+    else h += sezione('3', '#b45309', 'Collegamenti che usano i cavi di ' + esc(clli), '', '<div class="cc-vuoto">Nessun collegamento RC o RA ha nell\u2019Id Cavo una C-FOS con questo CLLI.</div>');
+    return h + '<div class="cc-k">Clic su un subpath o su una C-FOS per la sua scheda.</div>';
   }
+  /* collegamenti RC e RA che hanno nell'Id Cavo una C-FOS con questo CLLI come primo o
+     secondo estremo (CLLI1/CLLI2/C-FOS/n), anche se non partono o non arrivano qui */
+  function cfosConClli(clli) {
+    var trovati = [], distinte = {}, nome = '';
+    [['RC', rc()], ['RA', ra()]].forEach(function (x) {
+      x[1].forEach(function (r) {
+        var c = String(r.IdCavo || '').split(' + ').map(function (v) { return v.trim(); }).filter(function (v) {
+          var p = v.split('/'); return p.length >= 3 && (p[0] === clli || p[1] === clli);
+        });
+        if (c.length) { trovati.push({ rete: x[0], r: r, c: c }); c.forEach(function (v) { distinte[v] = 1; }); }
+      });
+    });
+    if (!trovati.length) return null;
+    var estremo = function (r) { return r.CLLI_A === clli || r.CLLI_Z === clli; };
+    var ordine = function (t) { return (t.rete === 'RC' ? 0 : 2) + (estremo(t.r) ? 1 : 0); };   /* RC prima, e prima chi passa soltanto */
+    trovati.sort(function (a, b) { return ordine(a) - ordine(b); });
+    var cRC = trovati.filter(function (t) { return t.rete === 'RC'; }), cRA = trovati.filter(function (t) { return t.rete === 'RA'; });
+    var soloRC = cRC.filter(function (t) { return !estremo(t.r); }), soloRA = cRA.filter(function (t) { return !estremo(t.r); });
+    var nC = Object.keys(distinte).length;
+    var mark = function (v) { return esc(v).split(esc(clli)).join('<mark>' + esc(clli) + '</mark>'); };
+    var plur = function (n, s1, s2) { return n + ' ' + (n === 1 ? s1 : s2); };
+    var ids = function (L) { var u = {}; L.forEach(function (t) { u[t.rete === 'RC' ? t.r.IdCollegamento : t.r.SubPath] = 1; }); return Object.keys(u).join(', '); };
+    var punti = '<ul class="cc-punti">'
+      + '<li><b>' + plur(nC, 'cavo C-FOS', 'cavi C-FOS') + '</b> ' + (nC === 1 ? 'parte o arriva' : 'partono o arrivano') + ' in ' + esc(clli) + '.</li>'
+      + '<li><b>Rete RC</b>: ' + (cRC.length ? plur(cRC.length, 'collegamento usa', 'collegamenti usano') + ' questi cavi (' + esc(ids(cRC)) + ')'
+          + (soloRC.length ? '; <b>' + (soloRC.length === cRC.length ? (cRC.length === 1 ? 'non parte e non arriva' : 'nessuno parte o arriva') : plur(soloRC.length, 'non parte e non arriva', 'non partono e non arrivano')) + '</b> in questa centrale: ci ' + (soloRC.length === 1 ? 'passa' : 'passano') + ' solo con i cavi, per questo non ' + (soloRC.length === 1 ? 'compare' : 'compaiono') + ' nella parte \u2461' : '') + '.'
+          : 'nessun collegamento usa questi cavi.') + '</li>'
+      + '<li><b>Rete RA</b>: ' + (cRA.length ? plur(cRA.length, 'tratta usa', 'tratte usano') + ' questi cavi'
+          + (soloRA.length ? '; ' + plur(soloRA.length, 'non parte e non arriva qui', 'non partono e non arrivano qui') + ' (ci ' + (soloRA.length === 1 ? 'passa' : 'passano') + ' solo con i cavi)' : '; sono le stesse tratte della parte \u2461, perch\u00e9 partono o arrivano qui') + '.'
+          : 'nessuna tratta usa questi cavi.') + '</li></ul>';
+    var tabella = '<div class="cc-lunga"><table><tr><th>Rete</th><th>Subpath</th><th>Tratta</th><th>Cavi C-FOS con ' + esc(clli) + '</th></tr>'
+      + trovati.map(function (t) {
+          var id = t.rete === 'RC' ? t.r.IdCollegamento : t.r.SubPath;
+          return '<tr><td>' + t.rete + '</td><td><button type="button" data-q="' + esc(id) + '" style="border:0;background:none;color:' + (t.rete === 'RC' ? '#0066CC' : '#16a34a') + ';cursor:pointer;padding:0;font-weight:700">' + esc(id) + '</button>'
+            + (t.rete === 'RA' ? '<div class="cc-k">' + esc(t.r.Arco || '') + ' \u00b7 prog. ' + esc(t.r['Prog (Ramo/Arco)'] || '') + '</div>' : '')
+            + (estremo(t.r) ? '<div class="cc-k">parte o arriva qui</div>' : '<div class="cc-k" style="color:#b45309;font-weight:700">passa solo con i cavi</div>') + '</td><td>' + esc(t.r.GAT_A) + ' \u2192 ' + esc(t.r.GAT_Z) + '</td><td>'
+            + t.c.map(function (v) { return '<button type="button" data-q="' + esc(v) + '" style="border:0;background:none;color:#334155;cursor:pointer;padding:0;text-align:left">' + mark(v) + '</button>'; }).join('<br>') + '</td></tr>';
+        }).join('') + '</table></div>';
+    var spiega = 'Una <b>C-FOS</b> \u00e8 un cavo in fibra tra due centrali e si scrive <code>CENTRALE1/CENTRALE2/C-FOS/numero</code>. Ogni collegamento ha nel campo <b>Id Cavo</b> l\u2019elenco dei cavi su cui passa. Qui ci sono i collegamenti che usano almeno un cavo che parte o arriva in ' + esc(clli) + ', anche se il collegamento ha i suoi estremi altrove.';
+    return { nome: nome, html: sezione('3', '#b45309', 'Collegamenti che usano i cavi di ' + esc(clli), spiega, punti + tabella + azioniLista(trovati.map(function (t) { return { rete: t.rete, r: t.r }; }), 'C-FOS con ' + clli)) };
+  }
+
   function rispostaID(q) {
     var R = rc().filter(function (r) { return norm(r.IdCollegamento) === q || norm(r.SubPath) === q; });
     var A = ra().filter(function (r) { return norm(r.SubPath) === q || norm(r.Arco) === q || norm(r['IdCollegamento (Ramo)']) === q; });
@@ -4118,10 +4232,14 @@ window.croChat = (function () {
   }
   function invia() {
     var i = el('croChatIn'), t = i.value.trim(); if (!t) return;
-    i.value = ''; msg('cc-u', esc(t));
+    i.value = ''; var u = msg('cc-u', esc(t));
     var b = msg('cc-b', '<span class="cc-k">Cerco\u2026</span>');
     conv.push({ q: t, el: b, ora: new Date() });
-    setTimeout(function () { try { b.innerHTML = rispondi(t); } catch (e) { b.innerHTML = 'Errore nella ricerca: ' + esc(e.message); } el('croChatMsg').scrollTop = el('croChatMsg').scrollHeight; }, 30);
+    setTimeout(function () {
+      try { b.innerHTML = rispondi(t); } catch (e) { b.innerHTML = 'Errore nella ricerca: ' + esc(e.message); }
+      /* V10.26|83: la risposta resta in alto, a partire dalla domanda; si scende leggendo */
+      var m = el('croChatMsg'); m.scrollTop = Math.max(0, u.offsetTop - m.offsetTop - 8);
+    }, 30);
   }
 
   /* ════ V10.26|54 · EXPORT DELLA CONVERSAZIONE: TXT e Word ════ */
@@ -22483,7 +22601,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V10.26 | 81 | Ott 2026</div>
+<div class="version-tag">V10.26 | 87 | Ott 2026</div>
       </div>
     </div>
   </header>
@@ -22729,7 +22847,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 81</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 87</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati. Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -22746,9 +22864,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 81</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 87</span>
                     </div>
-                    <p class="feature-desc">Dal bottone <strong>💬</strong> in basso a sinistra (trasparente, si apre al passaggio del mouse), una chat locale che cerca nei dati e nei testi del tool. Scrivi un <strong>CLLI</strong> e mostra nome, zona, data center, mappa e tutti i collegamenti RC e RA; un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
+                    <p class="feature-desc">Dal bottone <strong>💬</strong> in basso a sinistra (trasparente, si apre al passaggio del mouse), una chat locale che cerca nei dati e nei testi del tool. Scrivi un <strong>CLLI</strong> e mostra nome, zona, data center, mappa, tutti i collegamenti RC e RA e quelli che lo toccano solo con le C-FOS; un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">CLLI</span>
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">Subpath RA e RC</span>
@@ -22766,7 +22884,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 81</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 87</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -23284,7 +23402,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <h3 class="feature-title" style="color: #7c3aed;">🧩 Verifica RXMx e PXMx</h3>
     <span class="feature-badge" style="background:#f5f3ff;color:#7c3aed;">NUOVO V60.09.01</span>
   </div>
-  <p class="feature-desc">Verifica se la centrale d'accesso ha già un DWDM attivo (<strong>PXM1</strong> o <strong>PXM3</strong>) prima di prevedere un apparato nuovo in Studio di Fattibilità: su PXM1 bastano <strong>4WCC + 2 FO</strong>, su PXM3 <strong>4WCC + 4CSM</strong>. Da coordinate o indirizzo trova la <strong>centrale RC</strong> e la <strong>centrale RA</strong> più vicine e le <strong>dieci centrali PXM1/PXM3</strong> più vicine, in due tabelle con righe alternate e copia della singola riga; sopra le tabelle restano le ultime due ricerche fatte. La ricerca per <em>CLLI Sito</em> o <em>Descrizione Sito</em> lavora sull'intero archivio con filtro per tipo, selezione multipla ed export CSV. Le note del tab stanno nel pannello laterale a scomparsa.</p>
+  <p class="feature-desc">Verifica se la centrale d'accesso ha già un DWDM attivo (<strong>PXM1</strong> o <strong>PXM3</strong>) prima di prevedere un apparato nuovo in Studio di Fattibilità: su PXM1 si suggerisce <strong>1x 4WCC + 2 FO</strong>, su PXM3 <strong>1x 4WCC + 1x 4CSM</strong>, salvo verifiche su NNI; ora anche RXM1, RXM3 e RXM5. Da coordinate o indirizzo trova la <strong>centrale RC</strong> e la <strong>centrale RA</strong> più vicine e le <strong>dieci centrali PXM1/PXM3</strong> più vicine, in due tabelle con righe alternate e copia della singola riga; sopra le tabelle restano le ultime due ricerche fatte. La ricerca per <em>CLLI Sito</em> o <em>Descrizione Sito</em> lavora sull'intero archivio con filtro per tipo, selezione multipla ed export CSV. Le note del tab stanno nel pannello laterale a scomparsa.</p>
   <div class="feature-specs">
     <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">PXM1 / PXM3</span>
     <span class="spec-tag" style="background:#f5f3ff;color:#7c3aed;">Riutilizzo DWDM</span>
@@ -23405,8 +23523,70 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #7c3aed;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🔌 Novità V10.26 | 81 | Ott 2026</span>
+                  <span class="cl-ver">🧩 Novità V10.26 | 87 | Ott 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧩 Schede PXM e RXM più leggibili</strong>: la frase «La presenza di un RXM… si suggerisce sempre una verifica su NNI per conferma» è in grassetto nelle schede RXM1, RXM3 e RXM5; le altezze dei telai sono in corsivo, con il colore del testo, invece che in grigio</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #7c3aed;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📏 Novità V10.26 | 86 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📏 Altezze Nokia e Huawei OSN 8800</strong>: nelle schede PXM ci sono anche Nokia 1830 PSS-4 (2 U), PSS-8 (3 U), PSS-32 (14 U) e Huawei OSN 8800 (da 9 a 21 U secondo il telaio T16, T32, T64). Per ZTE (ZM721RA) e Nokia 1830 nelle RXM3 il telaio non è indicato nel DB e la scheda lo dice</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #7c3aed;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📏 Novità V10.26 | 85 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📏 Verifica RXMx e PXMx, altezza dei telai</strong>: ogni scheda indica l’altezza in unità rack. PXM1 e RXM1 sono telai piccoli, da 1 a 9 U (ADVA SH1HU, C7HU, C9HU, 7HU, 9HU; Huawei OSN 1800 I, II, V); RXM3 e RXM5 telai medi (Huawei OSN 1800 V circa 5 U, ADVA FSP 3000 R7 da 7 o 9 U); PXM3 telai più grandi</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #7c3aed;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧩 Novità V10.26 | 84 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>💬 Assistente CRO, risposta per un CLLI più chiara</strong>: tre parti numerate e spiegate. ① La centrale. ② I collegamenti che partono o arrivano lì, prima RC e poi RA, con un messaggio se una rete non ne ha. ③ I collegamenti che usano i suoi cavi C-FOS, con la spiegazione di cos’è una C-FOS, un riepilogo in punti e l’indicazione «passa solo con i cavi» o «parte o arriva qui»</li>
+    <li><strong>🧩 Verifica RXMx e PXMx</strong>: per la coda cliente si suggerisce, salvo verifiche su NNI, 1x 4WCC + 2 FO su PXM1 e 1x 4WCC + 1x 4CSM su PXM3; per RXM1, RXM3 e RXM5 la presenza dell’apparato (verso clienti, di Rete Aggregation, di Rete Core) va confermata su NNI. Le RXM sono classificate come le PXM (telai compatti per code cliente, telai di nodo RA, telai di nodo RC)</li>
+    <li><strong>🔘 Filtri per tipo a selezione multipla</strong>: PXM1, PXM3, RXM1, RXM3 e RXM5 si accendono e si spengono uno per uno e si sommano; Tutti li spegne. Tolti il bottone PXM1+PXM3 e la parola «SOLO»</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">💬 Novità V10.26 | 83 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>💬 Assistente CRO, risposta dall’inizio</strong>: dopo una domanda la chat non scorre più fino in fondo alla risposta, ma si ferma all’inizio della domanda; la risposta si legge dall’alto scendendo, senza dover risalire</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧵 Novità V10.26 | 82 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧵 Assistente CRO, CLLI nelle C-FOS</strong>: scrivendo un CLLI, oltre alla scheda della centrale, l’Assistente elenca i collegamenti RC e RA che hanno nell’Id Cavo una C-FOS con quel CLLI, anche se non partono o non arrivano in quella centrale (per esempio PESCITAA nelle C-FOS di CAM010). Le C-FOS hanno il CLLI evidenziato e si aprono con un clic; l’elenco si scarica in CSV o si apre nel tab Database</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #7c3aed;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🔌 Novità V10.26 | 81 | Ott 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -36999,11 +37179,11 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               </li>
 
               <li><p style="margin-top: 0.9rem;">
-                <strong style="color: #004C99;">PXM1 / PXM3</strong>: indicano automaticamente la scheda da richiedere per l'accesso in coda cliente — <strong>4WCC + 2 FO</strong> su PXM1, <strong>4WCC + 4CSM</strong> su PXM3.</p>
+                <strong style="color: #004C99;">PXM1 / PXM3</strong>: indicano la scheda suggerita per l'accesso in coda cliente, salvo verifiche su NNI — <strong>1x 4WCC + 2 FO</strong> su PXM1, <strong>1x 4WCC + 1x 4CSM</strong> su PXM3. <strong>RXM1 / RXM3 / RXM5</strong>: indicano un apparato DWDM verso clienti, di Rete Aggregation o di Rete Core, da confermare su NNI.</p>
               </li>
 
               <li><p style="margin-top: 0.9rem;">
-                <strong style="color: #004C99;">🔍 Ricerca Centrale con Apparati DWDM (PXM1/3 e RXM1/3/5)</strong>: cerca per CLLI Sito e/o Descrizione sito su tutti i database PXM1, PXM3, RXM1, RXM3 e RXM5, in un’unica tabella; clicca sul campo vuoto per sfogliare l'elenco completo. Filtro per tipo (attivo anche sfogliando l'elenco): <strong>🔷 Tutti</strong> (default, nessun filtro), <strong>SOLO PXM1</strong> mostra solo le centrali che hanno esclusivamente PXM1, <strong>SOLO PXM3</strong> solo quelle che hanno esclusivamente PXM3, <strong>PXM1+PXM3</strong> mostra solo le centrali che hanno installate entrambe le schede.</p>
+                <strong style="color: #004C99;">🔍 Ricerca Centrale con Apparati DWDM (PXM1/3 e RXM1/3/5)</strong>: cerca per CLLI Sito e/o Descrizione sito su tutti i database PXM1, PXM3, RXM1, RXM3 e RXM5, in un’unica tabella; clicca sul campo vuoto per sfogliare l'elenco completo. Filtro per tipo (attivo anche sfogliando l'elenco): <strong>🔷 Tutti</strong> (default, nessun filtro) e i bottoni <strong>PXM1</strong>, <strong>PXM3</strong>, <strong>RXM1</strong>, <strong>RXM3</strong>, <strong>RXM5</strong>, che si accendono e si spengono uno per uno e si sommano: per esempio PXM3 + RXM3 mostra gli apparati di tutti e due i tipi. Tutti li spegne.</p>
               </li>
 
               <li><p style="margin-top: 0.9rem;">
@@ -37027,15 +37207,15 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
           <div>Nell’inventario da cui vengono i dati, <strong>PXM1, PXM3, RXM1, RXM3 e RXM5</strong> sono <strong>tipologie di apparato DWDM installate in centrale</strong>, non singole schede: ogni record è un telaio (shelf) con il suo modello, per esempio ADVA FSP 3000, Nokia/Alcatel-Lucent 1830 PSS, Huawei OSN 1800 e 8800, ZTE. Le note del DB indicano le <strong>RXM</strong> come modelli della rete <strong>Revolution</strong>; per le <strong>PXM</strong> i dati non dicono a quale rete appartengono. Dove sono installate (confronto con i DB RA e RC del tool): <strong>RXM3</strong> quasi sempre su nodi RA (2.775 sedi su 2.789), <strong>RXM5</strong> quasi sempre su nodi RC (597 su 601), <strong>PXM3</strong> per lo più su nodi RA o RC, mentre <strong>PXM1</strong> e <strong>RXM1</strong> sono spesso in sedi che non sono nodi di rete, molte delle quali sedi cliente. La presenza di una PXM o RXM in centrale indica che c’è già un DWDM, potenzialmente riutilizzabile per la coda cliente.</div>
         </div>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.75rem; margin-top: 0.75rem; margin-bottom: 1rem;">
-          <div style="background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);border:1px solid #93c5fd;border-radius:10px;padding:0.9rem 1.05rem;font-size:0.79rem;color:#374151;line-height:1.55;"><div style="font-size:0.9rem;font-weight:700;color:#1e40af;margin-bottom:0.4rem;">PXM1 · 1.039 apparati</div>Telai piccoli: ADVA FSP 3000 SlimLine e 7HU (891), Nokia 1830 PSS-4 (109), Huawei OSN 1800 (39).<div style="margin-top:0.4rem;"><strong>Per la coda cliente:</strong> 4WCC + 2 FO.</div></div>
-          <div style="background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%);border:1px solid #c4b5fd;border-radius:10px;padding:0.9rem 1.05rem;font-size:0.79rem;color:#374151;line-height:1.55;"><div style="font-size:0.9rem;font-weight:700;color:#5b21b6;margin-bottom:0.4rem;">PXM3 · 2.423 apparati</div>Telai più grandi: ADVA FSP 3000 R7 (1.520), Nokia 1830 PSS-32 (705), Huawei OSN 8800/1800 (196).<div style="margin-top:0.4rem;"><strong>Per la coda cliente:</strong> 4WCC + 4CSM.</div></div>
-          <div style="background:linear-gradient(135deg,#f0fdfa 0%,#ccfbf1 100%);border:1px solid #5eead4;border-radius:10px;padding:0.9rem 1.05rem;font-size:0.79rem;color:#374151;line-height:1.55;"><div style="font-size:0.9rem;font-weight:700;color:#0f766e;margin-bottom:0.4rem;">RXM1 · 192 apparati</div>ADVA (159: SlimLine SH1HU, FSP C9HU e C7HU) e Huawei OSN 1800 (33). Le note del DB li indicano come <strong>modelli per code cliente</strong> della rete Revolution.<div style="margin-top:0.4rem;"><strong>Per la coda cliente:</strong> da definire.</div></div>
-          <div style="background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);border:1px solid #86efac;border-radius:10px;padding:0.9rem 1.05rem;font-size:0.79rem;color:#374151;line-height:1.55;"><div style="font-size:0.9rem;font-weight:700;color:#15803d;margin-bottom:0.4rem;">RXM3 · 2.839 apparati</div>Huawei OSN 1800 «RA» (2.129), ADVA FSP 3000 «RA» (613), ZTE (93), Nokia 1830 (4). Le note del DB: apparati dello <strong>strato Urban Region</strong> / Revolution <strong>Regional Aggregation</strong>.<div style="margin-top:0.4rem;"><strong>Per la coda cliente:</strong> da definire.</div></div>
-          <div style="background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);border:1px solid #fcd34d;border-radius:10px;padding:0.9rem 1.05rem;font-size:0.79rem;color:#374151;line-height:1.55;"><div style="font-size:0.9rem;font-weight:700;color:#b45309;margin-bottom:0.4rem;">RXM5 · 619 apparati</div>Huawei OSN 1800 «RC» (492) e ADVA FSP 3000 «RC» (127). Le note del DB: apparati dello <strong>strato Dense Urban</strong>.<div style="margin-top:0.4rem;"><strong>Per la coda cliente:</strong> da definire.</div></div>
+          <div style="background:linear-gradient(135deg,#eff6ff 0%,#dbeafe 100%);border:1px solid #93c5fd;border-radius:10px;padding:0.9rem 1.05rem;font-size:0.79rem;color:#374151;line-height:1.55;"><div style="font-size:0.9rem;font-weight:700;color:#1e40af;margin-bottom:0.4rem;">PXM1 · 1.039 apparati</div>Telai piccoli: ADVA FSP 3000 SlimLine e 7HU (891), Nokia 1830 PSS-4 (109), Huawei OSN 1800 I e V (39). <em>Altezza: da 1 a 9 unità rack (ADVA SH1HU 1U, 7HU, 9HU; Nokia PSS-4 2U; Huawei OSN 1800 I 1U, V circa 5U).</em><div style="margin-top:0.4rem;"><strong>Per la coda cliente si suggerisce salvo verifiche su NNI:</strong> 1x 4WCC + 2 FO.</div></div>
+          <div style="background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%);border:1px solid #c4b5fd;border-radius:10px;padding:0.9rem 1.05rem;font-size:0.79rem;color:#374151;line-height:1.55;"><div style="font-size:0.9rem;font-weight:700;color:#5b21b6;margin-bottom:0.4rem;">PXM3 · 2.423 apparati</div>Telai più grandi: ADVA FSP 3000 R7 (1.520), Nokia 1830 PSS-32 (705), Huawei OSN 8800/1800 (196). <em>Altezza: ADVA FSP 3000 R7 7 o 9 U (SH7HU, SH9HU); Nokia PSS-32 14 U (PSS-8 3 U, 2 apparati); Huawei OSN 8800 da 9 a 21 U secondo il telaio (T16 9 U, T32 14 U, T64 21 U), che il DB non indica.</em><div style="margin-top:0.4rem;"><strong>Per la coda cliente si suggerisce salvo verifiche su NNI:</strong> 1x 4WCC + 1x 4CSM.</div></div>
+          <div style="background:linear-gradient(135deg,#f0fdfa 0%,#ccfbf1 100%);border:1px solid #5eead4;border-radius:10px;padding:0.9rem 1.05rem;font-size:0.79rem;color:#374151;line-height:1.55;"><div style="font-size:0.9rem;font-weight:700;color:#0f766e;margin-bottom:0.4rem;">RXM1 · 192 apparati</div>Telai piccoli per le code cliente: ADVA SlimLine SH1HU, FSP C7HU e C9HU (159), Huawei OSN 1800 II e V (33). <em>Altezza: da 1 a 9 unità rack (SH1HU 1U, C7HU 7U, C9HU 9U; OSN 1800 II 2U, V circa 5U).</em> Le note del DB li indicano come <strong>modelli per code cliente</strong> della rete Revolution.<div style="margin-top:0.4rem;font-weight:700;">La presenza di un RXM1 indica che esiste un apparato DWDM verso clienti, ma si suggerisce sempre una verifica su NNI per conferma.</div></div>
+          <div style="background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);border:1px solid #86efac;border-radius:10px;padding:0.9rem 1.05rem;font-size:0.79rem;color:#374151;line-height:1.55;"><div style="font-size:0.9rem;font-weight:700;color:#15803d;margin-bottom:0.4rem;">RXM3 · 2.839 apparati</div>Telai medi di nodo della Rete Aggregation: Huawei OSN 1800 V «RA» (2.129), ADVA FSP 3000 R7 «RA» (613), ZTE (93), Nokia 1830 (4). <em>Altezza: circa 5 unità rack l’OSN 1800 V, 7 o 9 l’FSP 3000 R7. ZTE (codice ZM721RA, probabilmente ZXMP M721) da 1 a 6 U secondo il telaio e Nokia 1830 secondo lo shelf: il DB non indica quale.</em> Le note del DB: apparati dello <strong>strato Urban Region</strong> / Revolution <strong>Regional Aggregation</strong>.<div style="margin-top:0.4rem;font-weight:700;">La presenza di un RXM3 indica che esiste un apparato DWDM di Rete Aggregation, ma si suggerisce sempre una verifica su NNI per conferma.</div></div>
+          <div style="background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);border:1px solid #fcd34d;border-radius:10px;padding:0.9rem 1.05rem;font-size:0.79rem;color:#374151;line-height:1.55;"><div style="font-size:0.9rem;font-weight:700;color:#b45309;margin-bottom:0.4rem;">RXM5 · 619 apparati</div>Telai medi di nodo della Rete Core: Huawei OSN 1800 V «RC» (492) e ADVA FSP 3000 R7 «RC» (127). <em>Altezza: circa 5 unità rack l’OSN 1800 V, 7 o 9 l’FSP 3000 R7.</em> Le note del DB: apparati dello <strong>strato Dense Urban</strong>.<div style="margin-top:0.4rem;font-weight:700;">La presenza di un RXM5 indica che esiste un apparato DWDM di Rete Core, ma si suggerisce sempre una verifica su NNI per conferma.</div></div>
         </div>
 
         <div style="background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%); border-left: 4px solid #3b82f6; border-radius: 6px; padding: 0.9rem 1.1rem; margin-bottom: 1rem; font-size: 0.8rem; color: #1e3a8a; line-height: 1.55;">
-          <strong>💡 Nota di fattibilità:</strong> in fase di Studio di Fattibilità (SdF), sulla centrale d'accesso impattata dalla coda cliente si verifica prima se è già presente un DWDM (PXM1/PXM3 o RXM1/RXM3/RXM5): se sì, <strong>non si prevede l'installazione ex-novo dell'intero apparato/cestello</strong>, ma si riutilizza quello esistente aggiungendo solo <strong>4WCC</strong> (transponder) — più <strong>2 FO</strong> da richiedere a <strong>FOL</strong> su PXM1, oppure <strong>4CSM</strong> (filtro) su PXM3. Questo, anche in valutazioni parametriche, riduce l'acquisto di materiale già presente in centrale. Resta comunque necessaria la verifica d'ingegneria sulla disponibilità di <strong>slot liberi su NNI</strong> per l'installazione delle nuove piastre prima di confermare il riutilizzo.
+          <strong>💡 Nota di fattibilità:</strong> in fase di Studio di Fattibilità (SdF), sulla centrale d'accesso impattata dalla coda cliente si verifica prima se è già presente un DWDM (PXM1/PXM3 o RXM1/RXM3/RXM5): se sì, <strong>non si prevede l'installazione ex-novo dell'intero apparato/cestello</strong>, ma si riutilizza quello esistente: si suggerisce, salvo verifiche su NNI, <strong>1x 4WCC</strong> (transponder) più <strong>2 FO</strong> da richiedere a <strong>FOL</strong> su PXM1, oppure <strong>1x 4WCC + 1x 4CSM</strong> (filtro) su PXM3; su RXM1, RXM3 e RXM5 la presenza dell’apparato va confermata su NNI. Questo, anche in valutazioni parametriche, riduce l'acquisto di materiale già presente in centrale. Resta comunque necessaria la verifica d'ingegneria sulla disponibilità di <strong>slot liberi su NNI</strong> per l'installazione delle nuove piastre prima di confermare il riutilizzo.
         </div>
 
         <!-- Ricerca Centrale (larghezza piena) -->
@@ -37049,19 +37229,16 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 
           <!-- Filtro Tipo -->
           <div style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.85rem;">
-            <label style="font-size: 0.75rem; color: #4b5563;">Filtra per tipo:</label>
+            <label style="font-size: 0.75rem; color: #4b5563;">Filtra per tipo <span style="color:#94a3b8;">(clic per aggiungere o togliere)</span>:</label>
             <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
               <button type="button" id="pxmFilterBtnALL" class="btn btn-chip pxm-filter-btn pxm-filter-active" onclick="setPXMTipoFilter('ALL')" style="white-space: nowrap; background: #475569; color: white; border-color: #475569;">
                 🔷 Tutti
               </button>
               <button type="button" id="pxmFilterBtnPXM1" class="btn btn-chip pxm-filter-btn" onclick="setPXMTipoFilter('PXM1')" style="white-space: nowrap; background: #eff6ff; color: #1d4ed8; border-color: #93c5fd;">
-                SOLO PXM1
+                PXM1
               </button>
               <button type="button" id="pxmFilterBtnPXM3" class="btn btn-chip pxm-filter-btn" onclick="setPXMTipoFilter('PXM3')" style="white-space: nowrap; background: #f5f3ff; color: #6d28d9; border-color: #c4b5fd;">
-                SOLO PXM3
-              </button>
-              <button type="button" id="pxmFilterBtnBOTH" class="btn btn-chip pxm-filter-btn" onclick="setPXMTipoFilter('BOTH')" style="white-space: nowrap; background: #fff7ed; color: #c2410c; border-color: #fdba74;">
-                PXM1+PXM3
+                PXM3
               </button>
               <button type="button" id="pxmFilterBtnRXM1" class="btn btn-chip pxm-filter-btn" onclick="setPXMTipoFilter('RXM1')" style="white-space: nowrap; background: #f0fdfa; color: #0f766e; border-color: #5eead4;">RXM1</button>
               <button type="button" id="pxmFilterBtnRXM3" class="btn btn-chip pxm-filter-btn" onclick="setPXMTipoFilter('RXM3')" style="white-space: nowrap; background: #f0fdf4; color: #15803d; border-color: #86efac;">RXM3</button>
@@ -37196,10 +37373,10 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   const NAT_ITALIA_URL = 'https://lupoli76.github.io/NAT_ITALIA_NETCOM_2026/';
 
   const CARD_NOTE = {
-    'PXM1': '4WCC + 2 FO',
-    'PXM3': '4WCC + 4CSM',
-    /* V10.26|80: per le RXM la scheda da richiedere non e' ancora definita */
-    'RXM1': 'da definire', 'RXM3': 'da definire', 'RXM5': 'da definire'
+    /* V10.26|84: suggerimenti, sempre salvo verifiche su NNI */
+    'PXM1': '1x 4WCC + 2 FO (salvo verifica NNI)',
+    'PXM3': '1x 4WCC + 1x 4CSM (salvo verifica NNI)',
+    'RXM1': 'DWDM verso clienti: verificare su NNI', 'RXM3': 'DWDM di Rete Aggregation: verificare su NNI', 'RXM5': 'DWDM di Rete Core: verificare su NNI'
   };
   const PXM_TIPI = ['PXM1', 'PXM3', 'RXM1', 'RXM3', 'RXM5'];
   const PXM_COLORI = { PXM1: ['#1d4ed8', '#dbeafe'], PXM3: ['#6d28d9', '#ede9fe'], RXM1: ['#0f766e', '#ccfbf1'], RXM3: ['#15803d', '#dcfce7'], RXM5: ['#b45309', '#fef3c7'] };
@@ -37237,7 +37414,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
 
   // ===== Selezione multipla =====
   const _pxmSelected = new Set();
-  let _pxmTipoFilter = 'ALL'; // 'ALL' | 'PXM1' | 'PXM3' | 'BOTH'
+  /* V10.26|84: filtro a selezione multipla: i tipi accesi si sommano; vuoto = Tutti */
+  let _pxmTipiSel = new Set();
   let _pxmByIdCache = null;
   function getPXMById(id) {
     if (!_pxmByIdCache) {
@@ -37740,7 +37918,10 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   }
 
   window.setPXMTipoFilter = function(tipo) {
-    _pxmTipoFilter = tipo;
+    if (tipo === 'ALL') _pxmTipiSel.clear();
+    else if (_pxmTipiSel.has(tipo)) _pxmTipiSel.delete(tipo);
+    else _pxmTipiSel.add(tipo);
+    if (_pxmTipiSel.size === PXM_TIPI.length) _pxmTipiSel.clear();   /* tutti accesi = Tutti */
     const palette = {
       ALL:  { solid: '#475569', pastelBg: '#f1f5f9', pastelText: '#475569', pastelBorder: '#cbd5e1' }, // slate — nessun filtro
       PXM1: { solid: '#1d4ed8', pastelBg: '#eff6ff', pastelText: '#1d4ed8', pastelBorder: '#93c5fd' }, // blu — coerente con badge/card PXM1
@@ -37750,11 +37931,13 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       RXM3: { solid: '#15803d', pastelBg: '#f0fdf4', pastelText: '#15803d', pastelBorder: '#86efac' },
       RXM5: { solid: '#b45309', pastelBg: '#fffbeb', pastelText: '#b45309', pastelBorder: '#fcd34d' }  // arancio — combinazione PXM1+PXM3, distinto dal viola
     };
-    ['ALL', 'PXM1', 'PXM3', 'BOTH', 'RXM1', 'RXM3', 'RXM5'].forEach(function(t) {
+    ['ALL', 'PXM1', 'PXM3', 'RXM1', 'RXM3', 'RXM5'].forEach(function(t) {
       const btn = document.getElementById('pxmFilterBtn' + t);
       if (!btn) return;
       const c = palette[t];
-      if (t === tipo) {
+      const acceso = t === 'ALL' ? !_pxmTipiSel.size : _pxmTipiSel.has(t);
+      btn.setAttribute('aria-pressed', acceso ? 'true' : 'false');
+      if (acceso) {
         btn.classList.add('pxm-filter-active');
         btn.style.background = c.solid;
         btn.style.color = 'white';
@@ -37802,20 +37985,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
              normalize(rec.sede).indexOf(term) !== -1;
     });
     const tipiByClliGlobal = getPXMTipiByClli();
-    if (/^RXM/.test(_pxmTipoFilter)) {
-      matches = matches.filter(function (rec) { return rec.tipo === _pxmTipoFilter; });
-    } else if (_pxmTipoFilter === 'PXM1' || _pxmTipoFilter === 'PXM3') {
-      const other = _pxmTipoFilter === 'PXM1' ? 'PXM3' : 'PXM1';
-      matches = matches.filter(function(rec) {
-        const tipi = tipiByClliGlobal[rec.clli];
-        return rec.tipo === _pxmTipoFilter && tipi && !tipi.has(other);
-      });
-    } else if (_pxmTipoFilter === 'BOTH') {
-      matches = matches.filter(function(rec) {
-        const tipi = tipiByClliGlobal[rec.clli];
-        return tipi && tipi.has('PXM1') && tipi.has('PXM3');
-      });
-    }
+    if (_pxmTipiSel.size) matches = matches.filter(function (rec) { return _pxmTipiSel.has(rec.tipo); });
 
     emptyState.style.display = 'none';
 
@@ -37877,11 +38047,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     if (input.value.trim()) { hidePXMDropdown(); return; }
 
     const list = getPXMCentraliList().filter(function(item) {
-      if (/^RXM/.test(_pxmTipoFilter)) return !!item.tipi[_pxmTipoFilter];
-      if (_pxmTipoFilter === 'BOTH') return !!(item.tipi['PXM1'] && item.tipi['PXM3']);
-      if (_pxmTipoFilter === 'PXM1') return !!(item.tipi['PXM1'] && !item.tipi['PXM3']);
-      if (_pxmTipoFilter === 'PXM3') return !!(item.tipi['PXM3'] && !item.tipi['PXM1']);
-      return true;
+      if (!_pxmTipiSel.size) return true;
+      return PXM_TIPI.some(function (t) { return _pxmTipiSel.has(t) && item.tipi[t]; });
     });
     let html = '';
     list.forEach(function(item) {
@@ -38404,7 +38571,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               <ul class="docs-list">
                 <li>Apri il tab <strong>🧩 Analisi e Verifica PXM</strong> dal menu <em>Analisi Extra</em>.</li>
                 <li>Con <strong>📍 Ricerca per Coordinate / Indirizzo Sede Cliente</strong> ottieni la centrale RC e la centrale RA più vicine e le dieci centrali PXM1/PXM3 più vicine, in due tabelle con il bottone 📋 di riga.</li>
-                    <li>Cerca la centrale per <em>CLLI</em> o <em>Descrizione sito</em>; il risultato indica se ha scheda PXM1 (richiede 4WCC + 2 FO) o PXM3 (richiede 4WCC + 4CSM).</li>
+                    <li>Cerca la centrale per <em>CLLI</em> o <em>Descrizione sito</em>; il risultato indica se ha PXM1 (si suggerisce 1x 4WCC + 2 FO), PXM3 (1x 4WCC + 1x 4CSM) o RXM1, RXM3, RXM5 (da confermare su NNI), sempre salvo verifiche su NNI.</li>
                 <li>Seleziona le centrali di interesse con le checkbox e usa <strong>👁️ Mostra solo selezionate</strong> per isolarle in tabella.</li>
               </ul>
             </div>
@@ -38563,7 +38730,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   🧩 Verifica RXMx e PXMx — Centrali con apparati DWDM PXM e RXM
                 </summary>
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
-                  <p><strong>Scopo:</strong> nelle Studi di Fattibilità (SdF), verificare se la centrale d'accesso impattata dalla coda cliente ha già un DWDM installato (<strong>PXM1</strong> o <strong>PXM3</strong>), per evitare di prevedere una nuova installazione ex-novo dell'apparato/cestello e riutilizzare quello esistente: basta aggiungere <strong>4WCC + 2 FO</strong> (2 FO da richiedere a FOL) su PXM1, oppure <strong>4WCC + 4CSM</strong> su PXM3 — riducendo, anche in valutazioni parametriche, l'acquisto di materiale già presente in centrale, previa verifica di slot liberi su NNI per l'installazione delle nuove piastre. Database di 3.478 record (1.040 PXM1 + 2.438 PXM3) da anagrafica SHELF_PXM1/PXM3.</p>
+                  <p><strong>Scopo:</strong> nelle Studi di Fattibilità (SdF), verificare se la centrale d'accesso impattata dalla coda cliente ha già un DWDM installato (<strong>PXM1</strong> o <strong>PXM3</strong>), per evitare di prevedere una nuova installazione ex-novo dell'apparato/cestello e riutilizzare quello esistente: si suggerisce, salvo verifiche su NNI, <strong>1x 4WCC + 2 FO</strong> (2 FO da richiedere a FOL) su PXM1, oppure <strong>1x 4WCC + 1x 4CSM</strong> su PXM3 — riducendo, anche in valutazioni parametriche, l'acquisto di materiale già presente in centrale, previa verifica di slot liberi su NNI per l'installazione delle nuove piastre. Database di 3.478 record (1.040 PXM1 + 2.438 PXM3) da anagrafica SHELF_PXM1/PXM3.</p>
                   <p><strong>Come si usa:</strong></p>
                   <ul style="margin-left:1.2rem;line-height:1.8;">
                     <li>Accedi da <strong>Analisi Extra → Analisi e Verifica PXM</strong>.</li>
@@ -38571,7 +38738,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     <li><strong>🗓️ Cronologia delle ultime ricerche</strong>: sopra i risultati restano le ultime due ricerche per coordinate, con coordinate, indirizzo, centrale RC e RA trovate con le rispettive distanze e data e ora al secondo. Restano salvate nel browser e si cancellano solo con <strong>🗑️ Cancella cronologia</strong>, che chiede conferma con un secondo clic e si annulla da solo dopo cinque secondi.</li>
                     <li><strong>📘 Note e regole</strong>: le note del tab stanno nel pannello laterale a scomparsa, come nei tre tab di ricerca percorso, con l'indice a pastiglie delle voci e il riquadro finale sulle regole di calcolo. La distanza è in linea d'aria (Haversine) e non lungo la fibra; le centrali PXM prese in esame sono solo quelle georeferenziate.</li>
                     <li>Cerca per <em>CLLI Sito</em> e/o <em>Descrizione sito</em> nel campo di ricerca live (case/accent-insensitive), oppure clicca sul campo vuoto per sfogliare l'elenco completo delle centrali installate.</li>
-                    <li><strong>Filtro per tipo</strong>: 🔷 Tutti (default), SOLO PXM1 (esclude centrali che hanno anche PXM3), SOLO PXM3 (esclude centrali che hanno anche PXM1), PXM1+PXM3 (solo centrali con entrambe).</li>
+                    <li><strong>Filtro per tipo</strong>: 🔷 Tutti (default) e i bottoni PXM1, PXM3, RXM1, RXM3, RXM5, che si accendono e si spengono uno per uno e si sommano (per esempio PXM3 + RXM3 mostra gli apparati di tutti e due i tipi); Tutti li spegne.</li>
                     <li>I risultati mostrano Tipo (PXM1/PXM3), CLLI, Descrizione Sito, Nome Sede/Comune/Lat/Long (da anagrafica ufficiale, disponibili per 1.845 centrali su 2.254 CLLI presenti nel DB), ID Apparato, Costruttore, Modello e Scheda richiesta; il bottone 📋 su ogni riga copia i dati completi della centrale.</li>
                     <li>Seleziona una o più centrali con la <strong>checkbox</strong> di riga, oppure usa la checkbox <strong>seleziona tutto</strong> in intestazione tabella.</li>
                     <li>Il pannello <strong>✅ Selezione</strong> mostra il conteggio e i chip rimovibili (✕) delle centrali scelte; resta valido anche cambiando termine di ricerca.</li>
@@ -38624,7 +38791,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
                   <p><strong>Dove si trova:</strong> bottone <em>💬</em> in basso a sinistra, in tutti i tab: è trasparente per non coprire il testo e al passaggio del mouse diventa pieno con la scritta «Assistente CRO»; sopra compare un fumetto con cosa sa fare e i limiti. Si chiude con ✕ o Esc; <em>Pulisci</em> svuota la conversazione, <em>Limiti</em> ricorda cosa non sa fare.</p>
                   <p><strong>Export:</strong> <em>⬇ TXT</em> scarica la conversazione impaginata come gli export dei tab RA, RC e Unificato (intestazione, data, revisione, limiti, una sezione per domanda, schede con i puntini, tabelle allineate, elenchi e link). <em>⬇ Word</em> crea un documento A4 orizzontale con copertina, indice delle domande, una pagina per domanda, schede ombreggiate e tabelle con gli stati colorati (verde attivo, rosso non attivo, giallo da verificare). Il Word richiede la libreria JSZip; sul PC di lavoro il download può essere bloccato dal software di sicurezza.</p>
-                  <p><strong>CLLI</strong> (per esempio MILAITCG): nome della centrale, zona, regione e area, data center se c’è, link alla mappa e tabella dei collegamenti RC e RA con verso, km e stato; un clic su un subpath apre la sua scheda.</p>
+                  <p><strong>CLLI</strong> (per esempio MILAITCG): nome della centrale, zona, regione e area, data center se c’è, link alla mappa e tabella dei collegamenti RC e RA con verso, km e stato; un clic su un subpath apre la sua scheda. Più sotto, i collegamenti RC e RA che hanno nell’Id Cavo una C-FOS con quel CLLI (per esempio PESCITAA nelle C-FOS di CAM010), anche se non partono o non arrivano in quella centrale, con il CLLI evidenziato.</p>
                   <p><strong>Subpath RC, subpath RA, arco, ramo</strong> (per esempio CLO201, AAM003/1, AM_arco_101): scheda con estremi, CLLI, mappa, km, portante, vendor, stato, zona, C-FOS, OTS, note e indicazioni NNI.</p>
                   <p><strong>C-FOS</strong> (per esempio MILAITCG/MILAITCH/C-FOS/00005): quali subpath RC e tratte RA la usano.</p>
                   <p><strong>Centrale</strong> (per esempio Pioltello): le centrali con quel nome; se è una sola, la sua scheda.</p>
@@ -40663,8 +40830,8 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
                 <dt><strong>Percorso Alternativo (Div)</strong></dt>
                 <dd>Percorso diversificato con overlap <30% vs 1.1. Per ridondanza e disaster recovery</dd>
 
-                <dt><strong>PXM1 / PXM3</strong></dt>
-                <dd>Processor Switch Module: schede di controllo/gestione del nodo ottico DWDM (supervisione chassis, provisioning circuiti, allarmi, sync/timing). PXM1 = prima generazione (CPU/memoria limitate); PXM3 = versione evoluta (CPU più potente, più cross-connect, supporto 10G/40G/100G). Per l'accesso in coda cliente richiedono rispettivamente scheda <strong>4WCC + 2 FO</strong> (PXM1) e <strong>4WCC + 4CSM</strong> (PXM3). Verificabili nel tab <em>Analisi e Verifica PXM</em></dd>
+                <dt><strong>PXM1 / PXM3 / RXM1 / RXM3 / RXM5</strong></dt>
+                <dd>Tipologie di apparato DWDM dell’inventario (telai completi, non schede). PXM1: telai piccoli (ADVA SlimLine, Nokia 1830 PSS-4, Huawei OSN 1800); PXM3: telai più grandi (ADVA FSP 3000 R7, Nokia 1830 PSS-32, Huawei OSN 8800). RXM1: apparati Revolution per code cliente; RXM3: apparati di nodo della Rete Aggregation; RXM5: apparati di nodo della Rete Core. Per la coda cliente si suggerisce, salvo verifiche su NNI, 1x 4WCC + 2 FO su PXM1 e 1x 4WCC + 1x 4CSM su PXM3. Verificabili nel tab <em>Verifica RXMx e PXMx</em></dd>
 
                 <dt><strong>RA Italia (Rete Aggregation Italia)</strong></dt>
                 <dd>Rete di aggregazione TIM che raccoglie traffico dalle centrali periferiche verso i nodi Core (NODO A1). Struttura gerarchica: Tipo 3 → Tipo 2 → Tipo 1</dd>
@@ -40726,7 +40893,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 81 | Ott 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 87 | Ott 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -40745,6 +40912,74 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#f5f3ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
+            🧩 V10.26 | 87 | Ott 2026 | Schede PXM e RXM più leggibili
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧩 Stile</strong>: frase finale delle schede RXM con <code>font-weight: 700</code>; riga «Altezza:» in <code>&lt;em&gt;</code> al posto dello span grigio</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#f5f3ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
+            📏 V10.26 | 86 | Ott 2026 | Altezze Nokia e Huawei OSN 8800
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📏 Fonti</strong>: misure indicate da Giuseppe (Nokia 1830 PSS-4 2 RU, PSS-8 3 RU, PSS-32 14 RU; Huawei OSN 8800 T16 9 U, T32 14 U, T64 21 U). Il modello Huawei nel DB (8800U1800V) e quelli ZTE (ZM721RA) e Nokia (1830REVRA) non indicano il telaio, quindi per loro resta un intervallo o «non indicato»</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#f5f3ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
+            📏 V10.26 | 85 | Ott 2026 | Altezza dei telai nelle schede PXM e RXM
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📏 Fonti</strong>: altezze dalle schede dei costruttori indicate da Giuseppe (Huawei OptiX OSN 1800: I 1U, II 2U, V circa 5U; ADVA FSP 3000 R7: SH7HU 7U, SH9HU 9U, shelf da 1U) e dal nome dei modelli nel DB (SH1HU, C7HU, C9HU, 7HU, 9HU). Per ZTE e Nokia l’altezza non è indicata</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#f5f3ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
+            🧩 V10.26 | 84 | Ott 2026 | Risposta per CLLI in tre parti, suggerimenti PXM/RXM, filtri multipli
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>💬 rispostaCLLI()</strong>: tre sezioni <code>.cc-sez</code> numerate con titolo e spiegazione; <code>cfosConClli()</code> restituisce la terza sezione, con l’ordine RC prima di RA e, dentro ciascuna rete, prima chi passa solo con i cavi</li>
+              <li><strong>🧩 CARD_NOTE</strong> e schede informative con i nuovi testi «salvo verifiche su NNI»; glossario della Guida corretto (PXM e RXM sono tipologie di apparato, non schede)</li>
+              <li><strong>🔘 _pxmTipiSel</strong>: insieme dei tipi accesi al posto del filtro singolo; vuoto o tutti accesi = Tutti</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            💬 V10.26 | 83 | Ott 2026 | Assistente CRO: risposta dall’inizio
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>💬 invia()</strong>: a risposta pronta lo scorrimento della conversazione va all’inizio della domanda appena fatta (prima andava in fondo)</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#f2f7fd;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#00519e;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            🧵 V10.26 | 82 | Ott 2026 | Assistente CRO: CLLI nelle C-FOS
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧵 cfosConClli(clli)</strong>: scorre l’Id Cavo di tutti i collegamenti RC e RA, divide le C-FOS (separate da « + ») e tiene quelle con il CLLI come primo o secondo estremo (<code>CLLI1/CLLI2/C-FOS/n</code>). Prima i collegamenti che toccano la centrale solo con i cavi, poi quelli che partono o arrivano lì</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#f5f3ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
             🔌 V10.26 | 81 | Ott 2026 | Schede PXM/RXM corrette sui dati
           </summary>
@@ -91207,7 +91442,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V10.26 | 81';
+  var REVISIONE = 'V10.26 | 87';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
