@@ -4,13 +4,39 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 10.26 | 151  (rev. pubblicata: V10.26 | 151 | Ott 2026)              ║
+║   Versione: 10.26 | 156  (rev. pubblicata: V10.26 | 156 | Ott 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V10.26 | 156 | Ott 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • POSIZIONE CLIENTE: tolti riquadro e fondo verde di Trova Nodi A1; restano una║
+║     barretta verde a sinistra, la targhetta "A1" e un bottone bianco verde       ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 155 | Ott 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • POSIZIONE CLIENTE: "CLLI o Nome Centrale" e "Trova Nodi A1" in un riquadro   ║
+║     verde sottile; bottone nel verde dell'icona del campo (anche in tema scuro)  ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 154 | Ott 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • POSIZIONE CLIENTE: campo "CLLI o Nome Centrale" e bottone "Trova Nodi A1"    ║
+║     alti esattamente come Latitudine, misurata nel browser (ResizeObserver)      ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 153 | Ott 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • POSIZIONE CLIENTE (RC, RA, Unificato): campo "CLLI o Nome Centrale" e bottone║
+║     "Trova Nodi A1" spostati sulla riga di Latitudine e Longitudine, alti uguali ║
+║                                                                                  ║
+║   CHANGELOG V10.26 | 152 | Ott 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • TROVA NODI A1 (tab RC, RA, Unificato): nuovo campo "CLLI o Nome Centrale" in ║
+║     Posizione Cliente; popup con i Nodi A1 piu' vicini (linea d'aria, km di rete ║
+║     del tab, badge A1_DIV senza PE) e scelta di Arrivo, Arrivo 2 o entrambi      ║
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 151 | Ott 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -24224,7 +24250,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V10.26 | 151 | Ott 2026</div>
+<div class="version-tag">V10.26 | 156 | Ott 2026</div>
       </div>
     </div>
   </header>
@@ -24470,7 +24496,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 151</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 156</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati. Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -24487,7 +24513,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 151</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V10.26 | 156</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -24508,7 +24534,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V10.26 | 151</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V10.26 | 156</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -24525,7 +24551,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 151</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V10.26 | 156</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -25137,10 +25163,60 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #0066cc;">
+              <details class="cl-item" open style="--cl-accent: #16a34a;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">✳️ Novità V10.26 | 156 | Ott 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>✳️ Trova Nodi A1 più sobrio</strong>: niente più riquadro e fondo verde; la sezione si riconosce da una barretta verde a sinistra, come le note del tool, e dalla targhetta verde «A1» accanto all’etichetta, come il bollo dell’icona del campo. Il bottone è bianco con testo verde e al passaggio del mouse prende un fondo verde chiarissimo</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #15803d;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🟩 Novità V10.26 | 155 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🟩 Trova Nodi A1 in evidenza</strong>: nella Posizione Cliente dei tab RC, RA e Unificato il campo «CLLI o Nome Centrale» e il bottone «Trova Nodi A1» stanno in un riquadro con un contorno verde sottile; il bottone riprende il verde dell’icona del campo e si riempie di verde al passaggio del mouse</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0e7490;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📏 Novità V10.26 | 154 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📏 Stessa altezza</strong>: nella Posizione Cliente dei tab RC, RA e Unificato il campo «CLLI o Nome Centrale» e il bottone «🏢 Trova Nodi A1» prendono l’altezza esatta di Latitudine e Longitudine, misurata nel browser, così restano allineati anche con altri font o con lo zoom</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0369a1;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📐 Novità V10.26 | 153 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📐 Posizione Cliente più compatta</strong>: nei tab RC, RA e Unificato il campo «CLLI o Nome Centrale» e il bottone «🏢 Trova Nodi A1» stanno sulla stessa riga di Latitudine e Longitudine, con la stessa altezza delle coordinate</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0050a0;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🏢 Novità V10.26 | 152 | Ott 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🏢 Trova Nodi A1</strong>: nei tab RC, RA e Unificato la Posizione Cliente ha un nuovo campo, «CLLI o Nome Centrale», con il suo bottone. Scrivi una centrale e il popup mostra i Nodi A1 più vicini, in linea d’aria e in km di rete, con il tipo (A1 Standard o A1_DIV senza PE); scegli se metterne uno in Arrivo o in Arrivo 2, oppure i primi due insieme</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🎛️ Novità V10.26 | 151 | Ott 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -27077,7 +27153,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <button class="btn btn-chip" type="button" onclick="resetClientPosition()" style="margin: 0;">🔁 Reset Campi</button>
                 </div>
                 <!-- Prima riga: Latitudine e Longitudine affiancati -->
-                <div style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <div style="grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.7fr) auto; gap: 0.75rem; margin-bottom: 0.5rem; align-items: end;">
                   <div class="route-field" style="margin: 0;">
                     <label for="clientLatInput">🧭 Latitudine</label>
                     <input id="clientLatInput"
@@ -27091,6 +27167,19 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                            class="db-search-input"
                            type="text"
                            placeholder="Es. 12.4964">
+                  </div>
+                  <!-- V10.26|153: Nodi A1 piu' vicini, sulla riga delle coordinate; V10.26|155: riquadro verde -->
+                  <div class="cna-gruppo">
+                    <div class="route-field" style="margin: 0;">
+                      <label for="cnaInputRC">🏢 CLLI o Nome Centrale<span class="cna-tag" title="Cerca i Nodi A1 più vicini a questa centrale">A1</span></label>
+                      <div class="custom-autocomplete-wrapper">
+                        <input id="cnaInputRC" class="db-search-input" type="text" autocomplete="off" placeholder="Es. ROMAITFT">
+                        <div id="cnaInputRCDropdown" class="custom-autocomplete-dropdown"></div>
+                      </div>
+                    </div>
+                    <div style="display: flex; align-items: flex-end; margin-bottom: 6px;">
+                      <button class="btn btn-chip cna-btn" type="button" onclick="window.croNodiA1.cerca('RC')" style="white-space: nowrap; margin: 0;" title="Mostra i Nodi A1 più vicini alla centrale e li mette in Arrivo / Arrivo 2">🏢 Trova Nodi A1</button>
+                    </div>
                   </div>
                 </div>
                 <!-- Seconda riga: Indirizzo Cliente (largo) + Bottoni a destra sotto Longitudine -->
@@ -27423,6 +27512,11 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       algoritmo di <strong>Haversine</strong> e la imposta automaticamente come
       <strong>“🚀 Centrale di Partenza (Percorso Std)”</strong>.</p>
     </li>
+                  <li><p style="margin-top: 0.9rem;">
+    <strong style="color: #004C99;">🏢 Trova Nodi A1</strong>: scrivi il CLLI o il nome di una centrale in <strong>“CLLI o Nome Centrale”</strong>
+    e il popup mostra i Nodi A1 più vicini in linea d’aria, con accanto i km di rete (cammino minimo nella rete RC) e il tipo
+    (A1 Standard o A1_DIV senza PE). Puoi mettere un Nodo A1 in <strong>Arrivo</strong> o in <strong>Arrivo 2</strong>, oppure usare i primi due insieme.</p>
+  </li>
                   <li><p style="margin-top: 0.9rem;">
       <strong style="color: #004C99;">🥇 Percorso Std</strong>: utilizza <strong>Partenza 1 / Arrivo 1</strong> e restituisce fino a
       <strong>30 soluzioni</strong> ordinate per distanza crescente. Questi rappresentano i percorsi standard
@@ -28669,7 +28763,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <button class="btn btn-chip" type="button" onclick="resetClientPositionRA()" style="margin: 0;">🔁 Reset Campi</button>
                 </div>
                 <!-- Prima riga: Latitudine e Longitudine affiancati -->
-                <div style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <div style="grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.7fr) auto; gap: 0.75rem; margin-bottom: 0.5rem; align-items: end;">
                   <div class="route-field" style="margin: 0;">
                     <label for="clientLatInputRA">🧭 Latitudine</label>
                     <input id="clientLatInputRA"
@@ -28683,6 +28777,19 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                            class="db-search-input"
                            type="text"
                            placeholder="Es. 12.4964">
+                  </div>
+                  <!-- V10.26|153: Nodi A1 piu' vicini, sulla riga delle coordinate; V10.26|155: riquadro verde -->
+                  <div class="cna-gruppo">
+                    <div class="route-field" style="margin: 0;">
+                      <label for="cnaInputRA">🏢 CLLI o Nome Centrale<span class="cna-tag" title="Cerca i Nodi A1 più vicini a questa centrale">A1</span></label>
+                      <div class="custom-autocomplete-wrapper">
+                        <input id="cnaInputRA" class="db-search-input" type="text" autocomplete="off" placeholder="Es. ROMAITFT">
+                        <div id="cnaInputRADropdown" class="custom-autocomplete-dropdown"></div>
+                      </div>
+                    </div>
+                    <div style="display: flex; align-items: flex-end; margin-bottom: 6px;">
+                      <button class="btn btn-chip cna-btn" type="button" onclick="window.croNodiA1.cerca('RA')" style="white-space: nowrap; margin: 0;" title="Mostra i Nodi A1 più vicini alla centrale e li mette in Arrivo / Arrivo 2">🏢 Trova Nodi A1</button>
+                    </div>
                   </div>
                 </div>
                 <!-- Seconda riga: Indirizzo Cliente (largo) + Bottoni a destra sotto Longitudine -->
@@ -28940,6 +29047,11 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <strong style="color: #004C99;">🔎 Trova Centrale Vicina</strong>: calcola la centrale RA più vicina (Tipo 1 o Tipo 2) alla posizione
     cliente tramite algoritmo di <strong>Haversine</strong> e la imposta automaticamente come
     <strong>“🚀 Centrale di Partenza (Percorso Std)”</strong>.</p>
+  </li>
+                  <li><p style="margin-top: 0.9rem;">
+    <strong style="color: #004C99;">🏢 Trova Nodi A1</strong>: scrivi il CLLI o il nome di una centrale in <strong>“CLLI o Nome Centrale”</strong>
+    e il popup mostra i Nodi A1 più vicini in linea d’aria, con accanto i km di rete (cammino minimo nella rete RA) e il tipo
+    (A1 Standard o A1_DIV senza PE). Puoi mettere un Nodo A1 in <strong>Arrivo</strong> o in <strong>Arrivo 2</strong>, oppure usare i primi due insieme. Nel tab RA si possono mettere in arrivo solo i Nodi A1 che nella rete RA sono di Tipo 1; gli altri compaiono con il motivo.</p>
   </li>
                   <li><p style="margin-top: 1rem;">
     <strong style="color: #004C99;">🥇 Percorso Std</strong>: utilizza <strong>Partenza 1 → Arrivo 1</strong> e restituisce il percorso
@@ -29276,7 +29388,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 </div>
 
                 <!-- Prima riga: Latitudine e Longitudine affiancati -->
-                <div style="grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <div style="grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.7fr) auto; gap: 0.75rem; margin-bottom: 0.5rem; align-items: end;">
                   <div class="route-field" style="margin: 0;">
                     <label for="uClientLatInput">🧭 Latitudine</label>
                     <input id="uClientLatInput" class="db-search-input" type="text" placeholder="Es. 41.9028">
@@ -29284,6 +29396,19 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <div class="route-field" style="margin: 0;">
                     <label for="uClientLonInput">🧭 Longitudine</label>
                     <input id="uClientLonInput" class="db-search-input" type="text" placeholder="Es. 12.4964">
+                  </div>
+                  <!-- V10.26|153: Nodi A1 piu' vicini, sulla riga delle coordinate; V10.26|155: riquadro verde -->
+                  <div class="cna-gruppo">
+                    <div class="route-field" style="margin: 0;">
+                      <label for="cnaInputUNI">🏢 CLLI o Nome Centrale<span class="cna-tag" title="Cerca i Nodi A1 più vicini a questa centrale">A1</span></label>
+                      <div class="custom-autocomplete-wrapper">
+                        <input id="cnaInputUNI" class="db-search-input" type="text" autocomplete="off" placeholder="Es. ROMAITFT">
+                        <div id="cnaInputUNIDropdown" class="custom-autocomplete-dropdown"></div>
+                      </div>
+                    </div>
+                    <div style="display: flex; align-items: flex-end; margin-bottom: 6px;">
+                      <button class="btn btn-chip cna-btn" type="button" onclick="window.croNodiA1.cerca('UNI')" style="white-space: nowrap; margin: 0;" title="Mostra i Nodi A1 più vicini alla centrale e li mette in Arrivo / Arrivo 2">🏢 Trova Nodi A1</button>
+                    </div>
                   </div>
                 </div>
 
@@ -29300,6 +29425,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     <button id="uNearestTargetBtn" class="btn btn-chip" type="button" onclick="window.toggleNearestTargetUnified()" style="white-space: nowrap; background: rgba(0, 102, 204, 0.12); border-color: #0066CC; color: #0066CC;">🚀 Inserisci: Partenza</button>
                   </div>
                 </div>
+
 
                 <!-- Riga distanza (come RA/RC): mostrata dopo ricerca centrale vicina -->
                 <div id="customerDistanceWrapUNI" style="grid-column: 1 / -1; display: none; margin-top: 0.55rem; padding: 0.45rem 0.65rem; background: rgba(0, 102, 204, 0.06); border-radius: 6px; border-left: 3px solid var(--tim-blue);">
@@ -29689,6 +29815,12 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     di <strong>Haversine</strong>. Usa il bottone <strong>“🚀/🏁 Inserisci”</strong> per scegliere se impostarla
     come Partenza o Arrivo.</p>
   </li>
+                  <li><p style="margin-top: 0.9rem;">
+    <strong style="color: #004C99;">🏢 Trova Nodi A1</strong>: scrivi il CLLI o il nome di una centrale in <strong>“CLLI o Nome Centrale”</strong>
+    e il popup mostra i Nodi A1 più vicini in linea d’aria, con accanto i km di rete (cammino minimo nella rete RA + RC, con passaggio fra le due reti solo nelle centrali RA di Tipo 1) e il tipo
+    (A1 Standard o A1_DIV senza PE). Puoi mettere un Nodo A1 in <strong>Arrivo</strong> o in <strong>Arrivo 2</strong>, oppure usare i primi due insieme. Con RTN attiva gli A1 di zona li sceglie sempre il tool: questa funzione riempie solo i campi di Arrivo.</p>
+  </li>
+
                   <li><p style="margin-top: 0.25rem;">
     <strong style="color: #004C99;">👥 Modalità Cliente <span style="color:#007800;">Sede A</span> → Rete → <span style="color:#B00020;">Sede Z</span></strong>: inserisci le coordinate di due clienti (A e Z). Il
     sistema individua le centrali più vicine e calcola il percorso ottimale sulla rete unificata
@@ -41743,6 +41875,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <li><strong style="color: #0066CC;">📍 Posizione Cliente</strong>: geocodifica indirizzi e trova automaticamente la centrale più vicina (RA o RC)</li>
                 <li><strong style="color: #0066CC;">🔎 Trova Centrale Vicina</strong>: cerca nelle reti RA (Tipo 1/2) e RC simultaneamente usando algoritmo Haversine</li>
                 <li><strong>🚀/🏁 Inserisci Partenza/Arrivo</strong>: toggle per scegliere dove inserire la centrale trovata</li>
+                <li><strong style="color: #0066CC;">🏢 Trova Nodi A1</strong> (tab RC, RA e Unificato): dal campo «CLLI o Nome Centrale» della Posizione Cliente (sulla riga di Latitudine e Longitudine), popup con i Nodi A1 più vicini alla centrale (linea d’aria e km di rete del tab, tipo A1 Standard o A1_DIV senza PE) e scelta di Arrivo, Arrivo 2 o entrambi; nel tab RA solo i Nodi A1 di Tipo 1 nella rete RA</li>
                 <li><strong style="color: #0066CC;">👥 Modalità Cliente Sede A → Rete → Sede Z</strong>: inserendo coordinate di due clienti, trova automaticamente le centrali più vicine e calcola il percorso ottimale</li>
                 <li><strong style="color: #0066CC;">🔗 Interconnessione RA↔RC / RC↔RA</strong>: avviene automaticamente sui nodi con stesso CLLI (tipicamente [T1]/NODO A1). Inoltre il passaggio da un Arco RA a un altro Arco RA (RA↔RA) avviene tra sedi T1 e/o T2.</li> 
                 <li><strong>Mix RA/RC</strong>: la colonna "Mix" nei risultati mostra la composizione del percorso (es. RA:3 • RC:2)</li>
@@ -43247,7 +43380,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 151 | Ott 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V10.26 | 156 | Ott 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -43265,7 +43398,69 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#eff6ff;">
+        <details open style="border:1px solid #16a34a;border-radius:12px;overflow:hidden;background:#f7fef9;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#166534;display:flex;align-items:center;gap:0.5rem;background:#e7f9ec;">
+            ✳️ V10.26 | 156 | Ott 2026 | Trova Nodi A1 senza riquadro
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>✳️ .cna-gruppo</strong>: tolti bordo, fondo e margini negativi della 155 (richiesta di Giuseppe); <code>padding-left: 14px</code> e <code>::before</code> come barretta verticale di 3 px <code>#16a34a</code> al 75%; etichetta di nuovo nel colore delle altre, con <code>.cna-tag</code> «A1» (<code>#dcfce7</code> / <code>#166534</code>, angoli a 6 px come gli altri badge che il tool squadra)</li>
+              <li><strong>🔘 .cna-btn</strong>: fondo bianco, testo <code>#15803d</code>, bordo <code>#bbe5c8</code>; al passaggio fondo <code>#f0fdf4</code> e bordo <code>#16a34a</code>; varianti <code>body.dark-mode</code></li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #15803d;border-radius:12px;overflow:hidden;background:#f0fdf4;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#166534;display:flex;align-items:center;gap:0.5rem;background:#dcfce7;">
+            🟩 V10.26 | 155 | Ott 2026 | Riquadro verde per Trova Nodi A1
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🟩 .cna-gruppo</strong>: contenitore unico per campo e bottone, <code>grid-column: span 2</code>, contorno <code>rgba(22,163,74,.5)</code> e fondo al 5%; padding 5×8 px compensato da margini −6/−9 px, così campo e bottone restano allineati a Latitudine e Longitudine. Etichetta in <code>#15803d</code></li>
+              <li><strong>🔘 .cna-btn</strong>: bottone nel verde dell’icona <code>G.nodoA1</code> (fondo <code>#f0fdf4</code>, testo <code>#15803d</code>, bordo <code>#86c99b</code>; al passaggio <code>#16a34a</code> pieno), con <code>!important</code> perché le regole di <code>.btn-chip</code> vengono dopo; varianti per <code>body.dark-mode</code>; nuovo colore nel Design System</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0e7490;border-radius:12px;overflow:hidden;background:#ecfeff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#155e75;display:flex;align-items:center;gap:0.5rem;background:#cffafe;">
+            📏 V10.26 | 154 | Ott 2026 | Altezza di campo e bottone Trova Nodi A1
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📏 allinea()</strong> in <code>window.croNodiA1</code>: legge l’altezza reale di <code>clientLatInput</code> / <code>clientLatInputRA</code> / <code>uClientLatInput</code> e la impone (con <code>!important</code>, <code>min-height: 0</code>) a <code>cnaInput*</code> e al bottone «Trova Nodi A1», che prende anche il raggio degli angoli della Latitudine; un <code>ResizeObserver</code> sulla Latitudine riallinea se cambia misura (zoom, font, tab mostrato), senza controlli periodici</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0369a1;border-radius:12px;overflow:hidden;background:#f0f9ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#075985;display:flex;align-items:center;gap:0.5rem;background:#e0f2fe;">
+            📐 V10.26 | 153 | Ott 2026 | Trova Nodi A1 sulla riga delle coordinate
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📐 HTML</strong>: tolte le righe <code>.cna-riga</code> della 152; <code>cnaInputRC</code>, <code>cnaInputRA</code>, <code>cnaInputUNI</code> e il loro bottone entrano nella prima riga della Posizione Cliente, con griglia <code>minmax(0,1fr) minmax(0,1fr) minmax(0,1.7fr) auto</code> e <code>align-items: end</code></li>
+              <li><strong>📏 Altezza</strong>: <code>caselle()</code> salta i campi <code>cnaInput*</code>, così non prendono <code>.cro-geo-cell</code> (58 px delle caselle delle centrali) e restano alti come Latitudine e Longitudine; l’icona del campo resta</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0050a0;border-radius:12px;overflow:hidden;background:#f0f6fd;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0050a0;display:flex;align-items:center;gap:0.5rem;background:#dce9f8;">
+            🏢 V10.26 | 152 | Ott 2026 | Trova Nodi A1 in RC, RA e Unificato
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🏢 window.croNodiA1</strong>: IIFE dopo <code>CENTRALI_POP_NODO_A1</code>; campi <code>cnaInputRC</code>, <code>cnaInputRA</code>, <code>cnaInputUNI</code> con completamento (nome, CLLI, zona, RC, RA Tn) e bottone «🏢 Trova Nodi A1» a destra; <code>risolvi()</code> accetta etichetta, CLLI o nome (se più centrali corrispondono, popup di scelta)</li>
+              <li><strong>📏 Distanze</strong>: ordine per <code>haversine()</code> sulle coordinate del DB (a parità prima gli A1 Standard); km di rete con Dijkstra a heap da una sola sorgente (<code>distanze()</code>) sul grafo del tab: RC, RA, o RA + RC con ponte a 0 km solo nelle centrali RA di Tipo 1. Tutti i collegamenti del DB, senza filtro di stato: valore indicativo, il percorso vero resta quello della ricerca</li>
+              <li><strong>🏁 Inserimento</strong>: <code>metti()</code> scrive l’etichetta nel formato del tab («NOME (CLLI)» in RC e Unificato, «NOME (CLLI) [T1]» in RA) e lancia <code>input</code> e <code>change</code>; nel tab RA i Nodi A1 che non sono RA di Tipo 1 (Bari, Lamezia, Piacenza, Roma Inviolatella solo T3; Milano Bersaglio e Malpaga, Napoli, Roma Sud assenti) restano visibili ma senza bottoni, con il motivo. Popup con 6 righe, i primi due utilizzabili evidenziati; Esc o clic fuori chiude; tema scuro con <code>body.dark-mode</code></li>
+              <li><strong>🎨 Icona del campo</strong>: nuovo disegno <code>G.nodoA1</code> (centrale con bollo «A1», tinta dell’arrivo) aggiunto alla mappa <code>BASE</code> delle icone dei campi, come Latitudine, Longitudine e Indirizzo</li>
+              <li><strong>🔁 Reset Campi</strong>: <code>resetClientPosition</code>, <code>resetClientPositionRA</code> e <code>resetClientPositionUnified</code> avvolte per svuotare anche il campo nuovo</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#eff6ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0050a0;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
             🎛️ V10.26 | 151 | Ott 2026 | Comandi della striscia Info live
           </summary>
@@ -62543,6 +62738,349 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
   
   // Esponi la lista globalmente
   window.CENTRALI_POP_NODO_A1 = CENTRALI_POP_NODO_A1;
+
+  /* V10.26|152: Nodi A1 più vicini a una centrale (tab RC, RA e Unificato, sezione Posizione Cliente).
+     Si scrive il CLLI o il nome della centrale, il popup mostra i Nodi A1 in ordine di distanza in linea d'aria,
+     con accanto i km di rete (cammino minimo sul DB del tab), e si sceglie cosa mettere in Arrivo e in Arrivo 2. */
+  (function () {
+    var TAB = {
+      RC:  { input: 'cnaInputRC',  end1: 'routeEnd1Input',   end2: 'routeEnd2Input',   rete: 'RC',  nomeRete: 'rete RC' },
+      RA:  { input: 'cnaInputRA',  end1: 'routeEnd1InputRA', end2: 'routeEnd2InputRA', rete: 'RA',  nomeRete: 'rete RA' },
+      UNI: { input: 'cnaInputUNI', end1: 'uRouteEndInput',   end2: 'uRouteEnd2Input',  rete: 'UNI', nomeRete: 'rete RA + RC' }
+    };
+    var MOSTRATI = 6;
+    var _cent = null, _grafi = {};
+
+    function esc(t) { return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function km(v) { return (Math.round(v * 10) / 10).toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
+    function haversine(a, b) {
+      var R = 6371, t = Math.PI / 180, dLa = (b.lat - a.lat) * t, dLo = (b.lon - a.lon) * t;
+      var x = Math.sin(dLa / 2) * Math.sin(dLa / 2) + Math.cos(a.lat * t) * Math.cos(b.lat * t) * Math.sin(dLo / 2) * Math.sin(dLo / 2);
+      return 2 * R * Math.asin(Math.min(1, Math.sqrt(x)));
+    }
+
+    /* indice delle centrali: CLLI -> nome RC, nome RA, coordinate, zona, presenza in RC, tipi RA */
+    function centrali() {
+      if (_cent) return _cent;
+      var m = {};
+      function add(r, s, ra) {
+        var c = String(r['CLLI_' + s] || '').trim().toUpperCase(); if (!c) return;
+        var e = m[c] || (m[c] = { clli: c, nomeRC: '', nomeRA: '', lat: null, lon: null, zona: '', rc: false, tipiRA: {} });
+        var g = String(r['GAT_' + s] || '').trim();
+        if (ra) { if (!e.nomeRA && g) e.nomeRA = g; var t = Number(r['TipoSede' + s]); if (t === 1 || t === 2 || t === 3) e.tipiRA[t] = true; }
+        else { e.rc = true; if (!e.nomeRC && g) e.nomeRC = g; }
+        var la = parseFloat(r['Lat_GAT_' + s]), lo = parseFloat(r['Lon_GAT_' + s]);
+        if (e.lat == null && isFinite(la) && isFinite(lo) && la && lo) { e.lat = la; e.lon = lo; }
+        if (!e.zona && r.Zona) e.zona = String(r.Zona);
+      }
+      (window.RAW_DB || []).forEach(function (r) { add(r, 'A', false); add(r, 'Z', false); });
+      (window.RAW_DB_RA || []).forEach(function (r) { add(r, 'A', true); add(r, 'Z', true); });
+      _cent = m; return m;
+    }
+    function nomeDi(e) { return e.nomeRC || e.nomeRA || e.clli; }
+    function descr(e) {
+      var p = [];
+      if (e.zona) p.push('zona ' + e.zona);
+      if (e.rc) p.push('RC');
+      var t = Object.keys(e.tipiRA).sort(); if (t.length) p.push('RA T' + t.join('/T'));
+      return p.join(' \u00b7 ');
+    }
+
+    /* grafi per i km di rete: RC, RA, oppure RA + RC con passaggio solo nelle centrali RA di Tipo 1 */
+    function grafo(rete) {
+      if (_grafi[rete]) return _grafi[rete];
+      var adj = {};
+      function arco(a, b, d) { (adj[a] || (adj[a] = [])).push([b, d]); (adj[b] || (adj[b] = [])).push([a, d]); }
+      function carica(db, pref) {
+        (db || []).forEach(function (r) {
+          var a = String(r.CLLI_A || '').trim().toUpperCase(), z = String(r.CLLI_Z || '').trim().toUpperCase(), d = Number(r.Distanza_km);
+          if (a && z && a !== z && isFinite(d) && d >= 0) arco(pref + a, pref + z, d);
+        });
+      }
+      if (rete === 'RC' || rete === 'UNI') carica(window.RAW_DB, 'RC:');
+      if (rete === 'RA' || rete === 'UNI') carica(window.RAW_DB_RA, 'RA:');
+      if (rete === 'UNI') { var C = centrali(); Object.keys(C).forEach(function (c) { if (C[c].rc && C[c].tipiRA[1]) arco('RC:' + c, 'RA:' + c, 0); }); }
+      _grafi[rete] = adj; return adj;
+    }
+    /* Dijkstra da una sorgente con coda a heap binario: restituisce le distanze di tutti i nodi raggiungibili */
+    function distanze(rete, clli) {
+      var adj = grafo(rete), dist = {}, heap = [];
+      function push(n, d) { heap.push([d, n]); var i = heap.length - 1; while (i > 0) { var p = (i - 1) >> 1; if (heap[p][0] <= heap[i][0]) break; var t = heap[p]; heap[p] = heap[i]; heap[i] = t; i = p; } }
+      function pop() { var top = heap[0], last = heap.pop(); if (heap.length) { heap[0] = last; var i = 0; for (;;) { var l = 2 * i + 1, r = l + 1, m = i; if (l < heap.length && heap[l][0] < heap[m][0]) m = l; if (r < heap.length && heap[r][0] < heap[m][0]) m = r; if (m === i) break; var t = heap[m]; heap[m] = heap[i]; heap[i] = t; i = m; } } return top; }
+      ['RC:', 'RA:'].forEach(function (p) { if (adj[p + clli]) { dist[p + clli] = 0; push(p + clli, 0); } });
+      while (heap.length) {
+        var cur = pop(), d = cur[0], n = cur[1];
+        if (d > dist[n]) continue;
+        (adj[n] || []).forEach(function (e) { var nd = d + e[1]; if (dist[e[0]] == null || nd < dist[e[0]]) { dist[e[0]] = nd; push(e[0], nd); } });
+      }
+      return dist;
+    }
+
+    /* da testo a centrale: etichetta «NOME (CLLI) [Tn]», CLLI da solo o nome */
+    function risolvi(testo) {
+      var C = centrali(), t = String(testo || '').trim(); if (!t) return { errore: 'Scrivi il CLLI o il nome della centrale.' };
+      var m = /\(([A-Z0-9]{6,})\)/i.exec(t); if (m && C[m[1].toUpperCase()]) return { e: C[m[1].toUpperCase()] };
+      var u = t.toUpperCase().replace(/\s*\[T\d\]\s*$/, '');
+      if (C[u]) return { e: C[u] };
+      var tutte = Object.keys(C).map(function (k) { return C[k]; });
+      var esatte = tutte.filter(function (e) { return (e.nomeRC || '').toUpperCase() === u || (e.nomeRA || '').toUpperCase() === u; });
+      if (esatte.length === 1) return { e: esatte[0] };
+      var simili = esatte.length ? esatte : tutte.filter(function (e) { return (e.nomeRC + ' ' + e.nomeRA + ' ' + e.clli).toUpperCase().indexOf(u) >= 0; });
+      if (simili.length === 1) return { e: simili[0] };
+      if (!simili.length) return { errore: 'Nessuna centrale trovata per \u00ab' + t + '\u00bb.' };
+      return { scelta: simili.slice(0, 12) };
+    }
+
+    /* etichetta da mettere nel campo Arrivo, nel formato che usa ogni tab */
+    function etichetta(tab, a, C) {
+      var e = C[a.clli] || {};
+      if (tab === 'RA') return e.tipiRA && e.tipiRA[1] ? (e.nomeRA || a.nome) + ' (' + a.clli + ') [T1]' : null;
+      return e.rc ? (e.nomeRC || a.nome) + ' (' + a.clli + ')' : null;
+    }
+    function motivoNo(tab, a, C) {
+      var e = C[a.clli] || {};
+      if (tab === 'RA') { var t = Object.keys(e.tipiRA || {}); return t.length ? 'Nella rete RA \u00e8 solo di Tipo ' + t.join('/') + ': non pu\u00f2 essere centrale di arrivo RA' : 'Non \u00e8 nella rete RA'; }
+      return 'Non \u00e8 nella rete RC';
+    }
+
+    function metti(id, valore) {
+      var el = document.getElementById(id); if (!el || !valore) return;
+      el.value = valore;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      el.classList.add('cna-appena'); setTimeout(function () { el.classList.remove('cna-appena'); }, 1600);
+    }
+
+    function chiudi() { var o = document.getElementById('cnaPopup'); if (o) o.remove(); document.removeEventListener('keydown', tasti, true); }
+    function tasti(ev) { if (ev.key === 'Escape') { ev.stopPropagation(); chiudi(); } }
+    function apri(html) {
+      chiudi();
+      var o = document.createElement('div'); o.id = 'cnaPopup'; o.className = 'cna-velo';
+      o.innerHTML = '<div class="cna-box" role="dialog" aria-modal="true" aria-labelledby="cnaTitolo">' + html + '</div>';
+      document.body.appendChild(o);
+      o.addEventListener('mousedown', function (ev) { if (ev.target === o) chiudi(); });
+      document.addEventListener('keydown', tasti, true);
+      return o;
+    }
+
+    function cerca(tab, testoForzato) {
+      var cfg = TAB[tab]; if (!cfg) return;
+      var inp = document.getElementById(cfg.input);
+      var r = risolvi(testoForzato != null ? testoForzato : (inp ? inp.value : ''));
+      if (r.errore) {
+        apri('<div class="cna-testa"><div><div class="cna-titolo" id="cnaTitolo">\uD83C\uDFE2 Nodi A1 pi\u00f9 vicini</div></div><button type="button" class="cna-x" data-cna="chiudi" aria-label="Chiudi">\u2715</button></div>'
+          + '<div class="cna-avviso">' + esc(r.errore) + '</div>');
+        legaChiudi(); return;
+      }
+      if (r.scelta) {
+        var o = apri('<div class="cna-testa"><div><div class="cna-titolo" id="cnaTitolo">\uD83C\uDFE2 Quale centrale?</div><div class="cna-sotto">Pi\u00f9 centrali corrispondono a quello che hai scritto</div></div><button type="button" class="cna-x" data-cna="chiudi" aria-label="Chiudi">\u2715</button></div>'
+          + '<div class="cna-lista">' + r.scelta.map(function (e) { return '<button type="button" class="cna-voce" data-clli="' + esc(e.clli) + '"><b>' + esc(nomeDi(e)) + '</b> (' + esc(e.clli) + ')<span>' + esc(descr(e)) + '</span></button>'; }).join('') + '</div>');
+        legaChiudi();
+        Array.prototype.forEach.call(o.querySelectorAll('.cna-voce'), function (b) { b.addEventListener('click', function () { var c = b.getAttribute('data-clli'); if (inp) inp.value = nomeDi(centrali()[c]) + ' (' + c + ')'; cerca(tab, c); }); });
+        return;
+      }
+      var e = r.e, C = centrali();
+      if (inp) inp.value = nomeDi(e) + ' (' + e.clli + ')';
+      if (e.lat == null) {
+        apri('<div class="cna-testa"><div><div class="cna-titolo" id="cnaTitolo">\uD83C\uDFE2 Nodi A1 pi\u00f9 vicini</div></div><button type="button" class="cna-x" data-cna="chiudi" aria-label="Chiudi">\u2715</button></div>'
+          + '<div class="cna-avviso">' + esc(nomeDi(e)) + ' (' + esc(e.clli) + ') non ha coordinate nel DB: non posso calcolare le distanze.</div>');
+        legaChiudi(); return;
+      }
+      var dist = distanze(cfg.rete, e.clli);
+      var lista = (window.CENTRALI_POP_NODO_A1 || []).map(function (a) {
+        var c = C[a.clli]; if (!c || c.lat == null) return null;
+        var dR = null; ['RC:', 'RA:'].forEach(function (p) { var v = dist[p + a.clli]; if (v != null && (dR == null || v < dR)) dR = v; });
+        return { a: a, aria: haversine(e, c), rete: dR, lbl: etichetta(tab, a, C) };
+      }).filter(Boolean).sort(function (x, y) { return x.aria - y.aria || (x.a.noPE ? 1 : 0) - (y.a.noPE ? 1 : 0); });
+      var usabili = lista.filter(function (x) { return x.lbl; });
+      var primi = usabili.slice(0, 2);
+      var eA1 = (window.CENTRALI_POP_NODO_A1 || []).some(function (a) { return a.clli === e.clli; });
+      var righe = lista.slice(0, MOSTRATI).map(function (x, i) {
+        var top = primi.indexOf(x);
+        var tipo = x.a.noPE ? '<span class="cna-badge cna-div" title="A1_DIV: solo per la diversificazione RTN, senza PE">A1_DIV \u00b7 senza PE</span>' : '<span class="cna-badge cna-std">A1 Standard</span>';
+        var bott = x.lbl
+          ? '<button type="button" class="cna-b" data-cna="a1" data-i="' + i + '">Arrivo</button><button type="button" class="cna-b" data-cna="a2" data-i="' + i + '">Arrivo 2</button>'
+          : '<span class="cna-no" title="' + esc(motivoNo(tab, x.a, C)) + '">' + esc(motivoNo(tab, x.a, C)) + '</span>';
+        return '<tr class="' + (top >= 0 ? 'cna-top' : '') + (x.lbl ? '' : ' cna-spento') + '">'
+          + '<td class="cna-pos">' + (top >= 0 ? (top + 1) + '\u00b0' : '') + '</td>'
+          + '<td><div class="cna-nome">' + esc(x.a.nome) + '</div><div class="cna-clli">' + esc(x.a.clli) + ' \u00b7 area ' + esc(x.a.area) + '</div></td>'
+          + '<td>' + tipo + '</td>'
+          + '<td class="cna-num">' + km(x.aria) + ' km</td>'
+          + '<td class="cna-num">' + (x.rete == null ? '<span class="cna-k" title="Nessun collegamento nella ' + esc(cfg.nomeRete) + ' fra le due centrali: di solito sono in zone diverse, collegate dalla RTN">nessun cammino</span>' : km(x.rete) + ' km') + '</td>'
+          + '<td class="cna-az">' + bott + '</td></tr>';
+      }).join('');
+      var o2 = apri('<div class="cna-testa"><div><div class="cna-titolo" id="cnaTitolo">\uD83C\uDFE2 Nodi A1 pi\u00f9 vicini a ' + esc(nomeDi(e)) + ' (' + esc(e.clli) + ')</div>'
+        + '<div class="cna-sotto">' + esc(descr(e)) + ' \u00b7 ordinati per distanza in linea d\u2019aria; km di rete: cammino minimo nella ' + esc(cfg.nomeRete) + ' (tutti i collegamenti del DB, da verificare)</div></div>'
+        + '<button type="button" class="cna-x" data-cna="chiudi" aria-label="Chiudi">\u2715</button></div>'
+        + (eA1 ? '<div class="cna-info">\u2139\uFE0F La centrale cercata \u00e8 gi\u00e0 un Nodo A1.</div>' : '')
+        + '<div class="cna-tab-wrap"><table class="cna-tab"><thead><tr><th></th><th>Nodo A1</th><th>Tipo</th><th class="cna-num">Linea d\u2019aria</th><th class="cna-num">Km di rete</th><th></th></tr></thead><tbody>' + righe + '</tbody></table></div>'
+        + '<div class="cna-piede"><span class="cna-k">' + (tab === 'RA' ? 'Nel tab RA l\u2019arrivo deve essere una centrale RA di Tipo 1.' : 'Il campo Arrivo resta modificabile a mano.') + '</span>'
+        + '<span class="cna-piede-b"><button type="button" class="cna-sec" data-cna="chiudi">Annulla</button>'
+        + (primi.length === 2 ? '<button type="button" class="cna-prim cna-entrambi" data-cna="entrambi">Usa i primi due: 1\u00b0 in Arrivo, 2\u00b0 in Arrivo 2</button>' : '') + '</span></div>');
+      legaChiudi();
+      o2.querySelector('.cna-box').addEventListener('click', function (ev) {
+        var b = ev.target.closest && ev.target.closest('[data-cna]'); if (!b) return;
+        var a = b.getAttribute('data-cna'), x = lista[+b.getAttribute('data-i')];
+        if (a === 'a1' && x) { metti(cfg.end1, x.lbl); chiudi(); }
+        else if (a === 'a2' && x) { metti(cfg.end2, x.lbl); chiudi(); }
+        else if (a === 'entrambi') { metti(cfg.end1, primi[0].lbl); metti(cfg.end2, primi[1].lbl); chiudi(); }
+      });
+      var f = o2.querySelector('.cna-entrambi') || o2.querySelector('.cna-b'); if (f) f.focus();
+    }
+    function legaChiudi() {
+      var o = document.getElementById('cnaPopup'); if (!o) return;
+      Array.prototype.forEach.call(o.querySelectorAll('[data-cna="chiudi"]'), function (b) { b.addEventListener('click', chiudi); });
+    }
+
+    /* completamento del campo «CLLI o Nome Centrale»: nome, CLLI e info zona/rete */
+    function completamento(tab) {
+      var cfg = TAB[tab], inp = document.getElementById(cfg.input), dd = document.getElementById(cfg.input + 'Dropdown');
+      if (!inp || !dd || inp._cna) return; inp._cna = true;
+      var voci = [], sel = -1;
+      function chiudiDd() { dd.classList.remove('active'); dd.style.display = 'none'; sel = -1; }
+      function mostra() {
+        var q = inp.value.trim().toUpperCase(); if (!q) { chiudiDd(); return; }
+        var C = centrali();
+        voci = Object.keys(C).map(function (k) { return C[k]; }).filter(function (e) { return (nomeDi(e) + ' ' + e.nomeRA + ' ' + e.clli).toUpperCase().indexOf(q) >= 0; })
+          .sort(function (a, b) { var pa = (nomeDi(a).toUpperCase().indexOf(q) === 0 || a.clli.indexOf(q) === 0) ? 0 : 1, pb = (nomeDi(b).toUpperCase().indexOf(q) === 0 || b.clli.indexOf(q) === 0) ? 0 : 1; return pa - pb || nomeDi(a).localeCompare(nomeDi(b)); }).slice(0, 40);
+        if (!voci.length) { dd.innerHTML = '<div class="custom-autocomplete-no-results">Nessuna centrale trovata</div>'; }
+        else dd.innerHTML = voci.map(function (e, i) { return '<div class="custom-autocomplete-item" data-i="' + i + '">' + esc(nomeDi(e)) + ' (' + esc(e.clli) + ')<div class="cna-dd-info">' + esc(descr(e)) + '</div></div>'; }).join('');
+        dd.classList.add('active'); dd.style.display = 'block'; sel = -1;
+      }
+      function scegli(i) { var e = voci[i]; if (!e) return; inp.value = nomeDi(e) + ' (' + e.clli + ')'; chiudiDd(); }
+      inp.addEventListener('input', mostra);
+      inp.addEventListener('focus', function () { if (inp.value.trim()) mostra(); });
+      inp.addEventListener('blur', function () { setTimeout(chiudiDd, 180); });
+      inp.addEventListener('keydown', function (ev) {
+        var it = dd.querySelectorAll('.custom-autocomplete-item');
+        if (ev.key === 'ArrowDown' && it.length) { ev.preventDefault(); sel = Math.min(it.length - 1, sel + 1); }
+        else if (ev.key === 'ArrowUp' && it.length) { ev.preventDefault(); sel = Math.max(0, sel - 1); }
+        else if (ev.key === 'Enter') { ev.preventDefault(); if (sel >= 0 && dd.classList.contains('active')) scegli(sel); chiudiDd(); cerca(tab); return; }
+        else if (ev.key === 'Escape') { chiudiDd(); return; }
+        else return;
+        Array.prototype.forEach.call(it, function (x, k) { x.classList.toggle('selected', k === sel); if (k === sel) x.scrollIntoView({ block: 'nearest' }); });
+      });
+      dd.addEventListener('mousedown', function (ev) { var x = ev.target.closest && ev.target.closest('.custom-autocomplete-item'); if (x) { ev.preventDefault(); scegli(+x.getAttribute('data-i')); } });
+    }
+
+    /* «Reset Campi» della Posizione Cliente svuota anche il campo nuovo */
+    function avvolgiReset(nome, tab) {
+      var f = window[nome]; if (typeof f !== 'function' || f._cna) return;
+      var g = function () { var r = f.apply(this, arguments); var el = document.getElementById(TAB[tab].input); if (el) el.value = ''; return r; };
+      g._cna = true; window[nome] = g;
+    }
+
+    /* V10.26|154: campo «CLLI o Nome Centrale» e bottone «Trova Nodi A1» alti esattamente come Latitudine,
+       misurata nel browser di chi usa il tool (font e zoom possono cambiarla); si riallinea solo quando
+       Latitudine cambia misura, senza controlli periodici */
+    var LAT = { RC: 'clientLatInput', RA: 'clientLatInputRA', UNI: 'uClientLatInput' };
+    function allinea(tab) {
+      var lat = document.getElementById(LAT[tab]), inp = document.getElementById(TAB[tab].input);
+      if (!lat || !inp || inp._cnaAll) return;
+      var cella = inp.closest('.route-field'), bt = cella && cella.nextElementSibling ? cella.nextElementSibling.querySelector('button') : null;
+      function applica() {
+        var h = lat.getBoundingClientRect().height; if (!h) return;
+        var cs = getComputedStyle(lat);
+        inp.style.setProperty('height', h + 'px', 'important');
+        inp.style.setProperty('min-height', '0', 'important');
+        inp.style.boxSizing = 'border-box';
+        if (bt) {
+          bt.style.setProperty('height', h + 'px', 'important');
+          bt.style.boxSizing = 'border-box';
+          bt.style.display = 'inline-flex'; bt.style.alignItems = 'center'; bt.style.justifyContent = 'center';
+          bt.style.padding = '0 14px'; bt.style.borderRadius = cs.borderTopLeftRadius;
+          if (bt.parentElement) bt.parentElement.style.marginBottom = '0';
+        }
+      }
+      inp._cnaAll = true; applica();
+      if (window.ResizeObserver) { try { new ResizeObserver(applica).observe(lat); } catch (e) {} }
+    }
+
+    var CSS = ''
+      /* V10.26|155: riquadro di «CLLI o Nome Centrale» + «Trova Nodi A1»; il contenuto resta allineato alle coordinate
+         (il bordo e il padding stanno nei margini negativi) */
+      /* V10.26|156: niente riquadro: barretta verde a sinistra, targhetta «Nodi A1» nell'etichetta, bottone bianco con testo verde */
+      + '.cna-gruppo{grid-column:span 2;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0.75rem;align-items:end;position:relative;padding-left:14px;}'
+      + '.cna-gruppo::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:3px;border-radius:3px;background:#16a34a;opacity:.75;}'
+      + '.cna-gruppo > .route-field > label{white-space:nowrap;}'
+      + '.cna-tag{display:inline-block;margin-left:8px;flex:none;padding:0 6px;border-radius:6px;background:#dcfce7;color:#166534;font-size:10.5px;font-weight:700;line-height:16px;}'
+      + '.route-input-grid .cna-gruppo .btn.btn-chip.cna-btn{background:#fff !important;color:#15803d !important;border:1px solid #bbe5c8 !important;font-weight:600;}'
+      + '.route-input-grid .cna-gruppo .btn.btn-chip.cna-btn:hover{background:#f0fdf4 !important;border-color:#16a34a !important;color:#166534 !important;}'
+      + '.route-input-grid .cna-gruppo .btn.btn-chip.cna-btn:focus-visible{outline:2px solid #16a34a;outline-offset:2px;}'
+      + 'body.dark-mode .cna-gruppo::before{background:#22c55e;}'
+      + 'body.dark-mode .cna-tag{background:#14532d;color:#bbf7d0;}'
+      + 'body.dark-mode .route-input-grid .cna-gruppo .btn.btn-chip.cna-btn{background:#0f172a !important;color:#86efac !important;border-color:#166534 !important;}'
+      + 'body.dark-mode .route-input-grid .cna-gruppo .btn.btn-chip.cna-btn:hover{background:#052e16 !important;border-color:#22c55e !important;}'
+      + '.cna-velo{position:fixed;inset:0;z-index:10050;background:rgba(15,23,42,.38);display:flex;align-items:center;justify-content:center;padding:16px;}'
+      + '.cna-box{background:#fff;color:#1f2937;border-radius:12px;box-shadow:0 18px 50px rgba(15,23,42,.28);width:min(860px,100%);max-height:90vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid #dbe4f0;}'
+      + '.cna-testa{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:14px 16px 10px;border-bottom:1px solid #e5eaf2;background:#f6f9fd;}'
+      + '.cna-titolo{font-weight:700;font-size:15px;color:#0050a0;}'
+      + '.cna-sotto{font-size:11.5px;color:#64748b;margin-top:3px;line-height:1.45;}'
+      + '.cna-x{border:0;background:transparent;color:#64748b;font-size:15px;width:28px;height:28px;border-radius:6px;cursor:pointer;flex:none;}'
+      + '.cna-x:hover{background:#e8eef7;color:#0f172a;}'
+      + '.cna-info,.cna-avviso{margin:10px 16px 0;padding:8px 10px;border-radius:8px;font-size:12.5px;}'
+      + '.cna-info{background:#eef5ff;color:#0050a0;border:1px solid #cfe0f7;}'
+      + '.cna-avviso{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;margin-bottom:14px;}'
+      + '.cna-tab-wrap{overflow:auto;padding:6px 8px 4px;}'
+      + '.cna-tab{width:100%;border-collapse:collapse;font-size:12.5px;}'
+      + '.cna-tab th{font-size:10.5px;font-weight:600;color:#64748b;text-align:left;padding:8px 8px 6px;border-bottom:1px solid #e5eaf2;white-space:nowrap;}'
+      + '.cna-tab td{padding:8px;border-bottom:1px solid #eef2f7;vertical-align:middle;}'
+      + '.cna-tab tr.cna-top td{background:#f3f8ff;}'
+      + '.cna-tab tr.cna-spento td{color:#94a3b8;}'
+      + '.cna-pos{width:28px;font-weight:700;color:#0066cc;text-align:center;}'
+      + '.cna-nome{font-weight:600;}'
+      + '.cna-clli{font-size:11px;color:#64748b;margin-top:1px;}'
+      + '.cna-num,.cna-tab th.cna-num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;}'
+      + '.cna-az{text-align:right;white-space:nowrap;}'
+      + '.cna-b{border:1px solid #b9cde6;background:#fff;color:#0050a0;font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:6px;cursor:pointer;margin-left:4px;}'
+      + '.cna-b:hover{background:#0066cc;border-color:#0066cc;color:#fff;}'
+      + '.cna-b:focus-visible,.cna-voce:focus-visible,.cna-x:focus-visible{outline:2px solid #3b82f6;outline-offset:1px;}'
+      + '.cna-badge{display:inline-block;font-size:10.5px;font-weight:600;padding:2px 7px;border-radius:999px;white-space:nowrap;}'
+      + '.cna-std{background:#e7f1fc;color:#0050a0;}'
+      + '.cna-div{background:#fdf0e3;color:#9a4d0b;border:1px solid #f5d2ad;}'
+      + '.cna-no{font-size:11px;color:#94a3b8;white-space:normal;display:inline-block;max-width:220px;text-align:right;}'
+      + '.cna-k{color:#94a3b8;font-size:11.5px;}'
+      + '.cna-piede{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 16px 14px;border-top:1px solid #e5eaf2;}'
+      + '.cna-piede-b{display:flex;gap:8px;flex-wrap:wrap;}'
+      + '.cna-sec,.cna-prim{font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:8px;cursor:pointer;line-height:1.2;}'
+      + '.cna-sec{background:#fff;color:#334155;border:1px solid #cbd5e1;}'
+      + '.cna-sec:hover{background:#f1f5f9;}'
+      + '.cna-prim{background:#0066cc;color:#fff;border:1px solid #0066cc;}'
+      + '.cna-prim:hover{background:#0050a0;border-color:#0050a0;}'
+      + '.cna-sec:focus-visible,.cna-prim:focus-visible{outline:2px solid #3b82f6;outline-offset:2px;}'
+      + '.cna-lista{display:flex;flex-direction:column;gap:6px;padding:12px 16px 16px;overflow:auto;}'
+      + '.cna-voce{text-align:left;border:1px solid #dbe4f0;background:#fff;border-radius:8px;padding:8px 10px;cursor:pointer;font-size:12.5px;color:#1f2937;}'
+      + '.cna-voce:hover{border-color:#0066cc;background:#f3f8ff;}'
+      + '.cna-voce span{display:block;font-size:11px;color:#64748b;margin-top:2px;}'
+      + '.cna-dd-info{font-size:10.5px;color:#64748b;margin-top:1px;}'
+      + 'input.cna-appena{box-shadow:0 0 0 3px rgba(0,102,204,.28);border-color:#0066cc;transition:box-shadow .3s;}'
+      + 'body.dark-mode .cna-box{background:#111827;color:#e5e7eb;border-color:#334155;}'
+      + 'body.dark-mode .cna-testa{background:#0f1a2e;border-color:#253247;}'
+      + 'body.dark-mode .cna-titolo{color:#93c5fd;}'
+      + 'body.dark-mode .cna-sotto,body.dark-mode .cna-clli,body.dark-mode .cna-tab th,body.dark-mode .cna-voce span,body.dark-mode .cna-dd-info{color:#94a3b8;}'
+      + 'body.dark-mode .cna-tab td,body.dark-mode .cna-tab th,body.dark-mode .cna-piede{border-color:#253247;}'
+      + 'body.dark-mode .cna-tab tr.cna-top td{background:#13243d;}'
+      + 'body.dark-mode .cna-b,body.dark-mode .cna-voce{background:#0f172a;border-color:#334155;color:#bfdbfe;}'
+      + 'body.dark-mode .cna-b:hover{background:#0066cc;color:#fff;}'
+      + 'body.dark-mode .cna-std{background:#1e3a5f;color:#bfdbfe;}'
+      + 'body.dark-mode .cna-div{background:#3b2410;color:#fcd9b0;border-color:#6b3f17;}'
+      + 'body.dark-mode .cna-info{background:#13243d;color:#bfdbfe;border-color:#1e3a5f;}'
+      + 'body.dark-mode .cna-avviso{background:#3b2410;color:#fcd9b0;border-color:#6b3f17;}'
+      + 'body.dark-mode .cna-x:hover{background:#1e293b;color:#fff;}'
+      + 'body.dark-mode .cna-sec{background:#0f172a;color:#e2e8f0;border-color:#334155;}'
+      + 'body.dark-mode .cna-sec:hover{background:#1e293b;}';
+
+    function avvia() {
+      if (!document.getElementById('cnaStile')) { var st = document.createElement('style'); st.id = 'cnaStile'; st.textContent = CSS; document.head.appendChild(st); }
+      Object.keys(TAB).forEach(completamento);
+      Object.keys(TAB).forEach(allinea);
+      avvolgiReset('resetClientPosition', 'RC'); avvolgiReset('resetClientPositionRA', 'RA'); avvolgiReset('resetClientPositionUnified', 'UNI');
+    }
+    window.croNodiA1 = { cerca: cerca, chiudi: chiudi };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(avvia, 0); }); else setTimeout(avvia, 0);
+    window.addEventListener('load', function () { setTimeout(avvia, 0); });
+  })();
+
   window.POP_CLLI_SET = POP_CLLI_SET;
   
   // Verifica se una label contiene un CLLI POP - SOLO MATCH ESATTO SUL CLLI
@@ -63230,6 +63768,9 @@ function getColorsContent() {
     {name: 'Fonte ❚❚', hex: '#818cf8', usage: 'Feed fermo: risponde ma senza notizie recenti'},
     {name: 'Comandi Info live', hex: '#9fb0c8', usage: 'Icone dei comandi della striscia (al passaggio #f1f5f9 su #1f2c44)'},
     {name: 'Pausa attiva', hex: '#7cb8ff', usage: 'Icona di pausa quando lo scorrimento è fermo, su blu TIM trasparente'},
+    {name: 'Nodo A1 Standard', hex: '#e7f1fc', usage: 'Badge «A1 Standard» nel popup Trova Nodi A1 (testo #0050a0)'},
+    {name: 'Trova Nodi A1', hex: '#16a34a', usage: 'Barretta a sinistra di CLLI o Nome Centrale; targhetta «A1» #dcfce7 / #166534; bottone bianco con testo #15803d e bordo #bbe5c8'},
+    {name: 'Nodo A1_DIV', hex: '#fdf0e3', usage: 'Badge «A1_DIV · senza PE» nel popup Trova Nodi A1 (testo #9a4d0b)'},
     {section: 'Assistente CRO (robottino 3D)'},
     {name: 'Bianco perlato', hex: '#F2F4FA', usage: 'Corpo e testa del robottino, metallo satinato'},
     {name: 'Blu notte', hex: '#173366', usage: 'Cuffie e collo del robottino'},
@@ -88528,6 +89069,7 @@ body.dark-mode .cro-storico .cro-st-coord { color: #e5e7eb; }
       if (!t) return;
       t.querySelectorAll('.custom-autocomplete-wrapper input, .autocomplete input').forEach(function (inp) {
         if (/Link/i.test(inp.id || '')) return;
+        if (/^cnaInput/.test(inp.id || '')) return;   /* V10.26|153: CLLI o Nome Centrale resta alto come le coordinate */
         out.push(inp);
       });
     });
@@ -91128,6 +91670,8 @@ body.dark-mode .cro-ico-wrap.cro-pieno > .cro-ico { border-right-color: var(--cr
   G.arrivoDiv   = svg(edificio(antenna(C.verdeS), bandiera(C.verdeS, true)) + due(C.verdeS));
   G.obbligo     = svg(edificio(antenna(C.teal),  bollo(C.teal, SPUNTA)));
   G.divieto     = svg(edificio(antenna(C.rosso), bollo(C.rosso, DIVIETO)));
+  /* V10.26|152: centrale da cui cercare i Nodi A1 */
+  G.nodoA1      = svg(edificio(antenna(C.verde), bollo(C.verde, '<text x="49" y="52.4" font-family="system-ui, sans-serif" font-size="9" font-weight="800" fill="' + C.verdeS + '" text-anchor="middle">A1</text>')));
 
   G.linkObbligo = svg(bretella(bollo(C.teal, SPUNTA)));
   G.linkDivieto = svg(bretella(bollo(C.rosso, DIVIETO)));
@@ -91192,6 +91736,7 @@ body.dark-mode .cro-ico-wrap.cro-pieno > .cro-ico { border-right-color: var(--cr
     ['clientLatInput',        'lat',         'cliente',  'Latitudine della sede cliente'],
     ['clientLonInput',        'lon',         'cliente',  'Longitudine della sede cliente'],
     ['clientAddressInput',    'sede',        'cliente',  'Indirizzo della sede cliente'],
+    ['cnaInputRC',            'nodoA1',      'arr-std',  'Centrale di cui cercare i Nodi A1 pi\u00f9 vicini'],
     ['routeStart1Input',      'partenza',    'part-std', 'Centrale di partenza, percorso standard'],
     ['routeEnd1Input',        'arrivo',      'arr-std',  'Centrale di arrivo, percorso standard'],
     ['routeStart2Input',      'partenzaDiv', 'part-div', 'Centrale di partenza, percorsi diversificati'],
@@ -91204,6 +91749,7 @@ body.dark-mode .cro-ico-wrap.cro-pieno > .cro-ico { border-right-color: var(--cr
     ['clientLatInputRA',      'lat',         'cliente',  'Latitudine della sede cliente'],
     ['clientLonInputRA',      'lon',         'cliente',  'Longitudine della sede cliente'],
     ['clientAddressInputRA',  'sede',        'cliente',  'Indirizzo della sede cliente'],
+    ['cnaInputRA',            'nodoA1',      'arr-std',  'Centrale di cui cercare i Nodi A1 pi\u00f9 vicini'],
     ['routeStart1InputRA',    'partenza',    'part-std', 'Centrale di partenza, percorso standard'],
     ['routeEnd1InputRA',      'arrivo',      'arr-std',  'Centrale di arrivo, percorso standard'],
     ['routeStart2InputRA',    'partenzaDiv', 'part-div', 'Centrale di partenza, percorsi diversificati'],
@@ -91212,6 +91758,7 @@ body.dark-mode .cro-ico-wrap.cro-pieno > .cro-ico { border-right-color: var(--cr
     ['uClientLatInput',       'lat',         'cliente',  'Latitudine della sede cliente'],
     ['uClientLonInput',       'lon',         'cliente',  'Longitudine della sede cliente'],
     ['uClientAddressInput',   'sede',        'cliente',  'Indirizzo della sede cliente'],
+    ['cnaInputUNI',           'nodoA1',      'arr-std',  'Centrale di cui cercare i Nodi A1 pi\u00f9 vicini'],
     ['uRouteStartInput',      'partenza',    'part-std', 'Centrale di partenza, percorso standard'],
     ['uRouteEndInput',        'arrivo',      'arr-std',  'Centrale di arrivo, percorso standard'],
     ['uRouteStart2Input',     'partenzaDiv', 'part-div', 'Centrale di partenza, percorsi diversificati'],
@@ -94834,7 +95381,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V10.26 | 151';
+  var REVISIONE = 'V10.26 | 156';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
