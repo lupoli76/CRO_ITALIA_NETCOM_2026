@@ -4,13 +4,35 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 001  (rev. pubblicata: V11.26 | 001 | Nov 2026)              ║
+║   Versione: 11.26 | 004  (rev. pubblicata: V11.26 | 004 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 004 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • NOVITA' DEI DB: riquadro RA riscritto a mano con le differenze vere fra i    ║
+║     template del 21/10 e del 02/11 (20/10 → 02/11): MILO_arco_1078 prog 1-4 DA   ║
+║     VERIFICARE SU NNI → ATTIVO, prog 2 tipo sede A 2 → 3 e Z 3 → 2. RC invariata ║
+║   • Guida e Overview: cosa deve contare fra le novita' (tipo sede, coordinate...)║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 003 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • CARD DEL PODIO (RC e Unificato): gli zeri si scrivono 0 e non con il trattino║
+║     (Non attivi, Cambi rete, Subpath); nastro dei Div con i numeri sempre scritti║
+║   • OVERVIEW: scheda Analisi Percorsi riscritta (podio Std e Div), nuova scheda  ║
+║     Trova Nodi A1; GUIDA: migliori tre e podio dei Div nella sezione Unificato;  ║
+║     ASSISTENTE: esempi Trova Nodi A1 e Podio dei Div                             ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 002 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PODIO DEI DIV (RC e Unificato, tutti i Div): nastro sui tre migliori e riga  ║
+║     "Podio Div" in cima; ordine: meno C-FOS in comune, meno CLLI in comune, meno ║
+║     collegamenti senza dato C-FOS, km, non attivi, passaggi RA<->RC              ║
+║   • Note dei tab: "Come nascono i migliori tre" senza il passaggio RA→RA         ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 001 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -4556,7 +4578,7 @@ window.croChat = (function () {
       + '<div class="cc-et">Info live (la striscia in fondo)</div>'
       + '<div class="cc-chips"><button type="button" data-q="info live">riattiva le info live</button><button type="button" data-q="nascondi info live">nascondi le info live</button><button type="button" data-q="mostra meteo">mostra il meteo</button><button type="button" data-q="abilita notizie">abilita le notizie</button></div>'
       + '<div class="cc-et">Altri modi di chiedere</div>'
-      + '<div class="cc-chips"><button type="button" data-q="Compositore di Fattibilit\u00e0">un tab: Compositore</button><button type="button" data-q="regola coda cliente">un argomento</button><button type="button" data-q="OSNCP">una Sigla: OSNCP</button><button type="button" data-q="PXM3">un tipo di apparato: PXM3</button><button type="button" data-q="KMZ">come si fa il KMZ</button><button type="button" data-q="novit\u00e0">novit\u00e0 dei DB</button></div>');
+      + '<div class="cc-chips"><button type="button" data-q="Compositore di Fattibilit\u00e0">un tab: Compositore</button><button type="button" data-q="regola coda cliente">un argomento</button><button type="button" data-q="OSNCP">una Sigla: OSNCP</button><button type="button" data-q="PXM3">un tipo di apparato: PXM3</button><button type="button" data-q="KMZ">come si fa il KMZ</button><button type="button" data-q="Trova Nodi A1">una funzione: Trova Nodi A1</button><button type="button" data-q="Podio dei Div">il Podio dei Div</button><button type="button" data-q="novit\u00e0">novit\u00e0 dei DB</button></div>');
   }
 
   /* ── risposte sui dati ─────────────────────────────────────────────── */
@@ -5150,7 +5172,7 @@ window.croChat = (function () {
    400 voci) di subpath nuovi, tolti, con stato, distanza o altri campi cambiati.
    La home la mostra in un riquadro; l'Assistente CRO risponde a «novità».
    ═══════════════════════════════════════════════════════════════════════════ */
-var CRO_DB_NOVITA = {"v":1,"RC":{"da":"2026-10-20","a":"2026-10-20","nuovi":0,"tolti":0,"cambiati":1,"elenco":[{"id":"CPU024","ga":"S. SEVERO VARANO","gz":"VICO DEL GARGANO","t":"altro","c":"C-FOS: SAGAITAB/SASEITAA/C-FOS/00001 + SAGAITAB/VIGAITAF/C-FOS/00001 → APRIITAA/SASEITAA/C-FOS/00002 + APRIITAA/SAGAITAB/C-FOS/00002 + SAGAITAB/VIGAITAF/C-FOS/00001; OTS: APRIITAA/SASEITAA/C-FOS/00002 + APRIITAA/SAGAITAB/C-FOS/00002 + SAGAITAB/VIGAITAF/C-FOS/00001 → SAGAITAB/SASEITAA/OTS/000002 + SAGAITAB/VIGAITAF/OTS/000002"}],"tagliato":false},"RA":{"da":"2026-10-20","a":"2026-10-20","nuovi":0,"tolti":0,"cambiati":0,"elenco":[],"tagliato":false}};
+var CRO_DB_NOVITA = {"v":1,"RC":{"da":"2026-10-20","a":"2026-10-20","nuovi":0,"tolti":0,"cambiati":1,"elenco":[{"id":"CPU024","ga":"S. SEVERO VARANO","gz":"VICO DEL GARGANO","t":"altro","c":"C-FOS: SAGAITAB/SASEITAA/C-FOS/00001 + SAGAITAB/VIGAITAF/C-FOS/00001 → APRIITAA/SASEITAA/C-FOS/00002 + APRIITAA/SAGAITAB/C-FOS/00002 + SAGAITAB/VIGAITAF/C-FOS/00001; OTS: APRIITAA/SASEITAA/C-FOS/00002 + APRIITAA/SAGAITAB/C-FOS/00002 + SAGAITAB/VIGAITAF/C-FOS/00001 → SAGAITAB/SASEITAA/OTS/000002 + SAGAITAB/VIGAITAF/OTS/000002"}],"tagliato":false},"RA":{"da":"2026-10-20","a":"2026-11-02","nuovi":0,"tolti":0,"cambiati":4,"elenco":[{"id":"MILO_arco_1078 | MILO_536 | ALO062 | 1","ga":"S. DONATO MILANESE","gz":"S. GIULIANO MILANESE","sp":"ALO062","t":"stato","da":"DA VERIFICARE SU NNI","a":"ATTIVO"},{"id":"MILO_arco_1078 | MILO_536 | ALO062 | 2","ga":"S. GIULIANO MILANESE","gz":"SESTO ULTERIANO","sp":"ALO062","t":"stato","da":"DA VERIFICARE SU NNI","a":"ATTIVO"},{"id":"MILO_arco_1078 | MILO_537 | ALO062 | 3","ga":"OPERA","gz":"SESTO ULTERIANO","sp":"ALO062","t":"stato","da":"DA VERIFICARE SU NNI","a":"ATTIVO"},{"id":"MILO_arco_1078 | MILO_537 | ALO062 | 4","ga":"PIEVE EMANUELE","gz":"OPERA","sp":"ALO062","t":"stato","da":"DA VERIFICARE SU NNI","a":"ATTIVO"},{"id":"MILO_arco_1078 | MILO_536 | ALO062 | 2","ga":"S. GIULIANO MILANESE","gz":"SESTO ULTERIANO","sp":"ALO062","t":"altro","c":"Tipo sede A: 2 → 3; Tipo sede Z: 3 → 2"}]}};
 window.croNovita = (function () {
   var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var it = function (iso) { var p = String(iso || '').split('-'); return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : (iso || '?'); };
@@ -24258,7 +24280,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 001 | Nov 2026</div>
+<div class="version-tag">V11.26 | 004 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -24504,9 +24526,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 001</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 004</span>
                     </div>
-                    <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati. Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
+                    <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">Cambi di stato</span>
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">Nuovi e tolti</span>
@@ -24521,7 +24543,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 001</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 004</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -24542,7 +24564,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 001</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 004</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -24553,13 +24575,30 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                 </div>
 
+                <!-- Feature V10.26|152-156: Trova Nodi A1 -->
+                <div class="feature-card" data-cat="routing" data-tags="nodo a1 nodi a1 clli centrale posizione cliente arrivo arrivo 2 a1_div" style="border-left: 3px solid #16a34a;">
+                    <div class="feature-icon" style="color: #16a34a;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-4h6v4M9 9h.01M15 9h.01M9 13h.01M15 13h.01"/></svg>
+                    </div>
+                    <div class="feature-header">
+                        <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 004</span>
+                    </div>
+                    <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
+                    <div class="feature-specs">
+                        <span class="spec-tag" style="background: #f0fdf4; color: #15803d;">RA, RC, Unificato</span>
+                        <span class="spec-tag" style="background: #f0fdf4; color: #15803d;">Linea d’aria e km di rete</span>
+                        <span class="spec-tag" style="background: #f0fdf4; color: #15803d;">Arrivo e Arrivo 2</span>
+                    </div>
+                </div>
+
                 <div class="feature-card" data-cat="analisi" data-tags="protezione protetto caramella e2e end-to-end rtn listino costi coda rc huawei adtran sirti" style="border-left: 3px solid #10b981;">
                     <div class="feature-icon" style="color: #10b981;">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 001</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 004</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -25013,24 +25052,23 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
 </div>
 
-<!-- Feature: Novità V50.05.23 -->
-<div class="feature-card" data-cat="analisi" style="border-left: 3px solid #0066CC; background: linear-gradient(135deg,#fff 0%,#eff6ff 100%);">
+<!-- Feature: Analisi Percorsi e podio (V50.05.23; riscritta V11.26|003) -->
+<div class="feature-card" data-cat="routing" data-tags="podio migliori tre nastro card analisi percorsi div diversificati c-fos clli" style="border-left: 3px solid #0066CC; background: linear-gradient(135deg,#fff 0%,#eff6ff 100%);">
   <div class="feature-icon" style="color: #0066CC;">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
     </svg>
   </div>
   <div class="feature-header">
-    <h3 class="feature-title" style="color: #0066CC;">📊 Analisi Percorsi — Tab Unificato</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">V50.05.23</span>
+    <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 004</span>
   </div>
-  <p class="feature-desc">Pannello <strong>📊 Analisi Percorsi</strong> nel tab Ricerca Percorso Unificato: appare automaticamente dopo ogni ricerca. La colonna <strong>⭐ Percorso Consigliato</strong> mostra lo score ottimale (meno link non attivi, meno transizioni RA↔RC, distanza minima) con badge 🥇🥈🥉. La colonna <strong>📈 Statistiche Std</strong> riporta min/max per tutti i percorsi su: Link, Non-att RC/RA/tot, Nodi, Hop, RC, RA, RA→RA, RA→RC, RC→RA. Range km nel titolo sezione; tooltip su ogni statistica; valori zero come «--».</p>
+  <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
-    <span class="spec-tag" style="background:#eff6ff;color:#0066CC;">Tab Unificato</span>
-    <span class="spec-tag" style="background:#eff6ff;color:#0066CC;">⭐ Percorso Consigliato</span>
-    <span class="spec-tag" style="background:#eff6ff;color:#0066CC;">📈 Statistiche Std</span>
-    <span class="spec-tag" style="background:#eff6ff;color:#0066CC;">Tooltip</span>
-    <span class="spec-tag" style="background:#eff6ff;color:#0066CC;">🥇🥈🥉 Classifica</span>
+    <span class="spec-tag" style="background:#eff6ff;color:#0066CC;">RC e Unificato</span>
+    <span class="spec-tag" style="background:#eff6ff;color:#0066CC;">🥇🥈🥉 Nastri</span>
+    <span class="spec-tag" style="background:#eff6ff;color:#0066CC;">🏅 Podio Div</span>
+    <span class="spec-tag" style="background:#eff6ff;color:#0066CC;">C-FOS e CLLI</span>
   </div>
 </div>
 
@@ -25171,10 +25209,43 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #7c3aed;">
+              <details class="cl-item" open style="--cl-accent: #1d4ed8;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🆕 Novità V11.26 | 004 | Nov 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🆕 Novità dei DB corrette</strong>: il riquadro «Cosa è cambiato nei database» mostra per la RA l’aggiornamento vero del 02/11/2026: i quattro collegamenti di MILO_arco_1078 passati da DA VERIFICARE SU NNI ad ATTIVO e lo scambio di tipo sede sul prog 2 (S. GIULIANO MILANESE da T2 a T3, SESTO ULTERIANO da T3 a T2). Prima riportava «0 cambiati» perché il CRONAT non guardava il tipo sede</li>
+    <li><strong>📖 Guida e Overview</strong>: scritto quali modifiche devono contare fra le novità (tutte quelle che cambiano un risultato, compresi tipo sede e coordinate)</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #475569;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">0️⃣ Novità V11.26 | 003 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>0️⃣ Zeri leggibili</strong>: nelle card del podio dei tab RC e Unificato i valori a zero (collegamenti non attivi, cambi rete, subpath) si leggono «0» invece del trattino. Anche il nastro dei Div scrive sempre i numeri, per esempio «0 C-FOS · 0 CLLI in comune · 170,21 km · 6 non attivi»</li>
+    <li><strong>📚 Documentazione allineata</strong>: la scheda dell’Overview sui migliori percorsi descrive il podio di oggi (anche dei Div), c’è una scheda per <strong>Trova Nodi A1</strong>, la Guida spiega migliori tre e podio dei Div, l’Assistente ha due esempi nuovi</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🏅 Novità V11.26 | 002 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🏅 Podio anche per i Div</strong>: nei tab RC e Unificato, quando apri i Div di uno Std, i tre migliori prendono il nastro oro, argento e bronzo, con il motivo scritto accanto (per esempio «niente in comune con lo Std · 41,78 km · tutto attivo»). In cima ai Div la riga «Podio Div» ha un bottone per ciascuno che porta alla riga. Conta prima la diversità (meno C-FOS in comune, poi meno centrali in comune), poi i km, poi lo stato dei collegamenti. L’ordine dell’elenco non cambia</li>
+    <li><strong>📝 Note dei tab</strong>: la spiegazione dei migliori tre non conta più i tratti RA consecutivi come passaggio di rete, come stabilito nella revisione 001</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #7c3aed;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🥇 Novità V11.26 | 001 | Nov 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -27549,8 +27620,11 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     </li>
                   <li><strong style="color: #004C99;">🔢 Quanti Div</strong>: per ogni Std escono tanti Div quanto <em>N° Risultati</em>, al massimo 100 (30 se il campo è vuoto). Con il default 150 sono 100. Per risposte più rapide abbassa <em>N° Risultati</em>: il numero vale sia per gli Std sia per i Div. Più alto è <em>N° Risultati</em>, più candidati il tool esamina (il triplo, fino a 3.000) e più Div completi può trovare, anche se ne mostra al massimo 100. Uso consigliato: 150 di base; se escono solo Div parziali, 300 e ricalcola i Div (tempi circa doppi). Nel tab RC fino a 150 i candidati restano 300.</li>
                   <li><p style="margin-top: 0.25rem;">
-    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo.</p>
+    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince. Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC e RC verso RA, dove si installano i transponder; più tratti RA di fila non contano come passaggio), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo.</p>
     </li>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong>🏅 Podio dei Div</strong>: quando apri i Div di uno Std, i tre migliori prendono il nastro come gli Std («🥇 Miglior Div», «🥈 Secondo Div», «🥉 Terzo Div», con il motivo scritto accanto) e in cima ai Div c’è la riga «Podio Div», con un bottone per ciascuno che porta alla riga. Per i Div conta prima di tutto la diversità: prima meno <strong>C-FOS in comune</strong> con lo Std (una fibra in comune pesa più di qualunque numero di centrali in comune), poi meno <strong>CLLI in comune</strong>, poi meno collegamenti senza dato C-FOS, poi i <strong>km</strong>, poi i collegamenti <strong>non attivi</strong>, poi i passaggi RA↔RC. Vale per tutti i Div: normali, RTN di zona, Div dei Div e parziali. L’ordine dell’elenco non cambia.</p>
+  </li>
                   <li><strong style="color: #004C99;">📊 Analisi Percorsi</strong>: sopra la tabella, tre card con i migliori percorsi: oro il primo, argento il secondo, bronzo il terzo, gli stessi colori del nastro che segnala la riga nella tabella. Ogni card è cliccabile e porta alla riga del percorso, facendo lampeggiare il nastro. Dentro la card: distanza, collegamenti e subpath, nodi, attivi e non attivi.</li>
                   <li><p style="margin-top: 0.9rem;">
       <strong style="color: #004C99;">🏢 Filtro POP (NODO A1)</strong>: il bottone <strong>[POP]</strong> nel campo
@@ -29862,8 +29936,11 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </li>
                   <li><strong style="color: #004C99;">🔢 Quanti Div</strong>: per ogni Std escono tanti Div quanto <em>N° Risultati</em>, al massimo 100 (30 se il campo è vuoto). Con il default 150 sono 100. Per risposte più rapide abbassa <em>N° Risultati</em>: il numero vale sia per gli Std sia per i Div. Più alto è <em>N° Risultati</em>, più candidati il tool esamina (il triplo, fino a 3.000) e più Div completi può trovare, anche se ne mostra al massimo 100. Uso consigliato: 150 di base; se escono solo Div parziali, 300 e ricalcola i Div (tempi circa doppi). Nel tab RC fino a 150 i candidati restano 300.</li>
                   <li><p style="margin-top: 0.25rem;">
-    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince; a parità di punteggio vale la regola di rete (solo RC, poi solo RA, poi misti RA+RC; con RTN per ciascuna zona). Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC, RC verso RA e due tratti RA consecutivi), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza e, a parità di km, la regola di rete, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo. Nel calcolo il salto sul backbone <strong>RTN</strong> viene ignorato: non conta come collegamento e non produce un passaggio di rete. In modalità RTN, sotto il numero del percorso, <strong>ZNA</strong> e <strong>ZNB</strong> segnalano i migliori tre per la sola Zona A e per la sola Zona B, calcolati con lo stesso punteggio sui rispettivi segmenti.</p>
+    <strong>🥇 Come nascono i migliori tre</strong>: i percorsi vengono ordinati per punteggio, e il punteggio più basso vince; a parità di punteggio vale la regola di rete (solo RC, poi solo RA, poi misti RA+RC; con RTN per ciascuna zona). Non è la sola distanza: ogni passaggio di rete pesa 12 punti (RA verso RC e RC verso RA, dove si installano i transponder; più tratti RA di fila non contano come passaggio), ogni collegamento non attivo pesa 8 punti, ogni collegamento vale mezzo punto e lo scostamento dalla distanza minima pesa 2 punti per ogni raddoppio. Un percorso più corto ma con un collegamento non attivo o un passaggio di rete in più perde quindi contro uno leggermente più lungo ma pulito. I primi tre restano al loro posto nell’elenco, che segue la distanza e, a parità di km, la regola di rete, e prendono un <strong>nastro colorato</strong> sopra la riga: oro il primo, argento il secondo, bronzo il terzo. Il numero dentro il nastro è quello del percorso nell’elenco completo. Nel calcolo il salto sul backbone <strong>RTN</strong> viene ignorato: non conta come collegamento e non produce un passaggio di rete. In modalità RTN, sotto il numero del percorso, <strong>ZNA</strong> e <strong>ZNB</strong> segnalano i migliori tre per la sola Zona A e per la sola Zona B, calcolati con lo stesso punteggio sui rispettivi segmenti.</p>
     </li>
+                  <li><p style="margin-top: 0.25rem;">
+    <strong>🏅 Podio dei Div</strong>: quando apri i Div di uno Std, i tre migliori prendono il nastro come gli Std («🥇 Miglior Div», «🥈 Secondo Div», «🥉 Terzo Div», con il motivo scritto accanto) e in cima ai Div c’è la riga «Podio Div», con un bottone per ciascuno che porta alla riga. Per i Div conta prima di tutto la diversità: prima meno <strong>C-FOS in comune</strong> con lo Std (una fibra in comune pesa più di qualunque numero di centrali in comune), poi meno <strong>CLLI in comune</strong>, poi meno collegamenti senza dato C-FOS, poi i <strong>km</strong>, poi i collegamenti <strong>non attivi</strong>, poi i passaggi RA↔RC. Vale per tutti i Div: normali, RTN di zona, Div dei Div e parziali. L’ordine dell’elenco non cambia.</p>
+  </li>
                   <li><p style="margin-top: 0.25rem;">
     <strong style="color: #0066CC;">📊 Pannello Analisi Percorsi</strong>: dopo ogni ricerca appare automaticamente
     il pannello <strong>📊 Analisi Percorsi</strong> con <strong>4 card classificate</strong>:
@@ -41126,6 +41203,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><span style="background:#f5f3ff;color:#7c3aed;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:4px;margin-right:6px;">RETAIL &amp; WHOLESALE</span><strong>Scopo:</strong> Calcola percorsi che attraversano <strong>sia la rete RA che la rete RC</strong> in un unico calcolo. Necessario quando il cliente è attestato su una centrale RA ma il servizio richiede transito su backbone RC. Con il toggle <strong>🌐 RTN</strong> abilita il routing interregionale automatico tra aree geografiche diverse (es. Campania → Lazio).</p>
                   <p><strong>Come si usa (modalità standard):</strong> Identico a RC/RA. Il motore combina automaticamente i due grafi con transizioni RA↔RC nei nodi T1/POP. I percorsi mostrano chiaramente le tratte RA (blu) e RC (rosso).</p>
                   <p><strong>Ordine dei percorsi:</strong> con RTN acceso o spento i percorsi sono ordinati per distanza in km. A parità di km, cioè quando le distanze coincidono al centesimo come in tabella, vengono prima i percorsi <strong>solo RC</strong>, poi i <strong>solo RA</strong>, poi i <strong>misti RA+RC</strong>: una sola rete vuol dire un solo tipo di scheda transponder invece di due. Senza RTN la classe è quella del percorso intero, con RTN quella di ciascun tratto di zona. La stessa regola vale per le Div e, a parità di punteggio, per i migliori tre del nastro.</p>
+                  <p><strong>Migliori tre e podio dei Div:</strong> i tre Std migliori prendono il nastro 🥇🥈🥉 e una card in <strong>📊 Analisi Percorsi</strong>. Il punteggio somma 12 punti per ogni passaggio RA↔RC (dove si installano i transponder; più tratti RA di fila non contano), 8 per ogni collegamento non attivo, mezzo punto per collegamento e un peso per i km in più. Aprendo i Div di uno Std, i tre Div migliori prendono il nastro e la riga «🏅 Podio Div»: conta prima la diversità (meno C-FOS in comune con lo Std, poi meno CLLI in comune, poi meno collegamenti senza dato C-FOS), poi i km, poi i collegamenti non attivi. Le card e i nastri scrivono sempre i numeri, anche quando valgono 0.</p>
                   <p><strong>Come si usa (modalità 🌐 RTN):</strong></p>
                   <ol style="margin-left:1.2rem;line-height:1.9;">
                     <li>Attiva il toggle <strong style="color:#0891b2;">🌐 RTN</strong> (diventa azzurro).</li>
@@ -41270,6 +41348,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><strong>Dove si trova:</strong> nella home, sotto l’intestazione. Chiede anche l’Assistente CRO: «novità».</p>
                   <p><strong>Cosa mostra:</strong> per RC e RA le date del DB precedente e di quello nuovo, i conteggi (cambiati, nuovi, tolti) e l’elenco diviso in cambio di stato (con i colori degli stati), nuovi, tolti, distanza cambiata e altri campi cambiati. L’elenco arriva al massimo a 400 voci per DB. Un clic su un subpath apre la sua scheda nell’Assistente.</p>
                   <p><strong>Da dove vengono i dati:</strong> il CRONAT, dalla revisione V10.26 | 05, quando sostituisce un DB confronta i record vecchi e nuovi per <code>IdCollegamento</code> e scrive il risultato nella riga <code>var CRO_DB_NOVITA</code>. Se aggiorni solo RC, le novità della RA restano quelle dell’aggiornamento precedente.</p>
+                  <p><strong>Cosa deve contare:</strong> ogni modifica che cambia un risultato del CRO: stato, distanza, C-FOS (IdCavo) e OTS, centrali e CLLI agli estremi, <strong>tipo sede</strong> (T1, T2, T3), <strong>coordinate</strong> delle centrali (confrontate al sesto decimale, così gli arrotondamenti non contano), Vendor, Zona, Regione, Area, DR e SubPath, più righe nuove e tolte. Note, Altro1, Altro2 e Info Extra sono solo testo e non contano. Fino alla revisione V10.26 | 11 il CRONAT non guardava tipo sede, coordinate e gli altri campi nuovi: l’aggiornamento RA del 02/11/2026 (MILO_arco_1078) è stato quindi riscritto a mano nella V11.26 | 004, confrontando i template del 21/10 e del 02/11.</p>
                   <p><strong>Età del DB:</strong> accanto al titolo i giorni dall’ultimo aggiornamento; oltre 30 giorni compare l’avviso in giallo.</p>
                 </div>
               </details>
@@ -43400,7 +43479,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 001 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 004 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -43418,7 +43497,47 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#faf5ff;">
+        <details open style="border:1px solid #1d4ed8;border-radius:12px;overflow:hidden;background:#eff6ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#1d4ed8;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            🆕 V11.26 | 004 | Nov 2026 | Novità dei DB RA riscritte a mano
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🆕 var CRO_DB_NOVITA</strong>: parte <code>RA</code> rifatta confrontando i fogli Collegamenti_RA di <code>CRONAT_DB_Template_21_10_26.xlsx</code> e <code>CRONAT_DB_Template_02_11_26_milo1078_1_e_2.xlsx</code> per <code>IdCollegamento</code>, con i campi che cambiano un risultato (stato, distanza, IdCavo, OTS, GAT/CLLI, TipoSede, coordinate al sesto decimale, Vendor, Zona, Regione, Area, DR, SubPath): <code>da</code> 2026-10-20, <code>a</code> 2026-11-02, cambiati 4, nuovi 0, tolti 0; 4 voci «stato» e una «altro» («Tipo sede A: 2 → 3; Tipo sede Z: 3 → 2»). La parte <code>RC</code> resta quella del 20/10 (CPU024): fra i due template il foglio RC non cambia. Il disegno del riquadro non cambia</li>
+              <li><strong>🔍 Causa</strong>: il CRONAT V10.26 | 11 confronta il template con il DB del CRO caricato e conta solo stato, distanza e <code>NOVITA_ALTRI</code> (IdCavo, OTS, GAT/CLLI A e Z); il CRO caricato aveva già gli ATTIVO, e lo scambio di tipo sede non era fra i campi: risultato RA vuoto. La correzione del CRONAT si fa nella sua chat</li>
+              <li><strong>📖 Testi</strong>: Guida «Cosa è cambiato nei database», nuovo paragrafo «Cosa deve contare»; scheda dell’Overview con i campi che contano</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #475569;border-radius:12px;overflow:hidden;background:#f8fafc;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#334155;display:flex;align-items:center;gap:0.5rem;background:#e2e8f0;">
+            0️⃣ V11.26 | 003 | Nov 2026 | Zeri nelle card del podio, documentazione allineata
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>0️⃣ Card</strong>: <code>_rcBloccoDati()</code> (NON Attivi) e blocco dati delle card dell’Unificato (<code>subpathN</code>, Cambi Rete, NON Attivi) scrivono il numero anche quando vale 0, al posto di «—»; il colore resta verde per 0 non attivi. Richiesta di Giuseppe</li>
+              <li><strong>🎗️ croPodioDiv, motivo()</strong>: il nastro dei Div scrive sempre C-FOS, CLLI e non attivi, anche a 0 (prima «niente in comune con lo Std» e «tutto attivo»); i collegamenti uguali allo Std compaiono solo nei Div parziali, quando ci sono</li>
+              <li><strong>📚 Overview</strong>: la scheda «Analisi Percorsi — Tab Unificato» (V50.05.23, parlava ancora di colonna Percorso Consigliato, Statistiche Std, RA→RA e zeri «--») diventa «Migliori percorsi e podio dei Div», categoria routing; nuova scheda «Trova Nodi A1» (mancava dalla V10.26 | 152). I badge «Nuovo» diventano 6</li>
+              <li><strong>📖 Guida</strong>: nella sezione Unificato di «Come funziona il routing» nuovo paragrafo «Migliori tre e podio dei Div». <strong>💬 Assistente</strong>: esempi «Trova Nodi A1» e «Podio dei Div» in «Altri modi di chiedere»</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#eff6ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0050a0;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            🏅 V11.26 | 002 | Nov 2026 | Podio dei Div
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🏅 window.croPodioDiv</strong>: IIFE nel blocco della pastiglia C-FOS. Raggruppa le righe Div (<code>uAltRow_</code>, <code>uAltARow_</code>, <code>uAltBRow_</code>, <code>routeAltRow_</code>) per Std o per Div padre, usa <code>_croDivRighe</code> per risalire a Std e Div e confronta a scalini: <code>croConfrontaCfos</code> → C-FOS in comune, CLLI in comune, collegamenti senza dato C-FOS; poi km (pari al centesimo), non attivi (<code>croStatoAttivo</code>), passaggi RA↔RC, numero di collegamenti. Misure tenute in una <code>WeakMap</code> per Div</li>
+              <li><strong>🎗️ Disegno</strong>: nastro <code>tr.cro-nastro.cro-nastro-N.cro-nastro-div</code> sopra la riga e classi <code>cro-top cro-nastro-N cro-podio-div</code> sulla riga (stesse tinte degli Std); riga <code>tr.cro-podio-div-riep</code> prima del primo Div del gruppo con bottoni <code>.cro-podio-div-b</code> che chiamano <code>croVaiAlPercorso</code>. I nastri seguono il filtro «Solo C-FOS OK» (nascosti con la loro riga) e si mettono sopra l’eventuale riga di avviso del filtro. Si ridisegna solo se cambia la firma (righe, podio, visibilità), con un <code>MutationObserver</code> per corpo tabella e attesa di 140 ms</li>
+              <li><strong>📝 Note</strong>: «Come nascono i migliori tre» (RC e Unificato) aggiornata alla regola della 001; nuova voce «Podio dei Div». Richiesta di Giuseppe del 02/11/2026: diversità prima di tutto (C-FOS pesa più dei CLLI), poi km, poi stato</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#faf5ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#6d28d9;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
             🥇 V11.26 | 001 | Nov 2026 | Podio senza RA→RA, KMZ con CLLI e tipo sede
           </summary>
@@ -52665,7 +52784,7 @@ function renderBaseTable() {
       + g('Subpath / Collegamenti', subpaths, '#374151', 'Nella Rete Core collegamento e subpath sono la stessa cosa, quindi il conteggio e\' unico')
       + g('Nodi / Centrali', nodi || '?', '#374151', 'Centrali attraversate dal percorso, partenza e arrivo compresi')
       + g('Attivi', attivi, '#16a34a', 'Collegamenti con stato ATTIVO, ATTIVO > SATURO, IN REINSTRADAMENTO o IN VARIAZIONE')
-      + g('NON Attivi', noAtt > 0 ? noAtt : '\u2014', noAtt > 0 ? '#dc2626' : '#16a34a',
+      + g('NON Attivi', noAtt, noAtt > 0 ? '#dc2626' : '#16a34a',   /* V11.26|003: 0 e non trattino */
           'Collegamenti con stato NON ATTIVO, IN ATTIVAZIONE, DA VERIFICARE SU NNI o IN CESSAZIONE')
       + '</div>';
   }
@@ -56741,6 +56860,8 @@ window.runBaseRoutesSearch = function() {
           ? window.croClassificaDiv(baseRoute, partialEnriched, null) : partialEnriched;   /* V10.26|19 */
         inlineAltBaseIndex = idx;
         renderAltTable();
+        /* V11.26|002: la tabella Div separata e' nascosta (display:none): senza questa riga i parziali non si vedevano */
+        try { renderInlineAltRoutes(idx); } catch (e) { console.error('[V11.26|002] Div parziali RC in linea', e); }
         if (altInfo) altInfo.textContent = partialEnriched.length + ' percorsi Div parziali trovati.';
         if (altBtn) { altBtn.innerHTML = '▼ Div'; altBtn.style.background = '#f59e0b'; altBtn.style.color = 'white'; altBtn.style.borderColor = '#f59e0b'; }
         return;
@@ -63802,6 +63923,7 @@ function getColorsContent() {
     {name: 'Comandi Info live', hex: '#9fb0c8', usage: 'Icone dei comandi della striscia (al passaggio #f1f5f9 su #1f2c44)'},
     {name: 'Pausa attiva', hex: '#7cb8ff', usage: 'Icona di pausa quando lo scorrimento è fermo, su blu TIM trasparente'},
     {name: 'Nodo A1 Standard', hex: '#e7f1fc', usage: 'Badge «A1 Standard» nel popup Trova Nodi A1 (testo #0050a0)'},
+    {name: 'Podio Div', hex: '#0066cc', usage: 'Riga «Podio Div» (fondo #f4f8fd, filo sinistro #0066cc) sopra i Div aperti; i nastri dei Div usano oro, argento e bronzo degli Std'},
     {name: 'Trova Nodi A1', hex: '#16a34a', usage: 'Barretta a sinistra di CLLI o Nome Centrale; targhetta «A1» #dcfce7 / #166534; bottone bianco con testo #15803d e bordo #bbe5c8'},
     {name: 'Nodo A1_DIV', hex: '#fdf0e3', usage: 'Badge «A1_DIV · senza PE» nel popup Trova Nodi A1 (testo #9a4d0b)'},
     {section: 'Assistente CRO (robottino 3D)'},
@@ -74982,7 +75104,7 @@ div[style*="background:#f3f4f6"] label:hover span {
       s = String(s).trim();
       if(s && s !== '-') _sp[s] = 1;
     });
-    var subpathN = Object.keys(_sp).length || '\u2014';
+    var subpathN = Object.keys(_sp).length;   /* V11.26|003: 0 e non trattino */
     /* RA: il conteggio logico segue la regola dei collegamenti (verde vale 1,
        due blu valgono 1, grigio vale 0), quello fisico sono i tratti reali */
     var raLog = linksInfo.raCount, raFis = raHops;
@@ -75024,11 +75146,11 @@ div[style*="background:#f3f4f6"] label:hover span {
       + g('Collegamenti',subpath,'#374151','Collegamenti conteggiati: RC vale 1, RA verde vale 1, due RA blu valgono 1, RA grigio vale 0. Fra parentesi i tratti reali del percorso, quando il numero differisce (RTN escluso)')
       + g('Subpath',subpathN,'#374151','Subpath distinti attraversati. Nella RA piu\' collegamenti possono appartenere allo stesso subpath, che nell\'identificativo e\' il terzo pezzo; nella RC collegamento e subpath coincidono')
       + g('Nodi / Centrali',nodes.length||'?','#374151','Centrali attraversate dal percorso, partenza e arrivo compresi')
-      + g('Cambi Rete',transitions>0?transitions:'\u2014',transitions>2?'#f59e0b':'#374151','Passaggi da una rete all\'altra fra RA e RC, cioe\' i gateway attraversati. Il salto sul backbone RTN non conta come passaggio')
+      + g('Cambi Rete',transitions,transitions>2?'#f59e0b':'#374151','Passaggi da una rete all\'altra fra RA e RC, cioe\' i gateway attraversati. Il salto sul backbone RTN non conta come passaggio')
       + g('Rete RA',raTxt,'#0066CC','Tratti sulla Rete di Aggregazione (RA): collegamenti conteggiati e, fra parentesi, tratti reali quando il numero differisce')
       + g('Rete RC',rcHops,'#dc2626','Tratti percorsi sulla Rete Core (RC)')
       + g('Attivi',attivi,'#16a34a','Collegamenti con stato ATTIVO, ATTIVO > SATURO, IN REINSTRADAMENTO o IN VARIAZIONE')
-      + g('NON Attivi',inactive>0?inactive:'\u2014',inactive>0?'#dc2626':'#16a34a','Collegamenti con stato NON ATTIVO, IN ATTIVAZIONE, DA VERIFICARE SU NNI o IN CESSAZIONE')
+      + g('NON Attivi',inactive,inactive>0?'#dc2626':'#16a34a','Collegamenti con stato NON ATTIVO, IN ATTIVAZIONE, DA VERIFICARE SU NNI o IN CESSAZIONE')
       + (unknown>0?g('Stato ?',unknown,'#9ca3af','Collegamenti che nel database non riportano uno stato. XFER e RTN sono esclusi dal conteggio'):'')
       + '</div>';
   }
@@ -95423,7 +95545,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 001';
+  var REVISIONE = 'V11.26 | 004';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
@@ -97837,7 +97959,7 @@ window.updateSDFSelectionCount = window.updateSDFSelectionCount || function () {
     var righe = lista.map(function (d, i) {
       var interi = {};
       (d.edges || []).filter(vera).forEach(function (e) { var k = _s(e.id || e.arco); if (idsBase[k]) interi[k] = 1; });
-      var punti = 0, R = null;
+      var punti = 0, R = null, nCfos = 0, nClli = 0;
       try { R = window.croConfrontaCfos(base, d); } catch (e) { R = null; }
       if (R) {
         var conta = function (links) {
@@ -97845,10 +97967,12 @@ window.updateSDFSelectionCount = window.updateSDFSelectionCount || function () {
           /* nei Div di zona, cio' che sta solo nei collegamenti della zona fissa non conta */
           return !fissa || l.some(function (x) { return x && !interi[_s(x).trim()]; });
         };
-        (R.cfosComuni || []).forEach(function (c) { if (conta(c.inB)) punti += 100; });
-        (R.clliComuni || []).forEach(function (x) { if (conta(x.inB)) punti += 1; });
+        (R.cfosComuni || []).forEach(function (c) { if (conta(c.inB)) { punti += 100; nCfos++; } });
+        (R.clliComuni || []).forEach(function (x) { if (conta(x.inB)) { punti += 1; nClli++; } });
       }
       if (!fissa) punti += Object.keys(interi).length * 1000;
+      /* V11.26|002: le stesse misure servono al podio dei Div */
+      try { d._divMisure = { interi: fissa ? 0 : Object.keys(interi).length, cfos: nCfos, clli: nClli, senza: R ? (R.senza || []).length : 0, conDati: !!R }; } catch (e) {}
       if (d._isPartialDiv && !punti) punti = 1;   /* parziale per altri motivi */
       if (punti && !d._divNote && typeof window.croNotaDivParziale === 'function') {
         d._isPartialDiv = true;
@@ -98439,6 +98563,215 @@ table.cro-cf-tab tr:first-child td { border-top: 0; }
   else osserva();
   window.addEventListener('load', osserva);
   setInterval(osserva, 1500);
+})();
+
+/* V11.26|002: PODIO DEI DIV (tab RC e Unificato, tutti i Div: normali, RTN di zona, Div dei Div, parziali).
+   L'ordine dell'elenco non cambia: i tre Div migliori prendono il nastro sopra la riga, come gli Std,
+   e in cima ai Div aperti c'e' una riga di riepilogo che porta alla riga. Classifica a scalini, si passa
+   al criterio dopo solo a parita' del precedente:
+     0. collegamenti identici allo Std (solo i Div parziali ne hanno)
+     1. C-FOS in comune con lo Std (una fibra in comune pesa piu' di qualunque numero di centrali in comune)
+     2. CLLI in comune (centrali dentro le C-FOS, partenza e arrivo esclusi)
+     3. collegamenti senza dato C-FOS (la verifica non e' completa)
+     4. km (pari al centesimo, come in tabella)
+     5. collegamenti non attivi
+     6. passaggi RA<->RC (transponder), poi numero di collegamenti */
+(function () {
+  'use strict';
+  var RIGHE = 'tr[id^="uAltRow_"], tr[id^="routeAltRow_"], tr[id^="uAltARow_"], tr[id^="uAltBRow_"]';
+  var CORPI = ['uRouteBody', 'routeBaseBody', 'routeAltBody'];
+  var NOMI = { 1: 'Miglior Div', 2: 'Secondo Div', 3: 'Terzo Div' };
+  var MEDAGLIE = { 1: '\uD83E\uDD47', 2: '\uD83E\uDD48', 3: '\uD83E\uDD49' };
+
+  function gruppoDi(id) {
+    var m;
+    if ((m = id.match(/^uAltRow_(\d+)_\d+$/))) return { k: 'U' + m[1], std: (+m[1] + 1) + '' };
+    if ((m = id.match(/^uAlt([AB])Row_(\d+)_(\d+)_\d+$/))) return { k: 'U' + m[1] + m[2] + '_' + m[3], std: (+m[2] + 1) + '', div: (+m[2] + 1) + '.' + (+m[3] + 1), zona: m[1] };
+    if (/^routeAltRow_\d+$/.test(id)) { var b = window._rcAltBaseIndex; return { k: 'RC', std: b == null ? '' : (+b + 1) + '' }; }
+    return null;
+  }
+  function numeroRiga(tr) {
+    var c = tr.cells && tr.cells[0]; if (!c) return '';
+    var t = '';
+    for (var i = 0; i < c.childNodes.length; i++) {
+      var n = c.childNodes[i];
+      if (n.nodeType === 3 || (n.nodeType === 1 && !n.classList.contains('cro-cf') && n.tagName !== 'INPUT')) t += n.textContent || '';
+    }
+    return t.trim().split('\n')[0].trim();
+  }
+  function statoAttivo(e) {
+    var st = ((e && e.raw && (e.raw.StatoCollegamento || e.raw.Stato_IdCollegamento || e.raw.stato || e.raw.Stato)) || (e && e.stato) || '') + '';
+    st = st.toUpperCase().trim();
+    return !st || (typeof window.croStatoAttivo === 'function' ? window.croStatoAttivo(st) : !/NON/.test(st));
+  }
+  function misure(base, div) {
+    var R = null;
+    if (!(div && div._divMisure && div._divMisure.conDati)) { try { R = window.croConfrontaCfos(base, div); } catch (e) { R = null; } }
+    var ed = (div && (div.edges || div.links)) || [], km = 0, ina = 0, tr = 0, coll = 0, cur = null;
+    ed.forEach(function (e) {
+      if (!e) return;
+      var src = e.source || '';
+      if (src === 'XFER' || src === 'RTN') return;
+      km += Number(e.weight != null ? e.weight : (e.Distanza_km != null ? e.Distanza_km : (e.raw && e.raw.Distanza_km))) || 0;
+      if (!statoAttivo(e)) ina++;
+      if ((cur === 'RA' && src === 'RC') || (cur === 'RC' && src === 'RA')) tr++;
+      coll++; if (src) cur = src;
+    });
+    if (!km) km = Number(div && (div.distanceKm || div.dist || div.cost)) || 0;
+    /* le misure di diversita' le lascia croClassificaDiv (con le regole dei Div di Zona A/B); se mancano si contano qui */
+    var M = div && div._divMisure;
+    if (M && M.conDati) return { interi: M.interi || 0, cfos: M.cfos, clli: M.clli, senza: M.senza, km: km, ina: ina, tr: tr, coll: coll };
+    return { interi: 0, cfos: R ? R.cfosComuni.length : 99, clli: R ? R.clliComuni.length : 99, senza: R ? R.senza.length : 99,
+             km: km, ina: ina, tr: tr, coll: coll };
+  }
+  /* le misure si calcolano una volta per coppia Std/Div: il confronto C-FOS non e' leggero */
+  var _cache = (typeof WeakMap === 'function') ? new WeakMap() : null;
+  function misureCache(base, div) {
+    if (!_cache) return misure(base, div);
+    var c = _cache.get(div);
+    if (c && c.base === base) return c.m;
+    var m = misure(base, div); _cache.set(div, { base: base, m: m }); return m;
+  }
+  function confronta(a, b) {
+    return (a.interi - b.interi) || (a.cfos - b.cfos) || (a.clli - b.clli) || (a.senza - b.senza)
+      || (Math.abs(a.km - b.km) > 0.005 ? a.km - b.km : 0)
+      || (a.ina - b.ina) || (a.tr - b.tr) || (a.coll - b.coll);
+  }
+  function km2(v) { return v.toFixed(2).replace('.', ','); }
+  function motivo(m) {
+    /* V11.26|003: i numeri si scrivono sempre, anche quando valgono 0 */
+    var d = (m.interi ? m.interi + (m.interi === 1 ? ' collegamento uguale' : ' collegamenti uguali') + ' allo Std \u00b7 ' : '')
+      + m.cfos + ' C-FOS \u00b7 ' + m.clli + ' CLLI in comune';
+    if (m.senza && m.senza < 99) d += ', ' + m.senza + ' senza dato C-FOS';
+    return d + ' \u00b7 ' + km2(m.km) + ' km \u00b7 ' + m.ina + ' non attiv' + (m.ina === 1 ? 'o' : 'i');
+  }
+  /* prima del Div, ma sopra l'eventuale riga di avviso del filtro C-FOS che gli sta attaccata */
+  function ancora(tr) {
+    var t = tr;
+    while (t.previousElementSibling && /^croFiltroAvviso_/.test(t.previousElementSibling.id || '')) t = t.previousElementSibling;
+    return t;
+  }
+  function colonne(tb) {
+    var t = tb.closest('table'), h = t && t.querySelector('thead tr');
+    return Math.max(1, h ? h.cells.length : 6);
+  }
+
+  function calcola(tb) {
+    var righe = Array.prototype.filter.call(tb.querySelectorAll(RIGHE), function (tr) { return tr.parentNode === tb && !/Detail/.test(tr.id); });
+    var gruppi = {}, ordine = [];
+    righe.forEach(function (tr) {
+      var g = gruppoDi(tr.id); if (!g) return;
+      var cp = (window._croDivRighe || {})[tr.id];
+      if (!cp || !cp.div || !cp.base) return;
+      if (!gruppi[g.k]) { gruppi[g.k] = { g: g, voci: [] }; ordine.push(g.k); }
+      gruppi[g.k].voci.push({ tr: tr, div: cp.div, base: cp.base });
+    });
+    var piano = [];
+    ordine.forEach(function (k) {
+      var G = gruppi[k];
+      if (G.voci.length < 2) return;
+      G.voci.forEach(function (v) { v.m = misureCache(v.base, v.div); });
+      var top = G.voci.slice().sort(function (a, b) { return confronta(a.m, b.m); }).slice(0, 3);
+      piano.push({ k: k, g: G.g, primo: G.voci[0].tr, top: top });
+    });
+    return piano;
+  }
+  function firma(piano) {
+    return piano.map(function (p) {
+      return p.k + ':' + p.primo.id + ':' + p.top.map(function (v) { return v.tr.id + (v.tr.style.display === 'none' ? '-' : '+'); }).join(',');
+    }).join('|');
+  }
+  function aPosto(tb) {
+    var ok = true;
+    Array.prototype.forEach.call(tb.querySelectorAll('tr.cro-nastro-div'), function (n) {
+      var r = document.getElementById(n.getAttribute('data-riga'));
+      if (!r || r.parentNode !== tb) { ok = false; return; }
+      var s = n.nextElementSibling;
+      while (s && /^croFiltroAvviso_/.test(s.id || '')) s = s.nextElementSibling;
+      if (s !== r) ok = false;
+    });
+    return ok;
+  }
+  function pulisci(tb) {
+    Array.prototype.forEach.call(tb.querySelectorAll('tr.cro-nastro-div, tr.cro-podio-div-riep'), function (n) { n.remove(); });
+    Array.prototype.forEach.call(tb.querySelectorAll('tr.cro-podio-div'), function (r) {
+      r.classList.remove('cro-podio-div', 'cro-top', 'cro-nastro-1', 'cro-nastro-2', 'cro-nastro-3');
+    });
+  }
+  function disegna(tb, piano) {
+    pulisci(tb);
+    var nc = colonne(tb);
+    piano.forEach(function (p) {
+      var voci = [];
+      p.top.forEach(function (v, i) {
+        var rk = i + 1, tr = v.tr, idN = 'croNastroDiv_' + tr.id;
+        var n = document.createElement('tr');
+        n.className = 'cro-nastro cro-nastro-' + rk + ' cro-nastro-div';
+        n.id = idN; n.setAttribute('data-riga', tr.id);
+        n.style.display = tr.style.display === 'none' ? 'none' : '';
+        var td = document.createElement('td'); td.colSpan = nc;
+        td.innerHTML = '<span class="cro-nastro-testo">' + MEDAGLIE[rk] + ' ' + NOMI[rk] + '</span><span class="cro-nastro-div-motivo">' + motivo(v.m) + '</span>';
+        n.appendChild(td);
+        tb.insertBefore(n, ancora(tr));
+        tr.classList.add('cro-podio-div', 'cro-top', 'cro-nastro-' + rk);
+        voci.push('<button type="button" class="cro-podio-div-b" data-n="' + idN + '" data-r="' + tr.id + '" title="' + motivo(v.m).replace(/"/g, '&quot;') + '">'
+          + MEDAGLIE[rk] + ' Div ' + (numeroRiga(tr) || '?') + '</button>');
+      });
+      var r = document.createElement('tr');
+      r.className = 'cro-podio-div-riep';
+      var td2 = document.createElement('td'); td2.colSpan = nc;
+      var chi = p.g.div ? 'del Div ' + p.g.div + (p.g.zona ? ' (Zona ' + p.g.zona + ')' : '') : (p.g.std ? 'dello Std ' + p.g.std : '');
+      td2.innerHTML = '<span class="cro-podio-div-tit">\uD83C\uDFC5 Podio Div ' + chi + '</span>' + voci.join('')
+        + '<span class="cro-podio-div-reg" title="Prima meno C-FOS in comune con lo Std, poi meno CLLI in comune, poi i km, poi i collegamenti non attivi, poi i passaggi RA\u2194RC">diversit\u00e0, poi km, poi stato</span>';
+      r.appendChild(td2);
+      var primo = p.primo, prima = primo.previousElementSibling;
+      while (prima && (prima.classList.contains('cro-nastro-div') || /^croFiltroAvviso_/.test(prima.id || ''))) { primo = prima; prima = primo.previousElementSibling; }
+      tb.insertBefore(r, primo);
+    });
+  }
+  function passa() {
+    CORPI.forEach(function (id) {
+      var tb = document.getElementById(id); if (!tb) return;
+      var piano = calcola(tb), f = firma(piano);
+      if (tb._croPodioDiv === f && aPosto(tb) && tb.querySelectorAll('tr.cro-nastro-div').length === piano.reduce(function (s, p) { return s + p.top.length; }, 0)) return;
+      tb._croPodioDiv = f;
+      disegna(tb, piano);
+    });
+  }
+  window.croPodioDiv = passa;
+
+  document.addEventListener('click', function (ev) {
+    var b = ev.target && ev.target.closest ? ev.target.closest('.cro-podio-div-b') : null; if (!b) return;
+    ev.stopPropagation();
+    if (typeof window.croVaiAlPercorso === 'function') window.croVaiAlPercorso(b.getAttribute('data-n'), b.getAttribute('data-r'));
+  }, true);
+
+  var CSS = ''
+    + 'tr.cro-nastro-div > td{font-weight:700;}'
+    + 'tr.cro-nastro-div .cro-nastro-div-motivo{font-weight:500;letter-spacing:0;margin-left:10px;opacity:.85;}'
+    + 'tr.cro-podio-div-riep > td{padding:5px 10px !important;text-align:left !important;font-size:0.72rem;background:#f4f8fd !important;border-left:3px solid #0066cc;color:#1f3a5f;}'
+    + '.cro-podio-div-tit{font-weight:700;margin-right:8px;}'
+    + '.cro-podio-div-b{border:1px solid #c9d7ea;background:#fff;color:#1f3a5f;font-size:0.7rem;font-weight:700;padding:1px 8px;border-radius:6px;margin-right:5px;cursor:pointer;}'
+    + '.cro-podio-div-b:hover{border-color:#0066cc;background:#eef5ff;}'
+    + '.cro-podio-div-b:focus-visible{outline:2px solid #3b82f6;outline-offset:1px;}'
+    + '.cro-podio-div-reg{margin-left:6px;color:#64748b;font-weight:500;}'
+    + 'body.dark-mode tr.cro-podio-div-riep > td{background:#13243d !important;color:#cfe0f7;border-left-color:#3b82f6;}'
+    + 'body.dark-mode .cro-podio-div-b{background:#0f172a;border-color:#334155;color:#cfe0f7;}'
+    + 'body.dark-mode .cro-podio-div-reg{color:#94a3b8;}';
+
+  function avvia() {
+    if (!document.getElementById('croPodioDivStile')) { var st = document.createElement('style'); st.id = 'croPodioDivStile'; st.textContent = CSS; document.head.appendChild(st); }
+    CORPI.forEach(function (id) {
+      var tb = document.getElementById(id);
+      if (!tb || tb._croPodioOss) return;
+      tb._croPodioOss = true;
+      var t = null;
+      new MutationObserver(function () { clearTimeout(t); t = setTimeout(passa, 140); }).observe(tb, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+    });
+    passa();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', avvia); else avvia();
+  window.addEventListener('load', avvia);
 })();
 </script>
 
