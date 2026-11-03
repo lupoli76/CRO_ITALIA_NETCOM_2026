@@ -4,13 +4,20 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 007  (rev. pubblicata: V11.26 | 007 | Nov 2026)              ║
+║   Versione: 11.26 | 008  (rev. pubblicata: V11.26 | 008 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 008 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • MODELLO KMZ: una riga per collegamento, nell'ordine dei progressivi del      ║
+║     percorso; prima le C-FOS ripetute sullo stesso arco (andata e ritorno su un  ║
+║     ramo) venivano unite e mancavano righe. Tab RA: Std e Div letti dal percorso ║
+║     calcolato e non piu' dalla tabella a video                                   ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 007 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -24392,7 +24399,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 007 | Nov 2026</div>
+<div class="version-tag">V11.26 | 008 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -24638,7 +24645,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 007</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 008</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -24655,7 +24662,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 007</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 008</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -24676,7 +24683,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 007</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 008</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -24694,7 +24701,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 007</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 008</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -24710,7 +24717,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 007</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 008</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -25173,7 +25180,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 007</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 008</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -25321,10 +25328,20 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #0369a1;">
+              <details class="cl-item" open style="--cl-accent: #b45309;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🗺️ Novità V11.26 | 008 | Nov 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🗺️ Modello KMZ completo</strong>: il modello «Tracciati KMZ per archi DWDM» ha una riga per ogni collegamento del percorso, nell’ordine dei progressivi dell’arco. Prima, quando un arco RA ripassa sulla stessa C-FOS con un altro progressivo (per esempio andata e ritorno verso GUALDO CATTANEO su AMU022), la seconda volta veniva saltata. Nel tab RA lo Std e i suoi Div escono ciascuno nel proprio gruppo</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0369a1;">
                 <summary class="cl-sum">
                   <span class="cl-ver">📋 Novità V11.26 | 007 | Nov 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -43623,7 +43640,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 007 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 008 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -43641,7 +43658,19 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #0369a1;border-radius:12px;overflow:hidden;background:#f0f9ff;">
+        <details open style="border:1px solid #b45309;border-radius:12px;overflow:hidden;background:#fffbeb;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
+            🗺️ V11.26 | 008 | Nov 2026 | Modello KMZ: una riga per collegamento
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🗺️ gruppi() e daTabella()</strong>: le righe si deduplicano per <code>IdCollegamento</code> (nuovo campo <code>id</code> di <code>daCollegamento()</code>) e non più per <code>arco|cavo</code>, che univa i collegamenti RA con la stessa C-FOS e progressivi diversi. Caso di Giuseppe: FOLIGNO P.F. (FOLIITAE) [T1] → S. GIACOMO (PG) (SPOLITAF) [T2], arco AMU022, prog 12 → 2: prima 8 righe, ora 11 (tornano i prog 8, 6 e 5, sulle C-FOS FOLIITAD/GUCAITAE, FOLIITAD/FOLIITAL e FOLIITAD/FOLIITAE già usate dai prog 9, 7 e 10)</li>
+              <li><strong>🔗 Tab RA</strong>: <code>window._baseRoutesRA</code> e <code>window._altRoutesRA</code> (getter sulle variabili del tab), così il modello legge i collegamenti dal percorso calcolato e non dagli id della tabella a video; senza caselle di selezione, <code>selezionati()</code> restituisce lo Std e i suoi Div, ciascuno con il proprio gruppo («Percorso Standard 1», «Percorso Diversificato 1.1»)</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0369a1;border-radius:12px;overflow:hidden;background:#f0f9ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#075985;display:flex;align-items:center;gap:0.5rem;background:#e0f2fe;">
             📋 V11.26 | 007 | Nov 2026 | Riquadro novità in tabelle
           </summary>
@@ -58067,6 +58096,9 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
   // Storage per i percorsi calcolati
   let baseRoutesRA = [];
   let altRoutesRA = [];
+  /* V11.26|008: il modello KMZ legge i percorsi RA con i collegamenti nell'ordine del percorso */
+  try { Object.defineProperty(window, '_baseRoutesRA', { configurable: true, get: function () { return baseRoutesRA; } });
+        Object.defineProperty(window, '_altRoutesRA', { configurable: true, get: function () { return altRoutesRA; } }); } catch (e) {}
   let inlineAltBaseIndexRA = -1;
   let routeStateRA = { start1: '', end1: '', start2: '', end2: '' };
   
@@ -95300,6 +95332,7 @@ table.route-detail-table > tbody > tr > td.col-id {
       return nome + (clli && nome.indexOf('(' + clli + ')') < 0 ? ' (' + clli + ')' : '') + (tipo >= 1 && tipo <= 3 ? ' [T' + tipo + ']' : '');
     }
     return {
+      id: testo(r.IdCollegamento),   /* V11.26|008: chiave della riga */
       arco: arco,
       cavo: cavo,
       a: sede('A'),
@@ -95309,8 +95342,9 @@ table.route-detail-table > tbody > tr > td.col-id {
 
   function percorsi(ambito) {
     if (ambito === 'RA') {
-      return window._baseRoutesRA || window.baseRoutesRA ||
-             window._multiArcoRoutesRA || window.multiArcoRoutesRA || [];
+      var cand = [window._baseRoutesRA, window.baseRoutesRA, window._multiArcoRoutesRA, window.multiArcoRoutesRA];   /* V11.26|008 */
+      for (var ci = 0; ci < cand.length; ci++) { if (Array.isArray(cand[ci]) && cand[ci].length) return cand[ci]; }
+      return [];
     }
     if (ambito === 'UNIFIED') {
       return window._baseRoutesUNIFIED || [];
@@ -95340,7 +95374,7 @@ table.route-detail-table > tbody > tr > td.col-id {
         if (!rec) continue;
         var r = daCollegamento(rec);
         if (!r) continue;
-        var chiave = r.arco + '|' + r.cavo;
+        var chiave = r.id || (r.arco + '|' + r.cavo + '|' + r.a + '|' + r.z);   /* V11.26|008 */
         if (visti[chiave]) continue;
         visti[chiave] = 1;
         out.push(r);
@@ -95360,6 +95394,11 @@ table.route-detail-table > tbody > tr > td.col-id {
        base in data-baseidx. Prima ne cercavo altre che non esistono, e cosi'
        il modello riportava sempre tutto. */
     var caselle = document.querySelectorAll('#' + tab + ' input.expsm-row-cb');
+    if (!caselle.length && ambito === 'RA' && tutti.length && tutti === window._baseRoutesRA) {   /* V11.26|008: solo per lo Std del tab RA, non per il Multi-Path */
+      var ra = tutti.map(function (p, i) { return { percorso: p, div: false, base: i, alt: i }; });
+      (window._altRoutesRA || []).forEach(function (p, i) { ra.push({ percorso: p, div: true, base: 0, alt: i }); });
+      return ra;
+    }
     if (!caselle.length) return tutti;
 
     var scelti = [], visti = {};
@@ -95452,7 +95491,9 @@ table.route-detail-table > tbody > tr > td.col-id {
       elenco.forEach(function (l) {
         var r = daCollegamentoRisolto(l);
         if (!r) return;
-        var chiave = r.arco + '|' + r.cavo;
+        /* V11.26|008: un arco RA puo' passare due volte sulla stessa C-FOS con progressivi diversi
+           (andata e ritorno su un ramo): ogni collegamento ha la sua riga, nell'ordine del percorso */
+        var chiave = r.id || (r.arco + '|' + r.cavo + '|' + r.a + '|' + r.z);
         if (visti[chiave]) return;
         visti[chiave] = 1;
         righe.push(r);
@@ -95727,7 +95768,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 007';
+  var REVISIONE = 'V11.26 | 008';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
