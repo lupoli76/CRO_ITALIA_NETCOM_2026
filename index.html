@@ -4,13 +4,20 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 006  (rev. pubblicata: V11.26 | 006 | Nov 2026)              ║
+║   Versione: 11.26 | 007  (rev. pubblicata: V11.26 | 007 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 007 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • NOVITA' DEI DB in tabelle: RA con Arco, Ramo, SubPath, Prog; RC con          ║
+║     Collegamento; tratta, prima e dopo in colonne; negli Altri campi una riga per║
+║     campo, C-FOS e OTS uno per riga (tolti in rosso, nuovi in verde); carattere  ║
+║     piu' piccolo; stesse tabelle nella risposta dell'Assistente a "novita'"      ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 006 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -5207,6 +5214,61 @@ window.croNovita = (function () {
     else if (e.t === 'nuovo' && e.a) det = '<span style="color:' + colStato(e.a) + '">' + esc(e.a) + '</span>';
     return '<li><button type="button" class="nv-id" data-nv="' + esc(e.sp || e.id) + '" title="Apri la scheda nell\u2019Assistente CRO">' + esc(id) + '</button> ' + tratta + (det ? ' <span class="nv-det">' + det + '</span>' : '') + '</li>';
   }
+  /* V11.26|007: novità in tabelle incolonnate. RA: Arco, Ramo, SubPath, Prog; RC: Collegamento. Negli «Altri campi»
+     una riga per campo (Campo, Prima, Dopo); C-FOS e OTS una per riga, con le tolte in rosso e le nuove in verde. */
+  function idCelle(e, db, span) {
+    var rs = span > 1 ? ' rowspan="' + span + '"' : '';
+    var bt = function (t) { return '<button type="button" class="nv-id" data-nv="' + esc(e.sp || e.id) + '" title="Apri la scheda nell\u2019Assistente CRO">' + esc(t) + '</button>'; };
+    if (db === 'RA') {
+      var p = String(e.id || '').split('|').map(function (x) { return x.trim(); });
+      if (p.length === 4) return '<td' + rs + '>' + bt(p[0]) + '</td><td' + rs + '>' + esc(p[1]) + '</td><td' + rs + '>' + esc(p[2]) + '</td><td' + rs + ' class="nv-c">' + esc(p[3]) + '</td>';
+      return '<td' + rs + ' colspan="4">' + bt(e.id) + '</td>';
+    }
+    return '<td' + rs + '>' + bt(e.id) + '</td>';
+  }
+  function idTesta(db) { return db === 'RA' ? '<th>Arco</th><th>Ramo</th><th>SubPath</th><th class="nv-c">Prog</th>' : '<th>Collegamento</th>'; }
+  function tratta(e, rs) { return '<td' + (rs > 1 ? ' rowspan="' + rs + '"' : '') + ' class="nv-tr">' + (e.ga ? esc(e.ga) + ' <span class="nv-fr">\u2192</span> ' + esc(e.gz) : '') + '</td>'; }
+  function stato(s) { return s ? '<span class="nv-st" style="color:' + colStato(s) + '">' + esc(s) + '</span>' : ''; }
+  /* «C-FOS: a + b → a + c; Tipo sede A: 2 → 3» → [{campo, prima, dopo}] */
+  function campi(c) {
+    return String(c || '').split(/;\s+(?=[A-Za-z\u00C0-\u00FF][^:;]{0,30}:\s)/).map(function (p) {
+      var m = /^([^:]{1,40}):\s*([\s\S]*?)\s*\u2192\s*([\s\S]*)$/.exec(p.trim());
+      return m ? { campo: m[1].trim(), prima: m[2].trim(), dopo: m[3].trim() } : { campo: '', prima: '', dopo: p.trim() };
+    });
+  }
+  /* liste di C-FOS/OTS separate da «+»: una per riga, tolte e aggiunte evidenziate */
+  function lista(v, altra, lato) {
+    var a = String(v || '').split(/\s*\+\s*/).filter(Boolean), b = String(altra || '').split(/\s*\+\s*/).filter(Boolean);
+    if (a.length < 2 && b.length < 2 && !/\//.test(v)) return esc(v || '');
+    return a.map(function (x) {
+      var cl = b.indexOf(x) >= 0 ? 'nv-uguale' : (lato === 'prima' ? 'nv-tolta' : 'nv-nuova');
+      return '<div class="' + cl + '">' + esc(x).split('/').map(function (q) { return '<span class="nv-nb">' + q + '</span>'; }).join('/<wbr>') + '</div>';
+    }).join('') || '<span class="nv-k">nessuna</span>';
+  }
+  function tabella(tp, L, db) {
+    var h = '<div class="nv-tw"><table class="nv-t"><thead><tr>' + idTesta(db) + '<th>Tratta</th>';
+    if (tp === 'stato') h += '<th>Prima</th><th>Dopo</th>';
+    else if (tp === 'nuovo' || tp === 'tolto') h += '<th>Stato</th>';
+    else if (tp === 'dist') h += '<th class="nv-n">Prima</th><th class="nv-n">Dopo</th><th class="nv-n">Differenza</th>';
+    else h += '<th>Campo</th><th>Prima</th><th>Dopo</th>';
+    h += '</tr></thead><tbody>';
+    L.forEach(function (e, i) {
+      var z = i % 2 ? ' class="nv-z"' : '';
+      if (tp === 'stato') h += '<tr' + z + '>' + idCelle(e, db, 1) + tratta(e, 1) + '<td>' + stato(e.da) + '</td><td><b>' + stato(e.a) + '</b></td></tr>';
+      else if (tp === 'nuovo' || tp === 'tolto') h += '<tr' + z + '>' + idCelle(e, db, 1) + tratta(e, 1) + '<td>' + stato(e.a) + '</td></tr>';
+      else if (tp === 'dist') {
+        var d1 = parseFloat(String(e.da).replace(',', '.')), d2 = parseFloat(String(e.a).replace(',', '.')), df = (isFinite(d1) && isFinite(d2)) ? d2 - d1 : null;
+        h += '<tr' + z + '>' + idCelle(e, db, 1) + tratta(e, 1) + '<td class="nv-n">' + esc(e.da) + ' km</td><td class="nv-n"><b>' + esc(e.a) + ' km</b></td><td class="nv-n">' + (df == null ? '' : (df > 0 ? '+' : '') + df.toFixed(2).replace('.', ',') + ' km') + '</td></tr>';
+      } else {
+        var C = campi(e.c);
+        C.forEach(function (c, j) {
+          h += '<tr' + z + (j === C.length - 1 ? '' : ' data-nv-cont="1"') + '>' + (j === 0 ? idCelle(e, db, C.length) + tratta(e, C.length) : '')
+            + '<td class="nv-campo">' + esc(c.campo) + '</td><td>' + lista(c.prima, c.dopo, 'prima') + '</td><td>' + lista(c.dopo, c.prima, 'dopo') + '</td></tr>';
+        });
+      }
+    });
+    return h + '</tbody></table></div>';
+  }
   function html(perChat) {
     var N = window.CRO_DB_NOVITA || {}, dbs = ['RC', 'RA'].filter(function (k) { return N[k]; });
     var h = '';
@@ -5227,7 +5289,8 @@ window.croNovita = (function () {
       TIPI.forEach(function (tp) {
         var L = (x.elenco || []).filter(function (e) { return e.t === tp[0]; });
         if (!L.length) return;
-        h += '<details class="nv-g"' + (tp[0] === 'stato' && !perChat && !vecchio ? ' open' : '') + '><summary>' + tp[1] + ' <span>' + L.length + '</span></summary><ul>' + L.map(function (e) { return voce(e, k); }).join('') + '</ul></details>';
+        var leg = tp[0] === 'altro' && L.some(function (e) { return /\//.test(e.c || ''); }) ? '<p class="nv-leg"><span class="nv-tolta">rosso</span> tolta \u00b7 <span class="nv-nuova">verde</span> nuova \u00b7 <span class="nv-uguale">grigio</span> invariata</p>' : '';
+        h += '<details class="nv-g"' + ((tp[0] === 'stato' || tp[0] === 'altro') && !perChat && !vecchio ? ' open' : '') + '><summary>' + tp[1] + ' <span>' + L.length + '</span></summary>' + tabella(tp[0], L, k) + leg + '</details>';   /* V11.26|007: tabelle */
       });
       if (x.tagliato) h += '<p class="nv-vuoto">Elenco limitato alle prime ' + (x.elenco || []).length + ' voci.</p>';
       h += '</div>';
@@ -5250,11 +5313,37 @@ window.croNovita = (function () {
     + '#croNovita .nv-prec{font-size:.72rem;background:#e2e8f0;color:#475569;border-radius:999px;padding:1px 8px;font-weight:700}'
     + '#croNovita .nv-db-prec{opacity:.8}'
     + 'body.dark-mode #croNovita .nv-prec{background:#334155;color:#cbd5e1}'   /* V11.26|005 */
-    + 'body.dark-mode #croNovita,body.dark-mode #croNovita .nv-db{background:#1e293b;border-color:#334155;color:#e2e8f0}';
+    + 'body.dark-mode #croNovita,body.dark-mode #croNovita .nv-db{background:#1e293b;border-color:#334155;color:#e2e8f0}'
+    /* V11.26|007: tabelle delle novità, nella home e nella chat dell'Assistente */
+    + '#croNovita .nv-tw,#croChat .nv-tw{max-height:300px;overflow:auto;margin:.35rem 0 .3rem;border:1px solid #e2e8f0;border-radius:8px;background:#fff}'
+    + '#croNovita .nv-t,#croChat .nv-t{width:100%;border-collapse:collapse;font-size:.72rem;line-height:1.35}'
+    + '#croNovita .nv-t th,#croChat .nv-t th{position:sticky;top:0;z-index:1;background:#f1f5f9;color:#64748b;font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;text-align:left;padding:5px 8px;border-bottom:1px solid #e2e8f0;white-space:nowrap}'
+    + '#croNovita .nv-t td,#croChat .nv-t td{padding:4px 8px;border-bottom:1px solid #eef2f7;vertical-align:top}'
+    + '#croNovita .nv-t tr[data-nv-cont] td,#croChat .nv-t tr[data-nv-cont] td{border-bottom:1px dashed #eef2f7}'
+    + '#croNovita .nv-t tr.nv-z td,#croChat .nv-t tr.nv-z td{background:#fafbfd}'
+    + '#croNovita .nv-t .nv-id,#croChat .nv-t .nv-id{font-size:.72rem;white-space:nowrap}'
+    + '#croNovita .nv-t .nv-tr,#croChat .nv-t .nv-tr{color:#475569;min-width:120px}#croNovita .nv-fr,#croChat .nv-fr{color:#94a3b8}'
+    + '#croNovita .nv-t .nv-c,#croChat .nv-t .nv-c{text-align:center}#croNovita .nv-t .nv-n,#croChat .nv-t .nv-n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}'
+    + '#croNovita .nv-campo,#croChat .nv-campo{font-weight:700;color:#334155;white-space:nowrap}'
+    + '#croNovita .nv-st,#croChat .nv-st{white-space:nowrap}'
+    + '#croNovita .nv-tolta,#croChat .nv-tolta{color:#b91c1c;text-decoration:line-through;text-decoration-color:rgba(185,28,28,.45)}'
+    + '#croNovita .nv-nuova,#croChat .nv-nuova{color:#15803d;font-weight:700}'
+    + '#croNovita .nv-uguale,#croChat .nv-uguale{color:#64748b}'
+    + '#croNovita .nv-t td div,#croChat .nv-t td div{white-space:normal;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.68rem}'
+    + '#croNovita .nv-nb,#croChat .nv-nb{white-space:nowrap}'
+    + '#croChat .nv-prec{font-size:.68rem;background:#e2e8f0;color:#475569;border-radius:999px;padding:1px 7px;font-weight:700}#croChat .nv-num{font-weight:800;color:#0066CC}'
+    + '#croNovita .nv-leg,#croChat .nv-leg{font-size:.66rem;color:#64748b;margin:.1rem 0 .3rem}'
+    + '#croNovita .nv-k,#croChat .nv-k{color:#94a3b8}'
+    + 'body.dark-mode #croNovita .nv-tw,body.dark-mode #croChat .nv-tw{background:#0f172a;border-color:#334155}'
+    + 'body.dark-mode #croNovita .nv-t th,body.dark-mode #croChat .nv-t th{background:#1e293b;color:#94a3b8;border-color:#334155}'
+    + 'body.dark-mode #croNovita .nv-t td,body.dark-mode #croChat .nv-t td{border-color:#253247}'
+    + 'body.dark-mode #croNovita .nv-t tr.nv-z td,body.dark-mode #croChat .nv-t tr.nv-z td{background:#131d2f}'
+    + 'body.dark-mode #croNovita .nv-t .nv-tr,body.dark-mode #croNovita .nv-campo{color:#cbd5e1}'
+    + 'body.dark-mode #croNovita .nv-nuova,body.dark-mode #croChat .nv-nuova{color:#4ade80}body.dark-mode #croNovita .nv-tolta,body.dark-mode #croChat .nv-tolta{color:#f87171}';
   function mostra() {
     var home = document.getElementById('tab-home'), hero = home && home.querySelector('.hero-section');
+    if (!document.getElementById('croNovitaStile')) { var st = document.createElement('style'); st.id = 'croNovitaStile'; st.textContent = CSS; document.head.appendChild(st); }   /* V11.26|007 */
     if (!hero || document.getElementById('croNovita')) return;
-    var st = document.createElement('style'); st.id = 'croNovitaStile'; st.textContent = CSS; document.head.appendChild(st);
     var e = eta();
     var box = document.createElement('section'); box.id = 'croNovita';
     box.innerHTML = '<div class="nv-h"><h3>\uD83C\uDD95 Cosa \u00e8 cambiato nei database</h3>'
@@ -24303,7 +24392,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 006 | Nov 2026</div>
+<div class="version-tag">V11.26 | 007 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -24549,7 +24638,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 006</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 007</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -24566,7 +24655,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 006</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 007</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -24587,7 +24676,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 006</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 007</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -24605,7 +24694,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 006</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 007</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -24621,7 +24710,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 006</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 007</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -25084,7 +25173,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 006</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 007</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -25232,10 +25321,20 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #7c3aed;">
+              <details class="cl-item" open style="--cl-accent: #0369a1;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📋 Novità V11.26 | 007 | Nov 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📋 Novità dei DB in tabella</strong>: nel riquadro «Cosa è cambiato nei database» ogni gruppo è una tabella con le colonne incolonnate (per la RA Arco, Ramo, SubPath e Prog, per la RC il Collegamento, poi tratta, prima e dopo), con un carattere più piccolo. Negli «Altri campi» ogni campo cambiato ha la sua riga e le C-FOS sono una per riga: si vede subito quali sono state tolte (rosso) e quali aggiunte (verde)</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #7c3aed;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🎨 Novità V11.26 | 006 | Nov 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -41392,6 +41491,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><strong>Cosa mostra:</strong> per RC e RA le date del DB precedente e di quello nuovo, i conteggi (cambiati, nuovi, tolti) e l’elenco diviso in cambio di stato (con i colori degli stati), nuovi, tolti, distanza cambiata e altri campi cambiati. L’elenco arriva al massimo a 400 voci per DB. Un clic su un subpath apre la sua scheda nell’Assistente.</p>
                   <p><strong>Da dove vengono i dati:</strong> il CRONAT, dalla revisione V10.26 | 05, quando sostituisce un DB confronta i record vecchi e nuovi per <code>IdCollegamento</code> e scrive il risultato nella riga <code>var CRO_DB_NOVITA</code>. Se aggiorni solo RC, le novità della RA restano quelle dell’aggiornamento precedente.</p>
                   <p><strong>Cosa deve contare:</strong> ogni modifica che cambia un risultato del CRO: stato, distanza, C-FOS (IdCavo) e OTS, centrali e CLLI agli estremi, <strong>tipo sede</strong> (T1, T2, T3), <strong>coordinate</strong> delle centrali (confrontate al sesto decimale, così gli arrotondamenti non contano), Vendor, Zona, Regione, Area, DR e SubPath, più righe nuove e tolte. Note, Altro1, Altro2 e Info Extra sono solo testo e non contano. Fino alla revisione V10.26 | 11 il CRONAT non guardava tipo sede, coordinate e gli altri campi nuovi: l’aggiornamento RA del 02/11/2026 (MILO_arco_1078) è stato quindi riscritto a mano nella V11.26 | 004, confrontando i template del 21/10 e del 02/11. Dal CRONAT V10.26 | 12 questi campi sono tracciati.</p>
+                  <p><strong>Come si legge:</strong> ogni gruppo è una tabella. Per la RA le colonne sono Arco, Ramo, SubPath e Prog, per la RC il Collegamento; poi la tratta (centrale A → centrale Z) e i valori prima e dopo. Negli «Altri campi» c’è una riga per ogni campo cambiato (Campo, Prima, Dopo) e le C-FOS e gli OTS sono uno per riga: in rosso barrato quelli tolti, in verde quelli nuovi, in grigio quelli rimasti. Un clic sul primo valore apre la scheda nell’Assistente.</p>
                   <p><strong>Aggiornamento precedente e note:</strong> se uno dei due DB non è stato sostituito nell’ultimo aggiornamento, le sue novità sono quelle di prima: il riquadro lo mette dopo l’altro, con la pastiglia grigia «aggiornamento precedente» e i gruppi chiusi. Lo capisce dal campo <code>prec</code> scritto dal CRONAT o, per le righe più vecchie, dalla data del DB più vecchia dell’altra. Sotto l’intestazione compare la nota del CRONAT quando c’è, per esempio «Nessun cambiamento che incide sui risultati».</p>
                   <p><strong>Età del DB:</strong> accanto al titolo i giorni dall’ultimo aggiornamento; oltre 30 giorni compare l’avviso in giallo.</p>
                 </div>
@@ -43523,7 +43623,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 006 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 007 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -43541,7 +43641,19 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#faf5ff;">
+        <details open style="border:1px solid #0369a1;border-radius:12px;overflow:hidden;background:#f0f9ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#075985;display:flex;align-items:center;gap:0.5rem;background:#e0f2fe;">
+            📋 V11.26 | 007 | Nov 2026 | Riquadro novità in tabelle
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📋 croNovita</strong>: nuove <code>tabella(tp, L, db)</code>, <code>idCelle()</code> (RA: <code>IdCollegamento</code> diviso in Arco, Ramo, SubPath, Prog; RC: Collegamento; bottone <code>.nv-id</code> con <code>data-nv</code> come prima), <code>campi()</code> che divide <code>e.c</code> in campo/prima/dopo e <code>lista()</code> che mette C-FOS e OTS uno per riga con <code>.nv-tolta</code>, <code>.nv-nuova</code>, <code>.nv-uguale</code>. Distanza con colonna Differenza. Gruppo «Altri campi» aperto come «Cambio di stato», legenda dei colori sotto. <code>voce()</code> non è più usata</li>
+              <li><strong>🎨 CSS</strong>: tabelle a .72rem con intestazione fissa allo scorrimento, righe alterne, valori C-FOS in carattere a spaziatura fissa; selettori sia per <code>#croNovita</code> sia per <code>#croChat</code> (la risposta «novità» dell’Assistente usa la stessa <code>html(true)</code>); lo stile si carica anche se la home non disegna il riquadro. Tema scuro. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#faf5ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#6d28d9;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
             🎨 V11.26 | 006 | Nov 2026 | Tinte proprie per il podio dei Div
           </summary>
@@ -95615,7 +95727,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 006';
+  var REVISIONE = 'V11.26 | 007';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
