@@ -4,13 +4,54 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 014  (rev. pubblicata: V11.26 | 014 | Nov 2026)              ║
+║   Versione: 11.26 | 021  (rev. pubblicata: V11.26 | 021 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 021 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE: esempi dinamici; il clic mette l'esempio nella casella con la    ║
+║     parte da cambiare selezionata (centrale, CLLI, subpath, regione...) e una    ║
+║     riga di aiuto; Invio subito per l'esempio, o scrivi il tuo valore            ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 020 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE: benvenuto compatto, tutto visibile senza barra di scorrimento;   ║
+║     "Cosa non sa fare" in una voce che si apre (anche dal bottone Limiti)        ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 019 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE, "Apri il tab con le centrali": le centrali vengono scelte        ║
+║     dalla tendina come a mano (campo selezionato, tendina chiusa)                ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 018 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE CRO piu' conversazionale, senza IA: ricorda la centrale di cui    ║
+║     parli ("e i Nodi A1 vicini?", "i collegamenti?"), Nodi A1 vicini a una       ║
+║     centrale, "Imposta una pratica" guidata fino al piano e all'apertura del     ║
+║     tab Unificato; "Chiedi a Claude" prepara la domanda con i dati del tool e    ║
+║     apre claude.ai (nessuna chiave, nessun invio automatico)                     ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 017 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • FOGLIO IRP: la via segue l'ordine dei percorsi esportati (il primo 1° Via,   ║
+║     il secondo 2° Via), anche se sono due Std; prima contava solo Std o Div      ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 016 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • FOGLIO IRP: tutti i colori del modulo master (giallo, azzurro, verde, verde  ║
+║     acqua e bianco delle intestazioni); nessuna colonna nascosta                 ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 015 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • EXPORT XLSX (RC e Unificato): nuovo foglio IRP, il "Modulo lavorazione       ║
+║     Standard" senza le righe 1-2; per ogni via coda A, sezioni di trasporto RA/RC║
+║     e coda Z, con km, rami, tempi 60/180 gg, costi del listino, hardware e       ║
+║     subpath nelle note; nel tab RC nuova scelta "Cap. IRP" nella barra export    ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 014 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -4468,6 +4509,13 @@ window.croChat = (function () {
     + '#croChat .cc-k{color:#64748b;font-size:.74rem}'
     + '#croChat .cc-ok{color:#166534;font-weight:700}#croChat .cc-ko{color:#b91c1c;font-weight:700}#croChat .cc-dv{color:#b45309;font-weight:700}#croChat .cc-i input{text-transform:none}'
     + '#croChat .cc-web{margin-top:.45rem;padding-top:.4rem;border-top:1px dashed #cbd5e1;font-size:.75rem;color:#64748b}'
+    + '#croChat .cc-sug{padding:.3rem .7rem;font-size:.74rem;color:#0050a0;background:#eff6ff;border-top:1px solid #dbeafe}#croChat .cc-sug[hidden]{display:none}body.dark-mode #croChat .cc-sug{background:#13243d;color:#93c5fd;border-color:#1e3a5f}'   /* V11.26|021 */
+    + '#croChat .cc-chips button[data-t]::after{content:" \u270F\uFE0F";font-size:.7em;opacity:.6}'
+    + '#croChat .cc-benv .cc-et{margin:.45rem 0 .2rem}#croChat .cc-benv .cc-chips{gap:.3rem}#croChat .cc-benv .cc-chips button{padding:2px 9px}'   /* V11.26|020 */
+    + '#croChat .cc-lim-d{margin:.4rem 0 .1rem}#croChat .cc-lim-d>summary{cursor:pointer;font-weight:700;color:#92400e;font-size:.8rem;list-style:none}#croChat .cc-lim-d>summary::-webkit-details-marker{display:none}#croChat .cc-lim-d>summary::after{content:" \u25B8";font-size:.7rem}#croChat .cc-lim-d[open]>summary::after{content:" \u25BE"}#croChat .cc-lim-d .cc-lim{margin-top:.3rem}'
+    + '#croChat .cc-claude{margin-left:.5rem;font-size:.72rem;font-weight:700;padding:2px 9px;border-radius:999px;border:1px solid #d97757;background:#fdf3ee;color:#b4532f;cursor:pointer}'   /* V11.26|018 */
+    + '#croChat .cc-claude:hover{background:#d97757;color:#fff}'
+    + 'body.dark-mode #croChat .cc-claude{background:#3b2219;color:#f3b49b;border-color:#b4532f}'
     + '#croChat .cc-web a{margin-right:.6rem}'
     + '#croChat .cc-chips{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.3rem}'
     + '#croChat .cc-chips button{border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:2px 9px;font-size:.74rem;cursor:pointer;color:#1f3864}'
@@ -4492,6 +4540,7 @@ window.croChat = (function () {
       + '<button type="button" data-a="txt" title="Esporta la conversazione in TXT">\u2b07 TXT</button><button type="button" data-a="doc" title="Esporta la conversazione in Word">\u2b07 Word</button>'
       + '<button type="button" data-a="limiti" title="Cosa l\u2019assistente non sa fare">Limiti</button><button type="button" data-a="pulisci" title="Svuota la conversazione">Pulisci</button><button type="button" data-a="riduci" id="croChatRiduci" title="Riduci">\u2013</button><button type="button" data-a="chiudi" title="Chiudi (Esc): la conversazione resta">\u2715</button></div>'
       + '<div class="cc-m" id="croChatMsg"></div>'
+      + '<div class="cc-sug" id="croChatSug" hidden></div>'   /* V11.26|021 */
       + '<div class="cc-i"><input id="croChatIn" type="text" placeholder="Scrivi un CLLI, un subpath, una C-FOS, una centrale o una sigla\u2026" autocomplete="off"><button type="button" data-a="invia">Invia</button></div>';
     var tip = document.createElement('div'); tip.id = 'croChatTip'; tip.setAttribute('role', 'tooltip');
     tip.innerHTML = '<b>Assistente CRO</b><br>Cerca CLLI, subpath, C-FOS, centrali, sigle e testi del tool.<br><span>Non \u00e8 un\u2019AI e non calcola percorsi n\u00e9 costi.</span>';
@@ -4557,6 +4606,17 @@ window.croChat = (function () {
       else if (a === 'txt') esportaTxt();
       else if (a === 'doc') esportaWord();
       else if (a === 'invia') invia();
+      else if (a === 'claude') { chiediClaude(e.target); return; }   /* V11.26|018 */
+      /* V11.26|021: esempi dinamici: il testo va nella casella con la parte da cambiare selezionata;
+         scrivi la tua (centrale, CLLI, subpath, regione...) e premi Invio, oppure Invio subito per l'esempio */
+      var tpl = e.target.getAttribute && e.target.getAttribute('data-t');
+      if (tpl) {
+        var i0 = tpl.indexOf('{'), i1 = tpl.indexOf('}'), tx = tpl.replace(/[{}]/g, ''), inp = el('croChatIn');
+        inp.value = tx; inp.focus();
+        try { if (i0 >= 0 && i1 > i0) inp.setSelectionRange(i0, i1 - 1); else inp.setSelectionRange(tx.length, tx.length); } catch (x) {}
+        var sug = el('croChatSug'); if (sug) { sug.innerHTML = '\u270F\uFE0F Scrivi ' + esc(e.target.getAttribute('data-c') || 'il tuo valore') + ' al posto della parte evidenziata e premi Invio (o Invio subito per l\u2019esempio).'; sug.hidden = false; }
+        return;
+      }
       var q = e.target.getAttribute && (e.target.getAttribute('data-q') || e.target.getAttribute('data-nv'));
       if (q) { el('croChatIn').value = q; invia(); }
       var li = e.target.getAttribute && e.target.getAttribute('data-lista');
@@ -4627,21 +4687,25 @@ window.croChat = (function () {
   function apri(si) { aperta = si; el('croChat').classList.toggle('on', si); el('croChatBtn').classList.toggle('on', si); if (si) { applicaPos(); if (!el('croChat').classList.contains('ridotta')) setTimeout(function () { el('croChatIn').focus(); }, 50); } }
   function msg(cls, html) { var d = document.createElement('div'); d.className = cls; d.innerHTML = html; el('croChatMsg').appendChild(d); el('croChatMsg').scrollTop = el('croChatMsg').scrollHeight; return d; }
   var LIMITI = '<div class="cc-lim"><b>\u26a0\ufe0f Cosa non sa fare (per ora)</b><ul>'
-    + '<li><b>Non \u00e8 un\u2019intelligenza artificiale</b>: non capisce le frasi, riconosce le parole che il tool conosce (CLLI, subpath, archi e rami, C-FOS, nomi di centrale, sigle, argomenti dei testi) e alcune domande guidate: stato e regione (\u00abnon attivi Lombardia\u00bb), data center di una regione, collegamenti diretti tra due CLLI, C-FOS in comune tra due subpath, novit\u00e0 dei DB.</li>'
+    + '<li><b>Non \u00e8 un\u2019intelligenza artificiale</b>: non capisce le frasi, riconosce le parole che il tool conosce (CLLI, subpath, archi e rami, C-FOS, nomi di centrale, sigle, argomenti dei testi) e alcune domande guidate: stato e regione (\u00abnon attivi Lombardia\u00bb), data center di una regione, collegamenti diretti tra due CLLI, C-FOS in comune tra due subpath, novit\u00e0 dei DB, Nodi A1 vicini a una centrale e \u00abImposta una pratica\u00bb. Ricorda la centrale di cui stai parlando: dopo una centrale puoi chiedere \u00abe i Nodi A1 vicini?\u00bb o \u00abi collegamenti?\u00bb.</li>'
+    + '<li><b>\uD83E\uDD16 Chiedi a Claude</b> (sotto ogni risposta) prepara una domanda con i dati del tool, la copia negli appunti e apre claude.ai: l\u00ec la incolli e decidi tu se inviarla. Il tool non manda niente da solo; il testo che incolli esce dalla rete aziendale, quindi usalo solo se la policy lo consente.</li>'
     + '<li><b>Non calcola percorsi n\u00e9 costi</b>: per quelli usa i tab di ricerca RA, RC e Unificato e Analisi Costi.</li>'
     + '<li><b>Non conosce</b> il database dei costi, i percorsi gi\u00e0 cercati, la cronologia e i file che importi.</li>'
     + '<li><b>I dati sono quelli dei DB caricati nel tool</b> (le date sono nella home): stati, C-FOS e distanze vanno sempre verificati su NNI.</li>'
     + '<li><b>I link internet</b> aprono ricerche esterne: le informazioni trovate l\u00ec non sono verificate.</li>'
     + '</ul></div>';
   function benvenuto() {
-    msg('cc-b', '<h6>Ciao, sono l\u2019assistente del CRO.</h6>Cerco nei <b>dati del tool</b> (DB RC, DB RA, data center), nella <b>legenda</b> delle Soluzioni Protette e nei <b>testi di tutti i tab</b>. In fondo trovi i link per cercare anche su internet.'
-      + LIMITI
+    /* V11.26|020: benvenuto compatto, tutto visibile senza scorrere: i limiti stanno in una voce che si apre */
+    msg('cc-b cc-benv', '<h6>Ciao, sono l\u2019assistente del CRO.</h6>Cerco nei <b>dati del tool</b> (DB RC, DB RA, data center), nella <b>legenda</b> delle Soluzioni Protette e nei <b>testi di tutti i tab</b>. Sotto ogni risposta trovi i link per cercare su internet e \u00ab\uD83E\uDD16 Chiedi a Claude\u00bb. Gli esempi con \u270F\uFE0F vanno nella casella: cambia la parte evidenziata con la tua centrale, CLLI o regione e premi Invio.'
+      + '<details class="cc-lim-d"><summary>\u26a0\ufe0f Cosa non sa fare (per ora)</summary>' + LIMITI + '</details>'
       + '<div class="cc-et">Rete e dati</div>'
-      + '<div class="cc-chips"><button type="button" data-q="MILAITCG">un CLLI: MILAITCG</button><button type="button" data-q="Torino Lancia">una Centrale: Torino Lancia</button><button type="button" data-q="CLO201">un Subpath RC: CLO201</button><button type="button" data-q="AAM003/1">un Subpath RA: AAM003/1</button><button type="button" data-q="IN CESSAZIONE">uno Stato: CLLI IN CESSAZIONE</button><button type="button" data-q="non attivi Lombardia">uno Stato: NON Attivi in Lombardia</button><button type="button" data-q="data center Piemonte">Data Center in Piemonte</button><button type="button" data-q="MILAITCG MILAITCH">Collegamenti tra due CLLI</button><button type="button" data-q="CLO201 CLO202 C-FOS in comune">C-FOS in comune tra due Subpath</button></div>'
+      + '<div class="cc-chips"><button type="button" data-c="un CLLI" data-t="{MILAITCG}">un CLLI: MILAITCG</button><button type="button" data-c="il nome di una centrale" data-t="{Torino Lancia}">una Centrale: Torino Lancia</button><button type="button" data-c="un subpath RC" data-t="{CLO201}">un Subpath RC: CLO201</button><button type="button" data-c="un subpath RA" data-t="{AAM003/1}">un Subpath RA: AAM003/1</button><button type="button" data-c="uno stato (ATTIVO, NON ATTIVO, IN CESSAZIONE, DA VERIFICARE SU NNI)" data-t="{IN CESSAZIONE}">uno Stato: CLLI IN CESSAZIONE</button><button type="button" data-c="una regione" data-t="non attivi {Lombardia}">uno Stato: NON Attivi in Lombardia</button><button type="button" data-c="una regione" data-t="data center {Piemonte}">Data Center in Piemonte</button><button type="button" data-c="due CLLI" data-t="{MILAITCG MILAITCH}">Collegamenti tra due CLLI</button><button type="button" data-c="due subpath" data-t="{CLO201 CLO202} C-FOS in comune">C-FOS in comune tra due Subpath</button></div>'
       + '<div class="cc-et">Info live (la striscia in fondo)</div>'
       + '<div class="cc-chips"><button type="button" data-q="info live">riattiva le info live</button><button type="button" data-q="nascondi info live">nascondi le info live</button><button type="button" data-q="mostra meteo">mostra il meteo</button><button type="button" data-q="abilita notizie">abilita le notizie</button></div>'
+      + '<div class="cc-et">Conversazione</div>'   /* V11.26|018 */
+      + '<div class="cc-chips"><button type="button" data-q="Imposta una pratica">\uD83D\uDDC2\uFE0F Imposta una pratica</button><button type="button" data-c="una centrale (nome o CLLI)" data-t="Nodi A1 vicini a {Milano Malpaga}">Nodi A1 vicini a una centrale</button></div>'
       + '<div class="cc-et">Altri modi di chiedere</div>'
-      + '<div class="cc-chips"><button type="button" data-q="Compositore di Fattibilit\u00e0">un tab: Compositore</button><button type="button" data-q="regola coda cliente">un argomento</button><button type="button" data-q="OSNCP">una Sigla: OSNCP</button><button type="button" data-q="PXM3">un tipo di apparato: PXM3</button><button type="button" data-q="KMZ">come si fa il KMZ</button><button type="button" data-q="Trova Nodi A1">una funzione: Trova Nodi A1</button><button type="button" data-q="Podio dei Div">il Podio dei Div</button><button type="button" data-q="novit\u00e0">novit\u00e0 dei DB</button></div>');
+      + '<div class="cc-chips"><button type="button" data-c="il nome di un tab" data-t="{Compositore di Fattibilit\u00e0}">un tab: Compositore</button><button type="button" data-c="un argomento" data-t="{regola coda cliente}">un argomento</button><button type="button" data-c="una sigla" data-t="{OSNCP}">una Sigla: OSNCP</button><button type="button" data-c="un tipo di apparato" data-t="{PXM3}">un tipo di apparato: PXM3</button><button type="button" data-q="KMZ">come si fa il KMZ</button><button type="button" data-q="Trova Nodi A1">una funzione: Trova Nodi A1</button><button type="button" data-q="Podio dei Div">il Podio dei Div</button><button type="button" data-q="novit\u00e0">novit\u00e0 dei DB</button></div>');
   }
 
   /* ── risposte sui dati ─────────────────────────────────────────────── */
@@ -4689,6 +4753,7 @@ window.croChat = (function () {
     var cf = cfosConClli(clli);
     if (!R.length && !A.length && !d && !cf) return '';
     var nome = Object.keys(nomi).join(' / ') || (cf && cf.nome) || '';
+    ricorda(clli, nome);   /* V11.26|018 */
     var lat = p ? (p.CLLI_A === clli ? p.Lat_GAT_A : p.Lat_GAT_Z) : '', lon = p ? (p.CLLI_A === clli ? p.Lon_GAT_A : p.Lon_GAT_Z) : '';
     var h = '<h6>\uD83C\uDFE2 ' + esc(clli) + (nome ? ' \u00b7 ' + esc(nome) : '') + '</h6>'
       + '<div class="cc-k" style="margin-bottom:.3rem">La risposta \u00e8 in tre parti: \u2460 la centrale, \u2461 i collegamenti che partono o arrivano qui, \u2462 i collegamenti che usano i suoi cavi.</div>';
@@ -4899,7 +4964,7 @@ window.croChat = (function () {
     var u = encodeURIComponent(q);
     return '<div class="cc-web">\uD83C\uDF10 Anche su internet (non verificato): <a href="https://www.google.com/search?q=' + u + '" target="_blank" rel="noopener">Google</a>'
       + '<a href="https://it.wikipedia.org/w/index.php?search=' + u + '" target="_blank" rel="noopener">Wikipedia</a>'
-      + '<a href="https://www.google.com/search?q=' + encodeURIComponent(q + ' DWDM OTN') + '" target="_blank" rel="noopener">Google, ambito reti ottiche</a></div>';
+      + '<a href="https://www.google.com/search?q=' + encodeURIComponent(q + ' DWDM OTN') + '" target="_blank" rel="noopener">Google, ambito reti ottiche</a>' + bottoneClaude() + '</div>';   /* V11.26|018 */
   }
 
   /* ════ V10.26|58 · domande guidate: filtri per stato e luogo, data center, C-FOS in comune,
@@ -5024,8 +5089,177 @@ window.croChat = (function () {
     if (window.croProt && croProt._docx) croProt._docx.scarica(blob, nome);
     else { var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nome; document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); }, 1000); }
   }
+  /* ════ V11.26|018 · ASSISTENTE PIÙ CONVERSAZIONALE (senza IA) ═══════════════════════════════
+     1) ricorda la centrale di cui si sta parlando: «e i Nodi A1 vicini?», «i collegamenti?»
+     2) domanda guidata «Imposta una pratica»: tipo, centrali A e Z (o Nodo A1), capacità, piano
+     3) «🤖 Chiedi a Claude»: prepara una domanda con il contesto del tool e apre claude.ai
+        (niente chiave, niente invio automatico: l'utente incolla e decide) ═══════════════════ */
+  var ctx = { clli: '', nome: '' }, pr = null;
+  function ricorda(clli, nome) { if (clli) { ctx.clli = clli; ctx.nome = nome || ctx.nome; } }
+  function dati(t) { return window.croNodiA1 && croNodiA1.dati ? croNodiA1.dati(t) : { errore: 'Funzione Nodi A1 non disponibile.' }; }
+  function nomeE(e) { return e.nomeRC || e.nomeRA || e.clli; }
+  function reti(e) { var t = Object.keys(e.tipiRA || {}).sort(); return (e.rc ? 'RC' : '') + (e.rc && t.length ? ' + ' : '') + (t.length ? 'RA T' + t.join('/T') : '') || 'nessuna rete'; }
+  function tariffa(e) { return (window._NO_ZONE_CODES || ['PV', 'MILO', 'LO']).indexOf(String(e.zona || '').toUpperCase()) >= 0 ? 'Nord Ovest (Lombardia / Piemonte)' : 'Italia Standard'; }
+  function lblUni(e) { var t = Object.keys(e.tipiRA || {}).sort(); return e.rc ? nomeE(e) + ' (' + e.clli + ')' : (t.length ? (e.nomeRA || nomeE(e)) + ' (' + e.clli + ') [T' + t[0] + ']' : nomeE(e) + ' (' + e.clli + ')'); }
+  function kmT(v) { return v == null ? '\u2014' : (Math.round(v * 10) / 10).toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' km'; }
+
+  /* Nodi A1 più vicini a una centrale */
+  function tabellaA1(r) {
+    if (!r.vicini || !r.vicini.length) return '<div class="cc-vuoto">' + (r.e && r.e.lat == null ? 'La centrale non ha coordinate nel DB.' : 'Nessun Nodo A1 trovato.') + '</div>';
+    return '<div class="cc-lunga"><table><tr><th>#</th><th>Nodo A1</th><th>Tipo</th><th>Linea d\u2019aria</th><th>Km di rete RA+RC</th></tr>'
+      + r.vicini.map(function (x, i) { return '<tr><td>' + (i + 1) + '</td><td><button type="button" data-q="' + esc(x.clli) + '" style="border:0;background:none;color:#0066CC;cursor:pointer;padding:0;font-weight:700">' + esc(x.nome) + '</button><div class="cc-k">' + esc(x.clli) + ' \u00b7 area ' + esc(x.area || '') + '</div></td><td>' + (x.noPE ? 'A1_DIV \u00b7 senza PE' : 'A1 Standard') + '</td><td>' + kmT(x.aria) + '</td><td>' + (x.rete == null ? '<span class="cc-k">nessun cammino</span>' : kmT(x.rete)) + '</td></tr>'; }).join('')
+      + '</table></div>';
+  }
+  function rispostaA1(testo) {
+    var r = dati(testo);
+    if (r.scelta) return '<h6>\uD83C\uDFE2 Quale centrale?</h6><div class="cc-chips">' + r.scelta.map(function (e) { return '<button type="button" data-q="Nodi A1 vicini a ' + esc(e.clli) + '">' + esc(nomeE(e)) + ' (' + esc(e.clli) + ')</button>'; }).join('') + '</div>';
+    if (!r.e) return '';
+    ricorda(r.e.clli, nomeE(r.e));
+    return '<h6>\uD83C\uDFE2 Nodi A1 pi\u00f9 vicini a ' + esc(nomeE(r.e)) + ' (' + esc(r.e.clli) + ')</h6>'
+      + (r.eA1 ? '<div class="cc-card">Questa centrale \u00e8 gi\u00e0 un Nodo A1.</div>' : '')
+      + tabellaA1(r) + '<div class="cc-k">In ordine di distanza in linea d\u2019aria; i km di rete sono il cammino pi\u00f9 corto su RA + RC. Per metterli in Arrivo usa \u00ab\uD83C\uDFE2 Trova Nodi A1\u00bb nella Posizione Cliente dei tab.</div>';
+  }
+
+  /* ── «Imposta una pratica» ── */
+  function chip(q, t) { return '<button type="button" data-q="' + esc(q) + '">' + esc(t || q) + '</button>'; }
+  function praticaInizio() {
+    pr = { passo: 'tipo' };
+    return '<h6>\uD83D\uDDC2\uFE0F Impostiamo la pratica</h6><div class="cc-card">Ti faccio qualche domanda e alla fine ti preparo il piano: tab da usare, centrali, controlli, coda e foglio IRP. Puoi fermarti quando vuoi con \u00abannulla\u00bb.</div>'
+      + '<b>1. Che collegamento \u00e8?</b><div class="cc-chips">' + chip('Pratica \u00b7 punto-punto', 'Punto-punto fra due sedi cliente') + chip('Pratica \u00b7 verso Nodo A1', 'Verso un Nodo A1') + chip('Pratica \u00b7 protetta', 'Soluzione protetta') + chip('Pratica \u00b7 annulla', 'Annulla') + '</div>';
+  }
+  function schedaE(e, lato) {
+    return '<div class="cc-card"><b>' + (lato ? 'Lato ' + lato + ': ' : '') + esc(nomeE(e)) + ' (' + esc(e.clli) + ')</b><br>Reti: ' + esc(reti(e)) + ' \u00b7 zona ' + esc(e.zona || '\u2014') + ' \u00b7 tariffa ' + esc(tariffa(e))
+      + (Object.keys(e.tipiRA || {}).length && !e.rc && !e.tipiRA[1] && !e.tipiRA[2] ? '<br><span class="cc-ko">Nella rete RA \u00e8 solo di Tipo 3: \u00e8 di passaggio e non pu\u00f2 essere estremo di un percorso RA.</span>' : '') + '</div>';
+  }
+  function chiediCentrale(lato) {
+    return '<b>' + (lato === 'A' ? '2' : '3') + '. Centrale Colt lato ' + lato + '</b><div class="cc-k">Scrivi qui sotto il CLLI o il nome della centrale' + (lato === 'A' ? ' (se hai solo l\u2019indirizzo del cliente, usa \u00ab\uD83D\uDD0E Trova Centrale Vicina\u00bb nella Posizione Cliente di un tab di ricerca).' : '.') + '</div>';
+  }
+  function chiediCap() { pr.passo = 'cap'; return '<b>4. Capacit\u00e0</b><div class="cc-chips">' + chip('Pratica \u00b7 1G', '1G') + chip('Pratica \u00b7 10G', '10G') + chip('Pratica \u00b7 100G', '100G') + '</div>'; }
+  function praticaCentrale(testo, lato) {
+    var r = dati(testo);
+    if (r.scelta) return '<h6>Quale centrale intendi?</h6><div class="cc-chips">' + r.scelta.map(function (e) { return chip(e.clli, nomeE(e) + ' (' + e.clli + ')'); }).join('') + '</div>';
+    if (!r.e) return '<div class="cc-card">' + esc(r.errore || 'Centrale non trovata.') + ' Riprova con il CLLI o con un nome pi\u00f9 preciso, oppure scrivi \u00abannulla\u00bb.</div>';
+    pr[lato] = r.e; pr['v' + lato] = r; ricorda(r.e.clli, nomeE(r.e));
+    var h = schedaE(r.e, lato);
+    if (lato === 'A' && pr.tipo === 'pp') { pr.passo = 'Z'; return h + chiediCentrale('Z'); }
+    if (lato === 'A' && pr.tipo === 'a1') {
+      pr.passo = 'a1';
+      var v = (r.vicini || []).slice(0, 4);
+      return h + '<b>3. Nodo A1 di arrivo</b>' + tabellaA1({ vicini: v, e: r.e }) + '<div class="cc-chips">' + v.map(function (x) { return chip('Pratica \u00b7 Nodo A1 ' + x.clli, x.nome + ' (' + x.clli + ')'); }).join('') + '</div><div class="cc-k">Di solito il primo va in Arrivo (1\u00b0 Via) e il secondo in Arrivo 2 (2\u00b0 Via, diversificato).</div>';
+    }
+    return h + chiediCap();
+  }
+  function piano() {
+    var A = pr.A, Z = pr.Z, h = '<h6>\uD83D\uDDC2\uFE0F Piano della pratica</h6>';
+    h += '<div class="cc-card"><b>' + esc(nomeE(A)) + ' (' + esc(A.clli) + ')</b> \u2192 <b>' + esc(nomeE(Z)) + ' (' + esc(Z.clli) + ')</b>' + (pr.tipo === 'a1' ? ' \u00b7 verso Nodo A1' : ' \u00b7 punto-punto') + ' \u00b7 capacit\u00e0 ' + esc(pr.cap)
+      + (pr.a1bis ? '<br>Arrivo 2 (2\u00b0 Via): ' + esc(pr.a1bis.nome) + ' (' + esc(pr.a1bis.clli) + ')' : '') + '</div>';
+    var soloRA = function (e) { return !e.rc; };
+    var tab = soloRA(A) || soloRA(Z) ? 'Unificato (RA + RC)' : 'Unificato (o RC, se ti basta la rete RC)';
+    var zone = [A, Z].map(function (e) { return tariffa(e); });
+    var passi = [
+      'Apri il tab <b>' + tab + '</b> con Partenza e Arrivo gi\u00e0 scritti (bottone qui sotto) e premi \u00ab\u26A1 Calcola\u00bb.',
+      'Guarda i <b>migliori tre</b> (nastro e card in \uD83D\uDCCA Analisi Percorsi): il punteggio pesa i passaggi RA\u2194RC, i non attivi e i km.',
+      'Controlla gli <b>stati</b>: anche un solo collegamento non attivo porta i tempi a <b>180 giorni</b> (altrimenti 60).',
+      (pr.tipo === 'a1' ? 'Per la 2\u00b0 Via metti il secondo Nodo A1 in <b>Arrivo 2</b> e lancia \u00abPercorsi Div\u00bb' : 'Lancia <b>\u00abPercorsi Div\u00bb</b> sul percorso scelto') + ': nel <b>podio dei Div</b> conta prima avere 0 C-FOS e 0 CLLI in comune con lo Std.',
+      'Coda cliente' + (pr.tipo === 'a1' || (pr.vZ && pr.vZ.eA1) ? ' (solo lato A: verso il Nodo A1 non serve)' : (pr.vA && pr.vA.eA1 ? ' (solo lato Z: dal Nodo A1 non serve)' : ' (lato A e lato Z)')) + ': in <b>Analisi Costi</b> \u2192 Coda Apparati, oppure nel <b>Compositore</b> con \u00ab\uD83E\uDDEE Apparati\u2026\u00bb.',
+      'Tariffa del trasporto: ' + esc(zone[0] === zone[1] ? zone[0] : zone[0] + ' lato A, ' + zone[1] + ' lato Z') + '.',
+      'Esporta in <b>Excel</b> con il riferimento SdF e la capacit\u00e0 ' + esc(pr.cap) + ': il foglio <b>IRP</b> esce gi\u00e0 compilato (coda, sezioni, tempi, costi, note).',
+      'Verifica sempre su <b>NNI</b> stati e C-FOS: i dati del tool sono quelli dei DB caricati.'
+    ];
+    h += '<ol style="margin:.3rem 0 .4rem 1.1rem;padding:0">' + passi.map(function (p) { return '<li style="margin:.15rem 0">' + p + '</li>'; }).join('') + '</ol>';
+    h += '<div class="cc-chips">' + chip('Pratica \u00b7 apri il tab', '\u27A1\uFE0F Apri il tab con le centrali') + chip('Pratica \u00b7 ricomincia', 'Ricomincia') + '</div><div class="cc-k" style="margin-top:.3rem">Vuoi un confronto su come impostarla? ' + bottoneClaude() + '</div>';
+    pr.passo = 'fatto';
+    return h;
+  }
+  function apriTab() {
+    if (!pr || !pr.A || !pr.Z) return '<div class="cc-card">Prima completa la pratica.</div>';
+    if (typeof switchTab === 'function') switchTab('search-unified');
+    /* V11.26|019: la centrale si sceglie come farebbe l'utente: si scrive, si apre la tendina e si clicca la voce
+       uguale (cosi' il campo e' davvero selezionato e la tendina si chiude); se la voce non c'e' resta il testo */
+    var metti = function (id, ddId, v) {
+      var i = el(id), dd = el(ddId); if (!i || !v) return;
+      i.value = v; i.dispatchEvent(new Event('input', { bubbles: true }));
+      var voce = dd ? Array.prototype.filter.call(dd.querySelectorAll('[data-value]'), function (x) { return x.getAttribute('data-value') === v; })[0] : null;
+      if (!voce && dd) voce = Array.prototype.filter.call(dd.querySelectorAll('.custom-autocomplete-item'), function (x) { return (x.getAttribute('data-value') || x.textContent || '').indexOf('(' + v.replace(/^.*\(([A-Z0-9]+)\).*$/, '$1') + ')') >= 0; })[0];
+      if (voce) { voce.dispatchEvent(new MouseEvent('mousedown', { bubbles: true })); voce.click(); }
+      else { i.dispatchEvent(new Event('change', { bubbles: true })); }
+      if (dd) { dd.classList.remove('active'); dd.style.display = ''; }
+      try { i.blur(); } catch (e) {}
+    };
+    metti('uRouteStartInput', 'uRouteStartDropdown', lblUni(pr.A)); metti('uRouteEndInput', 'uRouteEndDropdown', lblUni(pr.Z));
+    if (pr.a1bis) metti('uRouteEnd2Input', 'uRouteEnd2Dropdown', pr.a1bis.lbl || (pr.a1bis.nome + ' (' + pr.a1bis.clli + ')'));
+    return '<div class="cc-card">\u2705 Tab Unificato aperto: Partenza ' + esc(lblUni(pr.A)) + ', Arrivo ' + esc(lblUni(pr.Z)) + (pr.a1bis ? ', Arrivo 2 ' + esc(pr.a1bis.nome) : '') + '. Controlla i campi e premi \u00ab\u26A1 Calcola\u00bb.</div>';
+  }
+  function pratica(q, testo) {
+    var m;
+    if (/^PRATICA \u00b7 ANNULLA$|^ANNULLA$/.test(q)) { pr = null; return '<div class="cc-card">Pratica annullata. Scrivi \u00abImposta una pratica\u00bb per ricominciare.</div>'; }
+    if (/^PRATICA \u00b7 RICOMINCIA$/.test(q)) return praticaInizio();
+    if (/^PRATICA \u00b7 APRI IL TAB$/.test(q)) return apriTab();
+    if (pr.passo === 'tipo') {
+      if (/PUNTO/.test(q)) { pr.tipo = 'pp'; pr.passo = 'A'; return chiediCentrale('A'); }
+      if (/NODO A1/.test(q)) { pr.tipo = 'a1'; pr.passo = 'A'; return chiediCentrale('A'); }
+      if (/PROTETT/.test(q)) { pr = null; if (typeof switchTab === 'function') switchTab('soluzioni-protette'); return '<div class="cc-card">Per una soluzione protetta usa il tab <b>Analisi per Soluzioni Protette</b> (aperto ora): configurazioni, schemi, listini e documento Word.</div>'; }
+      return '<div class="cc-card">Scegli uno dei tre tipi qui sopra, o scrivi \u00abannulla\u00bb.</div>';
+    }
+    if (pr.passo === 'A' || pr.passo === 'Z') return praticaCentrale(testo, pr.passo);
+    if (pr.passo === 'a1' && (m = /NODO A1 ([A-Z0-9]{8})/.exec(q))) {
+      var v = (pr.vA && pr.vA.vicini) || [], x = v.filter(function (y) { return y.clli === m[1]; })[0];
+      var r = dati(m[1]); if (!r.e) return '<div class="cc-card">Nodo A1 non trovato.</div>';
+      pr.Z = r.e; var alt = v.filter(function (y) { return y.clli !== m[1]; })[0]; pr.a1bis = alt || null;
+      return schedaE(r.e, 'Z') + (alt ? '<div class="cc-k">Per la 2\u00b0 Via propongo ' + esc(alt.nome) + ' (' + esc(alt.clli) + '), il pi\u00f9 vicino dopo questo.</div>' : '') + chiediCap();
+    }
+    if (pr.passo === 'cap' && (m = /\b(1G|10G|100G)\b/.exec(q))) { pr.cap = m[1]; return piano(); }
+    if (pr.passo === 'fatto') { pr = null; return ''; }
+    return '';
+  }
+
+  /* ── domande che continuano quella prima ── */
+  function seguito(q) {
+    if (!ctx.clli) return '';
+    if (/\b(NODI? A1|A1 PIU VICIN|NODO PIU VICINO)\b/.test(q) && !/\b[A-Z]{4}IT[A-Z0-9]{2}\b/.test(q)) return '<div class="cc-k">Riferito a ' + esc(ctx.nome) + ' (' + esc(ctx.clli) + '), dalla domanda di prima.</div>' + rispostaA1(ctx.clli);
+    if (/^(E |ED |MA |ANCHE )?(I |GLI |LE |IL |LA |LO )?(COLLEGAMENTI|SUBPATH|STATI?|CAVI|C-FOS|CFOS|DOVE|COORDINATE|MAPPA|ZONA|REGIONE|RETE|RETI|DETTAGLI|QUESTA CENTRALE|LA STESSA|STESSA CENTRALE)\b/.test(q) && q.split(' ').length <= 6)
+      return '<div class="cc-k">Riferito a ' + esc(ctx.nome) + ' (' + esc(ctx.clli) + '), dalla domanda di prima.</div>' + rispostaCLLI(ctx.clli);
+    return '';
+  }
+
+  /* ── «🤖 Chiedi a Claude»: domanda con il contesto del tool, copiata e aperta su claude.ai ── */
+  function bottoneClaude() { return '<button type="button" class="cc-claude" data-a="claude" title="Prepara una domanda con i dati del tool, la copia e apre claude.ai: lì la incolli e decidi tu se inviarla">\uD83E\uDD16 Chiedi a Claude</button>'; }
+  function copia(t) {
+    try { if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(t); } catch (e) {}
+    var a = document.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); } catch (e) {} a.remove();
+    return Promise.resolve();
+  }
+  function chiediClaude(btn) {
+    var risp = btn.closest('.cc-b'), dom = risp && risp.previousElementSibling && risp.previousElementSibling.classList.contains('cc-u') ? risp.previousElementSibling.textContent : '';
+    var c = risp ? risp.cloneNode(true) : null;
+    if (c) Array.prototype.forEach.call(c.querySelectorAll('.cc-web, .cc-claude, .cc-chips, script, style'), function (n) { n.remove(); });
+    var datiTool = c ? String(c.innerText || c.textContent || '').replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim().slice(0, 3500) : '';
+    var t = 'Contesto: lavoro a studi di fattibilit\u00e0 sulla rete ottica di trasporto TIM in Italia, con il tool interno CRO ITALIA. '
+      + 'Reti: RA (Rete di Aggregazione, centrali di Tipo 1, 2 e 3; il Tipo 3 \u00e8 solo di passaggio), RC (Rete Core), RTN (backbone nazionale fra le zone). '
+      + 'Nodi A1 = nodi POP della rete (A1 Standard con PE, A1_DIV senza PE). C-FOS = cavi in fibra ottica fra due centrali (CLLI = codice di 8 caratteri della centrale). '
+      + 'Collegamenti attivi o non attivi (questi ultimi in realizzazione: 180 giorni invece di 60). Tariffe Italia Standard o Nord Ovest.\n\n'
+      + (ctx.clli ? 'Centrale di cui stiamo parlando: ' + ctx.nome + ' (' + ctx.clli + ').\n\n' : '')
+      + 'Domanda: ' + (dom || '(vedi i dati)') + '\n\n'
+      + (datiTool ? 'Dati dal tool CRO (DB caricati, da verificare su NNI):\n' + datiTool + '\n\n' : '')
+      + 'Rispondi in italiano restando in questo ambito (fattibilit\u00e0 su rete ottica TIM). Distingui ci\u00f2 che viene dai dati sopra da ci\u00f2 che \u00e8 conoscenza generale e di\u2019 chiaramente quando un\u2019informazione non \u00e8 verificabile.';
+    copia(t).then(function () {}, function () {});
+    var u = 'https://claude.ai/new' + (encodeURIComponent(t).length < 7000 ? '?q=' + encodeURIComponent(t) : '');
+    window.open(u, '_blank', 'noopener');
+    var n = document.createElement('div'); n.className = 'cc-k'; n.style.margin = '.25rem 0';
+    n.textContent = 'Domanda copiata negli appunti e claude.ai aperto in una nuova scheda: se non compare gi\u00e0 scritta, incollala con Ctrl+V. Il testo esce dal tool: usalo solo se la policy aziendale lo consente.';
+    btn.insertAdjacentElement('afterend', n);
+  }
+
   function rispondi(testo) {
     var q = norm(testo).trim(), h = '';
+    /* V11.26|018: pratica guidata, domande che continuano la precedente, Nodi A1 vicini */
+    if (/\b(IMPOSTA|IMPOSTARE|NUOVA|PREPARA|APRI)\b.*\bPRATICA\b|COME (APPROCCIO|IMPOSTO|AFFRONTO|PROCEDO|FACCIO)\b.*\b(PRATICA|FATTIBILITA|STUDIO)\b|^PRATICA$/.test(q)) return praticaInizio();
+    if (pr && (/^PRATICA \u00b7/.test(q) || /^ANNULLA$/.test(q) || pr.passo === 'A' || pr.passo === 'Z')) { var hp = pratica(q, testo); if (hp) return hp; }
+    if (/NODI? A1\b.*\bVICIN|\bVICIN\w*\b.*\bNODI? A1\b|NODO A1 PIU VICINO/.test(q)) {
+      var tgt = String(testo).replace(/^.*?\b(?:vicin[oiae]?|vicini)\s+(?:a|al|alla|all'|di|per|da)\s+/i, '').replace(/^.*?\bnod[oi] a1\s+(?:di|per|a)\s+/i, '').replace(/[?!.]+$/, '').trim();
+      if (tgt && tgt !== String(testo).trim()) { var ha = rispostaA1(tgt); if (ha) return ha + web(testo); }
+    }
+    var hs = seguito(q); if (hs) return hs + web(testo);
     if (/^(LIMITI|AIUTO|HELP|\?)$/.test(q)) return LIMITI + '<div class="cc-k">Scrivi un CLLI, un subpath, una C-FOS, una centrale, una sigla o un argomento.</div>';
     var parole = q.split(/[^A-Z0-9\/_\-]+/).filter(Boolean);
     var cllis = q.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || [];
@@ -5060,6 +5294,7 @@ window.croChat = (function () {
   }
   function invia() {
     var i = el('croChatIn'), t = i.value.trim(); if (!t) return;
+    var sg = el('croChatSug'); if (sg) sg.hidden = true;   /* V11.26|021 */
     i.value = ''; var u = msg('cc-u', esc(t));
     var b = msg('cc-b', '<span class="cc-k">Cerco\u2026</span>');
     conv.push({ q: t, el: b, ora: new Date() });
@@ -24680,7 +24915,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 014 | Nov 2026</div>
+<div class="version-tag">V11.26 | 021 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -24926,7 +25161,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 014</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 021</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -24943,9 +25178,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 014</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 021</span>
                     </div>
-                    <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
+                    <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">CLLI</span>
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">Subpath RA e RC</span>
@@ -24964,7 +25199,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 014</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 021</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -24982,7 +25217,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 014</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 021</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -24998,7 +25233,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 014</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 021</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -25461,7 +25696,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 014</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 021</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -25609,10 +25844,83 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #6d28d9;">
+              <details class="cl-item" open style="--cl-accent: #0050a0;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">✏️ Novità V11.26 | 021 | Nov 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>✏️ Esempi da completare</strong>: nell’Assistente CRO gli esempi con ✏️ (CLLI, centrale, subpath, stato, regione, due CLLI, due subpath, Nodi A1 vicini a una centrale, tab, argomento, sigla, apparato) non partono più da soli: mettono il testo nella casella con la parte da cambiare già selezionata, così scrivi la tua centrale o regione e premi Invio. Premendo Invio subito parte l’esempio</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧹 Novità V11.26 | 020 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧹 Assistente in una schermata</strong>: all’apertura e dopo «Pulisci» il benvenuto dell’Assistente CRO si vede tutto, senza barra di scorrimento. «Cosa non sa fare» è una voce che si apre con un clic (o con il bottone «Limiti»)</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0e7490;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">✅ Novità V11.26 | 019 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>✅ Centrali davvero selezionate</strong>: «Apri il tab con le centrali» dell’Assistente sceglie Partenza, Arrivo e Arrivo 2 dalla tendina, come faresti a mano: i campi risultano selezionati e le tendine si chiudono</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">💬 Novità V11.26 | 018 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>💬 Assistente che segue il discorso</strong>: ricorda la centrale di cui stai parlando, quindi dopo «Milano Malpaga» puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?». Risponde anche a «Nodi A1 vicini a …» con distanze in linea d’aria e km di rete</li>
+    <li><strong>🗂️ Imposta una pratica</strong>: domande una alla volta (punto-punto, verso un Nodo A1 o protetta; centrali A e Z o Nodo A1 proposto; capacità) e alla fine il piano: tab da usare, controlli su podio, stati e Div, coda, tariffa ed export IRP. Un bottone apre il tab Unificato con Partenza e Arrivo già scritti</li>
+    <li><strong>🤖 Chiedi a Claude</strong>: sotto ogni risposta prepara una domanda con il contesto del tool (ambito, centrale, dati trovati), la copia negli appunti e apre claude.ai. Nessuna chiave e nessun invio automatico: incolli e decidi tu</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #15803d;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🛣️ Novità V11.26 | 017 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🛣️ 1° Via e 2° Via nel foglio IRP</strong>: la via segue l’ordine dei percorsi esportati. Il primo è la 1° Via e il secondo la 2° Via, anche quando sono due percorsi Std (per esempio uno via S. DONATO MILANESE e l’altro via MELEGNANO)</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #ca8a04;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🎨 Novità V11.26 | 016 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🎨 Foglio IRP con i colori del master</strong>: le intestazioni del foglio IRP hanno gli stessi colori del modulo originale (giallo, azzurro, verde, verde acqua). Tutte le colonne restano visibili</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #15803d;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📑 Novità V11.26 | 015 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📑 Foglio IRP nell’export Excel</strong>: l’Excel dei risultati dei tab RC e Unificato ha un foglio «IRP», il Modulo lavorazione Standard già compilato. Per ogni via (1° Via Std, 2° Via Div) ci sono la coda cliente dal lato A, una riga per ogni sezione di trasporto (le RA di fila insieme, una riga nuova a ogni passaggio fra RA e RC) e la coda dal lato Z; niente coda verso un Nodo A1. Compila centrali e CLLI, infrastruttura DWDM/C o DWDM/R, rami, km, tempi (60 giorni, 180 se c’è un collegamento non attivo), costi del listino per la capacità scelta e la tariffa (Italia Standard o Nord Ovest), totali e note con hardware e subpath. La SF va in C1 dal riferimento Std della barra export</li>
+    <li><strong>⚙️ Cap. IRP nel tab RC</strong>: nella barra export del tab RC si sceglie la capacità (1G, 10G, 100G) per i costi del foglio IRP; nell’Unificato vale la capacità della barra</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #6d28d9;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🧹 Novità V11.26 | 014 | Nov 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -28334,6 +28642,10 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <input type="text" id="rcSdfRefDiv" placeholder="SdF-2024-002" maxlength="60"
                     style="width:92px; padding:1px 4px; border:1px solid var(--border-default); border-radius:4px; font-size:.73rem; font-family:inherit;"
                     title="Riferimento fattibilità per i percorsi Diversificati (opzionale)">
+                </span>
+                <span style="display:flex; align-items:center; gap:3px;" title="Capacità usata per i costi e l'hardware del foglio IRP dell'export Excel">
+                  <label for="rcIrpCapacity" style="font-size:.72rem; color:var(--text-secondary); white-space:nowrap;">Cap. IRP:</label>
+                  <select id="rcIrpCapacity" style="padding:1px 4px; border:1px solid var(--border-default); border-radius:4px; font-size:.73rem;"><option value="1G">1G</option><option value="10G" selected>10G</option><option value="100G">100G</option></select>
                 </span>
               </span>
               <span class="expsm-cost-sep"></span>
@@ -42093,7 +42405,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <li><strong>Calcolo percorsi Div</strong>: in modalità RTN usa <strong>▶ Div Zona A</strong> (A1 alternativo zona partenza) poi <strong>▶ Div Zona B</strong> su ogni Div A (A1 alternativo zona arrivo). I Div non condividono nessun collegamento fisico con il Std</li>
                 <li><strong>Visualizzazione mappa</strong>: click <strong>🗺️ Maps</strong> per analisi topografica; <strong>🌍 Mappa NAT</strong> per export su NAT Italia</li>
                 <li><strong>Selezione percorso ottimale</strong>: basati su distanza, composizione RA/RC, diversificazione geografica, badge 🏆🥇🥈🥉</li>
-                <li><strong>Export documentazione</strong>: <strong>📄 Esporta</strong> apre la selezione dei percorsi, poi <strong>📤 Esporta TXT</strong> per l'allegato tecnico NNI/IRP (include gateway RTN) oppure <strong>📊 Esporta XLSX</strong> per il foglio Excel con Riepilogo, Centrali, Collegamenti, KMZ (blocco informativo in testa, poi le tabelle CENTRALI e COLLEGAMENTI) e note IRP già pronte; copia formattata 📋 per inserimento rapido in pratiche</li>
+                <li><strong>Export documentazione</strong>: <strong>📄 Esporta</strong> apre la selezione dei percorsi, poi <strong>📤 Esporta TXT</strong> per l'allegato tecnico NNI/IRP (include gateway RTN) oppure <strong>📊 Esporta XLSX</strong> per il foglio Excel con Riepilogo, Centrali, Collegamenti, KMZ (blocco informativo in testa, poi le tabelle CENTRALI e COLLEGAMENTI) e note IRP già pronte, più il foglio <strong>IRP</strong> («Modulo lavorazione Standard»): SF in C1 dal riferimento Std della barra, riga 1 lasciata a chi emette la fattibilità, poi per ogni via (nell’ordine dell’export: il primo percorso è la 1° Via, il secondo la 2° Via) la coda cliente A (DWDM/C, costi dalla Coda Apparati dell’Analisi Costi), una riga per sezione di trasporto (DWDM/R: RA consecutive insieme, nuova riga a ogni passaggio RA↔RC) con rami logici, km, tempi 60/180 giorni, costo del listino per capacità (Cap. della barra; nel tab RC «Cap. IRP») e tariffa Italia Std o Nord Ovest, hardware e subpath nelle note, e la coda Z; niente coda dal lato di un Nodo A1; copia formattata 📋 per inserimento rapido in pratiche</li>
                 <li><strong>Archiviazione</strong>: allega export a ticket CR/GI, usa <strong>↩️ Undo</strong> per tornare alla ricerca precedente se necessario</li>
               </ol>
 
@@ -43984,7 +44296,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 014 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 021 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -44002,7 +44314,88 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #6d28d9;border-radius:12px;overflow:hidden;background:#faf5ff;">
+        <details open style="border:1px solid #0050a0;border-radius:12px;overflow:hidden;background:#eff6ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0050a0;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            ✏️ V11.26 | 021 | Nov 2026 | Esempi dell'Assistente dinamici
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>✏️ data-t</strong>: 14 esempi del benvenuto passano da <code>data-q</code> (invio immediato) a <code>data-t</code>, un modello con la parte variabile fra <code>{ }</code> (per esempio <code>Nodi A1 vicini a {Milano Malpaga}</code>) e <code>data-c</code> con cosa scrivere. Il clic mette il testo in <code>#croChatIn</code> con <code>setSelectionRange</code> sulla parte variabile e mostra la riga <code>#croChatSug</code> sopra la casella; <code>invia()</code> la nasconde. Restano a invio immediato i comandi senza parametri (info live, Imposta una pratica, KMZ, Trova Nodi A1, Podio dei Div, novità) e i bottoni nelle risposte. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#eff6ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0050a0;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            🧹 V11.26 | 020 | Nov 2026 | Benvenuto dell'Assistente compatto
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧹 benvenuto()</strong>: messaggio con classe <code>cc-benv</code> (spazi e bottoni un po’ più stretti) e <code>LIMITI</code> dentro <code>&lt;details class="cc-lim-d"&gt;</code> chiuso; il bottone «Limiti» li mostra ancora per intero. Il contenuto entra nell’altezza della finestra (72 % dello schermo, al massimo 760 px) senza scorrere. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0e7490;border-radius:12px;overflow:hidden;background:#ecfeff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#155e75;display:flex;align-items:center;gap:0.5rem;background:#cffafe;">
+            ✅ V11.26 | 019 | Nov 2026 | Assistente: centrali selezionate nel tab
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>✅ apriTab()</strong>: per ogni campo scrive l’etichetta, lancia <code>input</code> perché la tendina (<code>uRouteStartDropdown</code>, <code>uRouteEndDropdown</code>, <code>uRouteEnd2Dropdown</code>) si riempia, poi clicca la voce con lo stesso <code>data-value</code> (o con lo stesso CLLI): la selezione passa dal gestore della tendina come a mano. Se la voce non c’è resta il testo con <code>change</code>; alla fine tendina chiusa e campo senza focus. Segnalato da Giuseppe: i campi erano scritti ma con le tendine aperte e non selezionati</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#eff6ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0050a0;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            💬 V11.26 | 018 | Nov 2026 | Assistente CRO più conversazionale
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>💬 Memoria della conversazione</strong>: <code>ctx</code> (centrale corrente) aggiornato da <code>rispostaCLLI()</code> e dalle risposte sui Nodi A1; <code>seguito(q)</code> riconosce le domande brevi che continuano la precedente (Nodi A1, collegamenti, stati, cavi, dove, zona…) e risponde su quella centrale con la nota «Riferito a …». <code>rispostaA1()</code> usa il nuovo <code>croNodiA1.dati(testo)</code> (centrale risolta e 6 Nodi A1 più vicini con linea d’aria e km di rete RA + RC, senza popup)</li>
+              <li><strong>🗂️ pratica(q, testo)</strong>: stato <code>pr</code> a passi (tipo → A → Z o Nodo A1 → capacità → piano); <code>schedaE()</code> con reti, zona, tariffa (<code>_NO_ZONE_CODES</code>) e avviso RA solo Tipo 3; <code>piano()</code> con i passi e la coda solo dal lato che non è un Nodo A1; <code>apriTab()</code> scrive Partenza, Arrivo e Arrivo 2 dell’Unificato nel formato dei campi. Soluzione protetta → tab Analisi per Soluzioni Protette</li>
+              <li><strong>🤖 chiediClaude()</strong>: bottone <code>.cc-claude</code> nella riga dei link di ogni risposta; costruisce il testo (ambito TIM/CRO, centrale corrente, domanda, testo della risposta senza link, al massimo 3500 caratteri, regole: italiano, stesso ambito, distinguere dati del tool e conoscenza generale), lo copia negli appunti e apre <code>claude.ai/new?q=…</code> (senza <code>q</code> se il testo è troppo lungo). Nessuna chiave, nessuna chiamata diretta. Limiti, benvenuto (gruppo «Conversazione») e scheda dell’Overview aggiornati. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #15803d;border-radius:12px;overflow:hidden;background:#f0fdf4;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#166534;display:flex;align-items:center;gap:0.5rem;background:#dcfce7;">
+            🛣️ V11.26 | 017 | Nov 2026 | Via nel foglio IRP secondo l'ordine
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🛣️ _irpRighe(d, isUni, cap, soglia, nVia)</strong>: colonna J = «nVia° Via», dove nVia è la posizione del percorso nell’export (1, 2, …); prima era «2° Via» solo per i Div e «1° Via» per tutti gli Std, così due Std nello stesso modulo uscivano entrambi 1° Via. Con un percorso Std e il suo Div l’ordine dell’export dà comunque Std = 1° Via e Div = 2° Via. Segnalato da Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #ca8a04;border-radius:12px;overflow:hidden;background:#fefce8;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#854d0e;display:flex;align-items:center;gap:0.5rem;background:#fef9c3;">
+            🎨 V11.26 | 016 | Nov 2026 | Colori del modulo IRP
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🎨 IRP_SPEC</strong>: il modulo usa colori indicizzati con una tavolozza propria (9 bianco, 43 FFFF99, 44 99CCFF, 42 CCFFCC, 26 FFFFCC, 49 33CCCC); nella 015 l’estrazione teneva solo il nero dei caratteri e perdeva i riempimenti. Ora ogni indice è convertito nel suo ARGB. Il foglio non nasconde colonne: quelle nascoste erano solo nell’anteprima mandata a Giuseppe. Segnalato da Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #15803d;border-radius:12px;overflow:hidden;background:#f0fdf4;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#166534;display:flex;align-items:center;gap:0.5rem;background:#dcfce7;">
+            📑 V11.26 | 015 | Nov 2026 | Foglio IRP nell'export Excel
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📑 _irpFoglio(wb, data, isUni)</strong> nel modulo export XLSX, chiamato da <code>_croExportXlsx</code> dopo <code>_build()</code>: ricostruisce il modulo IRP da <code>IRP_SPEC</code> (valori, stili, unioni, larghezze, altezze e convalide estratti dal file di Giuseppe; dalla 016 anche i riempimenti colorati, convertiti dalla tavolozza indicizzata del file) togliendo le righe 1-2 (SF in C1, H1 vuota). Riga 11 = PROG 1 (la compila chi emette la fattibilità), poi 1.1, 1.2… su tutte le vie; almeno 17 righe dati, di più se servono, e TOTALE con <code>SUM</code> su tutte (nel modulo sommava solo 13-15)</li>
+              <li><strong>🧮 _irpRighe()</strong>: coda A e Z (<code>DWDM/C</code>, 60 gg, costi da <code>window._codaDati</code> esposto da <code>_codaRefresh()</code>, nota «Coda Cliente: …»; non dal lato di un CLLI per cui <code>isNodoA1()</code> è vero; senza Coda Apparati la riga resta senza costi e note); sezioni da <code>_costBlocks()</code> (rete + tariffa, RTN escluso) con verso dei collegamenti da <code>_irpVerso()</code> per le centrali D-G, rami RA come il Mix (verdi + blu/2), RC per collegamento, km, 60 o 180 gg (<code>_nonAttivo</code>), costo <code>_costRow(gruppo, capacità)</code> (rigeneratore oltre la soglia), nota «Rete RA|RC: hardware -- [subpath] -- 180 Giorni…»</li>
+              <li><strong>📌 Colonne</strong> scelte per intestazione del modulo: BF «Previsione tempi realizzativi accesso + RTR», BJ «Tempi Totali», BN «Investimenti apparati sede cliente», BO «… in centrale per il cliente», BP «… accesso + RTR NON per il cliente», BS «Investimenti Network», BY «Investimento Totale», BZ «NOTE» (larga 100, a capo). <strong>⚙️ rcIrpCapacity</strong> nella barra export RC (default 10G); nell’Unificato <code>unifiedCostCapacity</code> e <code>unifiedCostThreshold</code>. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #6d28d9;border-radius:12px;overflow:hidden;background:#faf5ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
             🧹 V11.26 | 014 | Nov 2026 | Popup Apparati: svuota un lato
           </summary>
@@ -63855,7 +64248,20 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
       Object.keys(TAB).forEach(allinea);
       avvolgiReset('resetClientPosition', 'RC'); avvolgiReset('resetClientPositionRA', 'RA'); avvolgiReset('resetClientPositionUnified', 'UNI');
     }
-    window.croNodiA1 = { cerca: cerca, chiudi: chiudi };
+    /* V11.26|018: dati per l'Assistente CRO (centrale risolta e Nodi A1 vicini, senza popup) */
+    function datiA1(testo, n) {
+      var r = risolvi(testo); if (!r.e) return r;
+      var e = r.e, C = centrali(), out = { e: e, eA1: (window.CENTRALI_POP_NODO_A1 || []).some(function (a) { return a.clli === e.clli; }), vicini: [] };
+      if (e.lat == null) return out;
+      var dist = distanze('UNI', e.clli);
+      out.vicini = (window.CENTRALI_POP_NODO_A1 || []).filter(function (a) { return a.clli !== e.clli; }).map(function (a) {
+        var c = C[a.clli]; if (!c || c.lat == null) return null;
+        var dR = null; ['RC:', 'RA:'].forEach(function (p) { var v = dist[p + a.clli]; if (v != null && (dR == null || v < dR)) dR = v; });
+        return { nome: a.nome, clli: a.clli, area: a.area, noPE: !!a.noPE, aria: haversine(e, c), rete: dR, lbl: etichetta('UNI', a, C) };
+      }).filter(Boolean).sort(function (x, y) { return x.aria - y.aria || (x.noPE ? 1 : 0) - (y.noPE ? 1 : 0); }).slice(0, n || 6);
+      return out;
+    }
+    window.croNodiA1 = { cerca: cerca, chiudi: chiudi, dati: datiA1 };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { setTimeout(avvia, 0); }); else setTimeout(avvia, 0);
     window.addEventListener('load', function () { setTimeout(avvia, 0); });
   })();
@@ -67590,6 +67996,7 @@ function updateTotals() {
     var selIds = Array.from(selectedApp);
     if (!selIds.length) {
       if (btn) btn.style.display = 'none';
+      window._codaDati = null;   /* V11.26|015 */
       var _fp2=document.getElementById('codaFloatPanel'), _mb2=document.getElementById('codaMiniBadge');
       if(_fp2) _fp2.style.display='none'; if(_mb2) _mb2.style.display='none';
       return;
@@ -67654,6 +68061,7 @@ function updateTotals() {
     // Salva testi per i pulsanti copia
     window._codaLabelText = full || '';
     window._codaCostText  = costLinePlain || '';
+    window._codaDati = { totA: totA, totB: totB, labsA: labsA, labsB: labsB };   /* V11.26|015: per il foglio IRP */
   }
 
   // Helper copia clipboard
@@ -84784,6 +85192,136 @@ window._buildUnifiedCostBlock = function(opts) {
     return wb;
   }
 
+  // ══ V11.26|015: FOGLIO IRP (modulo «Modulo lavorazione Standard») ═══════════
+  // Modulo IRP ricostruito dal file di Giuseppe (righe 1-2 tolte: SF in C1).
+  // Una via = coda A (DWDM/C) + una riga per sezione di trasporto (DWDM/R:
+  // blocchi di rete come i costi, RA consecutive insieme) + coda Z (DWDM/C).
+  // La coda non c'e' dal lato di un Nodo A1.
+  var IRP_SPEC = {"stili":[{"font":{"name":"Arial","size":10.0}},{"font":{"name":"dialog","size":12.0,"color":"FF000000"},"alignment":{"horizontal":"left","vertical":"center","wrapText":true}},{"font":{"name":"Arial","size":10.0},"alignment":{"vertical":"center"}},{"font":{"name":"dialog","size":12.0,"color":"FF000000"},"alignment":{"horizontal":"left","vertical":"top","wrapText":true}},{"font":{"name":"Arial","size":10.0},"border":{"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":10.0},"border":{"right":{"style":"medium"}}},{"font":{"name":"Arial","size":10.0},"fill":"FFFFFFFF"},{"font":{"name":"Arial","size":10.0},"fill":"FFFFFFFF","border":{"right":{"style":"medium"},"top":{"style":"medium"}}},{"font":{"name":"Arial","size":16.0,"color":"FF000000"},"fill":"FF99CCFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true}},{"font":{"name":"Arial","size":16.0,"color":"FF000000"},"fill":"FFCCFFCC","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"left":{"style":"thin"},"top":{"style":"thin"},"bottom":{"style":"thin"}}},{"font":{"name":"Arial","size":10.0},"border":{"top":{"style":"thin"},"bottom":{"style":"thin"}}},{"font":{"name":"Arial","size":12.0,"color":"FF000000"},"fill":"FFFFFFCC","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"left":{"style":"thin"},"right":{"style":"thin"},"top":{"style":"thin"},"bottom":{"style":"thin"}}},{"font":{"name":"Arial","size":10.0},"border":{"top":{"style":"thin"}}},{"font":{"name":"Arial","size":10.0},"border":{"right":{"style":"thin"},"top":{"style":"thin"}}},{"font":{"name":"Arial","size":10.0},"fill":"FFFFFFFF","border":{"right":{"style":"medium"}}},{"font":{"name":"dialog","size":12.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Arial","size":10.0},"border":{"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Arial","size":10.0},"fill":"FFFFFFFF","border":{"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Arial","size":10.0},"fill":"FFFFFFFF","border":{"right":{"style":"thick","color":"FF000000"},"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Arial","size":10.0},"fill":"FFFFFFFF","border":{"left":{"style":"medium"}}},{"font":{"name":"Arial","size":10.0},"fill":"FFFFFFFF","border":{"right":{"style":"thick","color":"FF000000"}}},{"font":{"name":"Arial","size":10.0},"border":{"left":{"style":"thin"}}},{"font":{"name":"Arial","size":10.0},"border":{"right":{"style":"thin"}}},{"font":{"name":"Arial","size":10.0},"fill":"FFFFFFFF","border":{"right":{"style":"medium"},"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FF33CCCC","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"left":{"style":"thin"},"top":{"style":"thin"},"bottom":{"style":"thin"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"left":{"style":"thin"},"right":{"style":"thin"},"top":{"style":"thin"},"bottom":{"style":"thin"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"left":{"style":"thin"},"top":{"style":"thin"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"thin"},"top":{"style":"thin"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"left":{"style":"thin"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"thin"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"thin","color":"FF000000"},"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Arial","size":10.0},"border":{"right":{"style":"thin","color":"FF000000"},"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"left":{"style":"thin"},"right":{"style":"medium"},"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Arial","size":10.0},"border":{"right":{"style":"medium"},"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"medium"},"top":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Arial","size":10.0},"border":{"left":{"style":"thin"},"bottom":{"style":"thin"}}},{"font":{"name":"Arial","size":10.0},"border":{"bottom":{"style":"thin"}}},{"font":{"name":"Arial","size":10.0},"border":{"right":{"style":"thin","color":"FF000000"}}},{"font":{"name":"Arial","size":10.0},"border":{"left":{"style":"medium"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true}},{"font":{"name":"Arial","size":10.0},"border":{"right":{"style":"thin"},"bottom":{"style":"thin"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"left":{"style":"thin"},"bottom":{"style":"thin"}}},{"font":{"name":"Dialog","size":10.0,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"thin"},"bottom":{"style":"thin"}}},{"font":{"name":"Arial","size":7.0,"bold":true,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"left":{"style":"medium"},"right":{"style":"medium"},"top":{"style":"medium"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":7.0,"bold":true,"color":"FF000000"},"fill":"FFFFFF99","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"thin","color":"FF000000"},"top":{"style":"medium"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":7.0,"bold":true,"color":"FF000000"},"fill":"FFFFFF99","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"medium"},"top":{"style":"medium"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":7.0,"bold":true,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"medium"},"top":{"style":"medium"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":7.0,"bold":true,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"thin","color":"FF000000"},"top":{"style":"medium"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":7.0,"bold":true,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"top":{"style":"medium"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":7.0,"bold":true,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"left":{"style":"medium"},"right":{"style":"thin","color":"FF000000"},"top":{"style":"medium"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":7.0,"bold":true,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"thin","color":"FF000000"},"top":{"style":"thin","color":"FF000000"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":6.0,"bold":true,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"thin","color":"FF000000"},"top":{"style":"thin","color":"FF000000"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":5.0,"bold":true,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"thin","color":"FF000000"},"top":{"style":"thin","color":"FF000000"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":7.0,"bold":true,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"medium"},"top":{"style":"thin","color":"FF000000"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":7.0,"bold":true,"color":"FF000000"},"fill":"FFFFFFFF","alignment":{"horizontal":"center","vertical":"center","wrapText":true},"border":{"right":{"style":"thin","color":"FF000000"},"bottom":{"style":"medium"}}},{"font":{"name":"Arial","size":10.0},"alignment":{"horizontal":"center","wrapText":true},"border":{"left":{"style":"thin"},"right":{"style":"thin"},"bottom":{"style":"thin"}}},{"font":{"name":"Calibri","size":11.0,"bold":true},"alignment":{"horizontal":"center","wrapText":true},"border":{"left":{"style":"thin"},"right":{"style":"thin"},"bottom":{"style":"thin"}}}],"righe":{"3":{"h":15.95,"c":[[1,0,null],[2,1,"SF : "],[3,2,"xxxxxx"],[4,0,null],[5,3,"Descrizione Progetto: "],[6,0,null],[7,0,null],[8,2,"xxxxxx"],[9,0,null],[10,0,null],[11,0,null],[12,0,null],[13,0,null],[14,0,null],[15,0,null],[16,0,null],[17,0,null],[18,0,null],[19,0,null],[20,0,null],[21,0,null],[22,0,null],[23,0,null],[24,0,null],[25,0,null],[26,0,null],[27,0,null],[28,0,null],[29,0,null],[30,0,null],[31,0,null],[32,0,null],[33,0,null],[34,0,null],[35,0,null],[36,0,null],[37,0,null],[38,0,null],[39,0,null],[40,0,null],[41,0,null],[42,0,null],[43,0,null],[44,0,null],[45,0,null],[46,0,null],[47,0,null],[48,0,null],[49,0,null],[50,0,null],[51,0,null],[52,0,null],[53,0,null],[54,0,null],[55,0,null],[56,0,null],[57,0,null],[58,0,null],[59,0,null],[60,0,null],[61,0,null],[62,0,null],[63,0,null],[64,0,null],[65,0,null],[66,0,null],[67,0,null],[68,0,null],[69,0,null],[70,0,null],[71,0,null],[72,0,null],[73,0,null],[74,0,null],[75,0,null],[76,0,null],[77,0,null],[78,0,null]]},"4":{"h":17.1,"c":[[1,0,null],[2,4,null],[3,4,null],[4,4,null],[5,4,null],[6,4,null],[7,4,null],[8,4,null],[9,4,null],[10,4,null],[11,4,null],[12,4,null],[13,4,null],[14,4,null],[15,4,null],[16,4,null],[17,4,null],[18,4,null],[19,4,null],[20,4,null],[21,4,null],[22,4,null],[23,4,null],[24,4,null],[25,4,null],[26,4,null],[27,4,null],[28,4,null],[29,4,null],[30,4,null],[31,4,null],[32,4,null],[33,4,null],[34,4,null],[35,4,null],[36,4,null],[37,4,null],[38,4,null],[39,4,null],[40,4,null],[41,4,null],[42,4,null],[43,4,null],[44,4,null],[45,4,null],[46,4,null],[47,4,null],[48,0,null],[49,0,null],[50,0,null],[51,0,null],[52,0,null],[53,0,null],[54,0,null],[55,0,null],[56,0,null],[57,0,null],[58,0,null],[59,0,null],[60,0,null],[61,0,null],[62,0,null],[63,0,null],[64,0,null],[65,0,null],[66,0,null],[67,0,null],[68,0,null],[69,0,null],[70,0,null],[71,0,null],[72,0,null],[73,0,null],[74,0,null],[75,0,null],[76,0,null],[77,0,null],[78,0,null]]},"5":{"h":24.95,"c":[[1,5,null],[2,6,null],[3,6,null],[4,6,null],[5,6,null],[6,6,null],[7,6,null],[8,7,null],[9,8,"A CURA OPEN ACCESS"],[10,0,null],[11,0,null],[12,0,null],[13,0,null],[14,0,null],[15,0,null],[16,0,null],[17,0,null],[18,0,null],[19,0,null],[20,0,null],[21,0,null],[22,0,null],[23,0,null],[24,0,null],[25,0,null],[26,0,null],[27,0,null],[28,0,null],[29,0,null],[30,0,null],[31,0,null],[32,0,null],[33,0,null],[34,0,null],[35,0,null],[36,0,null],[37,0,null],[38,0,null],[39,0,null],[40,0,null],[41,0,null],[42,0,null],[43,0,null],[44,0,null],[45,0,null],[46,0,null],[47,0,null],[48,9,"A CURA NETWORK"],[49,10,null],[50,10,null],[51,10,null],[52,10,null],[53,10,null],[54,10,null],[55,10,null],[56,10,null],[57,10,null],[58,10,null],[59,10,null],[60,10,null],[61,10,null],[62,10,null],[63,10,null],[64,10,null],[65,10,null],[66,10,null],[67,10,null],[68,10,null],[69,10,null],[70,10,null],[71,10,null],[72,11,"Interventi a cura Technical Infrastructures"],[73,12,null],[74,12,null],[75,12,null],[76,13,null],[77,0,null],[78,0,null]]},"6":{"h":0.6,"c":[[1,5,null],[2,6,null],[3,6,null],[4,6,null],[5,6,null],[6,6,null],[7,6,null],[8,14,null],[9,0,null],[10,0,null],[11,0,null],[12,0,null],[13,0,null],[14,0,null],[15,0,null],[16,15,"Lunghezza e tipologia del collegamento"],[17,16,null],[18,16,null],[19,16,null],[20,16,null],[21,17,null],[22,17,null],[23,17,null],[24,17,null],[25,17,null],[26,17,null],[27,17,null],[28,17,null],[29,17,null],[30,17,null],[31,17,null],[32,17,null],[33,17,null],[34,17,null],[35,17,null],[36,17,null],[37,18,null],[38,0,null],[39,0,null],[40,0,null],[41,0,null],[42,0,null],[43,0,null],[44,0,null],[45,0,null],[46,0,null],[47,0,null],[48,19,null],[49,6,null],[50,6,null],[51,0,null],[52,20,null],[53,6,null],[54,6,null],[55,6,null],[56,6,null],[57,0,null],[58,0,null],[59,0,null],[60,0,null],[61,0,null],[62,0,null],[63,0,null],[64,0,null],[65,0,null],[66,0,null],[67,0,null],[68,0,null],[69,0,null],[70,0,null],[71,0,null],[72,21,null],[73,0,null],[74,0,null],[75,0,null],[76,22,null],[77,0,null],[78,0,null]]},"7":{"h":18.95,"c":[[1,5,null],[2,6,null],[3,6,null],[4,6,null],[5,6,null],[6,6,null],[7,6,null],[8,14,null],[9,17,null],[10,17,null],[11,17,null],[12,17,null],[13,17,null],[14,17,null],[15,23,null],[16,0,null],[17,0,null],[18,0,null],[19,0,null],[20,0,null],[21,19,null],[22,6,null],[23,6,null],[24,6,null],[25,6,null],[26,6,null],[27,6,null],[28,6,null],[29,6,null],[30,6,null],[31,6,null],[32,6,null],[33,6,null],[34,6,null],[35,6,null],[36,6,null],[37,14,null],[38,24,"DATI AGGIUNTIVI"],[39,16,null],[40,16,null],[41,16,null],[42,16,null],[43,16,null],[44,16,null],[45,16,null],[46,16,null],[47,16,null],[48,25,"DATI TECNICI "],[49,12,null],[50,12,null],[51,12,null],[52,12,null],[53,12,null],[54,12,null],[55,12,null],[56,12,null],[57,26,"TEMPI (gg solari)"],[58,12,null],[59,12,null],[60,12,null],[61,12,null],[62,13,null],[63,27,null],[64,28,null],[65,25,"INVESTIMENTI (euro)"],[66,12,null],[67,12,null],[68,12,null],[69,12,null],[70,12,null],[71,12,null],[72,21,null],[73,0,null],[74,0,null],[75,0,null],[76,22,null],[77,0,null],[78,0,null]]},"8":{"h":0.6,"c":[[1,5,null],[2,6,null],[3,6,null],[4,6,null],[5,6,null],[6,6,null],[7,6,null],[8,14,null],[9,6,null],[10,6,null],[11,6,null],[12,6,null],[13,6,null],[14,6,null],[15,14,null],[16,0,null],[17,0,null],[18,0,null],[19,0,null],[20,0,null],[21,19,null],[22,6,null],[23,6,null],[24,6,null],[25,6,null],[26,6,null],[27,6,null],[28,6,null],[29,6,null],[30,6,null],[31,6,null],[32,6,null],[33,6,null],[34,6,null],[35,6,null],[36,6,null],[37,14,null],[38,0,null],[39,0,null],[40,0,null],[41,0,null],[42,0,null],[43,0,null],[44,0,null],[45,0,null],[46,0,null],[47,0,null],[48,21,null],[49,0,null],[50,0,null],[51,0,null],[52,0,null],[53,0,null],[54,0,null],[55,0,null],[56,0,null],[57,21,null],[58,0,null],[59,0,null],[60,0,null],[61,0,null],[62,22,null],[63,29,null],[64,30,null],[65,21,null],[66,0,null],[67,0,null],[68,0,null],[69,0,null],[70,0,null],[71,0,null],[72,21,null],[73,0,null],[74,0,null],[75,0,null],[76,22,null],[77,0,null],[78,0,null]]},"9":{"h":17.1,"c":[[1,5,null],[2,6,null],[3,6,null],[4,6,null],[5,6,null],[6,6,null],[7,6,null],[8,14,null],[9,6,null],[10,6,null],[11,6,null],[12,6,null],[13,6,null],[14,6,null],[15,14,null],[16,31,"ACCESSO"],[17,32,null],[18,31,"GIUNZIONE"],[19,32,null],[20,17,null],[21,19,null],[22,6,null],[23,6,null],[24,6,null],[25,6,null],[26,6,null],[27,6,null],[28,33,"INVESTIMENTI (euro)"],[29,16,null],[30,16,null],[31,16,null],[32,16,null],[33,34,null],[34,35,"TEMPI (gg solari)"],[35,16,null],[36,16,null],[37,34,null],[38,0,null],[39,0,null],[40,0,null],[41,0,null],[42,0,null],[43,0,null],[44,0,null],[45,0,null],[46,0,null],[47,0,null],[48,36,null],[49,37,null],[50,37,null],[51,37,null],[52,37,null],[53,37,null],[54,37,null],[55,37,null],[56,37,null],[57,21,null],[58,0,null],[59,0,null],[60,0,null],[61,0,null],[62,22,null],[63,29,null],[64,30,null],[65,21,null],[66,0,null],[67,0,null],[68,0,null],[69,0,null],[70,0,null],[71,0,null],[72,21,null],[73,0,null],[74,0,null],[75,0,null],[76,22,null],[77,36,null],[78,37,null]]},"10":{"h":0.6,"c":[[1,5,null],[2,6,null],[3,6,null],[4,6,null],[5,6,null],[6,6,null],[7,6,null],[8,14,null],[9,6,null],[10,6,null],[11,6,null],[12,6,null],[13,6,null],[14,6,null],[15,14,null],[16,0,null],[17,38,null],[18,0,null],[19,38,null],[20,6,null],[21,39,null],[22,0,null],[23,0,null],[24,0,null],[25,0,null],[26,0,null],[27,0,null],[28,21,null],[29,0,null],[30,0,null],[31,0,null],[32,0,null],[33,5,null],[34,0,null],[35,0,null],[36,0,null],[37,5,null],[38,0,null],[39,0,null],[40,0,null],[41,0,null],[42,0,null],[43,0,null],[44,0,null],[45,0,null],[46,0,null],[47,0,null],[48,39,null],[49,0,null],[50,0,null],[51,40,null],[52,5,null],[53,0,null],[54,0,null],[55,0,null],[56,0,null],[57,36,null],[58,37,null],[59,37,null],[60,37,null],[61,37,null],[62,41,null],[63,42,null],[64,43,null],[65,36,null],[66,37,null],[67,37,null],[68,37,null],[69,37,null],[70,37,null],[71,37,null],[72,21,null],[73,0,null],[74,0,null],[75,0,null],[76,22,null],[77,0,null],[78,0,null]]},"11":{"h":0.6,"c":[[1,5,null],[2,0,null],[3,0,null],[4,0,null],[5,0,null],[6,0,null],[7,0,null],[8,5,null],[9,0,null],[10,0,null],[11,0,null],[12,0,null],[13,0,null],[14,0,null],[15,5,null],[16,0,null],[17,0,null],[18,0,null],[19,0,null],[20,0,null],[21,39,null],[22,0,null],[23,0,null],[24,0,null],[25,0,null],[26,0,null],[27,0,null],[28,0,null],[29,0,null],[30,0,null],[31,0,null],[32,0,null],[33,5,null],[34,0,null],[35,0,null],[36,0,null],[37,5,null],[38,0,null],[39,0,null],[40,0,null],[41,0,null],[42,0,null],[43,0,null],[44,0,null],[45,0,null],[46,0,null],[47,0,null],[48,39,null],[49,0,null],[50,0,null],[51,0,null],[52,5,null],[53,0,null],[54,0,null],[55,0,null],[56,0,null],[57,0,null],[58,0,null],[59,0,null],[60,0,null],[61,0,null],[62,5,null],[63,0,null],[64,0,null],[65,0,null],[66,0,null],[67,0,null],[68,0,null],[69,0,null],[70,0,null],[71,0,null],[72,36,null],[73,37,null],[74,37,null],[75,37,null],[76,41,null],[77,0,null],[78,0,null]]},"12":{"h":57.75,"c":[[1,5,null],[2,44,"PROG"],[3,45,"Territorio"],[4,45,"Descrizione Sede A (Nome GAT)"],[5,45,"Cod CLLI A"],[6,45,"Descrizione Sede Z (Nome GAT)"],[7,45,"Cod CLLI Z"],[8,46,"Codice Ordine Cliente"],[9,47,"Componente Instradamento"],[10,48,"1^Via / 2^ Via"],[11,48,"Raccordo AF"],[12,48,"Tipo di intervento"],[13,48,"Numero Impianto"],[14,48,"ID collegamento"],[15,47,"Numerazione delle fibre assegnate"],[16,48,"di cui DROP (KM)"],[17,48,"di cui Accesso (KM)"],[18,48,"Giunzione METRO (KM)"],[19,48,"Giunzione Long Distance (KM)"],[20,49,"Totale (KM)"],[21,50,"Necessità Intervento (no/si)"],[22,48,"Descrizione Tipo Intervento Cavo"],[23,48,"Tipologia Cavo"],[24,48,"Potenzialità Cavo"],[25,48,"Tipologia Scavo"],[26,48,"Km Scavo"],[27,47,"N° pozzetti incrementali"],[28,48,"Inv. per transiti in centrale"],[29,48,"Investimenti sul DROP"],[30,48,"Investimenti sull'Accesso"],[31,48,"Investimenti su Giunzione METRO"],[32,48,"Invest su Giunzione LONG DISTANCE"],[33,47,"Investimento OA"],[34,47,"Previs tempi ottenimento permessi (N° gg solari)"],[35,47,"Previs tempi realizzativi (N° gg solari)"],[36,47,"Tempi Totali (gg/u)"],[37,47,"Enti coinvolti ottenimento permessi"],[38,51,"Infr. Esistente (Km)"],[39,51,"Ripristini (€)"],[40,51,"Valore materiali (€)"],[41,51,"MOI (€)"],[42,51,"Valore scavo tradiz (€)"],[43,52,"Valore scavo minitrincea (€)"],[44,53,"Valore scavo altra tipologia ( specificare € )"],[45,51,"Giunti (n.)"],[46,51,"Sottoequipaggiamenti  (km)"],[47,54,"Terminazioni (FIBRE n°)"],[48,51,"Tipologia Apparato"],[49,51,"Capacità"],[50,51,"POP ATM"],[51,51,"Dacon Presente"],[52,51,"Canoni frequenze radio"],[53,51,"Infrastruttura DWDM utilizzata"],[54,51,"Numero Rami Fotonici attraversati"],[55,51,"Lunghezza Totale in Km. dei Rami Fotonici Attraversati"],[56,51,"Tipo Interfaccia e quantità"],[57,51,"Previsione tempi ottenimento permessi (N° gg solari)"],[58,51,"Previsione tempi realizzativi accesso + RTR (N° gg solari)"],[59,51,"Previsione tempi realizzativi RTN (N° gg solari)"],[60,51,"Tempi Dacon (N° gg solari)"],[61,51,"Tempi Riordino\n(gg. solari)"],[62,51,"Tempi Totali (gg/u)"],[63,51,"Fattibilità su carta(ore)"],[64,51,"Sopraluogo (ore)"],[65,51,"Investimenti per bretelle"],[66,51,"Investimenti apparati sede cliente"],[67,51,"Investimenti apparati in centrale per il cliente"],[68,51,"Inv. apparati in centrale accesso + RTR NON per il cliente"],[69,51,"Inv. apparati in centrale per RTN"],[70,51,"Investimenti Dacon"],[71,51,"Investimenti Network"],[72,55,"Tipologia Intervento"],[73,55,"Investimenti (I)"],[74,55,"Previs tempi realizz. (N° gg solari)"],[75,55,"Stima tempi rilascio permessi (gg solari)"],[76,55,"Tempi Totali"],[77,55,"Investimento Totale"],[78,55,"NOTE"]]},"13":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"14":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"15":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"16":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"17":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"18":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"19":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"20":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"21":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"22":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"23":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"24":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"25":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"26":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"27":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"28":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"29":{"h":null,"c":[[1,0,null],[2,56,null],[3,56,null],[4,56,null],[5,56,null],[6,56,null],[7,56,null],[8,56,null],[9,56,null],[10,56,null],[11,56,null],[12,56,null],[13,56,null],[14,56,null],[15,56,null],[16,56,null],[17,56,null],[18,56,null],[19,56,null],[20,56,null],[21,56,null],[22,56,null],[23,56,null],[24,56,null],[25,56,null],[26,56,null],[27,56,null],[28,56,null],[29,56,null],[30,56,null],[31,56,null],[32,56,null],[33,56,null],[34,56,null],[35,56,null],[36,56,null],[37,56,null],[38,56,null],[39,56,null],[40,56,null],[41,56,null],[42,56,null],[43,56,null],[44,56,null],[45,56,null],[46,56,null],[47,56,null],[48,56,null],[49,56,null],[50,56,null],[51,56,null],[52,56,null],[53,56,null],[54,56,null],[55,56,null],[56,56,null],[57,56,null],[58,56,null],[59,56,null],[60,56,null],[61,56,null],[62,56,null],[63,56,null],[64,56,null],[65,56,null],[66,56,null],[67,56,null],[68,56,null],[69,56,null],[70,56,null],[71,56,null],[72,56,null],[73,56,null],[74,56,null],[75,56,null],[76,56,null],[77,56,null],[78,56,null]]},"30":{"h":15.0,"c":[[1,0,null],[2,57,"TOTALE"],[3,37,null],[4,37,null],[5,37,null],[6,37,null],[7,37,null],[8,41,null],[9,57,null],[10,57,null],[11,57,null],[12,57,null],[13,57,null],[14,57,null],[15,57,null],[16,57,null],[17,57,null],[18,57,null],[19,57,null],[20,57,null],[21,57,null],[22,57,null],[23,57,null],[24,57,null],[25,57,null],[26,57,null],[27,57,null],[28,57,null],[29,57,null],[30,57,null],[31,57,null],[32,57,null],[33,57,null],[34,57,null],[35,57,null],[36,57,null],[37,57,null],[38,57,null],[39,57,null],[40,57,null],[41,57,null],[42,57,null],[43,57,null],[44,57,null],[45,57,null],[46,57,null],[47,57,null],[48,57,null],[49,57,null],[50,57,null],[51,57,null],[52,57,null],[53,57,null],[54,57,null],[55,57,null],[56,57,null],[57,57,null],[58,57,null],[59,57,null],[60,57,null],[61,57,null],[62,57,null],[63,57,null],[64,57,null],[65,57,null],[66,57,null],[67,57,null],[68,57,null],[69,57,null],[70,57,null],[71,57,null],[72,57,null],[73,57,null],[74,57,null],[75,57,null],[76,57,null],[77,57,null],[78,0,null]]}},"larg":{"1":3.86,"2":31.29,"3":9.57,"4":14.57,"5":10.57,"6":14.57,"7":10.43,"8":12.14,"9":11.57,"10":13.0,"11":9.57,"12":13.14,"13":13.0,"14":13.57,"15":14.57,"16":13.57,"17":14.57,"18":13.0,"19":13.0,"20":10.57,"21":12.57,"22":14.57,"23":8.86,"24":9.57,"25":13.0,"26":8.86,"27":13.0,"28":12.57,"29":13.0,"30":13.0,"31":14.57,"32":18.57,"33":12.57,"34":20.57,"35":16.57,"36":10.57,"37":18.57,"38":11.43,"39":8.86,"40":9.57,"41":13.0,"42":13.0,"43":13.0,"44":13.0,"45":13.0,"46":13.0,"47":13.0,"48":9.14,"49":8.86,"50":7.86,"51":8.86,"52":9.57,"53":13.0,"54":13.0,"55":13.0,"56":13.0,"57":20.0,"58":18.0,"59":17.57,"60":10.57,"61":13.0,"62":9.57,"63":13.0,"64":13.0,"65":11.57,"66":15.57,"67":17.57,"68":18.57,"69":13.57,"70":9.57,"71":8.86,"72":9.57,"73":13.0,"74":17.57,"75":16.57,"76":11.57,"77":10.57,"78":9.57},"merge":["I5:AU5","AL7:AU11","AB9:AG10","P9:Q10","AV7:BD9","B1:H1","P6:T7","BE7:BJ10","AH9:AK10","B30:H30","AV5:BS5","E3:G3","BT5:BX11","R9:S10","BM7:BS10"],"dv":[{"sqref":"V9","f":"\"Cavo in rame,Bretella,Fibra G 652,Fibra G 653,Fibra G 655,Altro\""},{"sqref":"X9","f":"\"Trincea,Minitrincea,Microtunnelling,Misto,NO DIG leggero,Altro\""},{"sqref":"K9","f":"\"Cavo,Ponte radio,DWDM,SDH,Altro\""},{"sqref":"H9","f":"\",1° Via,2° Via\""}]}   /* V11.26|016: colori del master (tavolozza indicizzata) */;
+  var IRP_PRIMA = 11;            // prima riga dati (PROG 1, la compila chi emette la fattibilita')
+  var IRP_SOMME = ['P','Q','R','S','T','AB','AC','AD','AE','AF','AG','BM','BN','BO','BP','BQ','BR','BS','BU','BY'];
+  function _irpCol(l){ var n = 0; for (var i = 0; i < l.length; i++) n = n * 26 + (l.charCodeAt(i) - 64); return n; }
+  function _irpStile(c, st){
+    if (!st) return;
+    if (st.font){ var f = {}; for (var k in st.font) f[k] = st.font[k]; if (f.color) f.color = { argb: f.color }; c.font = f; }
+    if (st.fill) c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: st.fill } };
+    if (st.alignment) c.alignment = st.alignment;
+    if (st.border){ var b = {}; for (var s in st.border){ b[s] = { style: st.border[s].style }; if (st.border[s].color) b[s].color = { argb: st.border[s].color }; } c.border = b; }
+    if (st.numFmt) c.numFmt = st.numFmt;
+  }
+  function _irpRiga(ws, rTpl, rDest){
+    var R = IRP_SPEC.righe[rTpl]; if (!R) return;
+    if (R.h) ws.getRow(rDest).height = R.h;
+    R.c.forEach(function(x){ var c = ws.getCell(rDest, x[0]); if (x[2] != null) c.value = x[2]; if (x[1] >= 0) _irpStile(c, IRP_SPEC.stili[x[1]]); });
+  }
+  /* verso di percorrenza di ogni collegamento: da quale CLLI entra e da quale esce */
+  function _irpVerso(links){
+    var out = [], prev = '';
+    links.forEach(function(l, i){
+      var a = _s(l.clliA).toUpperCase(), z = _s(l.clliZ).toUpperCase(), da = a, a2 = z;
+      if (prev && z === prev && a !== prev){ da = z; a2 = a; }
+      else if (!prev || (a !== prev && z !== prev)){
+        var nx = links[i + 1], nA = nx ? _s(nx.clliA).toUpperCase() : '', nZ = nx ? _s(nx.clliZ).toUpperCase() : '';
+        if (nx && (a === nA || a === nZ) && z !== nA && z !== nZ){ da = z; a2 = a; }
+      }
+      out.push({ da: da, a: a2 }); prev = a2;
+    });
+    return out;
+  }
+  function _irpRighe(d, isUni, cap, soglia, nVia){
+    var nomi = {};
+    (d.centrali || []).forEach(function(c){ if (!c.gw && c.clli) nomi[_s(c.clli).toUpperCase()] = { nome: c.nome, clli: _s(c.clli).toUpperCase() }; });
+    var cen = (d.centrali || []).filter(function(c){ return !c.gw && c.clli; });
+    var cA = cen[0], cZ = cen[cen.length - 1];
+    /* V11.26|017: la via e' la posizione del percorso nel modulo (1\u00b0, 2\u00b0, ...), non Std o Div:
+       due percorsi nello stesso modulo sono sempre 1\u00b0 Via e 2\u00b0 Via */
+    var via = (nVia || 1) + '\u00b0 Via';
+    var righe = [];
+    var coda = window._codaDati || null, haCoda = !!(coda && (coda.totA || coda.totB));
+    function rigaCoda(c){
+      var r = { via: via, ba: 'DWDM/C', gg: 60, a: c ? { nome: c.nome, clli: _s(c.clli).toUpperCase() } : null, z: null };
+      if (haCoda){
+        r.bn = Math.round(coda.totA || 0) || null; r.bo = Math.round(coda.totB || 0) || null;
+        var p = [];
+        if (coda.labsA && coda.labsA.length) p.push('Centrale Cliente [' + coda.labsA.join(' + ') + ']');
+        if (coda.labsB && coda.labsB.length) p.push('Centrale per il Cliente: [' + coda.labsB.join(' + ') + ']');
+        r.note = 'Coda Cliente: ' + p.join(' -- ');
+      }
+      return r;
+    }
+    var a1 = function(c){ return !!(c && typeof window.isNodoA1 === 'function' && window.isNodoA1(_s(c.clli).toUpperCase())); };
+    if (cA && !a1(cA)) righe.push(rigaCoda(cA));
+    var verso = _irpVerso(d.links), pos = {};
+    d.links.forEach(function(l, i){ pos[i] = verso[i]; });
+    var idxOf = function(l){ return d.links.indexOf(l); };
+    _costBlocks(d.links, d.gws).forEach(function(b){
+      if (b.rtn || !b.links.length) return;
+      var isNO = b.tariffa === 'NO', rig = b.dist > soglia, grp;
+      if (b.rete === 'RA') grp = isNO ? (rig ? 'LINK_NO_RA_RIG' : 'LINK_NO_RA') : 'LINK_RA';
+      else grp = isNO ? (rig ? 'LINK_NO_RC_RIG' : 'LINK_NO_RC') : (rig ? 'LINK_RC_RIG' : 'LINK_RC');
+      var row = cap ? _costRow(grp, cap) : null, costo = row && Number(row.costoTotale) ? Math.round(Number(row.costoTotale)) : null;
+      var hw = '';
+      if (row){ hw = isNO ? (row.hwAdva ? '[' + row.hwAdva + '] Scorte Incluse' : '') : _s(row.hwHuawei).replace(/\s*->\s*/g, ' > '); }
+      if (rig && !isNO && b.rete === 'RC' && hw) hw += ' (Con Rigeneratore)';
+      if (rig && !costo) hw = 'Da configurare';
+      var lista = [], noAtt = [], verdi = 0, blu = 0;
+      b.links.forEach(function(l){
+        var parti = _normId(l.id).split('|').map(function(x){ return x.trim(); });
+        var k = l.rete === 'RA' ? (l.subpath || parti[2] || '') : _s(l.id);
+        if (k && lista.indexOf(k) === -1) lista.push(k);
+        if (l.rete === 'RA'){ if (l.col === 'blue') blu++; else verdi++; }
+        if (_nonAttivo(l) && k && noAtt.indexOf(k) === -1) noAtt.push(k);
+      });
+      var nota = 'Rete ' + b.rete + ': ' + (hw ? hw + ' -- ' : '') + '[' + lista.join(' + ') + ']' + (noAtt.length ? ' -- ' + _giorniStr(noAtt) : '') + '.';
+      var vI = pos[idxOf(b.links[0])] || {}, vZ = pos[idxOf(b.links[b.links.length - 1])] || {};
+      righe.push({ via: via, ba: 'DWDM/R', a: nomi[vI.da] || (vI.da ? { nome: '', clli: vI.da } : null), z: nomi[vZ.a] || (vZ.a ? { nome: '', clli: vZ.a } : null),
+        bb: b.rete === 'RA' ? (verdi + Math.floor(blu / 2)) : b.links.length, bc: Math.round(b.dist * 100) / 100,
+        gg: noAtt.length ? 180 : 60, bp: costo, note: nota });
+    });
+    if (cZ && cZ !== cA && !a1(cZ)) righe.push(rigaCoda(cZ));
+    return righe;
+  }
+  function _irpFoglio(wb, data, isUni){
+    var ws = wb.addWorksheet('IRP', { properties: { tabColor: { argb: 'FF7F7F7F' } } });
+    Object.keys(IRP_SPEC.larg).forEach(function(c){ ws.getColumn(+c).width = IRP_SPEC.larg[c]; });
+    for (var r = 3; r <= 12; r++) _irpRiga(ws, r, r - 2);
+    var sposta = function(ref){ return ref.replace(/(\D+)(\d+)/g, function(m, l, n){ return l + (n - 2); }); };
+    IRP_SPEC.merge.forEach(function(m){ if (/\b[A-Z]+1:|:[A-Z]+1$/.test(m) && /^[A-Z]+1:/.test(m)) return; if (/^[A-Z]+(1|2):/.test(m)) return; if (/^[A-Z]+30:/.test(m)) return; try { ws.mergeCells(sposta(m)); } catch(e){} });
+    var sf = (window._exportSdfRef && window._exportSdfRef.std) ? window._exportSdfRef.std : '';
+    ws.getCell('C1').value = sf || null;
+    ws.getCell('H1').value = null;
+    var capEl = document.getElementById(isUni ? 'unifiedCostCapacity' : 'rcIrpCapacity'), thEl = isUni ? document.getElementById('unifiedCostThreshold') : null;
+    var cap = capEl ? capEl.value : '', soglia = thEl ? (Number(thEl.value) || 250) : 250;
+    var tutte = [];
+    data.forEach(function(d, iv){ _irpRighe(d, isUni, cap, soglia, iv + 1).forEach(function(x){ tutte.push(x); }); });
+    var nDati = Math.max(17, tutte.length + 1), ultima = IRP_PRIMA + nDati - 1;
+    for (var i = 0; i < nDati; i++) _irpRiga(ws, 13, IRP_PRIMA + i);
+    ws.getCell('B' + IRP_PRIMA).value = 1;
+    tutte.forEach(function(x, i){
+      var rr = IRP_PRIMA + 1 + i, put = function(col, v){ if (v != null && v !== '') ws.getCell(col + rr).value = v; };
+      put('B', '1.' + (i + 1));
+      if (x.a){ put('D', x.a.nome); put('E', x.a.clli); }
+      if (x.z){ put('F', x.z.nome); put('G', x.z.clli); }
+      put('J', x.via); put('BA', x.ba); put('BB', x.bb); put('BC', x.bc);
+      put('BF', x.gg); put('BJ', x.gg);
+      put('BN', x.bn); put('BO', x.bo); put('BP', x.bp);
+      var tot = (x.bn || 0) + (x.bo || 0) + (x.bp || 0);
+      if (x.bn != null || x.bo != null || x.bp != null){ put('BS', tot); put('BY', tot); }
+      put('BZ', x.note);
+      /* NOTE leggibili: colonna larga, testo a capo, altezza secondo la lunghezza */
+      if (x.note){ ws.getCell('BZ' + rr).alignment = { wrapText: true, vertical: 'middle', horizontal: 'left' }; ws.getRow(rr).height = Math.max(15, 13 * Math.ceil(String(x.note).length / 95)); }
+    });
+    ws.getColumn(_irpCol('BZ')).width = 100;
+    var rT = ultima + 1;
+    _irpRiga(ws, 30, rT);
+    ws.getCell('B' + rT).value = 'TOTALE';
+    try { ws.mergeCells('B' + rT + ':H' + rT); } catch(e){}
+    IRP_SOMME.forEach(function(c){ ws.getCell(c + rT).value = { formula: 'SUM(' + c + IRP_PRIMA + ':' + c + ultima + ')' }; });
+    (IRP_SPEC.dv || []).forEach(function(v){ try { ws.dataValidations.add(sposta(v.sqref), { type: 'list', allowBlank: true, formulae: [v.f] }); } catch(e){} });
+    ws.views = [{ state: 'frozen', ySplit: 10, xSplit: 2 }];
+    return tutte.length;
+  }
+
   // ── API pubblica ─────────────────────────────────────────────────────────────
   window._croExportXlsx = function(mode, selStdIdx, selDivByBase){
     try {
@@ -84799,6 +85337,9 @@ window._buildUnifiedCostBlock = function(opts) {
 
       var isUni = mode.indexOf('unified') === 0;
       var wb    = _build(mode, items);
+      /* V11.26|015: foglio IRP in coda agli altri */
+      try { _irpFoglio(wb, items.map(function(it){ return _routeData(it, isUni); }), isUni); }
+      catch (eIrp){ console.error('[EXPORT XLSX] foglio IRP', eIrp); }
       var hasD  = items.some(function(i){ return i.tipo === 'Div'; });
       var name  = _sdfPrefix() + 'CRO_' + (isUni ? 'UNIFIED' : 'RC') + '_' +
                   (hasD ? 'StdDiv' : 'Std') + '_' +
@@ -96212,7 +96753,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 014';
+  var REVISIONE = 'V11.26 | 021';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
