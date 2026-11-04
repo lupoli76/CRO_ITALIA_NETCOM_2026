@@ -4,13 +4,50 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 008  (rev. pubblicata: V11.26 | 008 | Nov 2026)              ║
+║   Versione: 11.26 | 014  (rev. pubblicata: V11.26 | 014 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 014 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • COMPOSITORE, popup Apparati: si svuota anche un lato solo (Centrale Cliente  ║
+║     o Centrale per il Cliente), oltre a "Svuota tutto"                           ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 013 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • COMPOSITORE, "Sposta sulla mappa": sfondi delle mappe dei percorsi (Google,  ║
+║     Esri, satellite) al posto dei tasselli OpenStreetMap, che rifiutavano la     ║
+║     pagina aperta da file con "403 Access blocked"                               ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 012 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • COMPOSITORE, Sede cliente: "Sposta sulla mappa" (clic sulla casa giusta),    ║
+║     "Cerca su Google Maps" quando l'indirizzo non e' esatto, e campo Indirizzo   ║
+║     che accetta coordinate e link di Google Maps incollati                       ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 011 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • COMPOSITORE, Geocodifica della sede cliente per gradi: indirizzo completo,   ║
+║     via e comune separati, via senza numero, via con il solo cognome, solo       ║
+║     comune; avviso quando il punto e' solo sulla via o al centro del comune      ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 010 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • COMPOSITORE, Sede cliente A e Z: campo Indirizzo con "Geocodifica" (anche    ║
+║     con Invio), come la Posizione Cliente: coordinate da OpenStreetMap scritte   ║
+║     nel campo Coordinate, luogo trovato sotto; indirizzo anche nell'export TXT   ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 009 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • COMPOSITORE, Coda (stima) Zona A e Z: km calcolati sede → centrale Colt      ║
+║     (linea d'aria e pedonale da OSRM, ripiego sulla linea d'aria); costo con il  ║
+║     popup "Apparati" dal listino Apparati & Cestelli, quantita' per Centrale     ║
+║     Cliente e Centrale per il Cliente; riga "Coda Cliente: ..." nelle note;      ║
+║     campo "Altro" per importi o testo libero                                     ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 008 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -5632,14 +5669,250 @@ window.croCmp = (function () {
     } catch (e) { return { testo: 'Calcolo dei costi non riuscito: ' + e.message, tot: null }; }
   }
 
+  /* ── V11.26|009: code cliente (Zona A e Z): km calcolati, apparati dal listino, note ── */
+  var PED = {};
+  function codaLato(b) { return b.tipo === 'codaZ' ? 'Z' : 'A'; }
+  function codaPunti(b) {
+    var L = codaLato(b), s = sedeCoord(L), c = trova('centrale' + L), cc = c && c.r ? c.r.c : null;
+    return { s: s, c: cc && !isNaN(cc.lat) ? cc : null };
+  }
+  /* percorso a piedi da un servizio internet (OSRM, profilo foot); se non risponde resta la linea d'aria */
+  function pedonale(s, c) {
+    var k = [s.lat, s.lon, c.lat, c.lon].map(function (x) { return Number(x).toFixed(5); }).join(',');
+    if (PED[k] !== undefined) return PED[k];
+    PED[k] = 'attesa';
+    var ctl = typeof AbortController === 'function' ? new AbortController() : null, t = setTimeout(function () { if (ctl) ctl.abort(); }, 10000);
+    fetch('https://routing.openstreetmap.de/routed-foot/route/v1/foot/' + s.lon + ',' + s.lat + ';' + c.lon + ',' + c.lat + '?overview=false', ctl ? { signal: ctl.signal } : {})
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)); })
+      .then(function (d) { PED[k] = d && d.routes && d.routes[0] && isFinite(d.routes[0].distance) ? d.routes[0].distance / 1000 : 'ko'; })
+      .catch(function () { PED[k] = 'ko'; })
+      .then(function () { clearTimeout(t); disegnaRisultati(); });
+    return 'attesa';
+  }
+  function codaKm(b) {
+    var p = codaPunti(b), man = parseFloat(String(b.f.km || '').replace(',', '.'));
+    var aria = p.s && p.c ? hav(p.s.lat, p.s.lon, p.c.lat, p.c.lon) : null;
+    var ped = p.s && p.c ? pedonale(p.s, p.c) : null;
+    var usa = !isNaN(man) ? man : (typeof ped === 'number' ? ped : aria);
+    return { aria: aria, ped: ped, man: isNaN(man) ? null : man, usa: usa, c: p.c, s: p.s };
+  }
+  function codaKmHtml(b) {
+    var q = codaKm(b);
+    if (q.aria == null) return '<span class="cmp-tag dv">servono le coordinate della sede e la centrale della zona</span>';
+    var ped = typeof q.ped === 'number' ? km(q.ped) + ' km' : q.ped === 'attesa' ? '<span class="cmp-k">calcolo\u2026</span>' : '<span class="cmp-k" title="Il servizio internet del percorso a piedi non ha risposto: vale la linea d\u2019aria">non disponibile</span>';
+    return '\uD83D\uDCCF Linea d\u2019aria <b>' + km(q.aria) + ' km</b> | Pedonale <b>' + ped + '</b>'
+      + '<br><span class="cmp-k">dalla sede a ' + esc(q.c.nome) + ' (' + esc(q.c.clli) + ')' + (q.man != null ? ' \u00b7 vale il valore a mano: ' + km(q.man) + ' km' : '') + '</span>';
+  }
+  /* listino 📲 Apparati & Cestelli dell'Analisi Costi */
+  function appDB() { return window._croCostAppDB || []; }
+  function appVoce(id) { var D = appDB(); for (var i = 0; i < D.length; i++) if (D[i].id === id) return D[i]; return null; }
+  function appLabel(r) { return [r.dettaglio, r.custom].filter(Boolean).join(' '); }
+  function appLato(app, s) {
+    var tot = 0, lab = [], q = (app && app[s]) || {};
+    appDB().forEach(function (r) { var n = parseInt(q[r.id], 10) || 0; if (n > 0) { tot += n * (Number(r.costoInstallazione) || 0); lab.push((n > 1 ? n + '\u00d7 ' : '') + appLabel(r)); } });
+    return { tot: tot, lab: lab };
+  }
+  function eur(v) { return v.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' \u20ac'; }
+  function altroNum(v) { var m = /(\d[\d.]*(?:,\d+)?)/.exec(String(v || '')); return m ? euroNum(m[1]) : null; }
+  function codaCosto(b) {
+    var A = appLato(b.f.app, 'A'), B = appLato(b.f.app, 'B'), x = altroNum(b.f.costo);
+    var tot = A.tot + B.tot + (x || 0), parti = [];
+    if (A.lab.length) parti.push('Centrale Cliente: ' + eur(A.tot));
+    if (B.lab.length) parti.push('Centrale per il Cliente: ' + eur(B.tot));
+    var riga = parti.length ? parti.join('  +  ') + (parti.length > 1 ? '  =  ' + eur(A.tot + B.tot) : '') : '';
+    return { A: A, B: B, altro: x, tot: (A.lab.length || B.lab.length || x != null) ? tot : null, riga: riga };
+  }
+  function codaNotaApp(b) {
+    var A = appLato(b.f.app, 'A'), B = appLato(b.f.app, 'B');
+    if (!A.lab.length && !B.lab.length) return '';
+    var p = [];
+    if (A.lab.length) p.push('Centrale Cliente [' + A.lab.join(' + ') + ']');
+    if (B.lab.length) p.push('Centrale per il Cliente: [' + B.lab.join(' + ') + ']');
+    return 'Coda Cliente: ' + p.join(' -- ');
+  }
+  function codaCostoHtml(b) {
+    var c = codaCosto(b), h = c.riga ? '<b>' + esc(c.riga) + '</b>' : '<span class="cmp-k">nessun apparato scelto</span>';
+    if (c.altro != null) h += '<br>+ altro: ' + eur(c.altro) + ' \u00b7 <b>totale coda ' + eur(c.tot) + '</b>';
+    return h;
+  }
+  /* popup: listino con le quantità per Centrale Cliente e Centrale per il Cliente */
+  function apparati(id) {
+    var b = catena.filter(function (x) { return x.id === id; })[0]; if (!b) return;
+    var D = appDB();
+    if (!D.length) { if (typeof showAlert === 'function') showAlert('Il listino Apparati & Cestelli non è disponibile.', 'warning'); return; }
+    var st = { A: {}, B: {} };
+    ['A', 'B'].forEach(function (s) { var q = (b.f.app && b.f.app[s]) || {}; Object.keys(q).forEach(function (k) { st[s][k] = q[k]; }); });
+    var NOMI = { CESTELLO_1HU: 'Cestello 1HU [da tavolo]', CESTELLO_7HU: 'Cestello 7HU [da telaio]', CESTELLO_9HU: 'Cestello 9HU [da telaio]' }, gruppi = [];
+    D.forEach(function (r) { if (gruppi.indexOf(r.group) < 0) gruppi.push(r.group); });
+    var h = '<div class="cmp-app-int">Listino <b>\uD83D\uDCF2 Apparati &amp; Cestelli</b> dell’Analisi Costi. Scrivi la quantità di ogni voce nella sede del cliente (\uD83C\uDFE0 Centrale Cliente) e in centrale (\uD83C\uDFE2 Centrale per il Cliente).</div>'
+      + '<div class="cmp-app-tw"><table class="cmp-app"><thead><tr><th>Voce</th><th class="n">Prezzo</th><th class="q">\uD83C\uDFE0 Centrale Cliente</th><th class="q">\uD83C\uDFE2 Centrale per il Cliente</th></tr></thead><tbody>';
+    gruppi.forEach(function (g) {
+      h += '<tr class="g"><td colspan="4">' + esc(NOMI[g] || g) + '</td></tr>';
+      D.filter(function (r) { return r.group === g; }).forEach(function (r) {
+        var nota = [r.note1, r.note2].filter(function (x) { return x && x !== 'None'; }).join(' \u00b7 ');
+        h += '<tr><td><b>' + esc(appLabel(r)) + '</b>' + (nota ? '<br><span class="cmp-k">' + esc(nota) + '</span>' : '') + '</td><td class="n">' + eur(Number(r.costoInstallazione) || 0) + '</td>'
+          + ['A', 'B'].map(function (s) { return '<td class="q"><input type="number" min="0" step="1" data-s="' + s + '" data-id="' + esc(r.id) + '" value="' + (st[s][r.id] || '') + '" placeholder="0"></td>'; }).join('') + '</tr>';
+      });
+    });
+    h += '</tbody></table></div><div class="cmp-app-piede"><div id="cmpAppTot"></div><div class="cmp-az"><button type="button" data-az="svuotaA" title="Azzera le quantità della sede del cliente">Svuota \uD83C\uDFE0 Centrale Cliente</button><button type="button" data-az="svuotaB" title="Azzera le quantità in centrale">Svuota \uD83C\uDFE2 Centrale per il Cliente</button><button type="button" data-az="svuota" title="Azzera tutte le quantità">Svuota tutto</button><button type="button" data-az="annulla">Annulla</button><button type="button" class="pri" data-az="applica">Applica</button></div></div>';   /* V11.26|014 */
+    el('cmpModTit').textContent = '\uD83E\uDDEE Apparati per la coda \u00b7 ' + TIPI[b.tipo].nome;
+    var corpo = el('cmpModCorpo'); corpo.innerHTML = h;
+    function totali() {
+      var x = { f: { app: st } }, A = appLato(st, 'A'), B = appLato(st, 'B');
+      el('cmpAppTot').innerHTML = '\uD83C\uDFE0 Centrale Cliente: <b>' + eur(A.tot) + '</b> &nbsp;+&nbsp; \uD83C\uDFE2 Centrale per il Cliente: <b>' + eur(B.tot) + '</b> &nbsp;=&nbsp; <b>' + eur(A.tot + B.tot) + '</b>'
+        + (codaNotaApp(x) ? '<br><span class="cmp-k">' + esc(codaNotaApp(x)) + '</span>' : '');
+    }
+    corpo.oninput = function (ev) { var i = ev.target; if (!i || !i.getAttribute('data-s')) return; var n = Math.max(0, parseInt(i.value, 10) || 0); if (n) st[i.getAttribute('data-s')][i.getAttribute('data-id')] = n; else delete st[i.getAttribute('data-s')][i.getAttribute('data-id')]; totali(); };
+    corpo.onclick = function (ev) {
+      var a = ev.target && ev.target.getAttribute && ev.target.getAttribute('data-az'); if (!a) return;
+      if (a === 'annulla') { chiudiModale(); return; }
+      if (a === 'svuota' || a === 'svuotaA' || a === 'svuotaB') {   /* V11.26|014: un lato o tutti e due */
+        var lati = a === 'svuota' ? ['A', 'B'] : [a.slice(-1)];
+        lati.forEach(function (x) { st[x] = {}; Array.prototype.forEach.call(corpo.querySelectorAll('input[data-s="' + x + '"]'), function (i) { i.value = ''; }); });
+        totali(); return;
+      }
+      b.f.app = st;
+      var riga = codaNotaApp(b), resto = String(b.f.note || '').split(/\r?\n/).filter(function (r) { return !/^Coda Cliente:/.test(r); });
+      b.f.note = (riga ? [riga] : []).concat(resto).join('\n').replace(/\n+$/, '');
+      chiudiModale(); ridisegna();
+    };
+    totali();
+    el('cmpModale').hidden = false;
+  }
+
+  /* ── V11.26|011: indirizzo della sede → coordinate (Nominatim). Per i comuni piccoli OpenStreetMap spesso non ha
+     il numero civico o ha la via con un nome diverso: si prova per gradi, una richiesta al secondo come chiede
+     il servizio, e si dice quanto è preciso il risultato ── */
+  function geoStato(id, h) { var g = document.querySelector('#cmpCatena [data-geo="' + id + '"]'); if (g) g.innerHTML = h; }
+  function geoParti(t) {
+    var p = String(t || '').split(',').map(function (x) { return x.trim(); }).filter(Boolean), num = '', via = '', com = '';
+    p = p.filter(function (x) { if (!num && /^\d+\s*[A-Za-z]?(\/\d+)?$/.test(x)) { num = x; return false; } return true; });
+    if (p.length >= 2) { via = p[0]; com = p[p.length - 1]; } else if (p.length === 1) via = p[0];
+    var m = /^(.*?)\s+(\d+\s*[A-Za-z]?)$/.exec(via); if (!num && m && /^(via|viale|piazza|corso|vicolo|largo|strada|contrada|traversa|piazzale|località|loc\.)\b/i.test(m[1])) { via = m[1]; num = m[2]; }
+    com = com.replace(/\b\d{5}\b/g, '').replace(/\([A-Za-z]{2}\)/g, '').trim();
+    /* «Via Alessandro Manzoni» → «Via Manzoni»: OSM a volte ha solo il cognome */
+    var corto = '', mm = /^(via|viale|piazza|corso|largo|vicolo|piazzale)\s+(.+\s)?(\S+)$/i.exec(via); if (mm && mm[2]) corto = mm[1] + ' ' + mm[3];
+    return { via: via, num: num, com: com, corto: corto };
+  }
+  function geoTentativi(t) {
+    var g = geoParti(t), T = [], add = function (q, prec) { if (q && !T.some(function (x) { return x.q === q; })) T.push({ q: q, prec: prec }); };
+    add('q=' + encodeURIComponent(t), 'esatto');
+    if (g.via && g.com) {
+      if (g.num) add('street=' + encodeURIComponent(g.num + ' ' + g.via) + '&city=' + encodeURIComponent(g.com), 'esatto');
+      add('street=' + encodeURIComponent(g.via) + '&city=' + encodeURIComponent(g.com), 'via');
+      if (g.corto) add('street=' + encodeURIComponent(g.corto) + '&city=' + encodeURIComponent(g.com), 'via');
+      add('q=' + encodeURIComponent(g.via + ', ' + g.com), 'via');
+      add('city=' + encodeURIComponent(g.com), 'comune');
+    }
+    return T;
+  }
+  function geocodifica(id) {
+    var b = catena.filter(function (x) { return x.id === id; })[0]; if (!b) return;
+    var inp = document.querySelector('#cmpCatena [data-ind="' + id + '"]');
+    var ind = String((inp ? inp.value : b.f.indirizzo) || '').trim(); b.f.indirizzo = ind;
+    if (!ind) { geoStato(id, '<span class="cmp-tag dv">scrivi un indirizzo da geocodificare</span>'); return; }
+    var cc = coordDaTesto(ind);   /* V11.26|012: coordinate o link di Google Maps incollati */
+    if (cc) { b.f.coord = cc.lat.toFixed(6) + ', ' + cc.lon.toFixed(6); b.f.geo = { nome: /^https?:/i.test(ind) ? 'posizione dal link di Google Maps' : 'coordinate incollate', ind: ind, prec: 'incollate' }; ridisegna(); return; }
+    var T = geoTentativi(ind), i = 0, errore = false;
+    var prova = function () {
+      if (i >= T.length) { b.f.geo = { ko: errore ? 'Errore durante la geocodifica: il servizio non risponde. Puoi scrivere le coordinate a mano.' : 'Indirizzo non trovato, nemmeno la via o il comune: controlla come è scritto o scrivi le coordinate a mano.' }; geoStato(id, geoHtml(b)); return; }
+      var t = T[i++];
+      geoStato(id, '<span class="cmp-k">\uD83D\uDD0E ricerca delle coordinate\u2026 (tentativo ' + i + ' di ' + T.length + ')</span>');
+      fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=it&' + t.q, { headers: { 'Accept-Language': 'it' } })
+        .then(function (r) { return r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status)); })
+        .then(function (d) {
+          if (!d || !d.length) { setTimeout(prova, 1100); return; }
+          var lat = parseFloat(d[0].lat), lon = parseFloat(d[0].lon);
+          b.f.coord = lat.toFixed(6) + ', ' + lon.toFixed(6);
+          b.f.geo = { nome: d[0].display_name || ind, ind: ind, prec: t.prec };
+          ridisegna();
+        })
+        .catch(function () { errore = true; setTimeout(prova, 1100); });
+    };
+    prova();
+  }
+  function geoHtml(b) {
+    var g = b.f.geo; if (!g) return '';
+    var gm = '<a class="cmp-gm-b" target="_blank" rel="noopener" href="' + esc(gmapsCerca(b.f.indirizzo || '')) + '" title="Apre la ricerca dell’indirizzo su Google Maps: clic destro sulla casa, clic sulle coordinate per copiarle, poi incollale qui nel campo Indirizzo">\uD83D\uDD0E Cerca su Google Maps</a>';
+    var mp = '<button type="button" class="cmp-geo-b" onclick="croCmp.spostaMappa(' + b.id + ')">\uD83D\uDDFA\uFE0F Sposta sulla mappa</button>';
+    var come = '<div class="cmp-k">Su Google Maps: clic destro sulla casa, clic sulle coordinate per copiarle, poi incollale nel campo Indirizzo e premi Geocodifica.</div>';
+    if (g.ko) return '<span class="cmp-tag dv">\u274C ' + esc(g.ko) + '</span><div class="cmp-geo-az">' + gm + '</div>' + come;
+    var PREC = {
+      via: '<br><span class="cmp-geo-w">\u26A0\uFE0F Trovata la via ma non il numero civico: il punto è sulla via. Spostalo sulla mappa o cerca l’indirizzo su Google Maps.</span>',
+      comune: '<br><span class="cmp-geo-w">\u26A0\uFE0F Trovato solo il comune: le coordinate sono del centro del comune. Spostale sulla mappa o cerca l’indirizzo su Google Maps.</span>',
+      mappa: '<br><span class="cmp-k">\u2714 punto scelto sulla mappa</span>',
+      incollate: ''
+    };
+    var dubbio = g.prec === 'via' || g.prec === 'comune';
+    return '\uD83D\uDCCD <b>' + esc(g.nome) + '</b>' + (PREC[g.prec] || '') + '<br><span class="cmp-k">coordinate ' + esc(b.f.coord || '') + (g.ind !== b.f.indirizzo ? ' \u00b7 indirizzo cambiato: premi di nuovo Geocodifica' : '') + '</span>'
+      + '<div class="cmp-geo-az">' + mp + (dubbio || g.prec === 'mappa' ? gm : '') + '</div>' + (dubbio ? come : '');
+  }
+  /* ── V11.26|012: coordinate o link di Google Maps incollati nel campo Indirizzo ── */
+  function coordDaTesto(t) {
+    t = String(t || '').trim(); var m;
+    var ok = function (a, b) { a = parseFloat(a); b = parseFloat(b); return isFinite(a) && isFinite(b) && Math.abs(a) <= 90 && Math.abs(b) <= 180 ? { lat: a, lon: b } : null; };
+    if ((m = /!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/.exec(t))) return ok(m[1], m[2]);            /* segnaposto di un luogo */
+    if ((m = /[?&](?:q|query|ll|destination)=(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)/.exec(t))) return ok(m[1], m[2]);
+    if ((m = /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/.exec(t))) return ok(m[1], m[2]);               /* centro della vista */
+    if ((m = /^\s*(-?\d{1,2}\.\d+)\s*[,; ]\s*(-?\d{1,3}\.\d+)\s*$/.exec(t))) return ok(m[1], m[2]); /* «40.9673, 14.2698» */
+    return null;
+  }
+  function gmapsCerca(ind) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(ind); }
+
+  /* ── V11.26|012: mappa per spostare il punto della sede (Leaflet, come le mappe dei percorsi) ── */
+  var _mappa = null;
+  function spostaMappa(id) {
+    var b = catena.filter(function (x) { return x.id === id; })[0]; if (!b) return;
+    var p = coord(b.f.coord) || { lat: 41.9, lon: 12.5 }, zoom = coord(b.f.coord) ? 17 : 6;
+    el('cmpModTit').textContent = '\uD83D\uDDFA\uFE0F Sposta il punto \u00b7 ' + TIPI[b.tipo].nome;
+    var corpo = el('cmpModCorpo'); corpo.oninput = null;
+    if (_mappa) { try { _mappa.remove(); } catch (e) {} _mappa = null; }
+    if (typeof L === 'undefined' || !L.map) {
+      corpo.onclick = function (ev) { if (ev.target && ev.target.getAttribute('data-az') === 'annulla') chiudiModale(); };
+      corpo.innerHTML = '<p class="cmp-geo-w">La mappa non si carica: la rete blocca la libreria delle mappe (Leaflet).</p><p class="cmp-k">Cerca l’indirizzo su Google Maps, fai clic destro sulla casa e clic sulle coordinate per copiarle, poi incollale nel campo Indirizzo o Coordinate.</p>'
+        + '<div class="cmp-app-piede"><a class="cmp-gm-b" target="_blank" rel="noopener" href="' + esc(gmapsCerca(b.f.indirizzo || '')) + '">\uD83D\uDD0E Cerca su Google Maps</a><div class="cmp-az"><button type="button" data-az="annulla">Chiudi</button></div></div>';
+      el('cmpModale').hidden = false; return;
+    }
+    corpo.innerHTML = '<div class="cmp-k" style="margin-bottom:.4rem">Clicca sul punto giusto o trascina il segnaposto. Il cerchio blu è la centrale della zona.</div><div id="cmpMappa" class="cmp-mappa"></div>'
+      + '<div class="cmp-app-piede"><div id="cmpMappaC" class="cmp-k"></div><div class="cmp-az"><button type="button" data-az="annulla">Annulla</button><button type="button" class="pri" data-az="applica">Applica</button></div></div>';
+    el('cmpModale').hidden = false;
+    var pos = { lat: p.lat, lon: p.lon }, scrivi = function () { el('cmpMappaC').textContent = 'Coordinate: ' + pos.lat.toFixed(6) + ', ' + pos.lon.toFixed(6); };
+    _mappa = L.map('cmpMappa').setView([p.lat, p.lon], zoom);
+    /* V11.26|013: gli stessi sfondi delle mappe dei percorsi (Google, Esri), con il selettore in basso a sinistra.
+       I tasselli di openstreetmap.org rifiutano le pagine aperte da file (403, «Access blocked»). */
+    if (typeof window.croSfondoMappa === 'function') window.croSfondoMappa(_mappa);
+    else L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, attribution: 'Tiles &copy; Esri' }).addTo(_mappa);
+    var mk = L.marker([p.lat, p.lon], { draggable: true }).addTo(_mappa);
+    mk.on('dragend', function () { var q = mk.getLatLng(); pos = { lat: q.lat, lon: q.lng }; scrivi(); });
+    _mappa.on('click', function (ev) { mk.setLatLng(ev.latlng); pos = { lat: ev.latlng.lat, lon: ev.latlng.lng }; scrivi(); });
+    var c = trova('centrale' + (b.tipo === 'sedeZ' ? 'Z' : 'A')); if (c && c.r && !isNaN(c.r.c.lat)) L.circleMarker([c.r.c.lat, c.r.c.lon], { radius: 8, color: '#0066cc', weight: 2, fillOpacity: 0.35 }).addTo(_mappa).bindTooltip(c.r.c.nome + ' (' + c.r.c.clli + ')');
+    setTimeout(function () { try { _mappa.invalidateSize(); } catch (e) {} }, 120);
+    scrivi();
+    corpo.onclick = function (ev) {
+      var a = ev.target && ev.target.getAttribute && ev.target.getAttribute('data-az'); if (!a) return;
+      if (a === 'applica') {
+        b.f.coord = pos.lat.toFixed(6) + ', ' + pos.lon.toFixed(6);
+        b.f.geo = { nome: (b.f.geo && b.f.geo.nome && !b.f.geo.ko ? b.f.geo.nome : (b.f.indirizzo || 'sede')), ind: b.f.indirizzo, prec: 'mappa' };
+      }
+      try { _mappa.remove(); } catch (e) {} _mappa = null;
+      chiudiModale(); if (a === 'applica') ridisegna();
+    };
+  }
+
   /* ── disegno ── */
   function bloccoHtml(b) {
     var T = TIPI[b.tipo], h = '<div class="cmp-b ' + T.cl + '"><div class="cmp-b-h">' + T.ic + '<span>' + esc(T.nome) + '</span><button type="button" title="Togli il blocco" onclick="croCmp.togli(' + b.id + ')">\u2715</button></div>';
     var inp = function (k, ph, lab) { return '<label>' + lab + '<input type="text" value="' + esc(b.f[k] || '') + '" placeholder="' + esc(ph) + '"' + (k === 'centrale' || k === 'manuale' ? ' list="cmpCentraliLista"' : '') + ' onchange="croCmp.campo(' + b.id + ',\'' + k + '\',this.value)"></label>'; };
-    if (T.cl === 'sede') h += inp('nome', 'es. BANCA INTESA (RM)', 'Cliente / sede') + inp('coord', 'es. 41.9619, 12.4421', 'Coordinate (lat, lon)') + inp('centrale', 'es. TOMBA DI NERONE (ROMAITFT)', 'Centrale indicata (Colt)');
-    else if (T.cl === 'coda') h += '<label>Km stimati<input type="text" value="' + esc(b.f.km || '') + '" placeholder="es. 1,5" onchange="croCmp.campo(' + b.id + ',\'km\',this.value)"></label>'
-      + '<label>Costo stimato (\u20ac)<input type="text" value="' + esc(b.f.costo || '') + '" placeholder="es. 18.580,00" onchange="croCmp.campo(' + b.id + ',\'costo\',this.value)"></label>'
-      + '<label>Note<textarea rows="3" placeholder="tracciato, permessi, fonte del costo\u2026" onchange="croCmp.campo(' + b.id + ',\'note\',this.value)">' + esc(b.f.note || '') + '</textarea></label>' + '<span class="cmp-tag ' + (b.f.km || b.f.costo ? 'man' : 'dv') + '">' + (b.f.km || b.f.costo ? 'stima manuale' : 'da stimare') + '</span>';
+    if (T.cl === 'sede') h += inp('nome', 'es. BANCA INTESA (RM)', 'Cliente / sede')
+      + '<div class="cmp-sez">Indirizzo <button type="button" class="cmp-geo-b" onclick="croCmp.geocodifica(' + b.id + ')" title="Cerca le coordinate dell’indirizzo (OpenStreetMap)">\uD83D\uDD0D Geocodifica</button></div>'   /* V11.26|010 */
+      + '<input type="text" class="cmp-ind" data-ind="' + b.id + '" value="' + esc(b.f.indirizzo || '') + '" placeholder="es. Via Roma 10, Milano \u00b7 o incolla coordinate o link di Google Maps" onchange="croCmp.campo(' + b.id + ',\'indirizzo\',this.value)" onkeydown="if(event.key===\'Enter\'){event.preventDefault();croCmp.geocodifica(' + b.id + ');}">'
+      + '<div class="cmp-geo" data-geo="' + b.id + '">' + geoHtml(b) + '</div>'
+      + inp('coord', 'es. 41.9619, 12.4421', 'Coordinate (lat, lon)') + inp('centrale', 'es. TOMBA DI NERONE (ROMAITFT)', 'Centrale indicata (Colt)');
+    else if (T.cl === 'coda') h += '<div class="cmp-sez">Km stimati</div><div class="cmp-ris" data-km="' + b.id + '"></div>'   /* V11.26|009 */
+      + '<label>Km a mano (facoltativo)<input type="text" value="' + esc(b.f.km || '') + '" placeholder="vince sul calcolo, es. 1,5" onchange="croCmp.campo(' + b.id + ',\'km\',this.value)"></label>'
+      + '<div class="cmp-sez">Costo stimato (\u20ac) <button type="button" class="cmp-app-b" onclick="croCmp.apparati(' + b.id + ')">\uD83E\uDDEE Apparati\u2026</button></div><div class="cmp-ris" data-costo="' + b.id + '"></div>'
+      + '<label>Altro (importo o testo libero)<input type="text" value="' + esc(b.f.costo || '') + '" placeholder="es. 1.200 scavo" onchange="croCmp.campo(' + b.id + ',\'costo\',this.value)"></label>'
+      + '<label>Note<textarea rows="3" placeholder="tracciato, permessi, fonte del costo\u2026" onchange="croCmp.campo(' + b.id + ',\'note\',this.value)">' + esc(b.f.note || '') + '</textarea></label>';
     else if (T.cl === 'centrale' || T.cl === 'nodo') {
       h += '<div class="cmp-ris" data-ris="' + b.id + '"></div>' + inp('manuale', 'scegli un’altra centrale', T.cl === 'nodo' ? 'Nodo A1 a mano' : 'Centrale a mano');
     } else if (T.cl === 'rtn') h += '<div class="cmp-ris" data-ris="' + b.id + '"></div>';
@@ -5682,6 +5955,8 @@ window.croCmp = (function () {
   function disegnaRisultati() {
     calcola();
     catena.forEach(function (b) { var r = document.querySelector('#cmpCatena [data-ris="' + b.id + '"]'); if (r) r.innerHTML = risultato(b); });
+    catena.forEach(function (b) { if (TIPI[b.tipo].cl !== 'coda') return; var k = document.querySelector('#cmpCatena [data-km="' + b.id + '"]'), c = document.querySelector('#cmpCatena [data-costo="' + b.id + '"]');   /* V11.26|009 */
+      if (k) k.innerHTML = codaKmHtml(b); if (c) c.innerHTML = codaCostoHtml(b); });
     avvisi(); riepilogo();
   }
   function avvisi() {
@@ -5696,8 +5971,10 @@ window.croCmp = (function () {
     var righe = [], tot = 0, kmT = 0;
     catena.forEach(function (b) {
       var T = TIPI[b.tipo];
-      if (T.cl === 'coda') { var k = parseFloat(String(b.f.km || '').replace(',', '.')), cc = euroNum(b.f.costo);
-        righe.push([T.nome, (b.f.km ? km(k) + ' km (stima)' : 'km da stimare') + (b.f.note ? ' \u00b7 ' + String(b.f.note).replace(/\s*\n\s*/g, ' \u00b7 ') : ''), cc != null ? cc.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac (stima)' : 'da stimare']); if (!isNaN(k)) kmT += k; if (cc != null) tot += cc; }
+      if (T.cl === 'coda') { var q = codaKm(b), cc = codaCosto(b);   /* V11.26|009 */
+        var kmTxt = q.man != null ? km(q.man) + ' km (a mano)' : q.aria != null ? km(q.aria) + ' km linea d\u2019aria' + (typeof q.ped === 'number' ? ' \u00b7 ' + km(q.ped) + ' km pedonale' : '') : 'km da stimare';
+        righe.push([T.nome, kmTxt + (b.f.note ? ' \u00b7 ' + String(b.f.note).replace(/\s*\n\s*/g, ' \u00b7 ') : ''), cc.tot != null ? cc.tot.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac (stima)' : 'da stimare']);
+        if (q.usa != null) kmT += q.usa; if (cc.tot != null) tot += cc.tot; }
       if (T.cl === 'rete') ['std', 'div'].forEach(function (x) { if (x === 'div' && !(el('cmpDiv') || {}).checked) return; var r = b.f[x]; if (!r) { righe.push([T.nome + ' ' + x.toUpperCase(), 'da importare', '']); return; }
         var q = riassunto(r), c = costo(r); kmT += q.km; if (c && c.tot) tot += c.tot; righe.push([T.nome + ' ' + x.toUpperCase(), km(q.km) + ' km \u00b7 ' + q.n + (q.n === 1 ? ' collegamento' : ' collegamenti'), c && c.tot != null ? c.tot.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac' : '\u2014']); });
       if (T.cl === 'rtn') righe.push(['RTN', 'non valorizzata', '']);
@@ -5720,12 +5997,16 @@ window.croCmp = (function () {
     var W = 120, LI = new Array(W + 1).join('\u2550'), RI = new Array(W + 1).join('\u2500');
     var t = [LI, '                    CRO ITALIA - COMPOSITORE DI FATTIBILITÀ (SPERIMENTALE)', LI, '', 'Data Export: ' + new Date().toLocaleString('it-IT'),
       'Revisione: ' + ((document.querySelector('.version-tag') || {}).textContent || ''), 'Capacità: ' + ((el('cmpCap') || {}).value || '1G') + ' · Diversificato su RTR: ' + ((el('cmpDiv') || {}).checked ? 'sì' : 'no'), '', RI,
-      ' \u26a0 Funzione sperimentale: risultati indicativi, da verificare. Code stimate a mano (km e costo); RTN non valorizzata.', RI, ''];
+      ' \u26a0 Funzione sperimentale: risultati indicativi, da verificare. Code: km in linea d\u2019aria e pedonali (servizio internet), apparati dal listino Apparati & Cestelli; RTN non valorizzata.', RI, ''];
     catena.forEach(function (b, i) {
       var T = TIPI[b.tipo];
       t.push('', ' ' + (i + 1) + '. ' + T.nome.toUpperCase());
-      if (T.cl === 'sede') { if (b.f.nome) t.push('    Cliente ......... ' + b.f.nome); if (b.f.coord) t.push('    Coordinate ...... ' + b.f.coord); if (b.f.centrale) t.push('    Centrale indicata ' + b.f.centrale); }
-      if (T.cl === 'coda') { t.push('    Km stimati ...... ' + (b.f.km || 'da stimare')); t.push('    Costo stimato ... ' + (euroNum(b.f.costo) != null ? euroNum(b.f.costo).toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac' : 'da stimare')); if (b.f.note) String(b.f.note).split(/\r?\n/).forEach(function (r, i) { t.push((i ? '                      ' : '    Note ............ ') + r); }); }
+      if (T.cl === 'sede') { if (b.f.nome) t.push('    Cliente ......... ' + b.f.nome); if (b.f.indirizzo) t.push('    Indirizzo ....... ' + b.f.indirizzo + (b.f.geo && b.f.geo.nome ? ' (' + b.f.geo.nome + ')' : '')); if (b.f.coord) t.push('    Coordinate ...... ' + b.f.coord); if (b.f.centrale) t.push('    Centrale indicata ' + b.f.centrale); }
+      if (T.cl === 'coda') { var qk = codaKm(b), qc = codaCosto(b);   /* V11.26|009 */
+        t.push('    Km stimati ...... ' + (qk.aria != null ? 'linea d\u2019aria ' + km(qk.aria) + ' km | pedonale ' + (typeof qk.ped === 'number' ? km(qk.ped) + ' km' : 'non disponibile') : 'da stimare') + (qk.man != null ? ' \u00b7 a mano ' + km(qk.man) + ' km' : ''));
+        if (qc.riga) t.push('    Apparati ........ ' + qc.riga);
+        if (b.f.costo) t.push('    Altro ........... ' + b.f.costo);
+        t.push('    Costo stimato ... ' + (qc.tot != null ? eur(qc.tot) : 'da stimare')); if (b.f.note) String(b.f.note).split(/\r?\n/).forEach(function (r, i) { t.push((i ? '                      ' : '    Note ............ ') + r); }); }
       if ((T.cl === 'centrale' || T.cl === 'nodo') && b.r) t.push('    ' + b.r.c.nome + ' (' + b.r.c.clli + ')' + (b.r.d != null ? ' · ' + km(b.r.d) + ' km in linea d\u2019aria' : '') + ' · ' + (b.r.modo === 'auto' ? 'scelta automatica (la più vicina)' : b.r.modo === 'indicata' ? 'indicata nella sede' : 'scelta a mano'));
       if (T.cl === 'rtn' && b.ep && b.ep.a && b.ep.z) t.push('    ' + b.ep.a.nome + ' (' + b.ep.a.clli + ') \u2192 ' + b.ep.z.nome + ' (' + b.ep.z.clli + ') · non valorizzata');
       if (T.cl === 'rete') ['std', 'div'].forEach(function (x) {
@@ -5775,7 +6056,7 @@ window.croCmp = (function () {
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && drawer.classList.contains('aperto')) chiudi(); });
   }
   window.addEventListener('load', function () { try { if (el('cmpCatena')) { preparaNote(); ridisegna(); } } catch (e) { console.error('[Compositore]', e); } });
-  return { diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
+  return { spostaMappa: spostaMappa, geocodifica: geocodifica, apparati: apparati, diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
 })();
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -24399,7 +24680,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 008 | Nov 2026</div>
+<div class="version-tag">V11.26 | 014 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -24645,7 +24926,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 008</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 014</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -24662,7 +24943,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 008</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 014</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -24683,7 +24964,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 008</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 014</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -24701,7 +24982,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 008</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 014</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -24717,7 +24998,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 008</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 014</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -25180,7 +25461,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 008</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 014</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -25328,10 +25609,72 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #b45309;">
+              <details class="cl-item" open style="--cl-accent: #6d28d9;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧹 Novità V11.26 | 014 | Nov 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧹 Svuota un lato solo</strong>: nel popup «🧮 Apparati per la coda» del Compositore ci sono «Svuota 🏠 Centrale Cliente» e «Svuota 🏢 Centrale per il Cliente», oltre a «Svuota tutto»: azzerano solo le quantità di quel lato, l’altro resta com’è</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0e7490;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🛰️ Novità V11.26 | 013 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🛰️ Mappa della sede che si vede</strong>: «Sposta sulla mappa» del Compositore usa gli stessi sfondi delle mappe dei percorsi (Google Maps stradale e satellite, Esri), con il selettore in basso a sinistra. Prima mostrava solo riquadri «Access blocked», perché il server delle mappe OpenStreetMap non accetta le pagine aperte da file</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #16a34a;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🗺️ Novità V11.26 | 012 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🗺️ Punto giusto anche dove la mappa non conosce l’indirizzo</strong>: nel Compositore, dopo la Geocodifica della sede cliente, «Sposta sulla mappa» apre una mappa su cui cliccare la casa giusta. Quando l’indirizzo non è stato trovato esatto compare anche «Cerca su Google Maps», che apre la ricerca dell’indirizzo: lì clic destro sulla casa, si copiano le coordinate e si incollano nel campo Indirizzo. Il campo accetta anche un link di Google Maps</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b45309;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧭 Novità V11.26 | 011 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧭 Geocodifica più tenace</strong>: nel Compositore, se OpenStreetMap non conosce l’indirizzo completo della sede cliente (succede spesso nei comuni piccoli, dove mancano i numeri civici o la via ha un altro nome), il tool riprova da solo con la via e il comune separati, poi senza numero civico, poi con il solo cognome nella via («Via Manzoni»), infine con il solo comune. Un avviso arancione dice quando il punto è sulla via o al centro del comune, così sai che le coordinate vanno controllate</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📍 Novità V11.26 | 010 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📍 Indirizzo della sede cliente</strong>: nel Compositore di Fattibilità i blocchi Sede cliente A e Z hanno il campo Indirizzo con il bottone «🔍 Geocodifica», come la Posizione Cliente dei tab di ricerca. Le coordinate trovate vanno nel campo Coordinate, sotto compare il luogo trovato, e da lì centrale più vicina e km della coda si aggiornano da soli</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #6d28d9;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧮 Novità V11.26 | 009 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📏 Km delle code calcolati</strong>: nel Compositore di Fattibilità, i blocchi Coda (stima) Zona A e Zona Z calcolano la distanza fra la sede cliente e la centrale Colt della zona, in linea d’aria e a piedi (servizio internet; se non risponde resta la linea d’aria). Si può sempre scrivere un valore a mano</li>
+    <li><strong>🧮 Apparati dal listino</strong>: il bottone «Apparati…» apre il listino 📲 Apparati &amp; Cestelli dell’Analisi Costi; si scelgono le quantità per la Centrale Cliente e per la Centrale per il Cliente e nel blocco compare «Centrale Cliente: … + Centrale per il Cliente: … = …». Il campo «Altro» accetta un importo in più o testo libero</li>
+    <li><strong>📝 Nota della coda</strong>: la riga «Coda Cliente: Centrale Cliente […] -- Centrale per il Cliente: […]» entra da sola in testa alle note, come nell’Analisi Costi; le altre righe restano tue</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b45309;">
                 <summary class="cl-sum">
                   <span class="cl-ver">🗺️ Novità V11.26 | 008 | Nov 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -41492,7 +41835,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><strong>Nodo A1 automatico:</strong> Zona A il più vicino alla Centrale A, Zona Z il più vicino alla Centrale Z, con le alternative.</p>
                   <p><strong>Estremi delle reti:</strong> per ogni blocco di rete (Rete RTR, Rete RTR Zona A o Z, RTN) partenza e arrivo sono la centrale o il nodo A1 compilati subito prima e subito dopo nella catena. Se ne manca uno, «Cerca nell’Unificato» lo dice.</p>
                   <p><strong>Rete RTR:</strong> «Cerca nell’Unificato» apre l’Unificato con partenza e arrivo del blocco (RTN spento) e avvia la ricerca; «Importa Std» e «Importa Div» mostrano tutti i percorsi trovati, con lo stesso numero dell’Unificato e un filtro per numero, subpath o km, e si sceglie con un clic. Per i Div va selezionato prima un percorso Std nell’Unificato, che calcola i suoi Div. Il blocco mostra km, collegamenti, stati, costo standard (stesso calcolo degli export, con la capacità scelta) e se Std e Div hanno C-FOS in comune.</p>
-                  <p><strong>Code:</strong> nel blocco «Coda (stima)» si scrivono a mano km, costo stimato in euro (anche nella forma 18.580,00) e note, per esempio la fonte del costo.</p>
+                  <p><strong>Sede cliente:</strong> nei blocchi «🏠 Sede cliente A» e «Z» si può scrivere l’<strong>indirizzo</strong> e premere «🔍 Geocodifica» (o Invio): come nella Posizione Cliente dei tab di ricerca, il tool chiede le coordinate a OpenStreetMap (Nominatim), le scrive nel campo Coordinate e mostra il luogo trovato. Se l’indirizzo completo non c’è (nei comuni piccoli OpenStreetMap spesso non ha i numeri civici, o ha la via con un altro nome, per esempio «Via Manzoni» invece di «Via Alessandro Manzoni»), prova da solo per gradi: via e comune separati, via senza numero, via con il solo cognome, solo comune; un avviso arancione dice quando il punto è solo sulla via o al centro del comune. In quel caso «🗺️ Sposta sulla mappa» apre una mappa, con gli stessi sfondi delle mappe dei percorsi (anche il satellite, dal selettore in basso a sinistra), su cui cliccare la casa giusta, e «🔎 Cerca su Google Maps» apre la ricerca dell’indirizzo su Google Maps: lì clic destro sulla casa, clic sulle coordinate per copiarle e incollarle nel campo Indirizzo. Il campo Indirizzo accetta anche coordinate («40.967334, 14.269830») e link di Google Maps, che vengono usati direttamente; da lì la centrale più vicina e i km della coda si calcolano da soli. Le coordinate si possono sempre scrivere a mano.</p>
+                  <p><strong>Code:</strong> nel blocco «Coda (stima)» di Zona A e Zona Z i <strong>km</strong> si calcolano da soli fra le coordinate della sede cliente e la centrale Colt della stessa zona: linea d’aria e percorso pedonale, quest’ultimo chiesto a un servizio internet (OSRM, profilo a piedi); se il servizio non risponde resta la linea d’aria. Un valore scritto a mano vince sul calcolo. Il <strong>costo</strong> si sceglie con «🧮 Apparati…»: il listino 📲 Apparati &amp; Cestelli dell’Analisi Costi, con la quantità di ogni voce in Centrale Cliente (sede) e in Centrale per il Cliente (si può svuotare un lato solo o tutto); nel blocco compare per esempio «Centrale Cliente: 8200,00 € + Centrale per il Cliente: 8200,00 € = 16.400,00 €». Il campo «Altro» accetta un importo da aggiungere o testo libero. Nelle <strong>note</strong> la prima riga «Coda Cliente: Centrale Cliente […] -- Centrale per il Cliente: […]» si scrive da sola; il resto delle note è libero.</p>
                   <p><strong>Riepilogo ed export:</strong> tabella con km e costi per tratta e totale (code stimate comprese, RTN non valorizzata); «Esporta TXT» scrive ogni blocco e, per le reti RTR, gli stessi blocchi del TXT dell’Unificato con i costi.</p>
                   <p><strong>Controlli:</strong> avvisa se manca un nodo A1 con la RTN, se si usa «Rete RTR» insieme alla RTN, se le due centrali di una «Rete RTR» sono in regioni diverse.</p>
                 </div>
@@ -43640,7 +43984,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 008 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 014 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -43658,7 +44002,77 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #b45309;border-radius:12px;overflow:hidden;background:#fffbeb;">
+        <details open style="border:1px solid #6d28d9;border-radius:12px;overflow:hidden;background:#faf5ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
+            🧹 V11.26 | 014 | Nov 2026 | Popup Apparati: svuota un lato
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧹 apparati(id)</strong>: nuovi bottoni <code>data-az="svuotaA"</code> e <code>"svuotaB"</code> accanto a «Svuota tutto» (<code>"svuota"</code>); azzerano <code>st.A</code> o <code>st.B</code> e i campi di quella colonna, poi ricalcolano i totali. Le modifiche valgono solo dopo «Applica», come prima. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0e7490;border-radius:12px;overflow:hidden;background:#ecfeff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#155e75;display:flex;align-items:center;gap:0.5rem;background:#cffafe;">
+            🛰️ V11.26 | 013 | Nov 2026 | Sfondi della mappa della sede
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🛰️ spostaMappa()</strong>: al posto di <code>L.tileLayer('https://{s}.tile.openstreetmap.org/…')</code> chiama <code>window.croSfondoMappa(_mappa)</code>, la funzione degli sfondi delle mappe dei percorsi (Google stradale e satellite ibrido, Esri stradale, topografica e satellite; ultimo sfondo scelto ricordato con la chiave <code>croSfondoMappa</code>, condivisa con NAT). Se manca, ripiego su Esri stradale. Segnalato da Giuseppe: i tasselli di openstreetmap.org rispondevano 403 «Access blocked» perché la pagina aperta da file non manda il Referer che la loro politica d’uso richiede</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #16a34a;border-radius:12px;overflow:hidden;background:#f0fdf4;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#166534;display:flex;align-items:center;gap:0.5rem;background:#dcfce7;">
+            🗺️ V11.26 | 012 | Nov 2026 | Sede cliente: mappa, Google Maps e coordinate incollate
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🗺️ spostaMappa(id)</strong>: nella modale del Compositore una mappa Leaflet (sfondi di <code>croSfondoMappa</code> dalla 013) centrata sulle coordinate della sede, segnaposto trascinabile o clic per spostarlo, cerchio blu sulla centrale della zona; «Applica» scrive <code>b.f.coord</code> e <code>b.f.geo.prec = 'mappa'</code>. Se Leaflet non è caricato, la modale lo dice e propone Google Maps</li>
+              <li><strong>🔎 Google Maps</strong>: bottone <code>.cmp-gm-b</code> con <code>google.com/maps/search/?api=1&amp;query=</code> e l’indirizzo scritto, mostrato quando la geocodifica è solo della via, solo del comune, fallita o corretta sulla mappa, con le istruzioni per copiare le coordinate</li>
+              <li><strong>📋 coordDaTesto()</strong>: prima dei tentativi su Nominatim, il campo Indirizzo riconosce «lat, lon» e i link di Google Maps (<code>!3d…!4d…</code> del segnaposto, <code>q=</code>/<code>query=</code>/<code>ll=</code>, <code>@lat,lon</code>) e li usa direttamente (<code>prec = 'incollate'</code>). Corretto anche l’avviso della 011, che invitava a spostare il punto quando la mappa non c’era ancora. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b45309;border-radius:12px;overflow:hidden;background:#fffbeb;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
+            🧭 V11.26 | 011 | Nov 2026 | Geocodifica della sede per gradi
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧭 geocodifica(id)</strong>: <code>geoParti()</code> separa via, numero civico e comune (toglie CAP e sigla di provincia); <code>geoTentativi()</code> prepara le richieste a Nominatim in ordine: testo libero, <code>street</code> con numero + <code>city</code>, <code>street</code> senza numero, via con il solo ultimo nome («Via Alessandro Manzoni» → «Via Manzoni»), via + comune in testo libero, solo <code>city</code>. Una richiesta ogni 1,1 s, come chiede la politica d’uso di Nominatim; ci si ferma al primo risultato. <code>b.f.geo.prec</code> (esatto, via, comune) fa comparire in <code>geoHtml()</code> l’avviso <code>.cmp-geo-w</code>. Segnalato da Giuseppe: «Via Alessandro Manzoni, 6, Orta di Atella» non trovato</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#eff6ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0050a0;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            📍 V11.26 | 010 | Nov 2026 | Compositore: indirizzo della sede cliente
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📍 geocodifica(id)</strong> in <code>croCmp</code>: stessa richiesta di <code>geocodeClientAddressUnified()</code> (Nominatim, <code>countrycodes=it</code>, <code>limit=1</code>, <code>Accept-Language: it</code>); scrive <code>b.f.coord</code> con 6 decimali e <code>b.f.geo</code> (luogo trovato o errore), poi <code>ridisegna()</code>, così centrale automatica e km della coda si ricalcolano. Campo <code>.cmp-ind</code> con Invio, riga <code>.cmp-geo</code> sotto (<code>geoHtml()</code>), avviso se l’indirizzo cambia dopo la geocodifica. Riga «Indirizzo» nell’export TXT. Vale per Sede cliente A e Z. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #6d28d9;border-radius:12px;overflow:hidden;background:#faf5ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
+            🧮 V11.26 | 009 | Nov 2026 | Compositore: code con km calcolati e apparati dal listino
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📏 codaKm()</strong> in <code>croCmp</code>: linea d’aria con <code>hav()</code> fra <code>sedeCoord(L)</code> e la centrale del blocco Centrale della zona (<code>trova('centrale'+L).r.c</code>); pedonale con <code>pedonale()</code>, richiesta a <code>routing.openstreetmap.de/routed-foot</code> (OSRM, profilo foot, 10 s, risultato tenuto in <code>PED</code> per coppia di coordinate, poi <code>disegnaRisultati()</code>); se fallisce «non disponibile» e vale la linea d’aria. Km per il riepilogo: a mano, altrimenti pedonale, altrimenti linea d’aria</li>
+              <li><strong>🧮 apparati(id)</strong>: popup nella modale del Compositore con <code>window._croCostAppDB</code> (il <code>COST_APP_DB</code> dell’Analisi Costi, esposto qui) diviso per cestello, quantità per lato A (Centrale Cliente) e B (Centrale per il Cliente), totali dal vivo; «Applica» salva <code>b.f.app = {A:{id:n}, B:{id:n}}</code>. Etichette come <code>_codaGetLabel</code> (dettaglio + custom), con «n×» se la quantità è più di 1</li>
+              <li><strong>💶 codaCosto()</strong>: totale = apparati A + B + importo trovato in «Altro» (<code>b.f.costo</code>, testo libero ammesso); riga «Centrale Cliente: … + Centrale per il Cliente: … = …» nel blocco, nel riepilogo e nell’export TXT (righe Km, Apparati, Altro, Costo stimato). <strong>📝 codaNotaApp()</strong>: «Coda Cliente: Centrale Cliente […] -- Centrale per il Cliente: […]» come prima riga di <code>b.f.note</code>, sostituita a ogni «Applica». Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b45309;border-radius:12px;overflow:hidden;background:#fffbeb;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
             🗺️ V11.26 | 008 | Nov 2026 | Modello KMZ: una riga per collegamento
           </summary>
@@ -66779,6 +67193,7 @@ window.runUnifiedClientToClient = function() {
 	"InfoAggiuntive": "--"
   }
 ];
+  window._croCostAppDB = COST_APP_DB;   /* V11.26|009: listino per le code del Compositore */
 
   const selectedLinks = new Set();
   const selectedCoda  = new Set();
@@ -93493,6 +93908,35 @@ body.cro-infolive-on .cro-toast-container { bottom: 44px !important; }
 #tab-compositore .cmp-riep th { background: #f1f5f9; }
 #tab-compositore .cmp-riep td.n, #tab-compositore .cmp-riep th.n { text-align: left; white-space: nowrap; }
 #tab-compositore pre.cmp-costo { font-size: .66rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: .4rem; max-height: 180px; overflow: auto; white-space: pre; margin: .2rem 0 0; }
+.cmp-sez { font-size: .72rem; font-weight: 700; color: #475569; margin: .45rem 0 .15rem; display: flex; align-items: center; justify-content: space-between; gap: .4rem; }   /* V11.26|009 */
+.cmp-k { color: #64748b; font-size: .7rem; }
+.cmp-geo-b { font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; border: 1px solid #0066cc; background: #eff6ff; color: #0066cc; cursor: pointer; }   /* V11.26|010 */
+.cmp-geo-b:hover { background: #0066cc; color: #fff; }
+.cmp-ind { width: 100%; box-sizing: border-box; }
+.cmp-geo { font-size: .72rem; line-height: 1.35; margin: .25rem 0 .35rem; color: #334155; }
+.cmp-geo:empty { display: none; }
+.cmp-geo-w { color: #b45309; font-weight: 600; }   /* V11.26|011 */
+.cmp-geo-az { display: flex; flex-wrap: wrap; gap: .35rem; margin: .3rem 0 .15rem; }   /* V11.26|012 */
+.cmp-gm-b { font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; border: 1px solid #16a34a; background: #f0fdf4; color: #15803d; text-decoration: none; }
+.cmp-gm-b:hover { background: #16a34a; color: #fff; }
+.cmp-mappa { height: 420px; border-radius: 8px; border: 1px solid #e2e8f0; }
+.cmp-app-b { font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; border: 1px solid #6d28d9; background: #f5f3ff; color: #6d28d9; cursor: pointer; }
+.cmp-app-b:hover { background: #6d28d9; color: #fff; }
+.cmp-app-int { font-size: .76rem; color: #475569; margin-bottom: .5rem; }
+.cmp-app-tw { max-height: 52vh; overflow: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
+.cmp-app { width: 100%; border-collapse: collapse; font-size: .74rem; }
+.cmp-app th { position: sticky; top: 0; background: #f1f5f9; color: #475569; font-size: .66rem; text-transform: uppercase; letter-spacing: .02em; padding: 6px 8px; text-align: left; z-index: 1; }
+.cmp-app td { padding: 5px 8px; border-bottom: 1px solid #eef2f7; vertical-align: middle; }
+.cmp-app tr.g td { background: #ede9fe; color: #5b21b6; font-weight: 700; font-size: .7rem; }
+.cmp-app .n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cmp-app .q { text-align: center; width: 150px; }
+.cmp-app .q input { width: 64px; text-align: center; padding: 3px; border: 1px solid #cbd5e1; border-radius: 6px; }
+.cmp-app-piede { display: flex; justify-content: space-between; align-items: center; gap: .6rem; flex-wrap: wrap; margin-top: .6rem; font-size: .76rem; }
+.cmp-app-piede .cmp-az { flex-wrap: wrap; justify-content: flex-end; }   /* V11.26|014 */
+.cmp-app-piede .cmp-az button.pri { background: #0066cc !important; color: #fff !important; border-color: #0066cc !important; }
+.cmp-app-tw { position: relative; } .cmp-app thead th { top: 0 !important; z-index: 3 !important; background: #f1f5f9 !important; box-shadow: 0 1px 0 #e2e8f0; }
+.cmp-app td { position: static !important; } .cmp-app .q input { position: static !important; }
+body.dark-mode .cmp-app th, body.dark-mode .cmp-app thead th { background: #1e293b !important; color: #94a3b8; } body.dark-mode .cmp-app tr.g td { background: #2e1065; color: #ddd6fe; } body.dark-mode .cmp-app td { border-color: #253247; }
 .cmp-modale { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
 .cmp-modale[hidden] { display: none; }
 .cmp-mod-box { background: #fff; border-radius: 12px; width: min(900px, 94vw); max-height: 82vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
@@ -95768,7 +96212,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 008';
+  var REVISIONE = 'V11.26 | 014';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
