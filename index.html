@@ -4,13 +4,19 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 029  (rev. pubblicata: V11.26 | 029 | Nov 2026)              ║
+║   Versione: 11.26 | 030  (rev. pubblicata: V11.26 | 030 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 030 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • SOLUZIONI PROTETTE, Configurazioni di riferimento: sotto ogni disegno i costi║
+║     della configurazione (coda A, RC lato A, RTN, RC lato Z, coda Z, totale; con ║
+║     Huawei e Adtran/Sirti affiancati) e il listino completo con le note          ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 029 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -3838,6 +3844,52 @@ window.croProt = (function () {
     { t: 'em@il di Leonardo · 1GbE per sezioni nella stessa regione, senza RTN', d: 'coda e RC protette ciascuna, raccordi interni singoli',
       sp: { cap: '1G', sol: 'Caramella', rtn: false, tecA: 'entrambi' } }
   ];
+  /* V11.26|030: costi delle configurazioni di riferimento, dal listino della em@il di Leonardo (Costi_Sdf.xlsx).
+     Lati: coda A, RC lato A, RTN (se c'e'), RC lato Z, coda Z. Con «entrambi» si mostrano i due tecnologi RC. */
+  function costiConfig(sp) {
+    var cap = sp.cap, sol = sp.sol, rig = [], nota = [];
+    var voce = function (k, tec) { var L = LISTINO[k]; var x = L && L.v[cap] && L.v[cap][sol]; return x ? { costo: x[0], d: x[1], tec: tec || L.tec } : null; };
+    var coda = voce('coda');
+    var tecA = sp.tecA === 'entrambi' ? ['huawei', 'adtran'] : [sp.tecA || 'huawei'];
+    var tecZ = sp.rtn ? (sp.tecZ === 'current' ? ['current'] : sp.tecZ ? [sp.tecZ] : tecA) : null;
+    var nomeTec = { huawei: 'Huawei', adtran: 'Adtran/Sirti', current: 'rete Current' };
+    var h = '<div class="cro-prot-costi"><h4>\uD83D\uDCB6 Costi di questa configurazione <span>' + esc(cap === '1G' ? '1GbE' : cap === '10G' ? '10GbE' : '100GbE') + ' \u00b7 ' + (sol === 'E2E' ? 'protezione E2E' : 'protezione per sezioni (a caramella)') + (sp.rtn ? ' \u00b7 con RTN' : ' \u00b7 stessa regione') + '</span></h4>';
+    if (cap === '100G') return h + '<p class="cro-prot-costi-k">Il listino della em@il non ha tariffe per i 100GbE: la soluzione E2E a 100G \u00e8 a progetto (slide 7).</p>' + listinoCompleto(sp) + '</div>';
+    var sezioni = [['Coda lato A', 'coda', null]].concat([['Rete RC lato A', 'rc', tecA]]).concat(sp.rtn ? [['RTN', 'rtn', null], ['Rete RC lato Z', 'rc', tecZ]] : []).concat([['Coda lato Z', 'coda', null]]);
+    var colonne = sp.tecA === 'entrambi' ? tecA : [tecA[0]];
+    var tot = colonne.map(function () { return 0; }), manca = colonne.map(function () { return false; });
+    var righe = sezioni.map(function (s) {
+      var celle = colonne.map(function (tc, ci) {
+        var v = null, t = '';
+        if (s[1] === 'coda') v = coda;
+        else if (s[1] === 'rtn') t = '<span class="cro-prot-costi-k">non valorizzata: la RTN non compete al gruppo</span>';
+        else { var tt = s[2].length > 1 ? s[2][ci] : s[2][0]; if (tt === 'current') t = '<span class="cro-prot-costi-k">rete Current: fuori listino, da evitare</span>'; else v = voce(tt, nomeTec[tt]); if (tt === 'current') manca[ci] = true; }
+        if (v) { tot[ci] += v.costo; return '<td class="n"><b>' + euro(v.costo) + '</b><div class="cro-prot-costi-k">' + esc(v.tec) + ' \u00b7 ' + esc(v.d) + '</div></td>'; }
+        if (s[1] !== 'rtn' && !t) manca[ci] = true;
+        return '<td class="n">' + (t || '<span class="cro-prot-costi-k">non a listino</span>') + '</td>';
+      }).join('');
+      return '<tr><td><b>' + esc(s[0]) + '</b></td>' + celle + '</tr>';
+    }).join('');
+    h += '<div class="cro-prot-tab-wrap"><table class="cro-prot-tab cro-prot-costi-t"><thead><tr><th>Sezione</th>' + colonne.map(function (c) { return '<th class="n">' + (colonne.length > 1 ? 'Con RC ' + esc(nomeTec[c]) : 'Costo') + '</th>'; }).join('') + '</tr></thead><tbody>' + righe
+      + '<tr class="cro-prot-costi-tot"><td>Totale stimato</td>' + tot.map(function (t, i) { return '<td class="n">' + euro(t) + (manca[i] ? '<div class="cro-prot-costi-k">esclusi i tratti fuori listino</div>' : '') + '</td>'; }).join('') + '</tr></tbody></table></div>';
+    if (sp.rtn) nota.push('RTN non valorizzata: la consegna (2 o 4 nodi) va condivisa con Stefano Gentile.');
+    if (sol === 'Caramella' && cap === '10G') nota.push('Listino presente, ma le slide Lambdawave non prevedono il 10GbE per sezioni (limiti di potenza dello splitter).');
+    h += (nota.length ? '<p class="cro-prot-costi-k">' + nota.map(esc).join(' ') + '</p>' : '') + listinoCompleto(sp) + '</div>';
+    return h;
+  }
+  function listinoCompleto(sp) {
+    var r = [];
+    [['coda', 'Coda'], ['huawei', 'RC'], ['adtran', 'RC']].forEach(function (k) {
+      var L = LISTINO[k[0]];
+      ['1G', '10G'].forEach(function (c) { ['Caramella', 'E2E'].forEach(function (s) {
+        var x = L.v[c][s], on = sp && sp.cap === c && sp.sol === s && (k[0] === 'coda' || sp.tecA === 'entrambi' || sp.tecA === k[0] || (sp.rtn && sp.tecZ === k[0]));
+        r.push('<tr' + (on ? ' class="on"' : '') + '><td>' + k[1] + ' ' + c + ' protetto ' + (s === 'E2E' ? 'E2E' : 'a caramella') + '</td><td>' + esc(L.tec) + '</td><td>' + esc(x[1]) + '</td><td class="n">' + euro(x[0]) + '</td></tr>');
+      }); });
+    });
+    return '<details class="cro-prot-listino"><summary>\uD83D\uDCCB Listino completo delle soluzioni protette (em@il di Leonardo) \u00b7 evidenziate le voci di questa configurazione</summary>'
+      + '<div class="cro-prot-tab-wrap"><table class="cro-prot-tab"><thead><tr><th>Voce</th><th>Tecnologia</th><th>Composizione</th><th class="n">Costo</th></tr></thead><tbody>' + r.join('') + '</tbody></table></div>'
+      + '<p class="cro-prot-costi-k"><b>Note:</b> 1) collegamenti che si richiudono nella stessa regione, senza trasporto su RTN: 10G protetto E2E, 1G protetto a caramella. 2) Con trasporto RTN sentire le indicazioni di Stefano Gentile: consegna su 2 nodi RTN, protezione 1G e 10G a caramella; consegna su 4 nodi RTN, protezione E2E.</p></details>';
+  }
   function galleria() {
     var g = el('croProtGalleria'); if (!g || g.getAttribute('data-ok')) return;
     g.innerHTML = '<div class="cro-prot-fcards">' + GALLERIA.map(function (x, i) {
@@ -3845,7 +3897,7 @@ window.croProt = (function () {
       return '<button type="button" class="cro-prot-fcard' + (i === 0 ? ' on' : '') + '" data-g="' + i + '" onclick="croProt.mostraConfig(' + i + ')">'
         + '<span class="cro-prot-fc-b"><span class="cro-prot-bdg rt">' + parti[0] + '</span></span><span class="cro-prot-fc-t">' + (parti[1] || parti[0]) + '</span>'
         + '<span class="cro-prot-fc-r">' + x.d + '</span></button>';
-    }).join('') + '</div><p class="cro-prot-fsub" id="croProtGalDesc"></p><div class="cro-prot-zoom" id="croProtGalSchema" title="Clic per ingrandire"></div>';
+    }).join('') + '</div><p class="cro-prot-fsub" id="croProtGalDesc"></p><div class="cro-prot-zoom" id="croProtGalSchema" title="Clic per ingrandire"></div><div id="croProtGalCosti"></div>';   /* V11.26|030 */
     g.setAttribute('data-ok', '1');
     mostraConfig(0);
   }
@@ -3854,6 +3906,7 @@ window.croProt = (function () {
     Array.prototype.forEach.call(document.querySelectorAll('#croProtGalleria .cro-prot-fcard'), function (b) { b.classList.toggle('on', +b.getAttribute('data-g') === i); });
     el('croProtGalDesc').textContent = '';
     el('croProtGalSchema').innerHTML = schema(x.sp);
+    var gc = el('croProtGalCosti'); if (gc) gc.innerHTML = costiConfig(x.sp);   /* V11.26|030 */
   }
   function mostraFig(i) {
     Array.prototype.forEach.call(document.querySelectorAll('#cpFigura .cro-prot-fcard'), function (b) { var on = +b.getAttribute('data-f') === i; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
@@ -25410,7 +25463,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 029 | Nov 2026</div>
+<div class="version-tag">V11.26 | 030 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -25656,7 +25709,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 029</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 030</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -25673,7 +25726,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 029</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 030</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -25694,7 +25747,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 029</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 030</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -25712,7 +25765,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 029</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 030</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -25729,7 +25782,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 029</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 030</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -25745,7 +25798,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 029</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 030</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -26208,7 +26261,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 029</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 030</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -26356,10 +26409,20 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #1f3864;">
+              <details class="cl-item" open style="--cl-accent: #10b981;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">💶 Novità V11.26 | 030 | Nov 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>💶 Costi nelle Configurazioni di riferimento</strong>: nel tab Analisi per Soluzioni Protette, sotto il disegno di ogni configurazione ci sono i costi sezione per sezione (coda lato A, rete RC lato A, RTN, rete RC lato Z, coda lato Z) con il totale stimato; quando la configurazione vale per entrambe le tecnologie, Huawei e Adtran/Sirti sono affiancate. Sotto, il listino completo delle soluzioni protette con le voci della configurazione evidenziate e le note della em@il di Leonardo</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #1f3864;">
                 <summary class="cl-sum">
                   <span class="cl-ver">📊 Novità V11.26 | 029 | Nov 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -33545,7 +33608,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         <section class="cro-prot-sez" id="cpConfig">
           <header class="cro-prot-sez-h">
             <span class="cro-prot-num">5</span>
-            <div class="cro-prot-sez-t"><h3>🗂️ Configurazioni di riferimento</h3><p>Le configurazioni della presentazione Lambdawave (slide 4-7), un collegamento reale e il caso regionale della em@il di Leonardo. Scegli dalle schede; clic sul disegno per ingrandirlo.</p></div>
+            <div class="cro-prot-sez-t"><h3>🗂️ Configurazioni di riferimento</h3><p>Le configurazioni della presentazione Lambdawave (slide 4-7), un collegamento reale e il caso regionale della em@il di Leonardo. Scegli dalle schede; clic sul disegno per ingrandirlo. Sotto il disegno i costi della configurazione e il listino completo.</p></div>
             <button type="button" class="cro-fold-btn cro-prot-fold" aria-expanded="true" title="Comprimi o espandi la sezione"><span class="cro-fold-ico">▾</span><span class="cro-fold-txt">Comprimi</span></button>
           </header>
           <div class="cro-prot-sez-b">
@@ -44911,7 +44974,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 029 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 030 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -44929,7 +44992,18 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #1f3864;border-radius:12px;overflow:hidden;background:#f5f8fc;">
+        <details open style="border:1px solid #10b981;border-radius:12px;overflow:hidden;background:#ecfdf5;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#047857;display:flex;align-items:center;gap:0.5rem;background:#d1fae5;">
+            💶 V11.26 | 030 | Nov 2026 | Costi delle Configurazioni di riferimento
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>💶 croProt, costiConfig(sp)</strong>: per la configurazione scelta nella galleria (<code>GALLERIA[i].sp</code>: capacità, soluzione, RTN, tecnologie dei due lati) legge <code>LISTINO</code> (stessi valori del Calcolatore: coda Adtran/Sirti, RC Huawei, RC Adtran/Sirti, dalla em@il di Leonardo) e costruisce la tabella coda A, RC lato A, RTN (non valorizzata), RC lato Z, coda Z con totale; con <code>tecA: 'entrambi'</code> due colonne (RC Huawei / RC Adtran/Sirti); lato Z su rete Current fuori listino; 100GbE a progetto. <strong>listinoCompleto(sp)</strong>: le 12 voci del listino in una voce che si apre, con quelle della configurazione evidenziate, e le note 1) e 2) (stessa regione senza RTN; con RTN indicazioni di Stefano Gentile, 2 nodi a caramella, 4 nodi E2E). Contenitore <code>#croProtGalCosti</code> sotto lo schema, aggiornato da <code>mostraConfig()</code>. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #1f3864;border-radius:12px;overflow:hidden;background:#f5f8fc;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#1f3864;display:flex;align-items:center;gap:0.5rem;background:#e3eaf5;">
             📊 V11.26 | 029 | Nov 2026 | Riepilogo del wizard
           </summary>
@@ -95343,6 +95417,13 @@ body.dark-mode .wz-sn { background: #1e293b; border-color: #334155; color: #e2e8
 .wz-f { display: flex; align-items: center; gap: .5rem; padding: .65rem 1.1rem; border-top: 1px solid #e2e8f0; background: #f8fafc; } .wz-sp { flex: 1; }
 .wz-f button { font-size: .8rem; padding: 6px 16px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: #334155; cursor: pointer; } .wz-f button:disabled { opacity: .4; cursor: default; } .wz-f button.pri { background: #0066cc; border-color: #0066cc; color: #fff; font-weight: 700; }
 body.dark-mode .wz-box { background: #0f172a; color: #e2e8f0; } body.dark-mode .wz-prog, body.dark-mode .wz-f { background: #111c30; border-color: #334155; } body.dark-mode .wz-ris, body.dark-mode .wz-card, body.dark-mode .wz-seg button, body.dark-mode .wz-steps button { background: #1e293b; border-color: #334155; color: #e2e8f0; } body.dark-mode .wz-l input, body.dark-mode .wz-l textarea { background: #0f172a; color: #e2e8f0; border-color: #334155; } body.dark-mode .wz-pag h4 { color: #93c5fd; }
+.cro-prot-costi { margin-top: .9rem; border: 1px solid #e2e8f0; border-radius: 12px; padding: .7rem .9rem; background: #fff; }   /* V11.26|030 */
+.cro-prot-costi h4 { margin: 0 0 .5rem; font-size: .92rem; color: #1f3864; } .cro-prot-costi h4 span { font-size: .74rem; font-weight: 500; color: #64748b; margin-left: .4rem; }
+.cro-prot-costi-k { font-size: .72rem; color: #64748b; font-weight: 400; } .cro-prot-costi p.cro-prot-costi-k { margin: .45rem 0 0; }
+.cro-prot-costi .cro-prot-tab td.n, .cro-prot-costi .cro-prot-tab th.n { text-align: right !important; font-variant-numeric: tabular-nums; }
+.cro-prot-costi-t td { vertical-align: top; } .cro-prot-costi-tot td { background: #1f3864 !important; color: #fff !important; font-weight: 800; } .cro-prot-costi-tot .cro-prot-costi-k { color: #c7d2fe; }
+.cro-prot-listino { margin-top: .6rem; } .cro-prot-listino summary { cursor: pointer; font-size: .78rem; font-weight: 700; color: #0066cc; } .cro-prot-listino tr.on td { background: #fffbeb; font-weight: 600; }
+body.dark-mode .cro-prot-costi { background: #0f172a; border-color: #334155; } body.dark-mode .cro-prot-listino tr.on td { background: #3b2f0b; }
 .cmp-modale { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
 .cmp-modale[hidden] { display: none; }
 .cmp-mod-box { background: #fff; border-radius: 12px; width: min(900px, 94vw); max-height: 82vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
@@ -97619,7 +97700,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 029';
+  var REVISIONE = 'V11.26 | 030';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
