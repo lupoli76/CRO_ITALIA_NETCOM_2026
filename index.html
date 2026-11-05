@@ -4,13 +4,67 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 021  (rev. pubblicata: V11.26 | 021 | Nov 2026)              ║
+║   Versione: 11.26 | 029  (rev. pubblicata: V11.26 | 029 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 029 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • WIZARD, Riepilogo rifatto: quattro indicatori (collegamento, km totali,      ║
+║     tempi stimati, costo totale) e una riga per tratta con da/a, distanza,       ║
+║     dettaglio (apparati o collegamenti e stato), tempi e costo                   ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 028 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • WIZARD: niente piu' pagine sovrapposte (riapertura e risultati in arrivo);   ║
+║     popup Apparati e Mappa visibili anche se avviato dall'Assistente; centrale   ║
+║     Colt nella pagina della sede, con scelta a mano; percorsi della rete come    ║
+║     nell'Unificato, migliori 3 in evidenza, centrali, RA/RC, salti, km           ║
+║   • COMPOSITORE: "Export completo" (TXT + Excel + Modulo KMZ) nella barra        ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 027 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • WIZARD: pagine senza scorrimento (Collegamento e Dati servizio separati,     ║
+║     Riepilogo ed Export separati, percorsi della rete a gruppi di 5); campi      ║
+║     allineati (etichetta sopra, controlli alti uguali); si parte da Solo Std     ║
+║   • COMPOSITORE: Rete RTR parte da Solo Std                                      ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 026 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • MODULI OTTICI: tabella SFP/SFP+/QSFP28 a 1G, 10G, 100G (portata, lunghezze   ║
+║     d'onda, norma, esempi Cisco) nei dati del tool e nella Guida; l'Assistente   ║
+║     risponde a "modulo 100G per 2 km", "LR4", "ER4 Lite"; scheda nell'Overview   ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 025 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • WIZARD: destinazione (altra sede cliente o Nodo A1), dati servizio come      ║
+║     nell'export (Velocita' = capacita', obbligatoria), export in un colpo di     ║
+║     TXT + Excel + Modulo KMZ dello Std e del Div scelti, con riferimenti SdF     ║
+║   • EXPORT: Velocita' dei Dati Servizio riempita da sola con la Cap. scelta      ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 024 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • COMPOSITORE: nuovo Wizard (bottone nella barra e dall'Assistente CRO) che    ║
+║     compila la catena passo per passo: impostazioni, sedi, code con apparati,    ║
+║     centrali, nodi A1, rete con Std e Div calcolati nell'Unificato, riepilogo;   ║
+║     transizioni animate, misura fissa, passi cliccabili                          ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 023 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • POPUP APPARATI: i bottoni Cestello portano la fascia del gruppo subito sotto ║
+║     l'intestazione (prima restava coperta con la prima riga); fascia del gruppo  ║
+║     piena con numero di voci, niente linguette, zebra e passaggio del mouse      ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 022 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • FOGLIO IRP: colonna B larga 6 e C larga 20; righe dati grigio #D9D9D9 su C,  ║
+║     I, K-AU, BT-BX e grigio #F2F2F2 su AV-AZ, BD, BE, BG-BI, BK-BM, BQ, BR       ║
+║   • COMPOSITORE, popup Apparati rifatto: misura fissa, stepper - / +, righe      ║
+║     scelte evidenziate, colori per cestello 1HU, 7HU, 9HU, totali in riquadri    ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 021 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -4703,7 +4757,7 @@ window.croChat = (function () {
       + '<div class="cc-et">Info live (la striscia in fondo)</div>'
       + '<div class="cc-chips"><button type="button" data-q="info live">riattiva le info live</button><button type="button" data-q="nascondi info live">nascondi le info live</button><button type="button" data-q="mostra meteo">mostra il meteo</button><button type="button" data-q="abilita notizie">abilita le notizie</button></div>'
       + '<div class="cc-et">Conversazione</div>'   /* V11.26|018 */
-      + '<div class="cc-chips"><button type="button" data-q="Imposta una pratica">\uD83D\uDDC2\uFE0F Imposta una pratica</button><button type="button" data-c="una centrale (nome o CLLI)" data-t="Nodi A1 vicini a {Milano Malpaga}">Nodi A1 vicini a una centrale</button></div>'
+      + '<div class="cc-chips"><button type="button" data-q="Wizard del Compositore">\uD83E\uDDED Wizard del Compositore</button><button type="button" data-c="la distanza in km (e la velocit\u00e0: 1G, 10G o 100G)" data-t="modulo ottico 100G per {2} km">\uD83D\uDCE1 Moduli ottici per distanza</button><button type="button" data-q="Imposta una pratica">\uD83D\uDDC2\uFE0F Imposta una pratica</button><button type="button" data-c="una centrale (nome o CLLI)" data-t="Nodi A1 vicini a {Milano Malpaga}">Nodi A1 vicini a una centrale</button></div>'
       + '<div class="cc-et">Altri modi di chiedere</div>'
       + '<div class="cc-chips"><button type="button" data-c="il nome di un tab" data-t="{Compositore di Fattibilit\u00e0}">un tab: Compositore</button><button type="button" data-c="un argomento" data-t="{regola coda cliente}">un argomento</button><button type="button" data-c="una sigla" data-t="{OSNCP}">una Sigla: OSNCP</button><button type="button" data-c="un tipo di apparato" data-t="{PXM3}">un tipo di apparato: PXM3</button><button type="button" data-q="KMZ">come si fa il KMZ</button><button type="button" data-q="Trova Nodi A1">una funzione: Trova Nodi A1</button><button type="button" data-q="Podio dei Div">il Podio dei Div</button><button type="button" data-q="novit\u00e0">novit\u00e0 dei DB</button></div>');
   }
@@ -5167,7 +5221,7 @@ window.croChat = (function () {
       'Verifica sempre su <b>NNI</b> stati e C-FOS: i dati del tool sono quelli dei DB caricati.'
     ];
     h += '<ol style="margin:.3rem 0 .4rem 1.1rem;padding:0">' + passi.map(function (p) { return '<li style="margin:.15rem 0">' + p + '</li>'; }).join('') + '</ol>';
-    h += '<div class="cc-chips">' + chip('Pratica \u00b7 apri il tab', '\u27A1\uFE0F Apri il tab con le centrali') + chip('Pratica \u00b7 ricomincia', 'Ricomincia') + '</div><div class="cc-k" style="margin-top:.3rem">Vuoi un confronto su come impostarla? ' + bottoneClaude() + '</div>';
+    h += '<div class="cc-chips">' + chip('Pratica \u00b7 apri il tab', '\u27A1\uFE0F Apri il tab con le centrali') + chip('Pratica \u00b7 ricomincia', 'Ricomincia') + chip('Wizard del Compositore', '\uD83E\uDDED Compila il Compositore') + '</div><div class="cc-k" style="margin-top:.3rem">Vuoi un confronto su come impostarla? ' + bottoneClaude() + '</div>';
     pr.passo = 'fatto';
     return h;
   }
@@ -5250,8 +5304,56 @@ window.croChat = (function () {
     btn.insertAdjacentElement('afterend', n);
   }
 
+  /* ── V11.26|026: moduli ottici (dati in window.CRO_MODULI_OTTICI) ── */
+  function moduliDomanda(q) {
+    var M = window.CRO_MODULI_OTTICI || []; if (!M.length) return '';
+    var nomi = /\b(LR4|ER4(?:-?LITE| LITE)?|ER4L|ZR4|CWDM4|LR1|LX|EX|ZX|LR|ER|ZR)\b/;
+    var chiave = /\b(MODUL[OI]|SFP\+?|QSFP28|QSFP|TRANSCEIVER|OTTIC[OI]|OTTICHE)\b/.test(q);
+    var solo = q.replace(/[^A-Z0-9 -]/g, '').trim();
+    var nm = nomi.exec(q);
+    if (!chiave && !(nm && solo.split(' ').length <= 2)) return '';
+    var v = /\b(1|10|100)\s?G(?:B|BIT|BE)?\b/.exec(q), vel = v ? v[1] + 'G' : '';
+    var d = /(\d+(?:[.,]\d+)?)\s?KM\b/.exec(q), dist = d ? parseFloat(d[1].replace(',', '.')) : null;
+    var riga = function (m, ev) { return '<tr' + (ev ? ' style="background:#ecfdf5"' : '') + '><td><b>' + esc(m.breve) + '</b><div class="cc-k">' + esc(m.nome) + '</div></td><td>' + esc(m.formato) + '</td><td>' + esc(m.kmTesto || ('fino a ' + m.km + ' km')) + '</td><td>' + esc(m.lambda) + '</td><td>' + esc(m.norma) + '</td><td>' + esc(m.cisco || '\u2014') + '</td></tr>'; };
+    var tab = function (L, ev) { return '<div class="cc-lunga"><table><tr><th>Modulo</th><th>Formato</th><th>Portata</th><th>Lunghezza d\u2019onda</th><th>Norma</th><th>Esempio Cisco</th></tr>' + L.map(function (m) { return riga(m, ev && ev.indexOf(m) >= 0); }).join('') + '</table></div>'; };
+    var avv = '<div class="cc-k">Portate su fibra monomodale G.652, indicative: conta la perdita reale della tratta (fibra, giunti, connettori). Serve un modulo per ogni estremo, dello stesso tipo. Il codice del produttore va verificato nella matrice di compatibilit\u00e0 dell\u2019apparato. Fonti: IEEE 802.3, MSA, schede Cisco.</div>';
+    var h = '';
+    if (nm && !vel && dist == null && !/TABELLA|DISTANZ|QUALE|QUALI/.test(q)) {
+      var k = nm[1].replace(/ LITE|-LITE/, '-LITE').replace('ER4L', 'ER4-LITE');
+      var m1 = M.filter(function (m) { return m.breve.toUpperCase() === k; })[0] || M.filter(function (m) { return m.breve.toUpperCase().replace(' ', '-') === k; })[0];
+      if (m1) return '<h6>\uD83D\uDCE1 ' + esc(m1.nome) + '</h6><div class="cc-card"><b>' + esc(m1.vel) + '</b> \u00b7 ' + esc(m1.formato) + ' \u00b7 ' + esc(m1.kmTesto || ('fino a ' + m1.km + ' km')) + '<br>Lunghezza d\u2019onda: ' + esc(m1.lambda) + '<br>Fibra: ' + esc(m1.fibra) + ' \u00b7 connettore ' + esc(m1.conn) + '<br>Norma: ' + esc(m1.norma) + (m1.cisco ? '<br>Esempio Cisco: <b>' + esc(m1.cisco) + '</b>' : '') + (m1.note ? '<br>' + esc(m1.note) : '') + '</div>' + avv;
+    }
+    var L = M.filter(function (m) { return !vel || m.vel === vel; });
+    if (dist != null) {
+      /* il consigliato lascia un margine del 25 % sulla portata; se un modulo copre la distanza ma senza margine, lo segnalo come «al limite» */
+      var min = function (cond) { var per = {}; L.filter(cond).forEach(function (m) { if (!per[m.vel] || m.km < per[m.vel].km) per[m.vel] = m; }); return per; };
+      var cons = min(function (m) { return m.km >= dist * 1.25; }), lim = min(function (m) { return m.km >= dist; });
+      var vels = Object.keys(lim);
+      var dk = esc(String(dist).replace('.', ','));
+      h = '<h6>\uD83D\uDCE1 Moduli ottici per ' + dk + ' km' + (vel ? ' a ' + esc(vel) : '') + '</h6>';
+      if (!vels.length) return h + '<div class="cc-card">Nessun modulo della tabella arriva a ' + dk + ' km' + (vel ? ' a ' + esc(vel) : '') + ': servono soluzioni DWDM/coerenti o amplificazione, da valutare con il progetto di trasporto.</div>' + tab(L) + avv;
+      var ev = [];
+      h += '<div class="cc-card">' + vels.map(function (k2) {
+        var c = cons[k2], l = lim[k2], t = '';
+        if (c) { ev.push(c); t = '<b>' + esc(k2) + ' \u2192 ' + esc(c.breve) + '</b>' + (c.cisco ? ' (es. ' + esc(c.cisco) + ')' : '') + ', portata ' + esc(c.kmTesto || (c.km + ' km')); }
+        if (l && l !== c) { ev.push(l); t += (t ? '; ' : '<b>' + esc(k2) + '</b>: ') + 'il modulo <b>' + esc(l.breve) + '</b> (' + esc(l.kmTesto || (l.km + ' km')) + ') copre la distanza ma \u00e8 al limite: va bene solo se la perdita reale della tratta lo consente'; }
+        return t;
+      }).join('<br>') + '</div>';
+      return h + tab(L, ev) + avv;
+    }
+    h = '<h6>\uD83D\uDCE1 Moduli ottici' + (vel ? ' ' + esc(vel) : '') + ' per distanza</h6>';
+    return h + tab(L) + '<div class="cc-lunga"><table>' + (window.CRO_MODULI_GLOSSARIO || []).map(function (g) { return '<tr><td><b>' + esc(g[0]) + '</b></td><td>' + esc(g[1]) + '</td></tr>'; }).join('') + '</table></div>' + avv
+      + '<div class="cc-k">Prova anche: \u00abmodulo 100G per 2 km\u00bb, \u00abLR4\u00bb, \u00abER4 Lite\u00bb.</div>';
+  }
+
   function rispondi(testo) {
     var q = norm(testo).trim(), h = '';
+    var hmo = moduliDomanda(q); if (hmo) return hmo + web(testo);   /* V11.26|026: moduli ottici */
+    /* V11.26|024: wizard del Compositore, avviato da qui con lo stesso comportamento del tab */
+    if (/\bWIZARD\b|COMPOSITORE GUIDATO|COMPILA (IL )?COMPOSITORE/.test(q)) {
+      if (window.croCmp && croCmp.wizard) { croCmp.wizard({ daAssistente: true }); return '<div class="cc-card">\uD83E\uDDED Ho aperto il <b>Wizard del Compositore di Fattibilit\u00e0</b>: compila i blocchi passo per passo. Alla fine \u00abVai al Compositore\u00bb ti porta a vedere la catena compilata.</div>'; }
+      return '<div class="cc-card">Il Compositore non \u00e8 disponibile.</div>';
+    }
     /* V11.26|018: pratica guidata, domande che continuano la precedente, Nodi A1 vicini */
     if (/\b(IMPOSTA|IMPOSTARE|NUOVA|PREPARA|APRI)\b.*\bPRATICA\b|COME (APPROCCIO|IMPOSTO|AFFRONTO|PROCEDO|FACCIO)\b.*\b(PRATICA|FATTIBILITA|STUDIO)\b|^PRATICA$/.test(q)) return praticaInizio();
     if (pr && (/^PRATICA \u00b7/.test(q) || /^ANNULLA$/.test(q) || pr.passo === 'A' || pr.passo === 'Z')) { var hp = pratica(q, testo); if (hp) return hp; }
@@ -5727,6 +5829,33 @@ window.croNovita = (function () {
    costi degli export; non scrive negli altri tab (salvo i campi di ricerca
    dell'Unificato quando si preme «Cerca nell'Unificato»).
    ═══════════════════════════════════════════════════════════════════════════ */
+/* ════ V11.26|026 · MODULI OTTICI (SFP, SFP+, QSFP28) ════════════════════════════════════════
+   Riferimento per scegliere il modulo in base a velocità e distanza. Fonti: IEEE 802.3 (z, ae, ba,
+   bm, cu), MSA CWDM4 / 4WDM, schede tecniche dei produttori (Cisco). Portate su fibra monomodale
+   G.652; la portata reale dipende dall'attenuazione della tratta. Dati raccolti il 05/11/2026. */
+window.CRO_MODULI_OTTICI = [
+  { vel: '1G', nome: '1000BASE-LX/LH', breve: 'LX', formato: 'SFP', km: 10, lambda: '1310 nm', fibra: 'monomodale', conn: 'LC duplex', norma: 'IEEE 802.3z (LX: 5 km da norma; le versioni LX/LH arrivano a 10 km)', cisco: 'GLC-LH-SMD', note: '' },
+  { vel: '1G', nome: '1000BASE-EX', breve: 'EX', formato: 'SFP', km: 40, lambda: '1310 nm', fibra: 'monomodale', conn: 'LC duplex', norma: 'non IEEE: specifica dei produttori', cisco: 'GLC-EX-SMD', note: '' },
+  { vel: '1G', nome: '1000BASE-ZX', breve: 'ZX', formato: 'SFP', km: 70, kmTesto: 'circa 70-80 km', lambda: '1550 nm', fibra: 'monomodale', conn: 'LC duplex', norma: 'non IEEE: specifica dei produttori', cisco: 'GLC-ZX-SMD', note: 'Cisco lo dichiara per circa 70 km, a seconda della perdita della tratta; altri produttori arrivano a 80 km.' },
+  { vel: '10G', nome: '10GBASE-LR', breve: 'LR', formato: 'SFP+', km: 10, lambda: '1310 nm', fibra: 'monomodale', conn: 'LC duplex', norma: 'IEEE 802.3ae', cisco: 'SFP-10G-LR-S', note: '' },
+  { vel: '10G', nome: '10GBASE-ER', breve: 'ER', formato: 'SFP+', km: 40, lambda: '1550 nm', fibra: 'monomodale', conn: 'LC duplex', norma: 'IEEE 802.3ae', cisco: 'SFP-10G-ER-S', note: '' },
+  { vel: '10G', nome: '10GBASE-ZR', breve: 'ZR', formato: 'SFP+', km: 80, lambda: '1550 nm', fibra: 'monomodale', conn: 'LC duplex', norma: 'non IEEE: specifica dei produttori', cisco: 'SFP-10G-ZR-S', note: '' },
+  { vel: '100G', nome: '100GBASE-CWDM4', breve: 'CWDM4', formato: 'QSFP28', km: 2, lambda: '4 lunghezze d\u2019onda CWDM: 1271, 1291, 1311, 1331 nm', fibra: 'monomodale', conn: 'LC duplex', norma: 'MSA CWDM4 (non IEEE)', cisco: 'QSFP-100G-CWDM4-S', note: 'Alternativa pi\u00f9 economica al LR4 fino a 2 km.' },
+  { vel: '100G', nome: '100GBASE-LR4', breve: 'LR4', formato: 'QSFP28', km: 10, lambda: '4 lunghezze d\u2019onda LAN-WDM: 1295,56 \u00b7 1300,05 \u00b7 1304,58 \u00b7 1309,14 nm', fibra: 'monomodale (G.652)', conn: 'LC duplex', norma: 'IEEE 802.3ba', cisco: 'QSFP-100G-LR4-S', note: 'Perdita massima di tratta (fibra + connettori) 6,3 dB; budget di potenza circa 8 dB, il resto copre le penalit\u00e0. Le 4 lunghezze d\u2019onda viaggiano multiplexate sulla stessa coppia di fibre.' },
+  { vel: '100G', nome: '100GBASE-LR1 (100G-LR, lambda singola)', breve: 'LR1', formato: 'QSFP28', km: 10, lambda: '1 lunghezza d\u2019onda intorno a 1310 nm', fibra: 'monomodale', conn: 'LC duplex', norma: 'IEEE 802.3cu', cisco: 'QSFP-100G-LR-S', note: 'Una sola lunghezza d\u2019onda; interopera solo con un altro LR1, non con un LR4.' },
+  { vel: '100G', nome: '100GBASE-ER4 Lite', breve: 'ER4-Lite', formato: 'QSFP28', km: 40, kmTesto: '40 km con RS-FEC, circa 30 km senza', lambda: '4 lunghezze d\u2019onda LAN-WDM (come LR4)', fibra: 'monomodale', conn: 'LC duplex', norma: 'non IEEE: specifica dei produttori', cisco: 'QSFP-100G-ER4L-S', note: 'Per i 40 km serve l\u2019RS-FEC attivo sulla porta dell\u2019apparato; il modulo non lo ha al suo interno.' },
+  { vel: '100G', nome: '100GBASE-ER4', breve: 'ER4', formato: 'QSFP28', km: 40, lambda: '4 lunghezze d\u2019onda LAN-WDM (come LR4)', fibra: 'monomodale', conn: 'LC duplex', norma: 'IEEE 802.3ba', cisco: '', note: 'Arriva a 40 km senza FEC; in formato QSFP28 \u00e8 meno diffuso e pi\u00f9 caro dell\u2019ER4 Lite.' },
+  { vel: '100G', nome: '100GBASE-ZR4', breve: 'ZR4', formato: 'QSFP28', km: 80, lambda: '4 lunghezze d\u2019onda LAN-WDM', fibra: 'monomodale', conn: 'LC duplex', norma: 'non IEEE: specifiche MSA e dei produttori', cisco: 'QSFP-100G-ZR4-S', note: 'Budget ottico e requisiti cambiano da un produttore all\u2019altro; di norma serve l\u2019RS-FEC sull\u2019apparato.' }
+];
+window.CRO_MODULI_GLOSSARIO = [
+  ['SFP / SFP+', 'Modulo piccolo a una sola corsia: SFP per 1G, SFP+ per 10G. Una lunghezza d\u2019onda per verso.'],
+  ['QSFP28', 'Modulo \u00abquad\u00bb per 100G, poco pi\u00f9 grande di un SFP: 4 corsie elettriche da 25G. Nel LR4 le 4 corsie diventano 4 lunghezze d\u2019onda sulla stessa coppia di fibre.'],
+  ['FEC (RS-FEC)', 'Correzione d\u2019errore fatta dall\u2019apparato: allunga la portata di alcuni moduli (ER4 Lite, ZR4).'],
+  ['Perdita di tratta / budget', 'La perdita di fibra, giunti e connettori deve stare sotto quella ammessa dal modulo; la portata in km \u00e8 indicativa.'],
+  ['Quanti moduli', 'Ne serve uno per ogni estremo del collegamento, dello stesso tipo ai due lati (per esempio LR4 con LR4).'],
+  ['Compatibilit\u00e0', 'Il codice del produttore dell\u2019apparato (per esempio Cisco \u00ab-S\u00bb) va verificato nella sua matrice di compatibilit\u00e0 per il modello di porta.']
+];
+
 window.croCmp = (function () {
   var TIPI = {
     sedeA: { ic: '\uD83C\uDFE0', nome: 'Sede cliente A', cl: 'sede' }, codaA: { ic: '\u3030\uFE0F', nome: 'Coda (stima) Zona A', cl: 'coda' },
@@ -5798,7 +5927,9 @@ window.croCmp = (function () {
   function segna(sch) { Array.prototype.forEach.call(document.querySelectorAll('#cmpSegSchema button'), function (x) { x.classList.toggle('on', x.getAttribute('data-v') === sch); }); }
   function schema(s) {
     segna(s);
-    catena = (s === 'rtn' ? ['sedeA', 'codaA', 'centraleA', 'rtrA', 'nodoA', 'rtn', 'nodoZ', 'rtrZ', 'centraleZ', 'codaZ', 'sedeZ'] : ['sedeA', 'codaA', 'centraleA', 'rtr', 'centraleZ', 'codaZ', 'sedeZ']).map(nuovo);
+    catena = (s === 'rtn' ? ['sedeA', 'codaA', 'centraleA', 'rtrA', 'nodoA', 'rtn', 'nodoZ', 'rtrZ', 'centraleZ', 'codaZ', 'sedeZ']
+      : s === 'a1' ? ['sedeA', 'codaA', 'centraleA', 'rtrA', 'nodoA']   /* V11.26|025: dalla sede A verso un Nodo A1, senza lato Z */
+      : ['sedeA', 'codaA', 'centraleA', 'rtr', 'centraleZ', 'codaZ', 'sedeZ']).map(nuovo);
     ridisegna();
   }
   function aggiungi(tipo) { catena.push(nuovo(tipo)); catena.sort(function (a, b) { return ORDINE.indexOf(a.tipo) - ORDINE.indexOf(b.tipo); }); ridisegna(); }
@@ -5887,7 +6018,7 @@ window.croCmp = (function () {
       chiudiModale(); ridisegna(); };
     el('cmpModale').hidden = false;
   }
-  function chiudiModale() { el('cmpModale').hidden = true; }
+  function chiudiModale() { el('cmpModale').hidden = true; if (!WZ) el('cmpModale').style.zIndex = ''; var bx = el('cmpModale').querySelector('.cmp-mod-box'); if (bx) bx.classList.remove('ap-box'); }   /* V11.26|022 */
 
   /* ── costi: lo stesso blocco degli export dell'Unificato ── */
   function costo(route) {
@@ -5970,47 +6101,84 @@ window.croCmp = (function () {
     if (c.altro != null) h += '<br>+ altro: ' + eur(c.altro) + ' \u00b7 <b>totale coda ' + eur(c.tot) + '</b>';
     return h;
   }
-  /* popup: listino con le quantità per Centrale Cliente e Centrale per il Cliente */
+  /* popup: listino con le quantità per Centrale Cliente e Centrale per il Cliente
+     V11.26|022: finestra di misura fissa (non cresce né si stringe scegliendo o togliendo voci), stepper − / +,
+     righe scelte evidenziate senza cambiare altezza, colori diversi per i cestelli 1HU, 7HU e 9HU */
+  var APP_GR = {
+    CESTELLO_1HU: { nome: 'Cestello 1HU', sub: 'da tavolo', c: '#0e7490', f: '#ecfeff', l: '#cffafe' },
+    CESTELLO_7HU: { nome: 'Cestello 7HU', sub: 'da telaio', c: '#6d28d9', f: '#f5f3ff', l: '#ede9fe' },
+    CESTELLO_9HU: { nome: 'Cestello 9HU', sub: 'da telaio', c: '#b45309', f: '#fffbeb', l: '#fef3c7' }
+  };
   function apparati(id) {
     var b = catena.filter(function (x) { return x.id === id; })[0]; if (!b) return;
     var D = appDB();
     if (!D.length) { if (typeof showAlert === 'function') showAlert('Il listino Apparati & Cestelli non è disponibile.', 'warning'); return; }
     var st = { A: {}, B: {} };
     ['A', 'B'].forEach(function (s) { var q = (b.f.app && b.f.app[s]) || {}; Object.keys(q).forEach(function (k) { st[s][k] = q[k]; }); });
-    var NOMI = { CESTELLO_1HU: 'Cestello 1HU [da tavolo]', CESTELLO_7HU: 'Cestello 7HU [da telaio]', CESTELLO_9HU: 'Cestello 9HU [da telaio]' }, gruppi = [];
+    var gruppi = [];
     D.forEach(function (r) { if (gruppi.indexOf(r.group) < 0) gruppi.push(r.group); });
-    var h = '<div class="cmp-app-int">Listino <b>\uD83D\uDCF2 Apparati &amp; Cestelli</b> dell’Analisi Costi. Scrivi la quantità di ogni voce nella sede del cliente (\uD83C\uDFE0 Centrale Cliente) e in centrale (\uD83C\uDFE2 Centrale per il Cliente).</div>'
-      + '<div class="cmp-app-tw"><table class="cmp-app"><thead><tr><th>Voce</th><th class="n">Prezzo</th><th class="q">\uD83C\uDFE0 Centrale Cliente</th><th class="q">\uD83C\uDFE2 Centrale per il Cliente</th></tr></thead><tbody>';
+    var h = '<div class="ap-int">Listino <b>\uD83D\uDCF2 Apparati &amp; Cestelli</b> dell\u2019Analisi Costi. Indica le quantit\u00e0 nella sede del cliente (\uD83C\uDFE0 Centrale Cliente) e in centrale (\uD83C\uDFE2 Centrale per il Cliente).</div>'
+      + '<div class="ap-leg">' + gruppi.map(function (g) { var G = APP_GR[g] || { nome: g, c: '#475569', f: '#f8fafc' }; return '<button type="button" class="ap-gb" data-vai="' + esc(g) + '" style="--g:' + G.c + ';--gf:' + G.f + '">' + esc(G.nome) + '</button>'; }).join('') + '</div>'
+      + '<div class="ap-tw"><table class="ap-t"><colgroup><col><col style="width:108px"><col style="width:150px"><col style="width:150px"></colgroup>'
+      + '<thead><tr><th>Voce</th><th class="n">Prezzo</th><th class="q">\uD83C\uDFE0 Centrale Cliente</th><th class="q">\uD83C\uDFE2 Centrale per il Cliente</th></tr></thead><tbody>';
     gruppi.forEach(function (g) {
-      h += '<tr class="g"><td colspan="4">' + esc(NOMI[g] || g) + '</td></tr>';
-      D.filter(function (r) { return r.group === g; }).forEach(function (r) {
+      var G = APP_GR[g] || { nome: g, sub: '', c: '#475569', f: '#f8fafc', l: '#e2e8f0' };
+      var Rg = D.filter(function (r) { return r.group === g; });   /* V11.26|023 */
+      h += '<tr class="ap-g" id="apG_' + esc(g) + '" style="--g:' + G.c + ';--gf:' + G.l + '"><td colspan="4"><span class="ap-gn">' + esc(G.nome) + '</span><span class="ap-gs">' + esc(G.sub || '') + '</span><span class="ap-gc">' + Rg.length + ' voci</span></td></tr>';
+      Rg.forEach(function (r, ri) {
         var nota = [r.note1, r.note2].filter(function (x) { return x && x !== 'None'; }).join(' \u00b7 ');
-        h += '<tr><td><b>' + esc(appLabel(r)) + '</b>' + (nota ? '<br><span class="cmp-k">' + esc(nota) + '</span>' : '') + '</td><td class="n">' + eur(Number(r.costoInstallazione) || 0) + '</td>'
-          + ['A', 'B'].map(function (s) { return '<td class="q"><input type="number" min="0" step="1" data-s="' + s + '" data-id="' + esc(r.id) + '" value="' + (st[s][r.id] || '') + '" placeholder="0"></td>'; }).join('') + '</tr>';
+        h += '<tr class="ap-r' + (ri % 2 ? ' ap-z' : '') + '" data-id="' + esc(r.id) + '" style="--g:' + G.c + ';--gf:' + G.f + '"><td><div class="ap-v">' + esc(appLabel(r)) + '</div>' + (nota ? '<div class="ap-n" title="' + esc(nota) + '">' + esc(nota) + '</div>' : '') + '</td><td class="n">' + eur(Number(r.costoInstallazione) || 0) + '</td>'
+          + ['A', 'B'].map(function (s) {
+            return '<td class="q"><div class="ap-st"><button type="button" data-meno="' + s + '" aria-label="meno">\u2212</button><input type="number" min="0" step="1" inputmode="numeric" data-s="' + s + '" data-id="' + esc(r.id) + '" value="' + (st[s][r.id] || '') + '" placeholder="0"><button type="button" data-piu="' + s + '" aria-label="pi\u00f9">+</button></div></td>';
+          }).join('') + '</tr>';
       });
     });
-    h += '</tbody></table></div><div class="cmp-app-piede"><div id="cmpAppTot"></div><div class="cmp-az"><button type="button" data-az="svuotaA" title="Azzera le quantità della sede del cliente">Svuota \uD83C\uDFE0 Centrale Cliente</button><button type="button" data-az="svuotaB" title="Azzera le quantità in centrale">Svuota \uD83C\uDFE2 Centrale per il Cliente</button><button type="button" data-az="svuota" title="Azzera tutte le quantità">Svuota tutto</button><button type="button" data-az="annulla">Annulla</button><button type="button" class="pri" data-az="applica">Applica</button></div></div>';   /* V11.26|014 */
+    h += '</tbody></table></div>'
+      + '<div class="ap-piede"><div class="ap-tot"><div class="ap-k"><span>\uD83C\uDFE0 Centrale Cliente</span><b id="apTA">0,00 \u20ac</b><i id="apNA">0 voci</i></div>'
+      + '<div class="ap-k"><span>\uD83C\uDFE2 Centrale per il Cliente</span><b id="apTB">0,00 \u20ac</b><i id="apNB">0 voci</i></div>'
+      + '<div class="ap-k ap-kt"><span>Totale coda</span><b id="apTT">0,00 \u20ac</b><i>&nbsp;</i></div></div>'
+      + '<div class="ap-nota" id="apNota" title=""></div>'
+      + '<div class="ap-az"><div class="ap-sv"><span>Svuota:</span><button type="button" data-az="svuotaA">\uD83C\uDFE0 Centrale Cliente</button><button type="button" data-az="svuotaB">\uD83C\uDFE2 Centrale per il Cliente</button><button type="button" data-az="svuota">tutto</button></div>'
+      + '<div class="ap-ok"><button type="button" data-az="annulla">Annulla</button><button type="button" class="pri" data-az="applica">Applica</button></div></div></div>';
     el('cmpModTit').textContent = '\uD83E\uDDEE Apparati per la coda \u00b7 ' + TIPI[b.tipo].nome;
+    var box = el('cmpModale').querySelector('.cmp-mod-box'); if (box) box.classList.add('ap-box');
     var corpo = el('cmpModCorpo'); corpo.innerHTML = h;
-    function totali() {
-      var x = { f: { app: st } }, A = appLato(st, 'A'), B = appLato(st, 'B');
-      el('cmpAppTot').innerHTML = '\uD83C\uDFE0 Centrale Cliente: <b>' + eur(A.tot) + '</b> &nbsp;+&nbsp; \uD83C\uDFE2 Centrale per il Cliente: <b>' + eur(B.tot) + '</b> &nbsp;=&nbsp; <b>' + eur(A.tot + B.tot) + '</b>'
-        + (codaNotaApp(x) ? '<br><span class="cmp-k">' + esc(codaNotaApp(x)) + '</span>' : '');
+    function riga(idv) {
+      var tr = corpo.querySelector('tr.ap-r[data-id="' + idv + '"]'); if (!tr) return;
+      tr.classList.toggle('ap-on', !!(st.A[idv] || st.B[idv]));
     }
-    corpo.oninput = function (ev) { var i = ev.target; if (!i || !i.getAttribute('data-s')) return; var n = Math.max(0, parseInt(i.value, 10) || 0); if (n) st[i.getAttribute('data-s')][i.getAttribute('data-id')] = n; else delete st[i.getAttribute('data-s')][i.getAttribute('data-id')]; totali(); };
+    function totali() {
+      var x = { f: { app: st } }, A = appLato(st, 'A'), B = appLato(st, 'B'), nt = codaNotaApp(x);
+      el('apTA').textContent = eur(A.tot); el('apTB').textContent = eur(B.tot); el('apTT').textContent = eur(A.tot + B.tot);
+      el('apNA').textContent = A.lab.length + (A.lab.length === 1 ? ' voce' : ' voci'); el('apNB').textContent = B.lab.length + (B.lab.length === 1 ? ' voce' : ' voci');
+      var n = el('apNota'); n.textContent = nt || 'Nessun apparato scelto'; n.title = nt || ''; n.classList.toggle('vuota', !nt);
+    }
+    function poni(s, idv, n) { n = Math.max(0, Math.min(99, parseInt(n, 10) || 0)); if (n) st[s][idv] = n; else delete st[s][idv]; var i = corpo.querySelector('input[data-s="' + s + '"][data-id="' + idv + '"]'); if (i && String(i.value) !== String(n || '')) i.value = n || ''; riga(idv); totali(); }
+    corpo.oninput = function (ev) { var i = ev.target; if (!i || !i.getAttribute('data-s')) return; poni(i.getAttribute('data-s'), i.getAttribute('data-id'), i.value); };
     corpo.onclick = function (ev) {
-      var a = ev.target && ev.target.getAttribute && ev.target.getAttribute('data-az'); if (!a) return;
+      var t = ev.target && ev.target.closest ? ev.target.closest('button') : null; if (!t) return;
+      var vai = t.getAttribute('data-vai');
+      if (vai) {   /* V11.26|023: la fascia del gruppo resta visibile sotto l'intestazione fissa */
+        var g = el('apG_' + vai), tw = corpo.querySelector('.ap-tw'), th = corpo.querySelector('.ap-t thead');
+        if (g && tw) { var c1 = corpo.querySelector('.ap-t th'), dy = g.getBoundingClientRect().top - (c1 ? c1.getBoundingClientRect().bottom : tw.getBoundingClientRect().top); tw.scrollTop = Math.max(0, Math.floor(tw.scrollTop + dy)); }
+        Array.prototype.forEach.call(corpo.querySelectorAll('.ap-gb'), function (x) { x.classList.toggle('on', x === t); });
+        return;
+      }
+      var pm = t.getAttribute('data-piu') || t.getAttribute('data-meno');
+      if (pm) { var tr = t.closest('tr.ap-r'), idv = tr.getAttribute('data-id'); poni(pm, idv, (st[pm][idv] || 0) + (t.getAttribute('data-piu') ? 1 : -1)); return; }
+      var a = t.getAttribute('data-az'); if (!a) return;
       if (a === 'annulla') { chiudiModale(); return; }
-      if (a === 'svuota' || a === 'svuotaA' || a === 'svuotaB') {   /* V11.26|014: un lato o tutti e due */
-        var lati = a === 'svuota' ? ['A', 'B'] : [a.slice(-1)];
-        lati.forEach(function (x) { st[x] = {}; Array.prototype.forEach.call(corpo.querySelectorAll('input[data-s="' + x + '"]'), function (i) { i.value = ''; }); });
+      if (a === 'svuota' || a === 'svuotaA' || a === 'svuotaB') {
+        (a === 'svuota' ? ['A', 'B'] : [a.slice(-1)]).forEach(function (x) { st[x] = {}; Array.prototype.forEach.call(corpo.querySelectorAll('input[data-s="' + x + '"]'), function (i) { i.value = ''; }); });
+        Array.prototype.forEach.call(corpo.querySelectorAll('tr.ap-r'), function (tr) { riga(tr.getAttribute('data-id')); });
         totali(); return;
       }
       b.f.app = st;
-      var riga = codaNotaApp(b), resto = String(b.f.note || '').split(/\r?\n/).filter(function (r) { return !/^Coda Cliente:/.test(r); });
-      b.f.note = (riga ? [riga] : []).concat(resto).join('\n').replace(/\n+$/, '');
+      var rg = codaNotaApp(b), resto = String(b.f.note || '').split(/\r?\n/).filter(function (r) { return !/^Coda Cliente:/.test(r); });
+      b.f.note = (rg ? [rg] : []).concat(resto).join('\n').replace(/\n+$/, '');
       chiudiModale(); ridisegna();
     };
+    Array.prototype.forEach.call(corpo.querySelectorAll('tr.ap-r'), function (tr) { riga(tr.getAttribute('data-id')); });
     totali();
     el('cmpModale').hidden = false;
   }
@@ -6291,7 +6459,334 @@ window.croCmp = (function () {
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && drawer.classList.contains('aperto')) chiudi(); });
   }
   window.addEventListener('load', function () { try { if (el('cmpCatena')) { preparaNote(); ridisegna(); } } catch (e) { console.error('[Compositore]', e); } });
-  return { spostaMappa: spostaMappa, geocodifica: geocodifica, apparati: apparati, diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
+  /* ════ V11.26|024 · WIZARD DEL COMPOSITORE ══════════════════════════════════════════════════
+     Compila la catena del Compositore passo per passo. Si avvia dal tab (🧭 Wizard) o dall'Assistente
+     CRO, con lo stesso comportamento: scrive nei blocchi veri, che restano poi modificabili a mano.
+     Ordine dei blocchi del Compositore; l'unica eccezione e' la rete, che si calcola dopo il lato Z
+     perche' le servono tutte e due le centrali. ═════════════════════════════════════════════════ */
+  var WZ = null, WDS = { mpls: 'NO', alice: 'NO', drop: 'NO', doppio: 'NO', dual: 'NO', protetto: 'NO' };   /* V11.26|025: dati servizio del wizard */
+  function wzPassi() {
+    var P = [{ k: 'imp', t: 'Collegamento', ic: '\u2699\uFE0F' }, { k: 'ds', t: 'Dati servizio', ic: '\uD83D\uDCCB' }];   /* V11.26|027: due pagine, niente scorrimento */
+    var ha = function (tp) { return !!trova(tp); };
+    [['sedeA', 'Sede cliente A', '\uD83C\uDFE0'], ['codaA', 'Coda A', '\u3030\uFE0F'], ['centraleA', 'Centrale A', '\uD83C\uDFE2'], ['nodoA', 'Nodo A1 A', '\uD83D\uDD00'],
+     ['sedeZ', 'Sede cliente Z', '\uD83C\uDFE0'], ['codaZ', 'Coda Z', '\u3030\uFE0F'], ['centraleZ', 'Centrale Z', '\uD83C\uDFE2'], ['nodoZ', 'Nodo A1 Z', '\uD83D\uDD00']]
+      .forEach(function (x) { if (ha(x[0])) P.push({ k: x[0], t: x[1], ic: x[2] }); });
+    catena.forEach(function (b) { if (TIPI[b.tipo].cl === 'rete') P.push({ k: 'rete:' + b.id, t: TIPI[b.tipo].nome, ic: '\uD83D\uDFE2' }); });
+    P.push({ k: 'fine', t: 'Riepilogo', ic: '\u2705' }); P.push({ k: 'exp', t: 'Export', ic: '\u2B07\uFE0F' });
+    return P;
+  }
+  function wizard(opt) {
+    opt = opt || {};
+    if (!el('wzVelo')) {
+      var v = document.createElement('div'); v.id = 'wzVelo'; v.className = 'wz-velo';
+      v.innerHTML = '<div class="wz-box" role="dialog" aria-modal="true" aria-labelledby="wzTit"><div class="wz-h"><div><b id="wzTit">\uD83E\uDDED Wizard del Compositore di Fattibilit\u00e0</b><small id="wzSub"></small></div><button type="button" data-wz="chiudi" title="Chiudi: quello che hai inserito resta nel Compositore">\u2715</button></div>'
+        + '<div class="wz-prog"><div class="wz-bar"><i id="wzBar"></i></div><div class="wz-steps" id="wzSteps"></div></div>'
+        + '<div class="wz-c" id="wzC"></div>'
+        + '<div class="wz-f"><button type="button" data-wz="indietro" id="wzInd">\u2190 Indietro</button><span class="wz-sp"></span><button type="button" data-wz="salta" id="wzSalta">Salta</button><button type="button" class="pri" data-wz="avanti" id="wzAv">Avanti \u2192</button></div></div>';
+      document.body.appendChild(v);
+      v.addEventListener('click', wzClic);
+      v.addEventListener('change', wzCambio);
+      v.addEventListener('keydown', function (e) { if (e.key === 'Escape') wzChiudi(); });
+    }
+    if (!catena.length || !catena.some(function (x) { return Object.keys(x.f).length; })) { schema('regione'); diversificato(false); }   /* V11.26|027: si parte da Solo Std */
+    WZ = { i: 0, dir: 1, ass: !!opt.daAssistente };
+    var m = el('cmpModale'); if (m) m.style.zIndex = '100020';
+    el('wzVelo').hidden = false; el('wzC').innerHTML = '';
+    var md = el('cmpModale'); if (md && md.parentNode !== document.body) document.body.appendChild(md);   /* V11.26|028: popup Apparati e Mappa visibili anche fuori dal tab */
+    wzMostra();
+  }
+  function wzChiudi() { if (!el('wzVelo')) return; el('wzVelo').hidden = true; WZ = null; ridisegna(); }
+  function wzB(k) { return trova(k); }
+  /* V11.26|028: dati di un percorso dell'Unificato per la tabella del wizard */
+  function wzInfo(r) {
+    carica();
+    var ed = r.edges || [], o = { km: 0, kmRA: 0, kmRC: 0, n: 0, nRA: 0, nRC: 0, gw: 0, non: 0, ids: [], perc: '' };
+    ed.forEach(function (e) {
+      if (e.source === 'XFER') { o.gw++; return; }
+      var w = Number(e.weight) || 0; o.km += w; o.n++;
+      if (e.source === 'RA') { o.kmRA += w; o.nRA++; } else { o.kmRC += w; o.nRC++; }
+      var st = String((e.raw && (e.raw.Stato_IdCollegamento || e.raw.StatoCollegamento)) || '').toUpperCase().trim();
+      if (st && !(typeof window.croStatoAttivo === 'function' ? window.croStatoAttivo(st) : st === 'ATTIVO')) o.non++;
+      if (e.id) o.ids.push(e.id);
+    });
+    var vis = [];
+    (r.nodes || []).forEach(function (nd) { var k = String(nd).split('::')[0], c = centrali[k], nome = c ? c.nome : k; if (!vis.length || vis[vis.length - 1] !== nome) vis.push(nome); });
+    o.perc = vis.join(' \u2192 '); o.ids = o.ids.join(' \u2192 ');
+    return o;
+  }
+  function wzClassifica(W, stdEdges) {
+    var L = W.lista, info = L.map(wzInfo), min = Math.min.apply(null, info.map(function (q) { return q.km || 1e9; })) || 1;
+    if (W.tipo === 'div') {
+      W.mis = L.map(function (r) { try { var R = window.croConfrontaCfos({ edges: stdEdges }, r); return { cfos: R.cfosComuni.length, clli: R.clliComuni.length, senza: R.senza.length }; } catch (e) { return { cfos: 99, clli: 99, senza: 99 }; } });
+      W.top = L.map(function (r, i) { return i; }).sort(function (a, b) { var A = W.mis[a], B = W.mis[b], qa = info[a], qb = info[b];
+        return (A.cfos - B.cfos) || (A.clli - B.clli) || (A.senza - B.senza) || (Math.abs(qa.km - qb.km) > 0.005 ? qa.km - qb.km : 0) || (qa.non - qb.non) || (qa.gw - qb.gw) || (qa.n - qb.n); }).slice(0, 3);
+    } else {
+      var s = info.map(function (q) { return q.gw * 12 + q.non * 8 + q.n * 0.5 + 2 * (q.km - min) / min; });
+      W.top = L.map(function (r, i) { return i; }).sort(function (a, b) { return s[a] - s[b]; }).slice(0, 3);
+    }
+  }
+  function wzCentrale(b) { return risultato(b).replace(/onclick="croCmp\.campo\((\d+),'manuale','([^']*(?:\\'[^']*)*)'\)"/g, 'data-wz="man" data-b="$1" data-v="$2"'); }
+  function wzCampo(b, k, lab, ph, extra) { return '<label class="wz-l">' + lab + '<input type="text" data-b="' + b.id + '" data-k="' + k + '" value="' + esc(b.f[k] || '') + '" placeholder="' + esc(ph || '') + '"' + (extra || '') + '></label>'; }
+  function wzPagina(p) {
+    var h = '', b;
+    if (p.k === 'imp') {
+      var sch = trova('rtn') ? 'rtn' : (trova('nodoA') && !trova('sedeZ') ? 'a1' : 'regione'), cap = (el('cmpCap') || {}).value || '1G';
+      h = '<p class="wz-int">Il wizard compila il Compositore blocco per blocco, nello stesso ordine della catena. Puoi tornare indietro, saltare un passo o chiudere quando vuoi: quello che inserisci resta nei blocchi.</p>'
+        + '<div class="wz-g"><span class="wz-et">Dalla sede cliente A verso</span><div class="wz-cards wz-cards3">'
+        + '<button type="button" class="wz-card' + (sch === 'regione' ? ' on' : '') + '" data-wz="schema" data-v="regione"><span class="i">\uD83C\uDFE0</span><b>Altra sede cliente</b><small>stessa regione: Sede A \u2192 RTR \u2192 Sede Z</small></button>'
+        + '<button type="button" class="wz-card' + (sch === 'rtn' ? ' on' : '') + '" data-wz="schema" data-v="rtn"><span class="i">\uD83C\uDF10</span><b>Altra sede cliente</b><small>interregionale, con Nodi A1 e RTN</small></button>'
+        + '<button type="button" class="wz-card' + (sch === 'a1' ? ' on' : '') + '" data-wz="schema" data-v="a1"><span class="i">\uD83D\uDD00</span><b>Nodo A1</b><small>Sede A \u2192 RTR \u2192 Nodo A1, senza coda Z</small></button></div></div>'
+        + '<div class="wz-grid2"><div class="wz-f2"><span class="wz-lb">Velocit\u00e0 <b class="wz-req">*</b></span><div class="wz-seg wz-seg-full">' + ['1G', '10G', '100G'].map(function (c) { return '<button type="button" data-wz="cap" data-v="' + c + '"' + (cap === c ? ' class="on"' : '') + '>' + c + '</button>'; }).join('') + '</div><span class="wz-hint">\u00c8 anche la capacit\u00e0 usata per i costi.</span></div>'
+        + '<div class="wz-f2"><span class="wz-lb">Percorsi</span><div class="wz-seg wz-seg-full"><button type="button" data-wz="div" data-v="0"' + (!(el('cmpDiv') || {}).checked ? ' class="on"' : '') + '>\u2796 Solo Std</button><button type="button" data-wz="div" data-v="1"' + ((el('cmpDiv') || {}).checked ? ' class="on"' : '') + '>\uD83D\uDD00 Std + Div</button></div><span class="wz-hint">Std + Div = Collegamento Diversificato.</span></div></div>'
+        + (catena.some(function (x) { return Object.keys(x.f).length; }) ? '<p class="wz-nota">Nel Compositore ci sono gi\u00e0 dati: cambiando destinazione la catena riparte da zero.</p>' : '');
+    } else if (p.k === 'ds') {
+      var D = WDS, dv = !!(el('cmpDiv') || {}).checked;
+      var sino = function (k, lab, on, az) { az = az || 'ds'; return '<div class="wz-sn"><span>' + lab + '</span><div class="wz-seg wz-seg-s"><button type="button" data-wz="' + az + '" data-k="' + k + '" data-v="' + (az === 'div' ? '1' : 'SI') + '"' + (on ? ' class="on"' : '') + '>SI</button><button type="button" data-wz="' + az + '" data-k="' + k + '" data-v="' + (az === 'div' ? '0' : 'NO') + '"' + (!on ? ' class="on"' : '') + '>NO</button></div></div>'; };
+      var txt = function (k, lab, ph) { return '<div class="wz-f2"><span class="wz-lb">' + lab + '</span><input class="wz-in" type="text" data-ds="' + k + '" value="' + esc(D[k] || '') + '" placeholder="' + esc(ph) + '"></div>'; };
+      h = '<p class="wz-int">Gli stessi campi del foglio <b>Dati Servizio</b> dell\u2019export. Sono tutti facoltativi: la Velocit\u00e0 (' + esc((el('cmpCap') || {}).value || '1G') + ') l\u2019hai gi\u00e0 scelta nella pagina Collegamento.</p>'
+        + '<div class="wz-grid3">' + txt('profilo', 'Profilo commerciale', 'es. LONG DISTANCE') + txt('interfaccia', 'Interfaccia', 'facoltativa') + txt('car', 'CAR richiesto', 'es. 300M, 2,5G, 30G') + '</div>'
+        + '<div class="wz-sns">' + sino('mpls', 'Attivare MPLS', D.mpls === 'SI') + sino('alice', 'Attivare Alice Business', D.alice === 'SI') + sino('drop', 'Drop diversificato', D.drop === 'SI') + sino('doppio', 'Doppio apparato in sede cliente', D.doppio === 'SI')
+        + sino('dual', 'Dual Homing', D.dual === 'SI') + sino('protetto', 'Collegamento Protetto', D.protetto === 'SI') + sino('divers', 'Collegamento Diversificato (Std + Div)', dv, 'div') + '</div>';
+    } else if (/^sede/.test(p.k)) {
+      b = wzB(p.k); calcola();
+      var cb = trova(p.k === 'sedeA' ? 'centraleA' : 'centraleZ');
+      h = '<p class="wz-int">Indica dove si trova il cliente: indirizzo (Geocodifica, anche con Invio) oppure coordinate. Sotto vedi subito la centrale Colt pi\u00f9 vicina: puoi sceglierne un\u2019altra, e la tua scelta vale su quella automatica.</p>'
+        + '<div class="wz-grid2"><div class="wz-f2"><span class="wz-lb">Cliente / sede</span><input class="wz-in" type="text" data-b="' + b.id + '" data-k="nome" value="' + esc(b.f.nome || '') + '" placeholder="es. BANCA INTESA (RM)"></div>'
+        + '<div class="wz-f2"><span class="wz-lb">Coordinate (lat, lon)</span><input class="wz-in" type="text" data-b="' + b.id + '" data-k="coord" value="' + esc(b.f.coord || '') + '" placeholder="es. 41.9619, 12.4421"></div></div>'
+        + '<div class="wz-f2"><span class="wz-lb">Indirizzo</span><div class="wz-row" style="margin:0"><input class="wz-in" style="flex:1" type="text" data-b="' + b.id + '" data-k="indirizzo" data-geo-in="1" value="' + esc(b.f.indirizzo || '') + '" placeholder="es. Via Roma 10, Milano \u00b7 o incolla coordinate o link di Google Maps"><button type="button" class="wz-azb wz-h38" data-wz="geo" data-b="' + b.id + '">\uD83D\uDD0D Geocodifica</button></div></div>'
+        + '<div class="wz-ris wz-geo1" id="wzGeo">' + (geoHtml(b) || '<span class="wz-k">Nessuna geocodifica ancora.</span>') + '</div>'
+        + (cb ? '<div class="wz-f2"><span class="wz-lb">Centrale Colt di attestazione</span><div class="wz-ris wz-cen">' + wzCentrale(cb) + '</div>'
+          + '<div class="wz-row" style="margin:.3rem 0 0"><input class="wz-in" style="flex:1" type="text" list="cmpCentraliLista" data-b="' + cb.id + '" data-k="manuale" value="' + esc(cb.f.manuale || '') + '" placeholder="scegli un\u2019altra centrale: nome o CLLI">' + (cb.f.manuale ? '<button type="button" class="wz-azb wz-h38" data-wz="auto" data-b="' + cb.id + '">\u21BA Torna alla pi\u00f9 vicina</button>' : '') + '</div></div>' : '');
+    } else if (/^coda/.test(p.k)) {
+      b = wzB(p.k);
+      var sd = trova(p.k === 'codaA' ? 'sedeA' : 'sedeZ');
+      h = '<p class="wz-int">La coda collega la sede del cliente alla centrale Colt. I km si calcolano da soli; gli apparati vengono dal listino \uD83D\uDCF2 Apparati &amp; Cestelli dell\u2019Analisi Costi.</p>'
+        + '<div class="wz-g"><span class="wz-et">Km stimati</span><div class="wz-ris">' + codaKmHtml(b) + '</div></div>' + wzCampo(b, 'km', 'Km a mano (facoltativo)', 'vince sul calcolo, es. 1,5')
+        + '<div class="wz-g"><span class="wz-et">Costo stimato <button type="button" class="wz-azb" data-wz="app" data-b="' + b.id + '">\uD83E\uDDEE Apparati\u2026</button></span><div class="wz-ris">' + codaCostoHtml(b) + '</div></div>'
+        + wzCampo(b, 'costo', 'Altro (importo o testo libero)', 'es. 1.200 scavo')
+        + '<label class="wz-l">Note<textarea rows="2" data-b="' + b.id + '" data-k="note" placeholder="tracciato, permessi, fonte del costo\u2026">' + esc(b.f.note || '') + '</textarea></label>'
+        + (sd && !coord(sd.f.coord) ? '<p class="wz-nota">Mancano le coordinate della sede: torna indietro per calcolare i km.</p>' : '');
+    } else if (/^(centrale|nodo)/.test(p.k)) {
+      b = wzB(p.k);
+      h = '<p class="wz-int">' + (/^nodo/.test(p.k) ? 'Il Nodo A1 di questa zona: il tool propone il pi\u00f9 vicino alla centrale. Puoi sceglierne un altro.' : 'La centrale Colt di attestazione: il tool propone la pi\u00f9 vicina alla sede (o quella indicata dal cliente). Puoi sceglierne un\u2019altra fra le vicine o scriverla.') + '</p>'
+        + '<div class="wz-ris wz-cen">' + wzCentrale(b) + '</div>'
+        + wzCampo(b, 'manuale', /^nodo/.test(p.k) ? 'Nodo A1 a mano' : 'Centrale a mano', 'scrivi nome o CLLI', ' list="cmpCentraliLista"');
+    } else if (/^rete:/.test(p.k)) {
+      /* V11.26|028: risultati come nell'Unificato: migliori 3 in evidenza (punteggio degli Std o podio dei Div),
+         percorso delle centrali, collegamenti RA/RC e salti, km RA/RC, stato; tutti i percorsi sfogliabili per km */
+      b = catena.filter(function (x) { return x.id === +p.k.split(':')[1]; })[0]; calcola();
+      var dv2 = !!(el('cmpDiv') || {}).checked, W = WZ.rete && WZ.rete.b === b.id ? WZ.rete : {};
+      var sc = function (k) { var r = b.f[k]; if (!r) return '<span class="cmp-tag dv">da scegliere</span>'; var q = wzInfo(r); return '<b>' + km(q.km) + ' km</b> \u00b7 ' + q.n + ' coll. \u00b7 ' + (q.non ? '<span class="cmp-tag dv">' + q.non + ' da verificare</span>' : '<span class="cmp-tag ok">tutti attivi</span>'); };
+      h = '<div class="wz-ris wz-rete-s">' + (b.ep && b.ep.a && b.ep.z ? '<b>' + esc(b.ep.a.nome) + '</b> (' + esc(b.ep.a.clli) + ') \u2192 <b>' + esc(b.ep.z.nome) + '</b> (' + esc(b.ep.z.clli) + ')' : '<span class="cmp-tag dv">servono i due estremi</span>')
+        + '<span class="wz-sp"></span>Std: ' + sc('std') + (dv2 ? ' \u00b7 Div: ' + sc('div') : '') + '</div>';
+      if (!b.ep || !b.ep.a || !b.ep.z) h += '<p class="wz-nota">Servono le due centrali (o i nodi A1) ai lati della rete: completa i passi precedenti.</p>';
+      else {
+        h += '<div class="wz-row"><button type="button" class="wz-azb" data-wz="calc" data-b="' + b.id + '">\uD83D\uDD0E Calcola i percorsi Std</button>' + (dv2 && b.f.std ? '<button type="button" class="wz-azb" data-wz="calcdiv" data-b="' + b.id + '">\uD83D\uDD00 Calcola i Div dello Std scelto</button>' : '')
+          + (W.lista && W.lista.length ? '<span class="wz-sp"></span><div class="wz-seg wz-seg-s"><button type="button" data-wz="ord" data-v="top"' + (W.ord !== 'km' ? ' class="on"' : '') + '>\uD83C\uDFC5 Migliori 3</button><button type="button" data-wz="ord" data-v="km"' + (W.ord === 'km' ? ' class="on"' : '') + '>Tutti per km</button></div>' : '') + '</div>'
+          + '<div class="wz-k" id="wzStato">' + esc(W.stato || '') + '</div>';
+        if (W.lista && W.lista.length) {
+          var idx = W.ord === 'km' ? W.lista.map(function (r, i) { return i; }).slice(W.da || 0, (W.da || 0) + 5) : W.top;
+          h += '<div class="wz-tw"><table class="wz-t wz-t2"><thead><tr><th style="width:64px">#</th><th>Percorso centrali</th><th style="width:170px">Collegamenti</th><th style="width:190px">Distanza (km)</th><th style="width:' + (W.tipo === 'div' ? 150 : 110) + 'px">' + (W.tipo === 'div' ? 'In comune con lo Std' : 'Stato') + '</th><th style="width:62px"></th></tr></thead><tbody>'
+            + idx.map(function (i) {
+              var r = W.lista[i], q = wzInfo(r), scelto = b.f[W.tipo] && b.f[W.tipo].edges === r.edges, med = W.top.indexOf(i);
+              var cf = '';
+              if (W.tipo === 'div') { var m = W.mis[i]; cf = '<span title="' + (q.non ? q.non + ' collegamenti da verificare' : 'tutti attivi') + '">' + (m ? m.cfos + ' C-FOS \u00b7 ' + m.clli + ' CLLI' : '') + (q.non ? ' \u00b7 <span class="cmp-tag dv">' + q.non + ' NA</span>' : '') + '</span>'; }
+              return '<tr class="' + (scelto ? 'on ' : '') + (med >= 0 ? 'med med' + (med + 1) : '') + '"><td><b>' + (med >= 0 ? ['\uD83E\uDD47', '\uD83E\uDD48', '\uD83E\uDD49'][med] + ' ' : '') + (i + 1) + '</b></td>'
+                + '<td class="wz-pc"><div class="wz-perc" title="' + esc(q.perc + '\n\nSubpath: ' + q.ids) + '">' + esc(q.perc) + '</div></td>'
+                + '<td title="RA ' + q.nRA + ' \u00b7 RC ' + q.nRC + '">' + q.n + ' <span class="wz-k">(RA ' + q.nRA + ' \u00b7 RC ' + q.nRC + ') \u00b7 ' + q.gw + (q.gw === 1 ? ' salto' : ' salti') + '</span></td>'
+                + '<td title="RA ' + km(q.kmRA) + ' km \u00b7 RC ' + km(q.kmRC) + ' km"><b>' + km(q.km) + '</b> <span class="wz-k">(RA ' + km(q.kmRA) + ' \u00b7 RC ' + km(q.kmRC) + ')</span></td>'
+                + '<td>' + (W.tipo === 'div' ? cf : (q.non ? '<span class="cmp-tag dv">' + q.non + ' da verificare</span>' : '<span class="cmp-tag ok">tutti attivi</span>')) + '</td>'
+                + '<td><button type="button" class="wz-scegli" data-wz="usa" data-b="' + b.id + '" data-i="' + i + '">' + (scelto ? '\u2714' : 'Usa') + '</button></td></tr>';
+            }).join('') + '</tbody></table></div>';
+          if (W.ord === 'km') { var p0 = W.da || 0, n0 = W.lista.length; h += '<div class="wz-pager"><button type="button" data-wz="pag" data-d="-5"' + (p0 <= 0 ? ' disabled' : '') + '>\u25C0 precedenti</button><span>' + (p0 + 1) + '\u2013' + Math.min(n0, p0 + 5) + ' di ' + n0 + '</span><button type="button" data-wz="pag" data-d="5"' + (p0 + 5 >= n0 ? ' disabled' : '') + '>successivi \u25B6</button></div>'; }
+          else h += '<div class="wz-k" style="margin-top:.35rem">' + (W.tipo === 'div' ? 'Podio dei Div: prima meno C-FOS e meno CLLI in comune con lo Std, poi i km, poi i collegamenti non attivi.' : 'Migliori 3 come nell\u2019Unificato: pesano i salti RA\u2194RC, i collegamenti non attivi, il numero di collegamenti e i km.') + ' \u00abTutti per km\u00bb li mostra tutti.</div>';
+        }
+      }
+    } else if (p.k === 'fine') {
+      riepilogo();
+      h = '<p class="wz-int">Il Compositore \u00e8 compilato. Qui il quadro d\u2019insieme; nel Compositore trovi tutti i blocchi da rivedere o ritoccare a mano, nella pagina dopo l\u2019export.</p>' + wzRiepilogo();   /* V11.26|029 */
+    } else if (p.k === 'exp') {
+      h = '<p class="wz-int">Lo stesso export dell\u2019Unificato per lo Std e il Div scelti: TXT, Modulo KMZ ed Excel con Dati Servizio e foglio IRP.</p>'
+        + '<div class="wz-grid2"><div class="wz-f2"><span class="wz-lb">Riferimento SdF Std</span><input class="wz-in" type="text" data-ds="sdfStd" value="' + esc(WDS.sdfStd || '') + '" placeholder="es. SF2600957337/0"></div>'
+        + '<div class="wz-f2"><span class="wz-lb">Riferimento SdF Div</span><input class="wz-in" type="text" data-ds="sdfDiv" value="' + esc(WDS.sdfDiv || '') + '" placeholder="facoltativo"></div></div>'
+        + '<div class="wz-row"><button type="button" class="wz-azb pri wz-big" data-wz="exp">\u2B07 Scarica TXT + Excel + Modulo KMZ</button></div><div class="wz-k" id="wzExpStato">' + esc(WDS.expStato || '') + '</div>'
+        + '<div class="wz-row" style="margin-top:1rem">' + (WZ.ass ? '<button type="button" class="wz-azb" data-wz="vai">\u27A1\uFE0F Vai al Compositore</button>' : '') + '<button type="button" class="wz-azb" data-wz="txt">\u2B07 Solo il TXT del Compositore</button></div>';
+    }
+    return h;
+  }
+  function wzMostra(anim) {
+    if (!WZ) return;
+    var P = wzPassi(); if (WZ.i >= P.length) WZ.i = P.length - 1; var p = P[WZ.i];
+    el('wzSub').textContent = 'Passo ' + (WZ.i + 1) + ' di ' + P.length + ' \u00b7 ' + p.t + (WZ.ass ? ' \u00b7 avviato dall\u2019Assistente' : '');
+    el('wzBar').style.width = Math.round(100 * WZ.i / Math.max(1, P.length - 1)) + '%';
+    el('wzSteps').innerHTML = P.map(function (x, i) { return '<button type="button" data-wz="vaia" data-i="' + i + '" class="' + (i < WZ.i ? 'fatto' : i === WZ.i ? 'qui' : '') + '" title="' + esc(x.t) + '"><span>' + x.ic + '</span><em>' + esc(x.t) + '</em></button>'; }).join('');
+    var c = el('wzC'), nuovo = document.createElement('div');
+    nuovo.className = 'wz-pag' + (anim ? (WZ.dir > 0 ? ' entra-dx' : ' entra-sx') : '');
+    nuovo.innerHTML = '<h4>' + p.ic + ' ' + esc(p.t) + '</h4>' + wzPagina(p);
+    /* V11.26|028: resta al massimo la pagina che esce (con l'animazione); tutte le altre si tolgono subito */
+    var vecchie = Array.prototype.slice.call(c.querySelectorAll('.wz-pag'));
+    vecchie.forEach(function (v, i) {
+      if (anim && i === vecchie.length - 1 && !v.classList.contains('esce-sx') && !v.classList.contains('esce-dx')) {
+        v.classList.add(WZ.dir > 0 ? 'esce-sx' : 'esce-dx'); setTimeout(function () { if (v.parentNode) v.remove(); }, 240);
+      } else v.remove();
+    });
+    c.appendChild(nuovo);
+    el('wzInd').disabled = WZ.i === 0;
+    el('wzSalta').style.visibility = (p.k === 'imp' || p.k === 'ds' || p.k === 'fine' || p.k === 'exp') ? 'hidden' : '';
+    el('wzAv').textContent = WZ.i === P.length - 1 ? 'Fine \u2714' : 'Avanti \u2192';
+  }
+  /* V11.26|025: export come nell'Unificato (TXT con Modulo KMZ, Excel con Dati Servizio e IRP) dello Std e del Div scelti */
+  /* V11.26|029: riepilogo del wizard leggibile: indicatori in alto e una riga per tratta con colonne chiare */
+  function wzRiepilogo() {
+    calcola();
+    var rows = [], tot = 0, kmT = 0, gg = 0, mancano = 0, eur2 = function (v) { return v.toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' \u20ac'; };
+    var cen = function (L) { var c = trova('centrale' + L) || trova('nodo' + L); return c && c.r ? c.r.c : null; };
+    catena.forEach(function (b) {
+      var T = TIPI[b.tipo];
+      if (T.cl === 'coda') {
+        var L = codaLato(b), q = codaKm(b), cc = codaCosto(b), c = cen(L);
+        var kmTxt = q.man != null ? km(q.man) + ' km (a mano)' : q.aria != null ? km(q.aria) + ' km in linea d\u2019aria' + (typeof q.ped === 'number' ? '<span class="wz-k"> \u00b7 ' + km(q.ped) + ' a piedi</span>' : '') : '<span class="cmp-tag dv">da stimare</span>';
+        var app = (cc.A.lab.length ? '\uD83C\uDFE0 ' + cc.A.lab.join(' + ') : '') + (cc.A.lab.length && cc.B.lab.length ? '<br>' : '') + (cc.B.lab.length ? '\uD83C\uDFE2 ' + cc.B.lab.join(' + ') : '');
+        if (q.usa != null) kmT += q.usa; if (cc.tot != null) tot += cc.tot; else mancano++; gg = Math.max(gg, 60);
+        rows.push({ ic: '\u3030\uFE0F', t: 'Coda ' + L, da: 'Sede cliente ' + L + ' \u2192 ' + (c ? c.nome : '\u2014'), km: kmTxt, det: app || '<span class="wz-k">apparati non scelti</span>', gg: '60 gg', costo: cc.tot != null ? eur2(cc.tot) + (cc.A.tot && cc.B.tot ? '<div class="wz-k">' + eur2(cc.A.tot) + ' + ' + eur2(cc.B.tot) + '</div>' : '') : '<span class="cmp-tag dv">da stimare</span>' });
+      }
+      if (T.cl === 'rete') ['std', 'div'].forEach(function (x) {
+        if (x === 'div' && !(el('cmpDiv') || {}).checked) return;
+        var r = b.f[x], ep = b.ep || {};
+        var da = (ep.a ? ep.a.nome : '\u2014') + ' \u2192 ' + (ep.z ? ep.z.nome : '\u2014');
+        if (!r) { mancano++; rows.push({ ic: '\uD83D\uDFE2', t: T.nome.replace('Rete ', '') + ' ' + x.toUpperCase(), da: da, km: '<span class="cmp-tag dv">da scegliere</span>', det: '', gg: '', costo: '' }); return; }
+        var q = wzInfo(r), c = costo(r), g = q.non ? 180 : 60;
+        kmT += q.km; gg = Math.max(gg, g); if (c && c.tot) tot += c.tot; else mancano++;
+        rows.push({ ic: '\uD83D\uDFE2', t: T.nome.replace('Rete ', '') + ' ' + x.toUpperCase(), da: da, km: '<b>' + km(q.km) + ' km</b><span class="wz-k"> \u00b7 RA ' + km(q.kmRA) + ' \u00b7 RC ' + km(q.kmRC) + '</span>',
+          det: q.n + (q.n === 1 ? ' collegamento \u00b7 ' : ' collegamenti \u00b7 ') + q.gw + (q.gw === 1 ? ' salto' : ' salti') + ' \u00b7 ' + (q.non ? '<span class="cmp-tag dv">' + q.non + ' da verificare</span>' : '<span class="cmp-tag ok">tutti attivi</span>'),
+          gg: g + ' gg', costo: c && c.tot != null ? eur2(c.tot) : '<span class="cmp-tag dv">\u2014</span>' });
+      });
+      if (T.cl === 'rtn') rows.push({ ic: '\uD83C\uDF10', t: 'RTN', da: (b.ep && b.ep.a ? b.ep.a.nome : '\u2014') + ' \u2192 ' + (b.ep && b.ep.z ? b.ep.z.nome : '\u2014'), km: '', det: '<span class="wz-k">non valorizzata \u00b7 consegna da condividere</span>', gg: '', costo: '' });
+    });
+    var cap = (el('cmpCap') || {}).value || '1G', D = WDS;
+    var sch = trova('rtn') ? 'Interregionale con RTN' : (trova('nodoA') && !trova('sedeZ') ? 'Verso un Nodo A1' : 'Stessa regione');
+    var si = ['mpls', 'alice', 'drop', 'doppio', 'dual', 'protetto'].filter(function (k) { return D[k] === 'SI'; }).map(function (k) { return { mpls: 'MPLS', alice: 'Alice Business', drop: 'Drop diversificato', doppio: 'Doppio apparato', dual: 'Dual Homing', protetto: 'Protetto' }[k]; });
+    var h = '<div class="wz-kpi"><div><span>Collegamento</span><b>' + esc(sch) + '</b><i>' + esc(cap) + ((el('cmpDiv') || {}).checked ? ' \u00b7 Std + Div' : ' \u00b7 solo Std') + '</i></div>'
+      + '<div><span>Km totali</span><b>' + km(kmT) + ' km</b><i>code comprese</i></div>'
+      + '<div><span>Tempi stimati</span><b>' + (gg ? gg + ' giorni' : '\u2014') + '</b><i>' + (gg === 180 ? 'ci sono collegamenti non attivi' : 'tutti i collegamenti attivi') + '</i></div>'
+      + '<div class="wz-kpi-t"><span>Costo totale</span><b>' + eur2(tot) + '</b><i>' + (mancano ? mancano + (mancano === 1 ? ' voce ancora da stimare' : ' voci ancora da stimare') : 'tutte le voci valorizzate') + '</i></div></div>';
+    h += '<div class="wz-tw"><table class="wz-t wz-rt"><thead><tr><th style="width:118px">Tratta</th><th>Da \u2192 a</th><th style="width:200px">Distanza</th><th>Dettaglio</th><th style="width:62px">Tempi</th><th style="width:120px;text-align:right">Costo</th></tr></thead><tbody>'
+      + rows.map(function (r) { return '<tr><td><b>' + r.ic + ' ' + esc(r.t) + '</b></td><td class="wz-cut" title="' + esc(r.da) + '">' + esc(r.da) + '</td><td>' + r.km + '</td><td class="wz-cut2">' + r.det + '</td><td>' + r.gg + '</td><td class="n">' + r.costo + '</td></tr>'; }).join('')
+      + '</tbody></table></div>';
+    h += '<div class="wz-k" style="margin-top:.4rem">Dati servizio: ' + esc([D.profilo, D.interfaccia && 'interfaccia ' + D.interfaccia, D.car && 'CAR ' + D.car].filter(Boolean).join(' \u00b7 ') || 'nessun campo compilato') + (si.length ? ' \u00b7 SI: ' + esc(si.join(', ')) : '') + '. Costi delle code: stima dal listino Apparati & Cestelli; rete: listino del trasporto alla capacit\u00e0 ' + esc(cap) + '.</div>';
+    return h;
+  }
+  function wzEsporta() {
+    var reti = catena.filter(function (x) { return TIPI[x.tipo].cl === 'rete'; });
+    var st = function (m, tipo) { WDS.expStato = m; var s = el('wzExpStato'); if (s && WZ) s.textContent = m; else if (typeof showToast === 'function') showToast(m, tipo || 'info'); };
+    if (!reti.length) return st('Nel Compositore non c\u2019\u00e8 una rete RTR da esportare.', 'warning');
+    if (reti.length !== 1) return st('Con lo schema interregionale le reti RTR sono due e l\u2019Unificato ne tiene una sola: esporta dal TXT del Compositore.', 'warning');
+    /* V11.26|028: gli indici si ritrovano dai percorsi scelti, cos\u00ec vale anche per lo Std e il Div importati a mano */
+    var b = reti[0], L = window._baseRoutesUNIFIED || [], A = window._altRoutesUNIFIED || [];
+    var iS = -1, iD = -1; L.forEach(function (r, i) { if (b.f.std && r.edges === b.f.std.edges) iS = i; });
+    if (iS < 0) return st('Lo Std scelto non \u00e8 pi\u00f9 fra i percorsi dell\u2019Unificato: ricalcolalo e sceglilo di nuovo, poi esporta.', 'warning');
+    var vuoleDiv = !!(el('cmpDiv') || {}).checked && b.f.div;
+    if (vuoleDiv) A.forEach(function (r, i) { if (r.edges === b.f.div.edges) iD = i; });
+    var dv = vuoleDiv && iD >= 0;
+    var cap = (el('cmpCap') || {}).value || '1G';
+    var setv = function (id, v) { var i = el(id); if (i) i.value = v || ''; };
+    setv('unifiedSdfRefStd', WDS.sdfStd); setv('unifiedSdfRefDiv', WDS.sdfDiv);
+    setv('unifiedCostCapacity', cap); var ce = el('unifiedCostEnabled'); if (ce) ce.checked = true;
+    var ds = el('unifiedSelBarDsChk'); if (ds) { ds.checked = true; if (window.expsmToggleDs) window.expsmToggleDs('unified'); }
+    setv('unifiedSelBarDs_profilo', WDS.profilo); setv('unifiedSelBarDs_velocita', cap); var vv = el('unifiedSelBarDs_velocita'); if (vv) vv.dataset.auto = '1';
+    setv('unifiedSelBarDs_interfaccia', WDS.interfaccia); setv('unifiedSelBarDs_car', WDS.car);
+    var sn = { mpls: WDS.mpls, alice: WDS.alice, drop: WDS.drop, doppio: WDS.doppio, dual: WDS.dual, protetto: WDS.protetto, divers: dv ? 'SI' : 'NO' };
+    Object.keys(sn).forEach(function (k) { var r = document.querySelector('input[name="unifiedSelBarDs_' + k + '"][value="' + (sn[k] === 'SI' ? 'SI' : 'NO') + '"]'); if (r) r.checked = true; });
+    var kz = el('croKmzUNIFIED'); if (kz && !kz.checked) { kz.checked = true; kz.dispatchEvent(new Event('change', { bubbles: true })); }
+    window._exportSdfRef = { std: WDS.sdfStd || '', div: WDS.sdfDiv || WDS.sdfStd || '' };
+    window._unifiedExportCostOpts = { enabled: true, capacity: cap, threshold: Number((el('unifiedCostThreshold') || {}).value) || 250, protetto: false, protSol: 'auto', protNodi: '2', protTec: 'huawei' };
+    window._exportDatiServizio = window._readDatiServizio ? window._readDatiServizio('unifiedSelBar') : null;
+    var selS = new Set([iS]), selD = {}; if (dv) selD[iS] = new Set([iD]);
+    window._croKmzScelta = [{ percorso: L[iS], div: false, base: iS, alt: iS }].concat(dv ? [{ percorso: A[iD], div: true, base: iS, alt: iD }] : []);
+    try {
+      if (dv) window.exportRoutesTxtWithAltUNIFIED({ selectedStdIndices: selS, selectedDivByBase: selD });
+      else window.exportRoutesTxtBaseUNIFIED({ selectedIndices: selS });
+      setTimeout(function () { try { window._croExportXlsx(dv ? 'unified_std_div' : 'unified_std', selS, selD); } catch (e) { console.error(e); } }, 900);
+      setTimeout(function () { window._croKmzScelta = null; }, 3000);
+      st('Export avviato: TXT, Modulo KMZ ed Excel (con Dati Servizio e foglio IRP) dello Std' + (dv ? ' e del Div scelti' : ' scelto') + (vuoleDiv && !dv ? ' (il Div non \u00e8 pi\u00f9 fra quelli dell\u2019Unificato: ricalcolalo per includerlo)' : '') + '. Se il browser lo chiede, consenti i download multipli.', 'success');
+    } catch (e) { st('Export non riuscito: ' + e.message, 'error'); window._croKmzScelta = null; }
+  }
+  function wzRidisegna() { if (WZ && el('wzVelo') && !el('wzVelo').hidden) wzMostra(false); }
+  function wzVai(d) { var P = wzPassi(); WZ.dir = d; WZ.i = Math.max(0, Math.min(P.length - 1, WZ.i + d)); wzMostra(true); }
+  function wzCambio(e) {
+    var t = e.target; if (!t || !t.getAttribute) return;
+    if (t.getAttribute('data-ds')) { WDS[t.getAttribute('data-ds')] = t.value; return; }
+    var id = +t.getAttribute('data-b'), k = t.getAttribute('data-k'); if (!id || !k) return;
+    var b = catena.filter(function (x) { return x.id === id; })[0]; if (!b) return;
+    b.f[k] = t.value; ridisegna(); if (k === 'coord' || k === 'centrale' || k === 'manuale' || k === 'km' || k === 'costo') wzRidisegna();
+  }
+  function wzAttendi(prova, fatto, max) { var n = 0, t = setInterval(function () { n++; var v = prova(); if (v || n > (max || 60)) { clearInterval(t); fatto(v); } }, 250); }
+  function wzClic(e) {
+    var t = e.target && e.target.closest ? e.target.closest('[data-wz]') : null;
+    if (!t) {   /* bottoni dei blocchi riusati nel wizard (alternative, mappa, Google Maps): dopo, la pagina si aggiorna */
+      var bt = e.target && e.target.closest ? e.target.closest('button[onclick*="croCmp."]') : null;
+      if (bt) setTimeout(function () { wzAttendi(function () { return el('cmpModale').hidden; }, function () { wzRidisegna(); }, 2400); }, 80);
+      return;
+    }
+    var a = t.getAttribute('data-wz'), id = +t.getAttribute('data-b'), b = id ? catena.filter(function (x) { return x.id === id; })[0] : null;
+    if (a === 'chiudi') return wzChiudi();
+    if (a === 'indietro') return wzVai(-1);
+    if (a === 'salta') return wzVai(1);
+    if (a === 'avanti') { if (WZ.i === wzPassi().length - 1) { var ass = WZ.ass; wzChiudi(); if (ass && typeof switchTab === 'function') switchTab('compositore'); return; } return wzVai(1); }
+    if (a === 'vaia') { var ni = +t.getAttribute('data-i'); WZ.dir = ni >= WZ.i ? 1 : -1; WZ.i = ni; return wzMostra(true); }
+    if (a === 'schema') { var v = t.getAttribute('data-v'), ora = trova('rtn') ? 'rtn' : (trova('nodoA') && !trova('sedeZ') ? 'a1' : 'regione'); if (ora !== v) schema(v); return wzRidisegna(); }
+    if (a === 'ord' && WZ.rete) { WZ.rete.ord = t.getAttribute('data-v'); WZ.rete.da = 0; return wzRidisegna(); }
+    if (a === 'pag' && WZ.rete) { WZ.rete.da = Math.max(0, (WZ.rete.da || 0) + (+t.getAttribute('data-d'))); return wzRidisegna(); }
+    if (a === 'ds') { WDS[t.getAttribute('data-k')] = t.getAttribute('data-v'); return wzRidisegna(); }
+    if (a === 'sdf') return;
+    if (a === 'exp') return wzEsporta();
+    if (a === 'cap') { capacita(t.getAttribute('data-v')); return wzRidisegna(); }
+    if (a === 'div') { diversificato(t.getAttribute('data-v') === '1'); return wzRidisegna(); }
+    if (a === 'auto' && b) { b.f.manuale = ''; ridisegna(); return wzRidisegna(); }
+    if (a === 'man' && b) { b.f.manuale = t.getAttribute('data-v').replace(/\\'/g, "'"); ridisegna(); return wzRidisegna(); }
+    if (a === 'app' && b) { apparati(b.id); var g0 = JSON.stringify(b.f.app || {}); wzAttendi(function () { return el('cmpModale').hidden; }, function () { wzRidisegna(); }, 2400); return; }
+    if (a === 'geo' && b) {
+      var inp = el('wzC').querySelector('input[data-geo-in]'); b.f.indirizzo = inp ? inp.value : b.f.indirizzo; ridisegna();
+      var di = document.querySelector('#cmpCatena [data-ind="' + b.id + '"]'); if (di) di.value = b.f.indirizzo || '';
+      var prima = JSON.stringify([b.f.geo, b.f.coord]); el('wzGeo').innerHTML = '<span class="wz-k">\uD83D\uDD0E ricerca delle coordinate\u2026</span>';
+      geocodifica(b.id);
+      wzAttendi(function () { return JSON.stringify([b.f.geo, b.f.coord]) !== prima; }, function () { wzRidisegna(); }, 80);
+      return;
+    }
+    if (a === 'calc' && b) {
+      calcola(); WZ.rete = { b: b.id, tipo: 'std', lista: null, stato: 'Calcolo dei percorsi Std nell\u2019Unificato\u2026' }; wzRidisegna();
+      if (window._uRtnModeAttivo === true && typeof window._uRtnModeChanged === 'function') window._uRtnModeChanged();
+      var s = el('uRouteStartInput'), z = el('uRouteEndInput'); if (s) s.value = etichetta(b.ep.a); if (z) z.value = etichetta(b.ep.z);
+      window._baseRoutesUNIFIED = null; window._cmpRicercaPer = b.id;
+      try { window.runUnifiedRouteSearch(); } catch (x) {}
+      wzAttendi(function () { return Array.isArray(window._baseRoutesUNIFIED) && window._baseRoutesUNIFIED.length ? window._baseRoutesUNIFIED : null; }, function (L) {
+        if (!WZ) return; WZ.rete = { b: b.id, tipo: 'std', lista: L || [], ord: 'top', da: 0, stato: L ? (L.length + ' percorsi Std trovati, numerati come nell\u2019Unificato.') : 'Nessun percorso trovato fra le due centrali.' }; if (L) wzClassifica(WZ.rete); wzRidisegna();
+      }, 120);
+      return;
+    }
+    if (a === 'calcdiv' && b && b.f.std) {
+      var L0 = window._baseRoutesUNIFIED || [], ix = -1; L0.forEach(function (r, i) { if (r.edges === b.f.std.edges) ix = i; });
+      if (ix < 0) { WZ.rete = { b: b.id, tipo: 'std', lista: WZ.rete && WZ.rete.lista, stato: 'Ricalcola prima gli Std: i percorsi dell\u2019Unificato sono cambiati.' }; return wzRidisegna(); }
+      WZ.rete = { b: b.id, tipo: 'div', base: ix, lista: null, stato: 'Calcolo dei Div nell\u2019Unificato\u2026' }; wzRidisegna();
+      window._altRoutesUNIFIED = null;
+      try { window.runAltRoutesSearchUNIFIED(ix); } catch (x) {}
+      wzAttendi(function () { return Array.isArray(window._altRoutesUNIFIED) && window._altRoutesUNIFIED.length ? window._altRoutesUNIFIED : null; }, function (L) {
+        if (!WZ) return; if (typeof closeCROPopup === 'function') try { closeCROPopup(); } catch (x) {}
+        WZ.rete = { b: b.id, tipo: 'div', base: ix, lista: L || [], ord: 'top', da: 0, stato: L ? (L.length + ' Div trovati, numerati come nell\u2019Unificato.') : 'Nessun Div trovato.' }; if (L) wzClassifica(WZ.rete, b.f.std.edges); wzRidisegna();
+      }, 160);
+      return;
+    }
+    if (a === 'usa' && b && WZ.rete && WZ.rete.lista) {
+      var r = WZ.rete.lista[+t.getAttribute('data-i')], s2 = el('uRouteStartInput'), z2 = el('uRouteEndInput');
+      var ii = +t.getAttribute('data-i');
+      b.f[WZ.rete.tipo] = { edges: r.edges, nodes: r.nodes, dist: r.dist, da: s2 ? s2.value : '', a: z2 ? z2.value : '', idx: ii, base: WZ.rete.tipo === 'div' ? WZ.rete.base : ii };   /* V11.26|025: indici per l'export */
+      ridisegna(); return wzRidisegna();
+    }
+    if (a === 'txt') return esportaTxt();
+    if (a === 'vai') { wzChiudi(); if (typeof switchTab === 'function') switchTab('compositore'); var ch = el('croChat'); if (ch) ch.classList.remove('on'); return; }
+  }
+
+  return { esportaCompleto: wzEsporta, wizard: wizard, spostaMappa: spostaMappa, geocodifica: geocodifica, apparati: apparati, diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
 })();
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -24915,7 +25410,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 021 | Nov 2026</div>
+<div class="version-tag">V11.26 | 029 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -25161,7 +25656,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 021</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 029</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -25178,7 +25673,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 021</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 029</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -25199,7 +25694,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 021</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 029</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -25210,6 +25705,23 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                 </div>
 
+                <!-- Feature V11.26|026: Moduli ottici -->
+                <div class="feature-card" data-cat="analisi" data-tags="moduli ottici sfp qsfp qsfp28 lr4 er4 zr4 cwdm4 lx ex zx lr er zr transceiver distanza" style="border-left: 3px solid #7c3aed;">
+                    <div class="feature-icon" style="color: #7c3aed;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h12v8H4zM16 10h4M16 14h4M7 11h6M7 13h6"/></svg>
+                    </div>
+                    <div class="feature-header">
+                        <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 029</span>
+                    </div>
+                    <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
+                    <div class="feature-specs">
+                        <span class="spec-tag" style="background: #f5f3ff; color: #6d28d9;">LX · EX · ZX</span>
+                        <span class="spec-tag" style="background: #f5f3ff; color: #6d28d9;">LR · ER · ZR</span>
+                        <span class="spec-tag" style="background: #f5f3ff; color: #6d28d9;">CWDM4 · LR4 · ER4 · ZR4</span>
+                    </div>
+                </div>
+
                 <!-- Feature V10.26|152-156: Trova Nodi A1 -->
                 <div class="feature-card" data-cat="routing" data-tags="nodo a1 nodi a1 clli centrale posizione cliente arrivo arrivo 2 a1_div" style="border-left: 3px solid #16a34a;">
                     <div class="feature-icon" style="color: #16a34a;">
@@ -25217,7 +25729,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 021</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 029</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -25233,7 +25745,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 021</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 029</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -25696,7 +26208,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 021</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 029</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -25844,10 +26356,96 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <p class="section-subtitle">Le modifiche rilasciate, dalla più recente. Apri una voce per leggerne il dettaglio.</p>
             </div>
             <div class="cl-list">
-              <details class="cl-item" open style="--cl-accent: #0050a0;">
+              <details class="cl-item" open style="--cl-accent: #1f3864;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📊 Novità V11.26 | 029 | Nov 2026</span>
+                  <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📊 Riepilogo del wizard leggibile</strong>: in alto quattro riquadri (tipo di collegamento e velocità, km totali, tempi stimati, costo totale con le voci ancora da stimare); sotto una riga per ogni tratta (code, reti Std e Div, RTN) con da dove a dove, distanza, dettaglio (apparati della coda, oppure collegamenti, salti e stato della rete), tempi e costo; in fondo i dati servizio scelti</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0066cc;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🔧 Novità V11.26 | 028 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🔧 Wizard sistemato</strong>: chiudendo e riaprendo il wizard, o mentre arrivano i percorsi, le pagine non si sovrappongono più; i popup Apparati e Mappa si aprono anche quando il wizard parte dall’Assistente</li>
+    <li><strong>🏢 Centrale nella pagina della sede</strong>: dopo la geocodifica vedi subito la centrale Colt più vicina, con le alternative; se ne scegli un’altra vale la tua scelta, e con «Torna alla più vicina» la annulli</li>
+    <li><strong>🏅 Percorsi come nell’Unificato</strong>: nella pagina della rete i migliori 3 sono in evidenza (oro, argento, bronzo), con il percorso delle centrali, i collegamenti RA e RC, i salti, i km RA e RC e lo stato; «Tutti per km» li sfoglia tutti a gruppi di 5. Per i Div il podio guarda prima C-FOS e CLLI in comune con lo Std</li>
+    <li><strong>⬇ Export completo nel Compositore</strong>: nella barra del Compositore c’è lo stesso export del wizard (TXT, Modulo KMZ, Excel con Dati Servizio e foglio IRP) per lo Std e il Div importati</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #1f3864;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📐 Novità V11.26 | 027 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📐 Wizard senza scorrimento</strong>: ogni pagina del wizard del Compositore sta tutta nella finestra. Le impostazioni sono ora due pagine (Collegamento con destinazione, Velocità e Solo Std / Std + Div; Dati servizio), riepilogo ed export sono separati e i percorsi della rete si sfogliano a gruppi di 5. Etichette e campi sono allineati, con i controlli tutti della stessa altezza</li>
+    <li><strong>➖ Si parte da Solo Std</strong>: il wizard e il Compositore partono dal solo percorso Standard; il diversificato si attiva quando serve</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #7c3aed;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📡 Novità V11.26 | 026 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📡 Moduli ottici</strong>: il tool conosce i moduli SFP, SFP+ e QSFP28 a 1G, 10G e 100G (LX, EX, ZX; LR, ER, ZR; CWDM4, LR4, 100G-LR, ER4 Lite, ER4, ZR4) con portata, lunghezze d’onda, norma ed esempi di codice Cisco. Chiedi all’Assistente CRO «modulo 100G per 2 km», «SFP 10G 35 km», «LR4» o «ER4 Lite»: consiglia il modulo con la portata giusta, con un margine, e segnala quello che arriverebbe al limite. La tabella completa è nella Guida, alla voce «Moduli ottici»</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #16a34a;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📦 Novità V11.26 | 025 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📦 Wizard completo</strong>: nelle impostazioni scegli se dalla sede cliente A vai verso un’altra sede cliente (stessa regione o interregionale) o verso un Nodo A1, e compili i dati servizio come nel foglio Dati Servizio dell’export (profilo, Velocità, interfaccia, CAR e le scelte SI/NO); la Velocità è anche la capacità. Alla fine «Scarica TXT + Excel + Modulo KMZ» fa lo stesso export dell’Unificato, in un colpo solo, per lo Std e il Div scelti</li>
+    <li><strong>⚡ Velocità già compilata</strong>: nella barra export dei tab RC e Unificato, attivando «📋 Dati Servizio» la Velocità prende da sola la capacità già scelta nella barra; se la cambi a mano resta la tua</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #1f3864;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧭 Novità V11.26 | 024 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧭 Wizard del Compositore</strong>: un percorso guidato che compila il Compositore di Fattibilità blocco per blocco, nello stesso ordine della catena: impostazioni, sede cliente A con indirizzo e geocodifica, coda A con km e apparati, centrale A, nodo A1, lato Z, rete con il calcolo dei percorsi Std e Div e la scelta di quello da usare, riepilogo con export TXT. Si apre dal bottone «🧭 Wizard» nel tab o dall’Assistente CRO, con lo stesso comportamento; dall’Assistente, alla fine, «Vai al Compositore» mostra la catena compilata. Le pagine scorrono con una transizione leggera e i passi in alto si possono cliccare</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #6d28d9;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🎛️ Novità V11.26 | 023 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🎛️ Popup Apparati più chiaro</strong>: i bottoni Cestello 1HU, 7HU e 9HU portano al gruppo lasciando visibili la sua intestazione e la prima riga. Ogni gruppo ha una fascia piena del suo colore con il numero di voci; al posto delle linguette a sinistra le righe hanno una zebra leggera nel colore del gruppo, si scuriscono al passaggio del mouse e restano colorate quando hanno una quantità</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b45309;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧾 Novità V11.26 | 022 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧾 Foglio IRP più leggibile</strong>: colonna PROG (B) stretta e Territorio (C) più larga, come nel modulo; nelle righe dati le colonne che il tool non compila sono in grigio (più scuro per quelle di Open Access e Technical Infrastructures, più chiaro per le altre di Network), così si vede subito cosa va completato a mano</li>
+    <li><strong>🧮 Popup Apparati rifatto</strong>: la finestra ha una misura fissa e non cambia quando scegli o togli voci; ogni quantità ha i bottoni − e +; le righe scelte si colorano; i tre cestelli hanno colori diversi (1HU ciano, 7HU viola, 9HU ambra) e un bottone in alto per saltare a ciascuno; i totali stanno in tre riquadri in basso</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #0050a0;">
                 <summary class="cl-sum">
                   <span class="cl-ver">✏️ Novità V11.26 | 021 | Nov 2026</span>
-                  <span class="cl-badge">Nuovo</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -32800,10 +33398,12 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cmp-seg" id="cmpSegCap"><button type="button" data-v="1G" class="on" onclick="croCmp.capacita('1G')">1G</button><button type="button" data-v="10G" onclick="croCmp.capacita('10G')">10G</button><button type="button" data-v="100G" onclick="croCmp.capacita('100G')">100G</button></div>
             <input type="hidden" id="cmpCap" value="1G"></div>
           <div class="cmp-grp"><span class="cmp-et">Rete RTR</span>
-            <div class="cmp-seg cmp-seg-div" id="cmpSegDiv"><button type="button" data-v="0" onclick="croCmp.diversificato(false)">➖ Solo Std</button><button type="button" data-v="1" class="on" onclick="croCmp.diversificato(true)">🔀 Std + Div</button></div>
-            <input type="checkbox" id="cmpDiv" checked hidden></div>
+            <div class="cmp-seg cmp-seg-div" id="cmpSegDiv"><button type="button" data-v="0" class="on" onclick="croCmp.diversificato(false)">➖ Solo Std</button><button type="button" data-v="1" onclick="croCmp.diversificato(true)">🔀 Std + Div</button></div>
+            <input type="checkbox" id="cmpDiv" hidden></div>
           <div class="cmp-grp cmp-azioni">
-            <button type="button" class="cmp-azb" onclick="croCmp.esportaTxt()">⬇ Esporta TXT</button>
+            <button type="button" class="cmp-azb cmp-wzb" onclick="croCmp.wizard()" title="Compila il Compositore passo per passo">🧭 Wizard</button>
+            <button type="button" class="cmp-azb" onclick="croCmp.esportaCompleto()" title="TXT, Modulo KMZ ed Excel (Dati Servizio e foglio IRP) dello Std e del Div importati, come nell'Unificato">⬇ Export completo</button>
+            <button type="button" class="cmp-azb" onclick="croCmp.esportaTxt()">⬇ TXT del Compositore</button>
             <button type="button" class="cmp-azb" onclick="croCmp.svuota()">↺ Svuota</button></div>
         </div>
         <div class="cmp-pal" id="cmpPal"></div>
@@ -42147,6 +42747,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><strong>Nodo A1 automatico:</strong> Zona A il più vicino alla Centrale A, Zona Z il più vicino alla Centrale Z, con le alternative.</p>
                   <p><strong>Estremi delle reti:</strong> per ogni blocco di rete (Rete RTR, Rete RTR Zona A o Z, RTN) partenza e arrivo sono la centrale o il nodo A1 compilati subito prima e subito dopo nella catena. Se ne manca uno, «Cerca nell’Unificato» lo dice.</p>
                   <p><strong>Rete RTR:</strong> «Cerca nell’Unificato» apre l’Unificato con partenza e arrivo del blocco (RTN spento) e avvia la ricerca; «Importa Std» e «Importa Div» mostrano tutti i percorsi trovati, con lo stesso numero dell’Unificato e un filtro per numero, subpath o km, e si sceglie con un clic. Per i Div va selezionato prima un percorso Std nell’Unificato, che calcola i suoi Div. Il blocco mostra km, collegamenti, stati, costo standard (stesso calcolo degli export, con la capacità scelta) e se Std e Div hanno C-FOS in comune.</p>
+                  <p><strong>Wizard:</strong> «🧭 Wizard» nella barra del Compositore (oppure «Wizard del Compositore» nell’Assistente CRO) compila la catena passo per passo, una pagina per volta senza scorrere: collegamento (dalla sede A verso un’altra sede cliente, stessa regione o interregionale, oppure verso un Nodo A1; Velocità, che è anche la capacità, e Solo Std o Std + Div, con Solo Std come partenza), dati servizio come nel foglio Dati Servizio dell’export, Sede cliente A, Coda A, Centrale A, Nodo A1 A, poi lo stesso per il lato Z, poi la rete (i percorsi si calcolano nell’Unificato in sottofondo e si sceglie lo Std e il Div), nella pagina della sede anche la centrale Colt proposta (si può cambiare, e la scelta a mano vale su quella automatica); nella pagina della rete i percorsi come nell’Unificato, con i migliori 3 in evidenza, il percorso delle centrali, i collegamenti RA e RC con i salti e i km; il riepilogo e infine l’export, con «Scarica TXT + Excel + Modulo KMZ» (lo stesso export c’è nella barra del Compositore, «⬇ Export completo»): lo stesso export dell’Unificato (TXT, Modulo KMZ, Excel con Dati Servizio e foglio IRP) per lo Std e il Div scelti, con i riferimenti SdF. Scrive nei blocchi veri, che restano modificabili a mano. Dall’Assistente, alla fine, «Vai al Compositore» porta alla catena compilata.</p>
                   <p><strong>Sede cliente:</strong> nei blocchi «🏠 Sede cliente A» e «Z» si può scrivere l’<strong>indirizzo</strong> e premere «🔍 Geocodifica» (o Invio): come nella Posizione Cliente dei tab di ricerca, il tool chiede le coordinate a OpenStreetMap (Nominatim), le scrive nel campo Coordinate e mostra il luogo trovato. Se l’indirizzo completo non c’è (nei comuni piccoli OpenStreetMap spesso non ha i numeri civici, o ha la via con un altro nome, per esempio «Via Manzoni» invece di «Via Alessandro Manzoni»), prova da solo per gradi: via e comune separati, via senza numero, via con il solo cognome, solo comune; un avviso arancione dice quando il punto è solo sulla via o al centro del comune. In quel caso «🗺️ Sposta sulla mappa» apre una mappa, con gli stessi sfondi delle mappe dei percorsi (anche il satellite, dal selettore in basso a sinistra), su cui cliccare la casa giusta, e «🔎 Cerca su Google Maps» apre la ricerca dell’indirizzo su Google Maps: lì clic destro sulla casa, clic sulle coordinate per copiarle e incollarle nel campo Indirizzo. Il campo Indirizzo accetta anche coordinate («40.967334, 14.269830») e link di Google Maps, che vengono usati direttamente; da lì la centrale più vicina e i km della coda si calcolano da soli. Le coordinate si possono sempre scrivere a mano.</p>
                   <p><strong>Code:</strong> nel blocco «Coda (stima)» di Zona A e Zona Z i <strong>km</strong> si calcolano da soli fra le coordinate della sede cliente e la centrale Colt della stessa zona: linea d’aria e percorso pedonale, quest’ultimo chiesto a un servizio internet (OSRM, profilo a piedi); se il servizio non risponde resta la linea d’aria. Un valore scritto a mano vince sul calcolo. Il <strong>costo</strong> si sceglie con «🧮 Apparati…»: il listino 📲 Apparati &amp; Cestelli dell’Analisi Costi, con la quantità di ogni voce in Centrale Cliente (sede) e in Centrale per il Cliente (si può svuotare un lato solo o tutto); nel blocco compare per esempio «Centrale Cliente: 8200,00 € + Centrale per il Cliente: 8200,00 € = 16.400,00 €». Il campo «Altro» accetta un importo da aggiungere o testo libero. Nelle <strong>note</strong> la prima riga «Coda Cliente: Centrale Cliente […] -- Centrale per il Cliente: […]» si scrive da sola; il resto delle note è libero.</p>
                   <p><strong>Riepilogo ed export:</strong> tabella con km e costi per tratta e totale (code stimate comprese, RTN non valorizzata); «Esporta TXT» scrive ogni blocco e, per le reti RTR, gli stessi blocchi del TXT dell’Unificato con i costi.</p>
@@ -42167,6 +42768,20 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><strong>Come si legge:</strong> ogni gruppo è una tabella. Per la RA le colonne sono Arco, Ramo, SubPath e Prog, per la RC il Collegamento; poi la tratta (centrale A → centrale Z) e i valori prima e dopo. Negli «Altri campi» c’è una riga per ogni campo cambiato (Campo, Prima, Dopo) e le C-FOS e gli OTS sono uno per riga: in rosso barrato quelli tolti, in verde quelli nuovi, in grigio quelli rimasti. Un clic sul primo valore apre la scheda nell’Assistente.</p>
                   <p><strong>Aggiornamento precedente e note:</strong> se uno dei due DB non è stato sostituito nell’ultimo aggiornamento, le sue novità sono quelle di prima: il riquadro lo mette dopo l’altro, con la pastiglia grigia «aggiornamento precedente» e i gruppi chiusi. Lo capisce dal campo <code>prec</code> scritto dal CRONAT o, per le righe più vecchie, dalla data del DB più vecchia dell’altra. Sotto l’intestazione compare la nota del CRONAT quando c’è, per esempio «Nessun cambiamento che incide sui risultati».</p>
                   <p><strong>Età del DB:</strong> accanto al titolo i giorni dall’ultimo aggiornamento; oltre 30 giorni compare l’avviso in giallo.</p>
+                </div>
+              </details>
+
+              <!-- V11.26|026: moduli ottici -->
+              <details id="docs-moduli-ottici">
+                <summary style="font-weight:700;font-size:0.95rem;cursor:pointer;color:#0066cc;padding:6px 0;">
+                  📡 Moduli ottici (SFP, SFP+, QSFP28) — quale usare in base a velocità e distanza
+                </summary>
+                <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
+                  <p>Riferimento per indicare al cliente il modulo da acquistare per la coda o per l’interfaccia dell’apparato. Chiedi anche all’Assistente CRO, per esempio «modulo 100G per 2 km» o «LR4». Portate su fibra monomodale G.652: sono indicative, conta la perdita reale della tratta (fibra, giunti, connettori).</p>
+                  <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:0.8rem;width:100%"><thead><tr style="background:#1f3864;color:#fff"><th style="padding:5px 8px;text-align:left">Velocità · modulo</th><th style="padding:5px 8px;text-align:left">Standard · formato</th><th style="padding:5px 8px;text-align:left">Portata</th><th style="padding:5px 8px;text-align:left">Lunghezza d’onda</th><th style="padding:5px 8px;text-align:left">Norma</th><th style="padding:5px 8px;text-align:left">Esempio Cisco</th></tr></thead><tbody><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>1G</b> · LX</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">1000BASE-LX/LH · SFP</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">fino a 10 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">1310 nm</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">IEEE 802.3z (LX: 5 km da norma; le versioni LX/LH arrivano a 10 km)</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">GLC-LH-SMD</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>1G</b> · EX</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">1000BASE-EX · SFP</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">fino a 40 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">1310 nm</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">non IEEE: specifica dei produttori</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">GLC-EX-SMD</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>1G</b> · ZX</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">1000BASE-ZX · SFP</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">circa 70-80 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">1550 nm</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">non IEEE: specifica dei produttori</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">GLC-ZX-SMD</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>10G</b> · LR</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">10GBASE-LR · SFP+</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">fino a 10 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">1310 nm</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">IEEE 802.3ae</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">SFP-10G-LR-S</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>10G</b> · ER</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">10GBASE-ER · SFP+</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">fino a 40 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">1550 nm</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">IEEE 802.3ae</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">SFP-10G-ER-S</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>10G</b> · ZR</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">10GBASE-ZR · SFP+</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">fino a 80 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">1550 nm</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">non IEEE: specifica dei produttori</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">SFP-10G-ZR-S</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>100G</b> · CWDM4</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">100GBASE-CWDM4 · QSFP28</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">fino a 2 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">4 lunghezze d’onda CWDM: 1271, 1291, 1311, 1331 nm</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">MSA CWDM4 (non IEEE)</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">QSFP-100G-CWDM4-S</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>100G</b> · LR4</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">100GBASE-LR4 · QSFP28</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">fino a 10 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">4 lunghezze d’onda LAN-WDM: 1295,56 · 1300,05 · 1304,58 · 1309,14 nm</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">IEEE 802.3ba</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">QSFP-100G-LR4-S</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>100G</b> · LR1</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">100GBASE-LR1 (100G-LR, lambda singola) · QSFP28</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">fino a 10 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">1 lunghezza d’onda intorno a 1310 nm</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">IEEE 802.3cu</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">QSFP-100G-LR-S</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>100G</b> · ER4-Lite</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">100GBASE-ER4 Lite · QSFP28</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">40 km con RS-FEC, circa 30 km senza</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">4 lunghezze d’onda LAN-WDM (come LR4)</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">non IEEE: specifica dei produttori</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">QSFP-100G-ER4L-S</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>100G</b> · ER4</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">100GBASE-ER4 · QSFP28</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">fino a 40 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">4 lunghezze d’onda LAN-WDM (come LR4)</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">IEEE 802.3ba</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">—</td></tr><tr><td style="padding:4px 8px;border-top:1px solid #e5e7eb"><b>100G</b> · ZR4</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">100GBASE-ZR4 · QSFP28</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">fino a 80 km</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">4 lunghezze d’onda LAN-WDM</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">non IEEE: specifiche MSA e dei produttori</td><td style="padding:4px 8px;border-top:1px solid #e5e7eb">QSFP-100G-ZR4-S</td></tr></tbody></table></div>
+                  <ul style="margin:0 0 0 1rem;padding:0;line-height:1.6"><li><strong>SFP / SFP+</strong>: Modulo piccolo a una sola corsia: SFP per 1G, SFP+ per 10G. Una lunghezza d’onda per verso.</li><li><strong>QSFP28</strong>: Modulo «quad» per 100G, poco più grande di un SFP: 4 corsie elettriche da 25G. Nel LR4 le 4 corsie diventano 4 lunghezze d’onda sulla stessa coppia di fibre.</li><li><strong>FEC (RS-FEC)</strong>: Correzione d’errore fatta dall’apparato: allunga la portata di alcuni moduli (ER4 Lite, ZR4).</li><li><strong>Perdita di tratta / budget</strong>: La perdita di fibra, giunti e connettori deve stare sotto quella ammessa dal modulo; la portata in km è indicativa.</li><li><strong>Quanti moduli</strong>: Ne serve uno per ogni estremo del collegamento, dello stesso tipo ai due lati (per esempio LR4 con LR4).</li><li><strong>Compatibilità</strong>: Il codice del produttore dell’apparato (per esempio Cisco «-S») va verificato nella sua matrice di compatibilità per il modello di porta.</li></ul>
+                  <p><strong>Note:</strong> LR4 ed ER4 sono IEEE 802.3ba e usano 4 lunghezze d’onda intorno ai 1310 nm; nel LR4 la perdita massima di tratta è 6,3 dB (il budget di potenza, circa 8 dB, comprende anche le penalità). L’ER4 Lite arriva a 40 km solo con l’RS-FEC attivo sull’apparato, senza si ferma intorno ai 30 km. Lo ZR4 non è uno standard IEEE: budget e requisiti cambiano da un produttore all’altro e di solito serve l’RS-FEC. 1000BASE-EX, 1000BASE-ZX e 10GBASE-ZR non sono IEEE (specifiche dei produttori); Cisco dichiara lo ZX per circa 70 km. Sotto i 2 km il CWDM4 è un’alternativa più economica al LR4; il 100G-LR (lambda singola, IEEE 802.3cu) arriva a 10 km ma interopera solo con un altro LR1.</p>
+                  <p><strong>Fonti:</strong> IEEE 802.3 (z, ae, ba, bm, cu), MSA CWDM4 e 4WDM, schede tecniche Cisco dei moduli SFP, SFP+ e QSFP28; dati raccolti il 05/11/2026. Il codice del produttore va sempre verificato nella matrice di compatibilità dell’apparato.</p>
                 </div>
               </details>
 
@@ -42405,7 +43020,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <li><strong>Calcolo percorsi Div</strong>: in modalità RTN usa <strong>▶ Div Zona A</strong> (A1 alternativo zona partenza) poi <strong>▶ Div Zona B</strong> su ogni Div A (A1 alternativo zona arrivo). I Div non condividono nessun collegamento fisico con il Std</li>
                 <li><strong>Visualizzazione mappa</strong>: click <strong>🗺️ Maps</strong> per analisi topografica; <strong>🌍 Mappa NAT</strong> per export su NAT Italia</li>
                 <li><strong>Selezione percorso ottimale</strong>: basati su distanza, composizione RA/RC, diversificazione geografica, badge 🏆🥇🥈🥉</li>
-                <li><strong>Export documentazione</strong>: <strong>📄 Esporta</strong> apre la selezione dei percorsi, poi <strong>📤 Esporta TXT</strong> per l'allegato tecnico NNI/IRP (include gateway RTN) oppure <strong>📊 Esporta XLSX</strong> per il foglio Excel con Riepilogo, Centrali, Collegamenti, KMZ (blocco informativo in testa, poi le tabelle CENTRALI e COLLEGAMENTI) e note IRP già pronte, più il foglio <strong>IRP</strong> («Modulo lavorazione Standard»): SF in C1 dal riferimento Std della barra, riga 1 lasciata a chi emette la fattibilità, poi per ogni via (nell’ordine dell’export: il primo percorso è la 1° Via, il secondo la 2° Via) la coda cliente A (DWDM/C, costi dalla Coda Apparati dell’Analisi Costi), una riga per sezione di trasporto (DWDM/R: RA consecutive insieme, nuova riga a ogni passaggio RA↔RC) con rami logici, km, tempi 60/180 giorni, costo del listino per capacità (Cap. della barra; nel tab RC «Cap. IRP») e tariffa Italia Std o Nord Ovest, hardware e subpath nelle note, e la coda Z; niente coda dal lato di un Nodo A1; copia formattata 📋 per inserimento rapido in pratiche</li>
+                <li><strong>Export documentazione</strong>: con «📋 Dati Servizio» attivo la Velocità si riempie da sola con la capacità scelta nella barra (Cap. o Cap. IRP) e resta modificabile; <strong>📄 Esporta</strong> apre la selezione dei percorsi, poi <strong>📤 Esporta TXT</strong> per l'allegato tecnico NNI/IRP (include gateway RTN) oppure <strong>📊 Esporta XLSX</strong> per il foglio Excel con Riepilogo, Centrali, Collegamenti, KMZ (blocco informativo in testa, poi le tabelle CENTRALI e COLLEGAMENTI) e note IRP già pronte, più il foglio <strong>IRP</strong> («Modulo lavorazione Standard»): SF in C1 dal riferimento Std della barra, riga 1 lasciata a chi emette la fattibilità, poi per ogni via (nell’ordine dell’export: il primo percorso è la 1° Via, il secondo la 2° Via) la coda cliente A (DWDM/C, costi dalla Coda Apparati dell’Analisi Costi), una riga per sezione di trasporto (DWDM/R: RA consecutive insieme, nuova riga a ogni passaggio RA↔RC) con rami logici, km, tempi 60/180 giorni, costo del listino per capacità (Cap. della barra; nel tab RC «Cap. IRP») e tariffa Italia Std o Nord Ovest, hardware e subpath nelle note, e la coda Z; niente coda dal lato di un Nodo A1; copia formattata 📋 per inserimento rapido in pratiche</li>
                 <li><strong>Archiviazione</strong>: allega export a ticket CR/GI, usa <strong>↩️ Undo</strong> per tornare alla ricerca precedente se necessario</li>
               </ol>
 
@@ -44296,7 +44911,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 021 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 029 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -44314,7 +44929,106 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
-        <details open style="border:1px solid #0050a0;border-radius:12px;overflow:hidden;background:#eff6ff;">
+        <details open style="border:1px solid #1f3864;border-radius:12px;overflow:hidden;background:#f5f8fc;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#1f3864;display:flex;align-items:center;gap:0.5rem;background:#e3eaf5;">
+            📊 V11.26 | 029 | Nov 2026 | Riepilogo del wizard
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📊 wzRiepilogo()</strong>: al posto della tabella di <code>riepilogo()</code> copiata senza stile, quattro indicatori <code>.wz-kpi</code> (schema e capacità con Std o Std + Div; km totali con le code, come nel riepilogo del Compositore; tempi = 60 giorni, 180 se una rete scelta ha collegamenti non attivi; costo totale code + reti Std e Div, con il numero di voci ancora da stimare) e la tabella <code>.wz-rt</code> a colonne fisse: tratta, da → a (centrali dei blocchi), distanza (linea d’aria e a piedi per le code; km totali, RA e RC per le reti), dettaglio (apparati 🏠 sede / 🏢 centrale; collegamenti, salti, stato), tempi, costo (per le code anche sede + centrale). Riga finale con i dati servizio e l’origine dei costi. Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0066cc;border-radius:12px;overflow:hidden;background:#eff6ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0050a0;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
+            🔧 V11.26 | 028 | Nov 2026 | Wizard: correzioni, centrale nella sede, percorsi come nell'Unificato; export completo nel Compositore
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🔧 wzMostra()</strong>: toglie tutte le pagine precedenti tranne quella che sta uscendo con l’animazione; prima ne toglieva una sola, e con la riapertura o con un <code>wzRidisegna()</code> durante l’animazione (risultati della rete, geocodifica) restavano pagine sovrapposte. <code>wizard()</code> svuota <code>#wzC</code> e sposta <code>#cmpModale</code> in <code>document.body</code>: dentro il tab Compositore nascosto (wizard avviato dall’Assistente) il popup Apparati non si vedeva</li>
+              <li><strong>🏢 Pagina della sede</strong>: Cliente e Coordinate su una riga, Indirizzo con Geocodifica, esito, poi la centrale del blocco Centrale della stessa zona (<code>wzCentrale()</code>, alternative cliccabili) e il campo «scegli un’altra centrale» che scrive <code>manuale</code> (in <code>calcola()</code> vince sull’automatica); «Torna alla più vicina» lo svuota. Tolto dal wizard il campo «centrale indicata dal cliente», che resta nel blocco</li>
+              <li><strong>🏅 Rete</strong>: <code>wzInfo(r)</code> (km totali, RA e RC, collegamenti RA e RC, salti XFER, non attivi, percorso delle centrali da <code>r.nodes</code>, subpath) e <code>wzClassifica()</code>: per gli Std lo stesso punteggio del podio dell’Unificato (salti × 12, non attivi × 8, collegamenti × 0,5, 2 × scarto km), per i Div il podio dei Div (C-FOS, CLLI, senza dato, km, non attivi, salti, collegamenti). Vista «Migliori 3» (righe oro, argento, bronzo) o «Tutti per km» a gruppi di 5 sull’elenco completo, con la numerazione dell’Unificato</li>
+              <li><strong>⬇ croCmp.esportaCompleto()</strong> (= <code>wzEsporta()</code>), bottone «⬇ Export completo» nella barra del Compositore accanto a «⬇ TXT del Compositore»: gli indici di Std e Div si ritrovano confrontando i percorsi scelti con quelli dell’Unificato, così vale anche per gli import a mano; messaggi con <code>showToast</code> fuori dal wizard. Segnalazioni di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #1f3864;border-radius:12px;overflow:hidden;background:#f5f8fc;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#1f3864;display:flex;align-items:center;gap:0.5rem;background:#e3eaf5;">
+            📐 V11.26 | 027 | Nov 2026 | Wizard senza scorrimento, partenza da Solo Std
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📐 wzPassi()</strong>: «Impostazioni» diventa «Collegamento» (destinazione, Velocità, Solo Std / Std + Div) + «Dati servizio» (Profilo, Interfaccia, CAR su una riga; sette SI/NO in griglia, con Collegamento Diversificato legato a <code>diversificato()</code>); «Riepilogo» + «Export» (SdF ed export in un colpo). Rete: 5 percorsi per pagina con «precedenti / successivi» (<code>WZ.rete.da</code>). <code>.wz-pag</code> senza scorrimento</li>
+              <li><strong>📏 Allineamento</strong>: nuovi <code>.wz-grid2</code> / <code>.wz-grid3</code> / <code>.wz-f2</code>: etichetta <code>.wz-lb</code> alta 18 px sopra un controllo alto 38 px (<code>.wz-in</code>, <code>.wz-seg-full</code>) e riga di aiuto alta 16 px, così campi e scelte sulla stessa riga partono e finiscono alla stessa altezza; righe SI/NO alte 44 px</li>
+              <li><strong>➖ Solo Std</strong>: <code>#cmpDiv</code> parte non spuntato e il bottone acceso è «Solo Std»; <code>wizard()</code> su un Compositore senza dati chiama <code>diversificato(false)</code>. Richieste di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #7c3aed;border-radius:12px;overflow:hidden;background:#faf5ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
+            📡 V11.26 | 026 | Nov 2026 | Moduli ottici nei dati del tool e nell'Assistente
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📡 window.CRO_MODULI_OTTICI</strong> (12 moduli: velocità, nome, sigla, formato, portata in km, lunghezze d’onda, fibra, connettore, norma, esempio Cisco, note) e <strong>window.CRO_MODULI_GLOSSARIO</strong> (SFP/SFP+, QSFP28, FEC, perdita di tratta, quanti moduli, compatibilità), nel blocco del Compositore. Valori verificati il 05/11/2026 su materiale IEEE 802.3ba (LR4: 4 corsie LAN-WDM 1295,56–1309,14 nm, perdita di tratta 6,3 dB) e schede dei produttori (ER4 Lite 40 km con RS-FEC e 30 km senza; Cisco ZX circa 70 km; codici Cisco GLC-LH-SMD, GLC-EX-SMD, GLC-ZX-SMD, SFP-10G-LR/ER/ZR-S, QSFP-100G-CWDM4-S, QSFP-100G-LR4-S, QSFP-100G-LR-S, QSFP-100G-ER4L-S, QSFP-100G-ZR4-S)</li>
+              <li><strong>💬 moduliDomanda(q)</strong> nell’Assistente, in testa a <code>rispondi()</code>: si attiva con «modulo/SFP/QSFP/transceiver/ottico» o con la sola sigla (LR4, ER4 Lite, ZX…); legge velocità (1G, 10G, 100G) e distanza in km. Con la distanza consiglia per ogni velocità il modulo con la portata minima che la copre con un margine del 25 %, e segnala come «al limite» quello che la copre senza margine (per esempio il CWDM4 a 2 km); con la sola sigla mostra la scheda del modulo; altrimenti tabella e glossario. Esempio «📡 Moduli ottici per distanza» (modello <code>modulo ottico 100G per {2} km</code>). Nuova sezione della Guida <code>#docs-moduli-ottici</code> e scheda dell’Overview «Moduli ottici» (i badge «Nuovo» diventano 7). Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #16a34a;border-radius:12px;overflow:hidden;background:#f0fdf4;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#166534;display:flex;align-items:center;gap:0.5rem;background:#dcfce7;">
+            📦 V11.26 | 025 | Nov 2026 | Wizard: destinazione, dati servizio, export in un colpo
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📦 Impostazioni del wizard</strong>: tre destinazioni (altra sede cliente stessa regione, interregionale con RTN, Nodo A1); nuovo schema <code>schema('a1')</code> = sedeA, codaA, centraleA, rtrA, nodoA. Dati servizio in <code>WDS</code> (profilo, interfaccia, CAR a testo libero; MPLS, Alice Business, Drop diversificato, Doppio apparato, Dual Homing, Collegamento Protetto SI/NO); Velocità = <code>capacita()</code> (1G, 10G, 100G); Collegamento Diversificato = <code>diversificato()</code></li>
+              <li><strong>⬇ wzEsporta()</strong>: con una sola rete RTR (stessa regione o Nodo A1) copia SdF, capacità (costi attivi) e Dati Servizio nella barra export dell’Unificato, accende il Modulo KMZ, poi chiama <code>exportRoutesTxtBaseUNIFIED</code> o <code>exportRoutesTxtWithAltUNIFIED</code> e, dopo 0,9 s, <code>_croExportXlsx</code> con gli indici dello Std e del Div scelti (salvati in <code>b.f.std/div.idx</code> e <code>.base</code>). Il Modulo KMZ prende gli stessi percorsi da <code>window._croKmzScelta</code> (nuovo controllo in testa a <code>selezionati()</code>). Con l’interregionale (due reti RTR) l’export unico non è possibile e il wizard lo dice</li>
+              <li><strong>⚡ _velAuto(pfx)</strong>: all’attivazione dei Dati Servizio e a ogni cambio di <code>unifiedCostCapacity</code> o <code>rcIrpCapacity</code> la Velocità prende la capacità, finché non viene scritta a mano (<code>data-auto</code>). Richieste di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #1f3864;border-radius:12px;overflow:hidden;background:#f5f8fc;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#1f3864;display:flex;align-items:center;gap:0.5rem;background:#e3eaf5;">
+            🧭 V11.26 | 024 | Nov 2026 | Wizard del Compositore
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧭 croCmp.wizard(opt)</strong>: finestra <code>#wzVelo</code> (940 × 700 al massimo) sopra il tab; passi da <code>wzPassi()</code> secondo i blocchi presenti (Impostazioni, sedeA, codaA, centraleA, nodoA, sedeZ, codaZ, centraleZ, nodoZ, una pagina per ogni blocco rete, Riepilogo). La rete viene dopo il lato Z perché le servono tutte e due le centrali. Ogni campo scrive in <code>b.f</code> dei blocchi veri e chiama <code>ridisegna()</code>; riusa <code>geocodifica()</code>, <code>geoHtml()</code>, <code>codaKmHtml()</code>, <code>codaCostoHtml()</code>, <code>apparati()</code>, <code>risultato()</code> e <code>riepilogo()</code></li>
+              <li><strong>🟢 Rete</strong>: «Calcola i percorsi Std» scrive gli estremi nell’Unificato e lancia <code>runUnifiedRouteSearch()</code> senza cambiare tab, attende <code>_baseRoutesUNIFIED</code> e mostra i primi 10 (km, collegamenti, stato, subpath); «Usa» importa in <code>b.f.std</code>. Con Std + Div, «Calcola i Div» lancia <code>runAltRoutesSearchUNIFIED</code> sull’indice dello Std scelto e mostra i primi 10 Div con C-FOS e CLLI in comune (<code>croConfrontaCfos</code>)</li>
+              <li><strong>✨ Animazioni</strong>: entrata e uscita laterale delle pagine (0,26 s), barra di avanzamento animata, comparsa della finestra; niente animazioni con <code>prefers-reduced-motion</code>. Le finestre Apparati e Mappa si aprono sopra il wizard (<code>cmpModale</code> a z-index 100020). <strong>💬 Assistente</strong>: esempio «🧭 Wizard del Compositore», comando «wizard» e bottone «Compila il Compositore» alla fine di «Imposta una pratica». Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #6d28d9;border-radius:12px;overflow:hidden;background:#faf5ff;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#5b21b6;display:flex;align-items:center;gap:0.5rem;background:#ede9fe;">
+            🎛️ V11.26 | 023 | Nov 2026 | Popup Apparati: salto ai gruppi, zebra, passaggio del mouse
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🎛️ apparati(id)</strong>: il salto al gruppo usa <code>.ap-tw.scrollTo(offsetTop della fascia − altezza del thead)</code> al posto di <code>scrollIntoView</code>, che metteva fascia e prima riga sotto l’intestazione fissa; il bottone del gruppo resta acceso (<code>.ap-gb.on</code>). Fascia <code>tr.ap-g</code> piena nel colore del cestello con contatore delle voci; tolta la linguetta sinistra delle righe; zebra per gruppo (<code>.ap-z</code>, 4 % del colore), passaggio del mouse 12 % con un filo sottile a sinistra, riga scelta 16 % e nome nel colore del gruppo. Segnalato da Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b45309;border-radius:12px;overflow:hidden;background:#fffbeb;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#92400e;display:flex;align-items:center;gap:0.5rem;background:#fef3c7;">
+            🧾 V11.26 | 022 | Nov 2026 | Grigi del foglio IRP, popup Apparati rifatto
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧾 _irpFoglio()</strong>: <code>getColumn(2).width = 6</code>, <code>getColumn(3).width = 20</code>; per le righe da <code>IRP_PRIMA</code> a <code>ultima</code> (escluse intestazione e TOTALE) riempimento <code>FFD9D9D9</code> su C, I, K–AU, BT–BX e <code>FFF2F2F2</code> su AV–AZ, BD, BE, BG, BH, BI, BK, BL, BM, BQ, BR. Indicazioni di Giuseppe con le lettere reali del foglio</li>
+              <li><strong>🧮 apparati(id)</strong> riscritta: modale <code>.ap-box</code> a misura fissa (980 × 720 px al massimo, 94 vw × 88 vh), tabella <code>table-layout: fixed</code> con colonne fisse e righe alte 42 px, note su una riga con puntini, <code>scrollbar-gutter: stable</code>; stepper −/+ (0–99) e campo numerico; <code>tr.ap-on</code> colora la riga scelta col colore del gruppo; <code>APP_GR</code> 1HU <code>#0e7490</code>, 7HU <code>#6d28d9</code>, 9HU <code>#b45309</code>, con bottoni per saltare al gruppo; piede con tre riquadri (Centrale Cliente, Centrale per il Cliente, Totale), nota della coda su una riga e bottoni Svuota / Annulla / Applica. <code>chiudiModale()</code> toglie <code>ap-box</code>. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #0050a0;border-radius:12px;overflow:hidden;background:#eff6ff;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#0050a0;display:flex;align-items:center;gap:0.5rem;background:#dbeafe;">
             ✏️ V11.26 | 021 | Nov 2026 | Esempi dell'Assistente dinamici
           </summary>
@@ -82835,7 +83549,24 @@ div[style*="background:#f3f4f6"] label:hover span {
     var isChecked = chk && chk.checked;
     if (row) row.style.display = isChecked ? 'flex' : 'none';
     if (btns) btns.style.display = isChecked ? 'flex' : 'none';
+    if (isChecked) _velAuto(pfx);   /* V11.26|025 */
   };
+  /* V11.26|025: la Velocità dei Dati Servizio si riempie da sola con la capacità già scelta nella barra
+     (Cap. dei costi nell'Unificato, Cap. IRP nel tab RC); se la scrivi a mano, resta la tua */
+  function _velAuto(pfx) {
+    var v = document.getElementById(pfx + 'SelBarDs_velocita'), c = document.getElementById(pfx === 'rc' ? 'rcIrpCapacity' : 'unifiedCostCapacity');
+    if (!v || !c) return;
+    if (!String(v.value || '').trim() || v.dataset.auto === '1') { v.value = c.value; v.dataset.auto = '1'; }
+  }
+  window._velAutoDs = _velAuto;
+  document.addEventListener('change', function (e) {
+    var id = e.target && e.target.id;
+    if (id === 'rcIrpCapacity') _velAuto('rc'); else if (id === 'unifiedCostCapacity') _velAuto('unified');
+  });
+  document.addEventListener('input', function (e) {
+    var id = e.target && e.target.id;
+    if (id === 'rcSelBarDs_velocita' || id === 'unifiedSelBarDs_velocita') e.target.dataset.auto = String(e.target.value || '').trim() ? '0' : '1';
+  });
 
   // ── Bottoni controllo Dati Servizio ──────────────────────────────────────
   window.expsmDsSelectAll = function(pfx) {
@@ -85312,6 +86043,16 @@ window._buildUnifiedCostBlock = function(opts) {
       if (x.note){ ws.getCell('BZ' + rr).alignment = { wrapText: true, vertical: 'middle', horizontal: 'left' }; ws.getRow(rr).height = Math.max(15, 13 * Math.ceil(String(x.note).length / 95)); }
     });
     ws.getColumn(_irpCol('BZ')).width = 100;
+    /* V11.26|022: B 6 e C 20 come nel modulo di Giuseppe; righe dati (non intestazione né TOTALE):
+       grigio scuro #D9D9D9 e grigio chiaro #F2F2F2 sulle colonne che il tool non compila */
+    ws.getColumn(2).width = 6; ws.getColumn(3).width = 20;
+    var _rng = function (a, b) { var o = [], i; for (i = _irpCol(a); i <= _irpCol(b); i++) o.push(i); return o; };
+    var GRIGIO_SCURO = [_irpCol('C'), _irpCol('I')].concat(_rng('K', 'AU'), _rng('BT', 'BX'));
+    var GRIGIO_CHIARO = _rng('AV', 'AZ').concat(['BD', 'BE', 'BG', 'BH', 'BI', 'BK', 'BL', 'BM', 'BQ', 'BR'].map(_irpCol));
+    for (var rg = IRP_PRIMA; rg <= ultima; rg++) {
+      GRIGIO_SCURO.forEach(function (c) { ws.getCell(rg, c).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD9D9D9' } }; });
+      GRIGIO_CHIARO.forEach(function (c) { ws.getCell(rg, c).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F2F2' } }; });
+    }
     var rT = ultima + 1;
     _irpRiga(ws, 30, rT);
     ws.getCell('B' + rT).value = 'TOTALE';
@@ -94478,6 +95219,130 @@ body.cro-infolive-on .cro-toast-container { bottom: 44px !important; }
 .cmp-app-tw { position: relative; } .cmp-app thead th { top: 0 !important; z-index: 3 !important; background: #f1f5f9 !important; box-shadow: 0 1px 0 #e2e8f0; }
 .cmp-app td { position: static !important; } .cmp-app .q input { position: static !important; }
 body.dark-mode .cmp-app th, body.dark-mode .cmp-app thead th { background: #1e293b !important; color: #94a3b8; } body.dark-mode .cmp-app tr.g td { background: #2e1065; color: #ddd6fe; } body.dark-mode .cmp-app td { border-color: #253247; }
+.cmp-mod-box.ap-box { width: min(980px, 94vw); height: min(720px, 88vh); max-height: none; }   /* V11.26|022: popup Apparati a misura fissa */
+.ap-box .cmp-mod-c { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; padding: .7rem 1rem .8rem; gap: .5rem; }
+.ap-int { font-size: .76rem; color: #475569; line-height: 1.4; }
+.ap-leg { display: flex; gap: .35rem; flex-wrap: nowrap; }
+.ap-gb { font-size: .7rem; font-weight: 700; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--g); background: var(--gf); color: var(--g); cursor: pointer; }
+.ap-gb:hover { background: var(--g); color: #fff; }
+.ap-tw { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-gutter: stable; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; }
+.cmp-mod-c table.ap-t { width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 0; font-size: .76rem; }
+.cmp-mod-c .ap-t th { position: sticky; top: 0 !important; z-index: 3 !important; background: #1f3864; color: #fff; font-size: .66rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; padding: 7px 10px; border: 0; text-align: left; }
+.cmp-mod-c .ap-t th.n, .cmp-mod-c .ap-t td.n { text-align: right; }
+.cmp-mod-c .ap-t th.q, .cmp-mod-c .ap-t td.q { text-align: center; }
+.cmp-mod-c .ap-t td { position: static !important; border: 0; border-bottom: 1px solid #eef2f7; padding: 5px 10px; vertical-align: middle; height: 42px; box-sizing: border-box; }
+.cmp-mod-c .ap-t tr.ap-g td { height: 32px; background: var(--g); color: #fff; border: 0; padding: 0 12px; }   /* V11.26|023: fascia piena, niente linguette */
+.ap-gn { font-weight: 800; font-size: .76rem; letter-spacing: .04em; text-transform: uppercase; }
+.ap-gs { font-size: .7rem; opacity: .85; margin-left: .5rem; }
+.ap-gc { float: right; font-size: .66rem; font-weight: 700; background: rgba(255,255,255,.2); border-radius: 999px; padding: 1px 8px; margin-top: 1px; }
+.cmp-mod-c .ap-t tr.ap-r td { background: #fff; transition: background-color .12s ease; }
+.cmp-mod-c .ap-t tr.ap-r.ap-z td { background: color-mix(in srgb, var(--g) 4%, #fff); }
+.cmp-mod-c .ap-t tr.ap-r:hover td { background: color-mix(in srgb, var(--g) 12%, #fff); }
+.cmp-mod-c .ap-t tr.ap-r:hover td:first-child { box-shadow: inset 3px 0 0 var(--g); }
+.cmp-mod-c .ap-t tr.ap-r.ap-on td { background: color-mix(in srgb, var(--g) 16%, #fff); }
+.cmp-mod-c .ap-t tr.ap-r.ap-on .ap-v { color: var(--g); }
+.cmp-mod-c .ap-t tr.ap-r.ap-on:hover td { background: color-mix(in srgb, var(--g) 22%, #fff); }
+.ap-gb.on { background: var(--g); color: #fff; }
+.ap-v { font-weight: 700; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ap-n { font-size: .68rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cmp-mod-c .ap-t td.n { font-variant-numeric: tabular-nums; white-space: nowrap; color: #334155; font-weight: 600; }
+.ap-st { display: inline-flex; align-items: stretch; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; background: #fff; height: 28px; width: 112px; }
+.ap-st button { width: 30px; border: 0; background: #f1f5f9; color: #334155; font-size: 1rem; font-weight: 700; cursor: pointer; line-height: 1; padding: 0; }
+.ap-st button:hover { background: #1f3864; color: #fff; }
+.ap-st input { width: 52px; border: 0; border-left: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; text-align: center; font-weight: 700; font-size: .8rem; padding: 0; -moz-appearance: textfield; }
+.ap-st input::-webkit-outer-spin-button, .ap-st input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.ap-r.ap-on .ap-st { border-color: var(--g); }
+.ap-piede { flex: none; display: flex; flex-direction: column; gap: .45rem; }
+.ap-tot { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .5rem; }
+.ap-k { border: 1px solid #e2e8f0; border-radius: 10px; padding: .4rem .7rem; background: #f8fafc; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto; column-gap: .5rem; }
+.ap-k span { font-size: .7rem; color: #475569; font-weight: 600; } .ap-k b { grid-row: span 2; align-self: center; font-size: 1rem; color: #0f172a; font-variant-numeric: tabular-nums; } .ap-k i { font-style: normal; font-size: .66rem; color: #94a3b8; }
+.ap-kt { background: #1f3864; border-color: #1f3864; } .ap-kt span, .ap-kt b { color: #fff; }
+.ap-nota { height: 1.3em; line-height: 1.3em; font-size: .72rem; color: #334155; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ap-nota.vuota { color: #94a3b8; font-style: italic; }
+.ap-az { display: flex; justify-content: space-between; align-items: center; gap: .6rem; }
+.ap-sv { display: flex; align-items: center; gap: .3rem; font-size: .7rem; color: #64748b; } .ap-sv button, .ap-ok button { font-size: .72rem; padding: 4px 10px; border-radius: 7px; border: 1px solid #cbd5e1; background: #fff; color: #334155; cursor: pointer; white-space: nowrap; }
+.ap-sv button:hover { border-color: #b91c1c; color: #b91c1c; } .ap-ok { display: flex; gap: .4rem; } .ap-ok button.pri { background: #0066cc; border-color: #0066cc; color: #fff; font-weight: 700; padding: 4px 18px; } .ap-ok button:hover { filter: brightness(.95); }
+body.dark-mode .ap-tw, body.dark-mode .ap-st { background: #0f172a; border-color: #334155; } body.dark-mode .ap-v { color: #e2e8f0; } body.dark-mode .ap-k { background: #1e293b; border-color: #334155; } body.dark-mode .ap-k b { color: #e2e8f0; } body.dark-mode .ap-st input { background: #0f172a; color: #e2e8f0; } body.dark-mode .ap-st button { background: #1e293b; color: #cbd5e1; } body.dark-mode .cmp-mod-c .ap-t tr.ap-r td { background: #0f172a; } body.dark-mode .cmp-mod-c .ap-t tr.ap-r.ap-z td { background: #131c2e; } body.dark-mode .cmp-mod-c .ap-t tr.ap-r:hover td { background: color-mix(in srgb, var(--g) 22%, #0f172a); } body.dark-mode .cmp-mod-c .ap-t tr.ap-r.ap-on td { background: color-mix(in srgb, var(--g) 30%, #0f172a); }
+.wz-cards.wz-cards3 { grid-template-columns: 1fr 1fr 1fr; }
+.wz-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem 1rem; margin: .8rem 0; align-items: start; }   /* V11.26|027: campi allineati */
+.wz-grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .9rem 1rem; margin: .6rem 0 .9rem; align-items: start; }
+.wz-f2 { display: flex; flex-direction: column; min-width: 0; }
+.wz-lb { display: block; height: 18px; line-height: 18px; margin-bottom: 6px; font-size: .74rem; font-weight: 700; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wz-req { color: #dc2626; }
+.wz-in { height: 38px; box-sizing: border-box; padding: 0 .65rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: .82rem; width: 100%; }
+.wz-in:focus { outline: none; border-color: #0066cc; box-shadow: 0 0 0 3px rgba(0,102,204,.15); }
+.wz-seg.wz-seg-full { display: flex; height: 38px; } .wz-seg.wz-seg-full button { flex: 1; padding: 0 10px; }
+.wz-hint { display: block; height: 16px; margin-top: 4px; font-size: .68rem; color: #94a3b8; }
+.wz-sns { grid-template-columns: 1fr 1fr; } .wz-sn { height: 44px; box-sizing: border-box; } .wz-sn > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wz-sn .wz-seg-s { height: 30px; } .wz-sn .wz-seg-s button { height: 30px; min-width: 46px; }
+.wz-pag { overflow: hidden; } .wz-pag h4 { margin-bottom: .35rem; } .wz-int { margin-bottom: .55rem; }
+.wz-pager { display: flex; align-items: center; justify-content: flex-end; gap: .5rem; margin-top: .4rem; font-size: .72rem; color: #64748b; } .wz-pager button { font-size: .72rem; padding: 3px 10px; border-radius: 7px; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; } .wz-pager button:disabled { opacity: .4; cursor: default; }
+.wz-big { font-size: .86rem; padding: 10px 18px; }
+.wz-h38 { height: 38px; box-sizing: border-box; }   /* V11.26|028 */
+.wz-kpi { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1.1fr; gap: .6rem; margin-bottom: .7rem; }   /* V11.26|029: riepilogo */
+.wz-kpi > div { border: 1px solid #e2e8f0; border-radius: 10px; padding: .5rem .75rem; background: #f8fafc; display: flex; flex-direction: column; min-width: 0; }
+.wz-kpi span { font-size: .66rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; color: #64748b; } .wz-kpi b { font-size: 1.05rem; color: #0f172a; margin: .1rem 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .wz-kpi i { font-style: normal; font-size: .68rem; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wz-kpi .wz-kpi-t { background: #1f3864; border-color: #1f3864; } .wz-kpi .wz-kpi-t span, .wz-kpi .wz-kpi-t i { color: #c7d2fe; } .wz-kpi .wz-kpi-t b { color: #fff; }
+.wz-rt { table-layout: fixed; font-size: .74rem; } .wz-rt td { vertical-align: middle; padding: 7px 8px; } .wz-rt td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; font-weight: 700; }
+.wz-rt td.wz-cut { white-space: normal; line-height: 1.35; } .wz-rt td.wz-cut2 { font-size: .7rem; line-height: 1.35; }
+body.dark-mode .wz-kpi > div { background: #1e293b; border-color: #334155; } body.dark-mode .wz-kpi b { color: #e2e8f0; }
+.wz-geo1 { min-height: 38px; margin: .4rem 0 .6rem; } .wz-cen, .wz-f2 > .wz-ris { margin: 0 !important; }
+.wz-rete-s { display: flex; align-items: center; flex-wrap: wrap; gap: .3rem; }
+.wz-t2 { table-layout: fixed; } .wz-t2 td { vertical-align: middle; padding: 7px 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 34px; box-sizing: border-box; }
+.wz-t2 td.wz-pc { white-space: normal; } .wz-perc { font-weight: 600; color: #1f2937; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: .72rem; line-height: 1.3; }
+.wz-t2 .wz-ids { max-width: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wz-t tbody tr.med1 td { background: #fffbeb; } .wz-t tbody tr.med2 td { background: #f5f7fa; } .wz-t tbody tr.med3 td { background: #fdf3ea; }
+.wz-t tbody tr.med1 td:first-child { box-shadow: inset 4px 0 0 #d4a017; } .wz-t tbody tr.med2 td:first-child { box-shadow: inset 4px 0 0 #9aa5b1; } .wz-t tbody tr.med3 td:first-child { box-shadow: inset 4px 0 0 #b87333; }
+.wz-t tbody tr.on td { background: #e8f5ec !important; }
+.wz-l { margin: .35rem 0; } .wz-l input, .wz-l textarea { padding: .4rem .6rem; }
+body.dark-mode .wz-in { background: #0f172a; color: #e2e8f0; border-color: #334155; }
+.wz-steps { justify-content: space-between; overflow: hidden; } .wz-steps button { padding: 2px 4px; } .wz-steps button em { display: none; } .wz-steps button.qui { padding: 2px 10px 2px 4px; } .wz-steps button.qui em { display: inline; }   /* solo icone, il nome del passo corrente e gli altri al passaggio del mouse */ .wz-ds { display: grid; grid-template-columns: 1fr 1fr; column-gap: .8rem; } .wz-ds .wz-l .wz-seg { margin-top: .2rem; }   /* V11.26|025 */
+.wz-sns { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem .8rem; margin-top: .5rem; } .wz-sn { display: flex; align-items: center; justify-content: space-between; gap: .5rem; font-size: .76rem; color: #334155; border: 1px solid #e2e8f0; border-radius: 8px; padding: .3rem .5rem; background: #fff; }
+.wz-seg-s button { padding: 3px 12px; font-size: .74rem; } .wz-seg-s button[data-v="SI"].on, .wz-seg-s button[data-v="1"].on { background: #16a34a; } .wz-seg-s button[data-v="NO"].on, .wz-seg-s button[data-v="0"].on { background: #64748b; }
+body.dark-mode .wz-sn { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+.cmp-wzb { background: #1f3864 !important; color: #fff !important; border-color: #1f3864 !important; font-weight: 700; }   /* V11.26|024: wizard */
+.wz-velo { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100005; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); animation: wzVelo .2s ease; }
+.wz-velo[hidden] { display: none; }
+.wz-box { width: min(940px, 94vw); height: min(700px, 90vh); background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.35); display: flex; flex-direction: column; overflow: hidden; animation: wzBox .26s cubic-bezier(.2,.8,.2,1); }
+.wz-h { display: flex; align-items: center; gap: .6rem; padding: .75rem 1.1rem; background: #1f3864; color: #fff; }
+.wz-h > div { flex: 1; display: flex; flex-direction: column; } .wz-h b { font-size: .95rem; } .wz-h small { font-size: .72rem; opacity: .8; margin-top: 1px; }
+.wz-h button { background: none; border: 1px solid rgba(255,255,255,.45); color: #fff; border-radius: 7px; cursor: pointer; padding: 2px 8px; }
+.wz-prog { padding: .55rem 1.1rem .4rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
+.wz-bar { height: 4px; background: #e2e8f0; border-radius: 4px; overflow: hidden; } .wz-bar i { display: block; height: 100%; background: linear-gradient(90deg, #0066cc, #16a34a); border-radius: 4px; transition: width .35s ease; }
+.wz-steps { display: flex; gap: .25rem; margin-top: .45rem; overflow-x: auto; scrollbar-width: none; } .wz-steps::-webkit-scrollbar { display: none; }
+.wz-steps button { flex: none; display: flex; align-items: center; gap: .3rem; border: 1px solid #e2e8f0; background: #fff; border-radius: 999px; padding: 2px 9px 2px 4px; font-size: .68rem; color: #64748b; cursor: pointer; transition: background-color .2s, color .2s, border-color .2s; }
+.wz-steps button span { width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: #f1f5f9; font-size: .7rem; }
+.wz-steps button em { font-style: normal; white-space: nowrap; }
+.wz-steps button.fatto { color: #15803d; border-color: #bbe5c8; background: #f0fdf4; } .wz-steps button.qui { color: #fff; background: #0066cc; border-color: #0066cc; font-weight: 700; } .wz-steps button.qui span { background: rgba(255,255,255,.25); }
+.wz-c { flex: 1; min-height: 0; position: relative; overflow: hidden; }
+.wz-pag { position: absolute; inset: 0; overflow-y: auto; padding: 1rem 1.3rem 1.2rem; scrollbar-gutter: stable; }
+.wz-pag h4 { margin: 0 0 .5rem; font-size: 1.02rem; color: #1f3864; }
+.wz-pag.entra-dx { animation: wzEntraDx .26s cubic-bezier(.2,.8,.2,1); } .wz-pag.entra-sx { animation: wzEntraSx .26s cubic-bezier(.2,.8,.2,1); }
+.wz-pag.esce-sx { animation: wzEsceSx .24s ease forwards; pointer-events: none; } .wz-pag.esce-dx { animation: wzEsceDx .24s ease forwards; pointer-events: none; }
+@keyframes wzEntraDx { from { opacity: 0; transform: translateX(36px); } to { opacity: 1; transform: none; } }
+@keyframes wzEntraSx { from { opacity: 0; transform: translateX(-36px); } to { opacity: 1; transform: none; } }
+@keyframes wzEsceSx { to { opacity: 0; transform: translateX(-36px); } } @keyframes wzEsceDx { to { opacity: 0; transform: translateX(36px); } }
+@keyframes wzVelo { from { opacity: 0; } } @keyframes wzBox { from { opacity: 0; transform: translateY(14px) scale(.98); } }
+@media (prefers-reduced-motion: reduce) { .wz-velo, .wz-box, .wz-pag { animation: none !important; } .wz-bar i { transition: none; } }
+.wz-int { font-size: .8rem; color: #475569; margin: 0 0 .7rem; line-height: 1.45; }
+.wz-g { margin: .6rem 0; } .wz-et { display: flex; align-items: center; justify-content: space-between; gap: .5rem; font-size: .7rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: .03em; margin-bottom: .3rem; }
+.wz-cards { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.wz-card { text-align: left; border: 1px solid #cbd5e1; border-radius: 12px; background: #fff; padding: .7rem .85rem; cursor: pointer; display: grid; grid-template-columns: auto 1fr; column-gap: .6rem; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.wz-card .i { grid-row: span 2; font-size: 1.5rem; } .wz-card b { color: #1f3864; } .wz-card small { color: #64748b; font-size: .72rem; }
+.wz-card:hover { border-color: #0066cc; transform: translateY(-1px); } .wz-card.on { border-color: #0066cc; box-shadow: 0 0 0 3px rgba(0,102,204,.15); background: #f5f9ff; }
+.wz-seg { display: inline-flex; border: 1px solid #cbd5e1; border-radius: 9px; overflow: hidden; } .wz-seg button { border: 0; background: #fff; padding: 5px 16px; font-size: .8rem; cursor: pointer; color: #334155; transition: background-color .2s, color .2s; } .wz-seg button + button { border-left: 1px solid #e2e8f0; } .wz-seg button.on { background: #0066cc; color: #fff; font-weight: 700; }
+.wz-l { display: block; font-size: .74rem; font-weight: 600; color: #475569; margin: .45rem 0; } .wz-l input, .wz-l textarea { display: block; width: 100%; box-sizing: border-box; margin-top: .2rem; padding: .45rem .6rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: .82rem; font-weight: 400; }
+.wz-l input:focus, .wz-l textarea:focus { outline: none; border-color: #0066cc; box-shadow: 0 0 0 3px rgba(0,102,204,.15); }
+.wz-row { display: flex; align-items: flex-end; gap: .5rem; flex-wrap: wrap; margin: .4rem 0; } .wz-flex { flex: 1; margin: 0; }
+.wz-azb { font-size: .74rem; font-weight: 700; padding: 6px 12px; border-radius: 8px; border: 1px solid #0066cc; background: #eff6ff; color: #0066cc; cursor: pointer; white-space: nowrap; } .wz-azb:hover { background: #0066cc; color: #fff; } .wz-azb.pri { background: #0066cc; color: #fff; }
+.wz-ris { border: 1px solid #e2e8f0; background: #f8fafc; border-radius: 10px; padding: .55rem .75rem; font-size: .78rem; line-height: 1.45; margin: .35rem 0; }
+.wz-ris .cmp-alt button, .wz-ris button[data-wz="man"] { font-size: .7rem; margin: .15rem .2rem 0 0; padding: 2px 8px; border-radius: 999px; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; } .wz-ris button[data-wz="man"]:hover { border-color: #0066cc; color: #0066cc; }
+.wz-riep { max-height: none; } .wz-k { font-size: .72rem; color: #64748b; } .wz-nota { font-size: .76rem; color: #b45309; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: .4rem .6rem; }
+.wz-tw { border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; margin-top: .4rem; } .wz-t { width: 100%; border-collapse: collapse; font-size: .74rem; } .wz-t th { background: #1f3864; color: #fff; font-size: .66rem; text-transform: uppercase; padding: 6px 8px; text-align: left; } .wz-t td { padding: 5px 8px; border-top: 1px solid #eef2f7; vertical-align: middle; } .wz-t tbody tr:nth-child(even) td { background: #fafbfd; } .wz-t tbody tr:hover td { background: #eef5ff; } .wz-t tr.on td { background: #e8f5ec; }
+.wz-ids { max-width: 360px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #475569; }
+.wz-scegli { font-size: .7rem; font-weight: 700; padding: 3px 10px; border-radius: 7px; border: 1px solid #0066cc; background: #fff; color: #0066cc; cursor: pointer; } .wz-t tr.on .wz-scegli { background: #16a34a; border-color: #16a34a; color: #fff; }
+.wz-f { display: flex; align-items: center; gap: .5rem; padding: .65rem 1.1rem; border-top: 1px solid #e2e8f0; background: #f8fafc; } .wz-sp { flex: 1; }
+.wz-f button { font-size: .8rem; padding: 6px 16px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: #334155; cursor: pointer; } .wz-f button:disabled { opacity: .4; cursor: default; } .wz-f button.pri { background: #0066cc; border-color: #0066cc; color: #fff; font-weight: 700; }
+body.dark-mode .wz-box { background: #0f172a; color: #e2e8f0; } body.dark-mode .wz-prog, body.dark-mode .wz-f { background: #111c30; border-color: #334155; } body.dark-mode .wz-ris, body.dark-mode .wz-card, body.dark-mode .wz-seg button, body.dark-mode .wz-steps button { background: #1e293b; border-color: #334155; color: #e2e8f0; } body.dark-mode .wz-l input, body.dark-mode .wz-l textarea { background: #0f172a; color: #e2e8f0; border-color: #334155; } body.dark-mode .wz-pag h4 { color: #93c5fd; }
 .cmp-modale { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
 .cmp-modale[hidden] { display: none; }
 .cmp-mod-box { background: #fff; border-radius: 12px; width: min(900px, 94vw); max-height: 82vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
@@ -96370,6 +97235,7 @@ table.route-detail-table > tbody > tr > td.col-id {
 
   /* solo i percorsi con la spunta, se la selezione esiste */
   function selezionati(ambito) {
+    if (ambito === 'UNIFIED' && window._croKmzScelta) return window._croKmzScelta;   /* V11.26|025: Std e Div scelti nel wizard */
     var tutti = percorsi(ambito);
     var tab = ambito === 'RA' ? 'tab-search-ra'
             : (ambito === 'UNIFIED' ? 'tab-search-unified' : 'tab-search');
@@ -96753,7 +97619,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 021';
+  var REVISIONE = 'V11.26 | 029';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
