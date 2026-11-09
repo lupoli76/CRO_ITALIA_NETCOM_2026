@@ -4,13 +4,45 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 084  (rev. pubblicata: V11.26 | 084 | Nov 2026)              ║
+║   Versione: 11.26 | 089  (rev. pubblicata: V11.26 | 089 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 089 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE, RIEPILOGO PER VIA: code comuni in testa e in fondo, poi la    ║
+║     1a Via (STD) e la 2a Via (DIV) separate da una fascia colorata; coda doppia  ║
+║     dentro la sua via; da verificare prima di IRP; RTN non gestita dal Gruppo RTR║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 088 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE: card di Centrale e Nodo A1 con le due vie nello stesso        ║
+║     formato (1a Via blu, 2a Via viola); Nodo A1 della 2a Via proposto (l'altro   ║
+║     A1 dell'area) o scelto a mano, usato per i Div, la RTN e l'export            ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 087 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE: Colt 2a Via (Div) facoltativa in Sede e Centrale A e Z,       ║
+║     allineate e da verificare; va in Partenza 2 / Arrivo 2 dell'Unificato, fa la ║
+║     coda doppia, avviso se il Div non parte da li', A2/Z2 sulla mappa            ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 086 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE: coda doppia quando lo Std e il Div usano Colt diverse         ║
+║     (avviso nella card con le due Colt e i km, due righe nel riepilogo); barra   ║
+║     del totale su una riga, Export completo non va piu' a capo                   ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 085 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE INTERREGIONALE: Export completo con un solo Excel; nel         ║
+║     foglio IRP ogni via va dalla Zona A alla Zona Z con una riga RTN in mezzo;   ║
+║     TXT della Progettazione e Modulo KMZ con le due zone                         ║
+║   • RIEPILOGO: una riga RTN per via; la coda copiata sull'altra zona porta       ║
+║     anche la nota Coda Cliente                                                   ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 084 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -6706,9 +6738,15 @@ window.croCmp = (function () {
       if (cc && v && cc.f.manuale !== v) { if (!cc.f.manuale || cc.f.daSede) { cc.f.manuale = v; cc.f.daSede = true; cc.f.verificata = ''; }
         else chiedi('Nella Centrale ' + Ls + ' \u00e8 scelta a mano \u00ab' + cc.f.manuale + '\u00bb. Metto al suo posto \u00ab' + v + '\u00bb, indicata nella sede (da verificare)?', function () { cc.f.manuale = v; cc.f.daSede = true; cc.f.verificata = ''; ridisegna(); }); }
       if (cc && !v && cc.f.daSede) { cc.f.manuale = ''; cc.f.daSede = false; } }
+    if (Ls && TIPI[b.tipo].cl === 'sede' && k === 'centrale2') { var c2 = trova('centrale' + Ls);   /* V11.26|087 */
+      if (c2 && v && c2.f.manuale2 !== v) { if (!c2.f.manuale2 || c2.f.daSede2) { c2.f.manuale2 = v; c2.f.daSede2 = true; c2.f.verificata2 = ''; }
+        else chiedi('Nella Centrale ' + Ls + ' la Colt 2a Via scelta a mano \u00e8 \u00ab' + c2.f.manuale2 + '\u00bb. Metto al suo posto \u00ab' + v + '\u00bb, indicata nella sede (da verificare)?', function () { c2.f.manuale2 = v; c2.f.daSede2 = true; c2.f.verificata2 = ''; ridisegna(); }); }
+      if (c2 && !v && c2.f.daSede2) { c2.f.manuale2 = ''; c2.f.daSede2 = false; } }
+    if (Ls && TIPI[b.tipo].cl === 'centrale' && k === 'manuale2') { b.f.daSede2 = false; var s2 = trova('sede' + Ls);
+      if (s2 && v && s2.f.centrale2 !== v) { if (!s2.f.centrale2) s2.f.centrale2 = v; else chiedi('Nella Sede cliente ' + Ls + ' la Colt 2a Via indicata \u00e8 \u00ab' + s2.f.centrale2 + '\u00bb. La sostituisco con \u00ab' + v + '\u00bb?', function () { s2.f.centrale2 = v; ridisegna(); }); } }
     if (Ls && TIPI[b.tipo].cl === 'centrale' && k === 'manuale') { b.f.daSede = false; var ss = trova('sede' + Ls);
       if (ss && v && ss.f.centrale !== v) { if (!ss.f.centrale) ss.f.centrale = v; else chiedi('Nella Sede cliente ' + Ls + ' la centrale indicata \u00e8 \u00ab' + ss.f.centrale + '\u00bb. La sostituisco con \u00ab' + v + '\u00bb?', function () { ss.f.centrale = v; ridisegna(); }); } }
-    if (k === 'manuale' || k === 'centrale' || k === 'coord') ridisegna(); else disegnaRisultati(); }
+    if (k === 'manuale' || k === 'centrale' || k === 'coord' || k === 'manuale2' || k === 'centrale2') ridisegna(); else disegnaRisultati(); }
 
   /* ── calcolo dei blocchi automatici ── */
   function sedeCoord(lato) { var s = trova(lato === 'A' ? 'sedeA' : 'sedeZ'); return s ? coord(s.f.coord) : null; }
@@ -6750,7 +6788,7 @@ window.croCmp = (function () {
     setTimeout(function () {
       if (window._uRtnModeAttivo === true && typeof window._uRtnModeChanged === 'function') window._uRtnModeChanged();   /* le reti RTR si cercano senza RTN */
       var s = el('uRouteStartInput'), e = el('uRouteEndInput');
-      if (s) s.value = etichetta(b.ep.a); if (e) e.value = etichetta(b.ep.z);
+      if (s) s.value = etichetta(b.ep.a); if (e) e.value = etichetta(b.ep.z); impostaDue(b);   /* V11.26|087 */
       window._cmpRicercaPer = id; window._baseRoutesUNIFIED = null; ritornoAvvia(WZ && WZ.sosp ? 'wizard' : 'studio', id);   /* V11.26|069 */
       if (typeof window.runUnifiedRouteSearch === 'function') window.runUnifiedRouteSearch();
     }, 300);
@@ -6867,6 +6905,10 @@ window.croCmp = (function () {
     var piena = A.lab.length || B.lab.length || x != null || (v2 && (v2.A.lab.length || v2.B.lab.length));
     return { A: A, B: B, v2: v2, altro: x, tot: piena ? tot : null, riga: riga };
   }
+  function notaDaApp(b) {   /* V11.26|085: riscrive la riga «Coda Cliente» della nota dagli apparati */
+    var rg = codaNotaApp(b), resto = String(b.f.note || '').split(/\r?\n/).filter(function (q) { return !/^Coda Cliente:/.test(q); });
+    b.f.note = (rg ? [rg] : []).concat(resto).join('\n').replace(/\n+$/, '');
+  }
   function codaNotaApp(b) {
     var A = appLato(b.f.app, 'A'), B = appLato(b.f.app, 'B');
     if (!A.lab.length && !B.lab.length) return '';
@@ -6971,6 +7013,58 @@ window.croCmp = (function () {
       return '<span class="cmp-cn ' + (ra ? 'ra' : 'rc') + '" title="' + esc(et) + ' \u00b7 rete ' + t.reti[0] + '">' + esc(et) + '</span>';
     }).join('<span class="cmp-lk-fr">\u2192</span>');
   }
+
+  /* V11.26|086: Colt della coda per via. Con il Div, se lo Std e il Div partono (o arrivano) da Colt diverse,
+     la coda di quella zona e' doppia: una verso la Colt dello Std, una verso quella del Div */
+  function coltVie(L) {
+    if (!viaDoppia()) return null;
+    var c1b = trova('centrale' + L), c2 = cen2(L);   /* V11.26|087: prima la Colt 2a Via scelta */
+    if (c2 && c1b && c1b.r && c1b.r.c && c2.c.clli !== c1b.r.c.clli) { var pp = sedeCoord(L), k1 = pp && !isNaN(c1b.r.c.lat) ? hav(pp.lat, pp.lon, c1b.r.c.lat, c1b.r.c.lon) : null;
+      return { std: { clli: c1b.r.c.clli, nome: c1b.r.c.nome, c: c1b.r.c }, div: { clli: c2.c.clli, nome: c2.c.nome, c: c2.c }, kmS: k1, kmD: c2.d }; }
+    var rete = L === 'A' ? (trova('rtrA') || trova('rtr')) : (trova('rtrZ') || trova('rtr'));
+    if (!rete || !rete.f.std || !rete.f.div) return null;
+    var capo = function (r) { var n = r.nodes || []; var k = String(L === 'A' ? n[0] : n[n.length - 1] || '').replace(/::(RA|RC)$/, ''); carica(); var c = centrali[k]; return { clli: k, nome: c ? c.nome : k, c: c }; };
+    var s = capo(rete.f.std), d = capo(rete.f.div);
+    if (!s.clli || !d.clli || s.clli === d.clli) return null;
+    var p = sedeCoord(L), kmD = p && d.c && !isNaN(d.c.lat) ? hav(p.lat, p.lon, d.c.lat, d.c.lon) : null, kmS = p && s.c && !isNaN(s.c.lat) ? hav(p.lat, p.lon, s.c.lat, s.c.lon) : null;
+    return { std: s, div: d, kmS: kmS, kmD: kmD };
+  }
+
+  /* V11.26|087: Colt della 2a Via (Div), facoltativa. Vale solo con Std + Div: se e' vuota coincide con la prima.
+     Si sceglie a mano nella Centrale (manuale2) o si indica nella Sede (centrale2); le due restano uguali. */
+  function cen2(L) {
+    if (!viaDoppia()) return null;
+    var c = trova('centrale' + L), s = trova('sede' + L); if (!c) return null;
+    var t = c.f.manuale2 || (s && s.f.centrale2) || ''; if (!t) return null;
+    var x = trovaCentrale(t); if (!x) return null;
+    var p = sedeCoord(L), d = p && !isNaN(x.lat) ? hav(p.lat, p.lon, x.lat, x.lon) : null;
+    var daSede = !c.f.manuale2 || c.f.daSede2;
+    return { c: x, d: d, modo: daSede ? 'indicata' : 'man', ver: c.f.verificata2 === x.clli };
+  }
+  function impostaDue(b) {   /* Partenza 2 e Arrivo 2 dell'Unificato per i Div */
+    var a2 = el('uRouteStart2Input'), z2 = el('uRouteEnd2Input'), L = b.tipo, A = (L === 'rtr' || L === 'rtrA') ? cen2('A') : (L === 'rtrZ' ? nodo2('Z') : null), Z = (L === 'rtr' || L === 'rtrZ') ? cen2('Z') : (L === 'rtrA' ? nodo2('A') : null);   /* V11.26|088: Nodi A1 della 2a Via */
+    if (A && b.ep && b.ep.a && A.c.clli === b.ep.a.clli) A = null; if (Z && b.ep && b.ep.z && Z.c.clli === b.ep.z.clli) Z = null;
+    if (a2) a2.value = A ? etichetta(A.c) : ''; if (z2) z2.value = Z ? etichetta(Z.c) : '';
+  }
+
+  /* V11.26|088: Nodo A1 della 2a Via (Div). Di partenza e' l'altro Nodo A1 della stessa area piu' vicino alla
+     centrale della zona (es. Lazio: ROMA SUD per lo Std, ROMA INVIOLATELLA per il Div); se l'area ne ha uno solo
+     resta lo stesso. Si puo' scegliere a mano (manuale2). */
+  function nodo2(L) {
+    if (!viaDoppia()) return null;
+    var b = trova('nodo' + L); if (!b || !b.r || !b.r.c) return null;
+    if (b.f.manuale2) { var xm = trovaCentrale(b.f.manuale2); if (xm) return { c: xm, modo: 'man', d: null }; }
+    var lista = typeof CENTRALI_POP_NODO_A1 !== 'undefined' ? CENTRALI_POP_NODO_A1 : [];
+    var me = lista.filter(function (x) { return x.clli === b.r.c.clli; })[0]; if (!me) return { c: b.r.c, modo: 'stesso', d: b.r.d };
+    var ce = trova('centrale' + L), rif = ce && ce.r && ce.r.c ? ce.r.c : b.r.c; carica();
+    var alt = lista.filter(function (x) { return x.area === me.area && x.clli !== me.clli && centrali[x.clli]; }).map(function (x) { var c = centrali[x.clli]; return { c: c, d: (!isNaN(c.lat) && !isNaN(rif.lat)) ? hav(rif.lat, rif.lon, c.lat, c.lon) : 1e9 }; })
+      .sort(function (p, q) { return p.d - q.d; })[0];
+    return alt ? { c: alt.c, modo: 'auto', d: alt.d } : { c: b.r.c, modo: 'stesso', d: b.r.d };
+  }
+  /* blocco uniforme di una via nella card di centrale o nodo */
+  function viaBox(tit, cls, c, sotto, extra) {
+    return '<div class="cmp-vb ' + cls + '"><div class="cmp-vb-t">' + tit + '</div>' + (c ? '<div class="cmp-cen"><span class="cmp-acico">' + SVG_CEN + '</span><span class="cmp-actx"><b>' + esc(acEt(c)) + '</b><span class="cmp-cen-k">' + acGeo(c) + acTag(c) + '</span><span class="cmp-k">' + sotto + '</span>' + (extra || '') + '</span></div>' : '<div class="cmp-k">' + sotto + '</div>') + '</div>';
+  }
   function codaCostoHtml(b) {
     var c = codaCosto(b), h = c.prot ? protHtml(c.prot, 'Coda') : c.riga ? '<b>' + esc(c.riga) + '</b>' : '<span class="cmp-k">nessun apparato scelto</span>';
     if (c.v2) h += '<div class="cmp-k">Std + Div: la coda si valorizza per la 1a Via (Std) e per la 2a Via (Div)' + (c.v2.uguale ? ', la 2a uguale alla 1a' : ', configurate a parte') + '. Nel popup Apparati scegli la via.</div>';
@@ -6990,7 +7084,7 @@ window.croCmp = (function () {
   function apparati(id) {
     var b = catena.filter(function (x) { return x.id === id; })[0]; if (!b) return;
     var altraC = trova(b.tipo === 'codaA' ? 'codaZ' : 'codaA');   /* V11.26|070 */
-    var copiaC = altraC ? { testo: 'Applica e copia su ' + (b.tipo === 'codaA' ? 'Coda Zona Z' : 'Coda Zona A'), fn: function () { ['app', 'app2', 'app2ug'].forEach(function (k) { altraC.f[k] = b.f[k] === undefined ? undefined : JSON.parse(JSON.stringify(b.f[k])); }); ridisegna(); if (typeof showToast === 'function') showToast('Apparati copiati anche sulla ' + TIPI[altraC.tipo].nome + '.', 'success'); } } : null;
+    var copiaC = altraC ? { testo: 'Applica e copia su ' + (b.tipo === 'codaA' ? 'Coda Zona Z' : 'Coda Zona A'), fn: function () { ['app', 'app2', 'app2ug'].forEach(function (k) { altraC.f[k] = b.f[k] === undefined ? undefined : JSON.parse(JSON.stringify(b.f[k])); }); notaDaApp(altraC); ridisegna(); if (typeof showToast === 'function') showToast('Apparati copiati anche sulla ' + TIPI[altraC.tipo].nome + '.', 'success'); } } : null;
     if (viaDoppia()) {   /* V11.26|069 */
       return apparatiPopup({ copia: copiaC, titolo: TIPI[b.tipo].nome + ' \u00b7 Std + Div', lati: { A: b.f.app, Z: b.f.app2 || b.f.app, uguale: b.f.app2ug !== false, etichette: ['1a Via (Std)', '2a Via (Div)'], ugTesto: '2a Via uguale alla 1a' },
         applica: function (r) { b.f.app = r.A; b.f.app2 = r.Z; b.f.app2ug = r.uguale; var rg = codaNotaApp(b), resto = String(b.f.note || '').split(/\r?\n/).filter(function (q) { return !/^Coda Cliente:/.test(q); }); b.f.note = (rg ? [rg] : []).concat(resto).join('\n').replace(/\n+$/, ''); ridisegna(); } });
@@ -7326,19 +7420,25 @@ window.croCmp = (function () {
   }
   function bloccoHtml(b) {
     var T = TIPI[b.tipo], h = '<div class="cmp-b ' + T.cl + '"><div class="cmp-b-h">' + T.ic + '<span>' + esc(T.nome) + '</span>' + (T.cl === 'rete' ? '<button type="button" class="cmp-cx" data-cmpx="' + b.id + '" title="Apri il dettaglio a tutta larghezza">\u2922</button>' : '') + '<button type="button" title="Togli il blocco" onclick="croCmp.togli(' + b.id + ')">\u2715</button></div>';
-    var inp = function (k, ph, lab) { return '<label>' + lab + '<input type="text" value="' + esc(b.f[k] || '') + '" placeholder="' + esc(ph) + '"' + (k === 'centrale' || k === 'manuale' ? ' data-cmp-ac="' + (T.cl === 'nodo' ? 'a1' : 'c') + '" autocomplete="off"' : '') + ' onchange="croCmp.campo(' + b.id + ',\'' + k + '\',this.value)"></label>' + (k === 'centrale' || k === 'manuale' ? acSub(b.f[k]) : ''); };
+    var inp = function (k, ph, lab) { return '<label>' + lab + '<input type="text" value="' + esc(b.f[k] || '') + '" placeholder="' + esc(ph) + '"' + (k === 'centrale' || k === 'manuale' || k === 'centrale2' || k === 'manuale2' ? ' data-cmp-ac="' + (T.cl === 'nodo' ? 'a1' : 'c') + '" autocomplete="off"' : '') + ' onchange="croCmp.campo(' + b.id + ',\'' + k + '\',this.value)"></label>' + (k === 'centrale' || k === 'manuale' || k === 'centrale2' || k === 'manuale2' ? acSub(b.f[k]) : ''); };
     if (T.cl === 'sede') h += inp('nome', 'es. BANCA INTESA (RM)', 'Cliente / sede')
       + '<div class="cmp-sez">Indirizzo <button type="button" class="cmp-geo-b" onclick="croCmp.geocodifica(' + b.id + ')" title="Cerca le coordinate dell’indirizzo (OpenStreetMap)">\uD83D\uDD0D Geocodifica</button></div>'   /* V11.26|010 */
       + '<input type="text" class="cmp-ind" data-ind="' + b.id + '" value="' + esc(b.f.indirizzo || '') + '" placeholder="es. Via Roma 10, Milano \u00b7 o incolla coordinate o link di Google Maps" onchange="croCmp.campo(' + b.id + ',\'indirizzo\',this.value)" onkeydown="if(event.key===\'Enter\'){event.preventDefault();croCmp.geocodifica(' + b.id + ');}">'
       + '<div class="cmp-geo" data-geo="' + b.id + '">' + geoHtml(b) + '</div>'
-      + inp('coord', 'es. 41.9619, 12.4421', 'Coordinate (lat, lon)') + inp('centrale', 'es. TOMBA DI NERONE (ROMAITFT)', 'Centrale indicata (Colt)');
+      + inp('coord', 'es. 41.9619, 12.4421', 'Coordinate (lat, lon)') + inp('centrale', 'es. TOMBA DI NERONE (ROMAITFT)', viaDoppia() ? 'Centrale indicata (Colt) 1a Via (Std)' : 'Centrale indicata (Colt)')
+      + (viaDoppia() ? inp('centrale2', 'facoltativa: se vuota vale la 1a Via', 'Centrale indicata (Colt) 2a Via (Div)') : '');   /* V11.26|087 */
     else if (T.cl === 'coda') h += '<div class="cmp-sez">Km stimati</div><div class="cmp-ris" data-km="' + b.id + '"></div>'   /* V11.26|009 */
       + '<label>Km a mano (facoltativo)<input type="text" value="' + esc(b.f.km || '') + '" placeholder="vince sul calcolo, es. 1,5" onchange="croCmp.campo(' + b.id + ',\'km\',this.value)"></label>'
       + '<div class="cmp-sez">Costo stimato (\u20ac) <button type="button" class="cmp-app-b" onclick="croCmp.apparati(' + b.id + ')">\uD83E\uDDEE Apparati\u2026</button></div><div class="cmp-ris" data-costo="' + b.id + '"></div>'
       + '<label>Altro (importo o testo libero)<input type="text" value="' + esc(b.f.costo || '') + '" placeholder="es. 1.200 scavo" onchange="croCmp.campo(' + b.id + ',\'costo\',this.value)"></label>'
       + '<label>Note<textarea rows="3" placeholder="tracciato, permessi, fonte del costo\u2026" onchange="croCmp.campo(' + b.id + ',\'note\',this.value)">' + esc(b.f.note || '') + '</textarea></label>';
     else if (T.cl === 'centrale' || T.cl === 'nodo') {
-      h += '<div class="cmp-ris" data-ris="' + b.id + '"></div>' + inp('manuale', 'scegli un’altra centrale', T.cl === 'nodo' ? 'Nodo A1 a mano' : 'Centrale a mano');
+      h += '<div class="cmp-ris" data-ris="' + b.id + '"></div>' + inp('manuale', 'scegli un’altra centrale', T.cl === 'nodo' ? 'Nodo A1 a mano' : (viaDoppia() ? 'Centrale a mano 1a Via (Std)' : 'Centrale a mano'));
+      if (T.cl === 'nodo' && viaDoppia()) { var n2 = nodo2(slotEt(b.tipo));   /* V11.26|088 */
+        h += '<div class="cmp-sez">Nodo A1 2a Via (Div)</div>' + (n2 ? '<div class="cmp-k">' + esc(acEt(n2.c)) + ' \u00b7 ' + (n2.modo === 'auto' ? 'proposto: l\u2019altro Nodo A1 dell\u2019area' : n2.modo === 'man' ? 'scelto a mano' : 'stesso della 1a Via') + '</div>' : '') + inp('manuale2', 'facoltativo: vince sulla proposta', 'Nodo A1 a mano 2a Via (Div)'); }
+      if (T.cl === 'centrale' && viaDoppia()) { var q2 = cen2(slotEt(b.tipo));   /* V11.26|087 */
+        h += '<div class="cmp-sez">Colt 2a Via (Div)</div>' + (q2 ? '<div class="cmp-cen"><span class="cmp-acico">' + SVG_CEN + '</span><span class="cmp-actx"><b>' + esc(acEt(q2.c)) + '</b><span class="cmp-cen-k">' + acGeo(q2.c) + acTag(q2.c) + '</span><span class="cmp-k">' + (q2.d != null ? km(q2.d) + ' km dalla sede \u00b7 ' : '') + (q2.modo === 'indicata' ? 'indicata nella sede' : 'scelta a mano') + '</span></span></div>' : '<div class="cmp-k">vuota: il Div usa la stessa Colt della 1a Via</div>')
+          + inp('manuale2', 'facoltativa: se vuota vale la 1a Via', 'Centrale a mano 2a Via (Div)'); }
     } else if (T.cl === 'rtn') h += '<div class="cmp-ris" data-ris="' + b.id + '"></div>';
     else if (T.cl === 'rete') {
       h += '<div class="cmp-ris" data-ris="' + b.id + '"></div><div class="cmp-az"><button type="button" onclick="croCmp.cerca(' + b.id + ')">\uD83D\uDD0E Cerca nell’Unificato</button><button type="button" onclick="croCmp.importa(' + b.id + ',\'std\')">\uD83D\uDCE5 Importa Std</button>'
@@ -7359,6 +7459,12 @@ window.croCmp = (function () {
     if (T.cl === 'rtn') return b.ep && b.ep.a && b.ep.z ? esc(b.ep.a.nome) + ' (' + esc(b.ep.a.clli) + ') \u2192 ' + esc(b.ep.z.nome) + ' (' + esc(b.ep.z.clli) + ')<br><span class="cmp-tag dv">non valorizzata · consegna da condividere</span>' : '<span class="cmp-tag dv">servono i due nodi A1</span>';
     if (T.cl === 'rete') {
       var h2 = b.ep && b.ep.a && b.ep.z ? '<b>' + esc(b.ep.a.nome) + '</b> \u2192 <b>' + esc(b.ep.z.nome) + '</b>' : '<span class="cmp-tag dv">servono i due estremi</span>';
+      (function () { var dvR = b.f.div, avv = [];   /* V11.26|087 */
+        if (dvR && dvR.nodes && (b.tipo === 'rtr' || b.tipo === 'rtrA')) { var qa = cen2('A'), n0 = String(dvR.nodes[0] || '').replace(/::(RA|RC)$/, ''); if (qa && n0 && n0 !== qa.c.clli) avv.push('il Div non parte dalla Colt 2a Via A (' + qa.c.nome + ')'); }
+        if (dvR && dvR.nodes && (b.tipo === 'rtr' || b.tipo === 'rtrZ')) { var qz = cen2('Z'), nN = String(dvR.nodes[dvR.nodes.length - 1] || '').replace(/::(RA|RC)$/, ''); if (qz && nN && nN !== qz.c.clli) avv.push('il Div non arriva alla Colt 2a Via Z (' + qz.c.nome + ')'); }
+        if (dvR && dvR.nodes && b.tipo === 'rtrA') { var na2 = nodo2('A'), nZ0 = String(dvR.nodes[dvR.nodes.length - 1] || '').replace(/::(RA|RC)$/, ''); if (na2 && na2.modo !== 'stesso' && nZ0 && nZ0 !== na2.c.clli) avv.push('il Div non arriva al Nodo A1 2a Via (' + na2.c.nome + ')'); }   /* V11.26|088 */
+        if (dvR && dvR.nodes && b.tipo === 'rtrZ') { var nz2 = nodo2('Z'), nA0 = String(dvR.nodes[0] || '').replace(/::(RA|RC)$/, ''); if (nz2 && nz2.modo !== 'stesso' && nA0 && nA0 !== nz2.c.clli) avv.push('il Div non parte dal Nodo A1 2a Via (' + nz2.c.nome + ')'); }
+        if (avv.length) h2 += '<div class="cmp-c2">\u26a0 ' + esc(avv.join('; ')) + ': rifai la ricerca (Partenza 2 e Arrivo 2 si compilano da soli) o importa un altro Div.</div>'; })();
       h2 += '<div class="cmp-vie">';   /* V11.26|065: Std e Div affiancati */
       ['std', 'div'].forEach(function (k) {
         if (k === 'div' && !(el('cmpDiv') || {}).checked) return;
@@ -7395,33 +7501,58 @@ window.croCmp = (function () {
     if (t.indexOf('rtr') >= 0 && ca && cz && ca.r && cz.r && ca.r.c.reg && cz.r.c.reg && ca.r.c.reg !== cz.r.c.reg) A.push('Centrale A (' + ca.r.c.reg + ') e Centrale Z (' + cz.r.c.reg + ') sono in regioni diverse: serve lo schema interregionale con RTN.');
     el('cmpAvvisi').innerHTML = A.map(function (x) { return '<div>\u26a0 ' + esc(x) + '</div>'; }).join('');
   }
-  function riepilogo() {
-    var righe = [], tot = 0, kmT = 0;
+  function riepilogo() {   /* V11.26|089: righe ordinate per via (1a Via STD, poi 2a Via DIV), code comuni in testa e in fondo */
+    var testa = [], fine = [], via = { std: [], div: [] }, tot = 0, kmT = 0, dv = !!(el('cmpDiv') || {}).checked;
+    var DAV = 'da verificare prima di IRP';
+    var eu = function (v) { return v != null ? v.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac' : '\u2014'; };
+    var zonaDi = function (T) { var m = / (Zona [AZ])$/.exec(T.nome); return { base: T.nome.replace(/ Zona [AZ]$/, ''), zona: m ? m[1] : '' }; };
     catena.forEach(function (b) {
       var T = TIPI[b.tipo];
       if (T.cl === 'coda') { var q = codaKm(b), cc = codaCosto(b);   /* V11.26|009 */
-        var kmTxt = q.man != null ? km(q.man) + ' km (a mano)' : q.aria != null ? km(q.aria) + ' km linea d\u2019aria' + (typeof q.ped === 'number' ? ' \u00b7 ' + km(q.ped) + ' km pedonale' : '') : 'km da stimare';
-        var PXr = protSol() ? protExport() : null, pc = PXr ? PXr[b.tipo] : null;   /* V11.26|084: con Protetto la nota IRP della coda protetta */
-        righe.push([T.nome, kmTxt, cc.tot != null ? cc.tot.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac' + (pc ? '' : ' (stima)') : 'da stimare', pc ? pc.nota : (b.f.note ? String(b.f.note).replace(/\s*\n\s*/g, ' \u00b7 ') : '')]);   /* V11.26|072: note a parte */
-        if (q.usa != null) kmT += q.usa; if (cc.tot != null) tot += cc.tot; }
-      if (T.cl === 'rete') ['std', 'div'].forEach(function (x) { if (x === 'div' && !(el('cmpDiv') || {}).checked) return; var r = b.f[x]; if (!r) { righe.push([T.nome + ' ' + x.toUpperCase(), 'da importare', '']); return; }
-        var q = riassunto(r), c = protRete(b) ? null : costo(r); kmT += q.km; if (c && c.tot) tot += c.tot;
-        var eu = function (v) { return v != null ? v.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac' : '\u2014'; };   /* V11.26|076: una riga per sezione di rete */
-        var prR = protRete(b), capR = (el('cmpCap') || {}).value || '1G', solR = protSol();
+        var kmTxt = q.man != null ? km(q.man) + ' km (a mano)' : q.aria != null ? km(q.aria) + ' km linea d\u2019aria' + (typeof q.ped === 'number' ? ' \u00b7 ' + km(q.ped) + ' km pedonale' : '') : 'km ' + DAV;
+        var PXr = protSol() ? protExport() : null, pc = PXr ? PXr[b.tipo] : null;   /* V11.26|084 */
+        var cvR = !pc ? coltVie(/A$/.test(b.tipo) ? 'A' : 'Z') : null;   /* V11.26|086: coda doppia, una per via */
+        if (q.usa != null) kmT += q.usa; if (cc.tot != null) tot += cc.tot;
+        if (cvR && cc.v2) {
+          var e2 = function (v) { return v.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac (stima)'; };
+          via.std.push({ t: T.nome, det: 'verso ' + cvR.std.nome + ' (' + cvR.std.clli + ')' + (cvR.kmS != null ? ' \u00b7 ' + km(cvR.kmS) + ' km linea d\u2019aria' : ''), costo: cc.tot != null ? e2(cc.A.tot + cc.B.tot) : DAV, nota: codaNotaApp(b) || '' });
+          via.div.push({ t: T.nome, det: 'verso ' + cvR.div.nome + ' (' + cvR.div.clli + ')' + (cvR.kmD != null ? ' \u00b7 ' + km(cvR.kmD) + ' km linea d\u2019aria' : ''), costo: cc.tot != null ? e2(cc.v2.tot) : DAV, nota: codaNotaApp({ f: { app: codaApp2(b) } }) || '' });
+          return;
+        }
+        (b.tipo === 'codaA' ? testa : fine).push({ t: T.nome, det: kmTxt, costo: cc.tot != null ? cc.tot.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac' + (pc ? '' : ' (stima)') : DAV, nota: pc ? pc.nota : (b.f.note ? String(b.f.note).replace(/\s*\n\s*/g, ' \u00b7 ') : '') });
+        return;
+      }
+      if (T.cl === 'rete') {
+        var zn = zonaDi(T), prR = protRete(b), capR = (el('cmpCap') || {}).value || '1G', solR = protSol();
         var hwR = prR ? (String(b.f.protHw || '').trim() ? '[' + String(b.f.protHw).trim().replace(/^\[|\]$/g, '') + ']' : ((PROT_IRP_HW[prR.tec] || {})[capR] || {})[solR] || prR.hw || '') : '';
-        sezioniRete(r, c).forEach(function (z, iz) {
-          var nota = z.nota, costoTxt = eu(z.costo);
-          if (prR) {   /* V11.26|084: regole della 033 come nel foglio IRP */
-            nota = prR.ra ? 'Protezione ' + solR + ' da rivedere (percorso con rete RA). ' + nota.replace(/^(Rete R[AC]\d*): .*? -- \[/, '$1: [') : nota.replace(/^(Rete R[AC]\d*): .*? -- \[/, '$1: [Protetto ' + solR + '] ' + hwR + ' -- [');
-            costoTxt = x === 'std' && iz === 0 ? (prR.costo != null ? eu(prR.costo) + ' (protetto)' : 'da indicare') : 'incluso nel protetto';
-          }
-          righe.push([T.nome + ' ' + x.toUpperCase() + ' [' + z.lbl + ']', km(z.km) + ' km \u00b7 ' + z.n + (z.n === 1 ? ' collegamento' : ' collegamenti'), costoTxt, nota]); }); });
-      if (T.cl === 'rete' && protRete(b)) { var pr = protRete(b); if (pr.costo != null) tot += pr.costo;   /* V11.26|031 */
-        /* V11.26|084: niente riga a parte, il costo del protetto sta sulla prima riga Std della zona */ }
-      if (T.cl === 'rtn') righe.push(['RTN', 'non valorizzata', '']);
+        if (prR && prR.costo != null) tot += prR.costo;
+        ['std', 'div'].forEach(function (x) {
+          if (x === 'div' && !dv) return; var r = b.f[x];
+          if (!r) { via[x].push({ t: zn.base + (zn.zona ? ' ' + zn.zona : ''), det: 'da importare', costo: '', nota: '' }); return; }
+          var q = riassunto(r), c = prR ? null : costo(r); kmT += q.km; if (c && c.tot) tot += c.tot;
+          sezioniRete(r, c).forEach(function (z, iz) {
+            var nota = z.nota, costoTxt = eu(z.costo);
+            if (prR) {   /* V11.26|084 */
+              nota = prR.ra ? 'Protezione ' + solR + ' da rivedere (percorso con rete RA). ' + nota.replace(/^(Rete R[AC]\d*): .*? -- \[/, '$1: [') : nota.replace(/^(Rete R[AC]\d*): .*? -- \[/, '$1: [Protetto ' + solR + '] ' + hwR + ' -- [');
+              costoTxt = x === 'std' && iz === 0 ? (prR.costo != null ? eu(prR.costo) + ' (protetto)' : 'da indicare') : 'incluso nel protetto';
+            }
+            via[x].push({ t: zn.base + ' [' + z.lbl + ']' + (zn.zona ? ' ' + zn.zona : ''), det: km(z.km) + ' km \u00b7 ' + z.n + (z.n === 1 ? ' collegamento' : ' collegamenti'), costo: costoTxt, nota: nota });
+          });
+        });
+        return;
+      }
+      if (T.cl === 'rtn') ['std', 'div'].forEach(function (x) {
+        if (x === 'div' && !dv) return;
+        var na = x === 'div' && nodo2('A') ? nodo2('A').c.nome : (b.ep && b.ep.a ? b.ep.a.nome : ''), nz = x === 'div' && nodo2('Z') ? nodo2('Z').c.nome : (b.ep && b.ep.z ? b.ep.z.nome : '');
+        via[x].push({ t: 'RTN', det: 'Non Valorizzata', costo: '', nota: 'RTN ' + na + ' \u2192 ' + nz + ': Rete Interregionale RTN non gestita dal Gruppo RTR.' });
+      });
     });
-    if (!righe.length) { el('cmpRiep').innerHTML = ''; return; }
-    el('cmpRiep').innerHTML = '<table class="cmp-riep"><tr><th>Tratta</th><th>Dettaglio</th><th>Note per IRP</th><th>Costo</th></tr>' + righe.map(function (r) { return '<tr><td>' + esc(r[0]) + '</td><td class="dt">' + esc(r[1]) + '</td><td class="nt">' + esc(r[3] || '') + '</td><td class="n">' + esc(r[2]) + '</td></tr>'; }).join('')
+    var n = testa.length + via.std.length + via.div.length + fine.length;
+    if (!n) { el('cmpRiep').innerHTML = ''; return; }
+    var riga = function (r, v) { return '<tr' + (v ? ' class="v-' + v + '"' : '') + '><td>' + (v ? '<span class="cmp-rb ' + v + '">' + (v === 'std' ? '1\u00b0 Via (STD)' : '2\u00b0 Via (DIV)') + '</span> ' : '') + esc(r.t) + '</td><td class="dt">' + esc(r.det) + '</td><td class="nt">' + esc(r.nota || '') + '</td><td class="n">' + esc(r.costo || '') + '</td></tr>'; };
+    var gruppo = function (v) { return via[v].length ? '<tr class="v-sep ' + v + '"><td colspan="4">' + (v === 'std' ? '1\u00b0 Via (STD)' : '2\u00b0 Via (DIV)') + '</td></tr>' + via[v].map(function (r) { return riga(r, v); }).join('') : ''; };
+    el('cmpRiep').innerHTML = '<table class="cmp-riep"><tr><th>Tratta</th><th>Dettaglio</th><th>Note per IRP</th><th>Costo</th></tr>'
+      + testa.map(function (r) { return riga(r, ''); }).join('') + gruppo('std') + gruppo('div') + fine.map(function (r) { return riga(r, ''); }).join('')
       + '<tr><th>Totale</th><th>' + km(kmT) + ' km (code stimate comprese)</th><th></th><th class="n">' + tot.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac</th></tr></table>';
   }
 /* [[CRO:MOD-067-PROGETTAZIONE-MAPPA]] dentro [[CRO:JS-NUCLEO]]: Progettazione: mappa nel popup e a tutto schermo (sfondi, livelli, legenda, gateway, percorso stradale) */
@@ -7458,6 +7589,8 @@ window.croCmp = (function () {
     catena.forEach(function (b) {
       var T = TIPI[b.tipo], z = zonaDi(b.tipo);
       if ((T.cl === 'centrale' || T.cl === 'nodo') && b.r && b.r.c && !isNaN(b.r.c.lat)) ruoli.push({ c: b.r.c, ruolo: nomeCorto(b), z: z, cl: T.cl });
+      if (T.cl === 'nodo') { var n2m = nodo2(z); if (n2m && n2m.modo !== 'stesso' && !isNaN(n2m.c.lat)) ruoli.push({ c: n2m.c, ruolo: 'Nodo A1 2a Via ' + z, z: z, cl: 'nodo' }); }   /* V11.26|088 */
+      if (T.cl === 'centrale') { var c2m = cen2(z); if (c2m && !isNaN(c2m.c.lat) && (!b.r || c2m.c.clli !== b.r.c.clli)) ruoli.push({ c: c2m.c, ruolo: 'Colt 2a Via ' + z, z: z, cl: 'centrale', z2: true }); }   /* V11.26|087 */
       if (T.cl === 'sede') { var p = coord(b.f.coord); if (p) { sedi.push({ lat: p.lat, lon: p.lon, b: b, z: z }); var ce = trova('centrale' + z); if (ce && ce.r && !isNaN(ce.r.c.lat)) code.push({ a: p, c: ce.r.c, z: z }); } }
     });
     var nA = trova('nodoA'), nZ = trova('nodoZ');
@@ -7498,7 +7631,7 @@ window.croCmp = (function () {
     var icona = function (clli, reti) {
       var rr = ruoloRec[clli] || [], nodo = rr.filter(function (x) { return x.cl === 'nodo'; })[0], cen = rr.filter(function (x) { return x.cl === 'centrale'; })[0];
       if (nodo) return L.divIcon({ className: 'cmp-mk', html: '<span class="mk-a1"></span>', iconSize: [18, 18], iconAnchor: [9, 9] });
-      if (cen) return L.divIcon({ className: 'cmp-mk', html: '<span class="mk-c">' + (cen.z || '') + '</span>', iconSize: [22, 22], iconAnchor: [11, 11] });
+      if (cen) return L.divIcon({ className: 'cmp-mk', html: '<span class="mk-c' + (cen.z2 ? ' mk-c2' : '') + '">' + (cen.z || '') + (cen.z2 ? '2' : '') + '</span>', iconSize: [22, 22], iconAnchor: [11, 11] });
       var cl = reti.RA && reti.RC ? 'gw' : reti.RA ? 'ra' : 'rc';
       if (cl === 'gw') return L.divIcon({ className: 'cmp-mk', html: '<span class="mk-n gw mk-gw">⇄</span>', iconSize: [22, 22], iconAnchor: [11, 11] });   /* V11.26|076: gateway in evidenza */
       return L.divIcon({ className: 'cmp-mk', html: '<span class="mk-n ' + cl + '"></span>', iconSize: [16, 16], iconAnchor: [8, 8] });
@@ -7695,6 +7828,7 @@ window.croCmp = (function () {
     var T = TIPI[b.tipo];
     if (T.cl === 'sede') return b.f.coord ? ['ok', 'completa'] : b.f.centrale ? ['ok', 'con centrale indicata'] : b.f.indirizzo ? ['wn', 'da geocodificare'] : ['wn', 'da completare'];
     if (T.cl === 'coda') { var q = codaCosto(b); return q && q.tot != null ? ['ok', 'valorizzata'] : ['wn', 'da valorizzare']; }
+    if (T.cl === 'centrale' && viaDoppia()) { var q2s = cen2(slotEt(b.tipo)); if (q2s && q2s.modo === 'indicata' && !q2s.ver) return ['wn', 'da verificare (2a Via)']; }   /* V11.26|087 */
     if (T.cl === 'centrale' && b.r && (b.r.modo === 'indicata' || b.f.daSede)) return b.f.verificata === b.r.c.clli ? ['ok', 'indicata e verificata'] : ['wn', 'da verificare'];   /* V11.26|067, 070 */
     if (T.cl === 'centrale' || T.cl === 'nodo') return b.r ? ['ok', b.r.modo === 'man' ? 'a mano' : b.r.modo === 'indicata' ? 'indicata' : 'automatica'] : ['wn', 'da scegliere'];
     if (T.cl === 'rete') return b.f.std ? ['ok', b.f.div ? 'Std e Div scelti' : 'Std scelto'] : ['wn', 'percorsi da scegliere'];
@@ -7703,15 +7837,24 @@ window.croCmp = (function () {
   function cardHtml(b) {
     var T = TIPI[b.tipo], st = statoB(b), c = '';
     if (T.cl === 'sede') c = (b.f.nome ? '<b>' + esc(b.f.nome) + '</b>' : '') + (b.f.indirizzo ? '<div>' + esc(b.f.indirizzo) + '</div>' : '') + (b.f.coord ? '<div class="cmp-k">' + esc(b.f.coord) + '</div>' : '') + (b.f.centrale ? '<div class="cmp-k">centrale indicata: ' + esc(b.f.centrale) + '</div>' : '') + (!b.f.nome && !b.f.indirizzo && !b.f.coord && !b.f.centrale ? '<div class="cmp-k">indirizzo, coordinate o centrale indicata</div>' : '');
-    else if (T.cl === 'coda') { var qk = codaKm(b), qc = codaCosto(b), kk = qk.usa != null && typeof qk.usa === 'number' ? km(qk.usa) + ' km' + (qk.man != null ? ' a mano' : typeof qk.ped === 'number' ? ' pedonali' : ' in linea d\u2019aria') : '';
+    else if (T.cl === 'coda') { var cv2 = coltVie(slotEt(b.tipo)), qk = codaKm(b), qc = codaCosto(b), kk = qk.usa != null && typeof qk.usa === 'number' ? km(qk.usa) + ' km' + (qk.man != null ? ' a mano' : typeof qk.ped === 'number' ? ' pedonali' : ' in linea d\u2019aria') : '';
       c = (kk ? '<div class="cmp-r"><span>Km stimati</span><b>' + kk + '</b></div>' : '<div class="cmp-k">servono le coordinate della sede e la centrale</div>')
         + (qc && qc.v2 && qc.tot != null ? '<div class="cmp-r"><span>1a Via (Std)</span><span>' + eur(qc.A.tot + qc.B.tot) + '</span></div><div class="cmp-r"><span>2a Via (Div)' + (qc.v2.uguale ? ' \u00b7 come la 1a' : ' \u00b7 a parte') + '</span><span>' + eur(qc.v2.tot) + '</span></div>' : '')
         + (qc && !qc.v2 && qc.A && qc.A.tot ? '<div class="cmp-r"><span>Sede cliente</span><span>' + eur(qc.A.tot) + '</span></div>' : '') + (qc && !qc.v2 && qc.B && qc.B.tot ? '<div class="cmp-r"><span>Centrale per il cliente</span><span>' + eur(qc.B.tot) + '</span></div>' : '')
         + (qc && qc.altro != null ? '<div class="cmp-r"><span>Altro</span><span>' + eur(qc.altro) + '</span></div>' : '') + (qc && qc.prot ? '<div class="cmp-k">' + esc(qc.riga) + '</div>' : '')
-        + (qc && qc.tot != null ? '<div class="cmp-r tot"><b>Totale coda</b><b>' + eur(qc.tot) + '</b></div>' : ''); }
+        + (qc && qc.tot != null ? '<div class="cmp-r tot"><b>Totale coda</b><b>' + eur(qc.tot) + '</b></div>' : '')
+        + (cv2 ? '<div class="cmp-c2"><b>Coda doppia</b>: lo Std e il Div usano Colt diverse.<br>1a Via \u2192 ' + esc(cv2.std.nome + ' (' + cv2.std.clli + ')') + (cv2.kmS != null ? ' \u00b7 ' + km(cv2.kmS) + ' km' : '') + '<br>2a Via \u2192 ' + esc(cv2.div.nome + ' (' + cv2.div.clli + ')') + (cv2.kmD != null ? ' \u00b7 ' + km(cv2.kmD) + ' km' : '') + '</div>' : ''); }
     else if (T.cl === 'centrale' || T.cl === 'nodo') c = b.r ? '<div class="cmp-cen"><span class="cmp-acico">' + SVG_CEN + '</span><span class="cmp-actx"><b>' + esc(acEt(b.r.c)) + '</b><span class="cmp-cen-k">' + acGeo(b.r.c) + acTag(b.r.c) + '</span><span class="cmp-k">' + (b.r.d != null ? km(b.r.d) + ' km dalla sede \u00b7 ' : '') + (b.r.modo === 'auto' ? 'la pi\u00f9 vicina' : (b.r.modo === 'indicata' || b.f.daSede) ? 'scelta nella ' + esc(nomeCorto(trova('sede' + slotEt(b.tipo)) || b)) : 'scelta a mano') + '</span></span></div>' + ((b.r.modo === 'indicata' || b.f.daSede) && b.f.verificata !== b.r.c.clli ? '<button type="button" class="cmp-verb" data-cmpver="' + b.id + '" title="Confermi che la centrale indicata nella sede \u00e8 giusta">\u2714 Verificata</button>' : '')
       : '<div class="cmp-k">' + (T.cl === 'nodo' ? 'serve la centrale della zona' : 'servono le coordinate della sede o una centrale indicata') + '</div>';
     else if (T.cl === 'rtn') c = b.ep && b.ep.a && b.ep.z ? '<div class="cmp-k">' + esc(b.ep.a.nome) + ' \u2192 ' + esc(b.ep.z.nome) + '</div>' : '';
+    if ((T.cl === 'centrale' || T.cl === 'nodo') && viaDoppia() && b.r && b.r.c) {   /* V11.26|088: due blocchi uguali, 1a Via blu e 2a Via viola */
+      var Lv = slotEt(b.tipo), m1 = b.r.modo === 'auto' ? 'la pi\u00f9 vicina' : (b.r.modo === 'indicata' || b.f.daSede) ? 'scelta nella ' + esc(nomeCorto(trova('sede' + Lv) || b)) : 'scelta a mano';
+      var v1 = (b.r.d != null ? km(b.r.d) + ' km dalla sede \u00b7 ' : '') + m1, x1 = (T.cl === 'centrale' && (b.r.modo === 'indicata' || b.f.daSede) && b.f.verificata !== b.r.c.clli) ? '<button type="button" class="cmp-verb" data-cmpver="' + b.id + '">\u2714 Verificata</button>' : '';
+      var q2 = T.cl === 'centrale' ? cen2(Lv) : nodo2(Lv), v2, x2 = '';
+      if (T.cl === 'centrale') { v2 = q2 ? (q2.d != null ? km(q2.d) + ' km dalla sede \u00b7 ' : '') + (q2.modo === 'indicata' ? (q2.ver ? 'indicata e verificata' : 'indicata nella sede') : 'scelta a mano') : 'stessa Colt della 1a Via'; if (q2 && q2.modo === 'indicata' && !q2.ver) x2 = '<button type="button" class="cmp-verb" data-cmpver2="' + b.id + '">\u2714 Verificata</button>'; }
+      else v2 = q2 ? (q2.modo === 'auto' ? 'l\u2019altro Nodo A1 dell\u2019area' + (q2.d != null && q2.d < 1e8 ? ' \u00b7 ' + km(q2.d) + ' km dalla centrale' : '') : q2.modo === 'man' ? 'scelto a mano' : 'stesso Nodo A1 della 1a Via (l\u2019area ne ha uno solo)') : 'stesso della 1a Via';
+      c = viaBox('1a Via (Std)', 'std', b.r.c, v1, x1) + viaBox('2a Via (Div)', 'div', q2 ? q2.c : null, v2, x2);
+    }
     return '<div class="cmp-c ' + T.cl + '" data-cmpc="' + b.id + '"><div class="cmp-c-h">' + T.ic + '<b>' + esc(nomeCorto(b)) + '</b>' + (T.cl === 'rtn' ? '<i class="cmp-rtn-k">(rete interregionale non gestita da noi, solo passaggio fra le zone)</i>' : '') + '<span class="cmp-st ' + st[0] + '">' + st[1] + '</span>'
       + (T.cl !== 'rtn' ? '<button type="button" class="cmp-cx" data-cmpx="' + b.id + '" title="Apri il dettaglio">\u2922</button>' : '') + '<button type="button" class="cmp-cx" data-cmpdel="' + b.id + '" title="Togli il blocco">\u2715</button></div><div class="cmp-c-b">' + c + '</div></div>';
   }
@@ -7725,7 +7868,7 @@ window.croCmp = (function () {
         ['std', 'div'].forEach(function (x) { if (x === 'div' && !dv) return; var r = b.f[x]; if (!r) return; var cc = costoC(r); if (cc && cc.tot != null) { tot += cc.tot; voci.push(x.toUpperCase() + ' ' + eur(cc.tot)); } }); }
       if (T.cl === 'coda') { var q = codaCosto(b); if (q && q.tot != null) { tot += q.tot; voci.push(nomeCorto(b) + ' ' + eur(q.tot)); } else voci.push(nomeCorto(b) + ' da valorizzare'); }
     });
-    return '<div class="cmp-foot"><span class="cmp-foot-k">TOTALE STIMATO</span><b>' + eur(tot) + '</b><span class="cmp-foot-v">' + esc(voci.join(' \u00b7 ')) + '</span><span class="cmp-sp"></span>'
+    return '<div class="cmp-foot"><span class="cmp-foot-k">TOTALE STIMATO</span><b>' + eur(tot) + '</b><span class="cmp-foot-v" title="' + esc(voci.join(' \u00b7 ')) + '">' + esc(voci.join(' \u00b7 ')) + '</span><span class="cmp-sp"></span>'
       + (manca.length ? '<span class="cmp-foot-m" title="' + esc(manca.join(', ')) + '">' + manca.length + (manca.length === 1 ? ' cosa' : ' cose') + ' da completare: ' + esc(manca.slice(0, 3).join(', ')) + (manca.length > 3 ? '\u2026' : '') + '</span>' : '<span class="cmp-foot-ok">\u2714 tutto compilato</span>')
       + '<button type="button" class="cmp-azb" data-mapgr="1" title="Mappa della Progettazione a tutto schermo">\uD83D\uDDFA\uFE0F Mappa</button><button type="button" class="cmp-azb" onclick="croCmp.esportaTxt()">\u2B07 TXT della Progettazione</button><button type="button" class="cmp-azb cmp-expb" onclick="croCmp.esportaCompleto()" title="TXT, Modulo KMZ ed Excel (Dati Servizio e foglio IRP) dello Std e del Div, come nell\u2019Unificato">\u2B07 Export completo</button></div>';
   }
@@ -7779,11 +7922,12 @@ window.croCmp = (function () {
   function dettaglioChiudi() { var M = el('cmpDett'); if (M) M.hidden = true; DT = null; if (_dMap) { try { _dMap.remove(); } catch (e) {} _dMap = null; } }
   document.addEventListener('click', function (e) {
     var t = e.target; if (!t || !t.closest || !t.closest('#tab-compositore')) return;
+    var vr2 = t.closest('[data-cmpver2]'); if (vr2) { var bv2 = catena.filter(function (x) { return x.id === +vr2.getAttribute('data-cmpver2'); })[0], q = bv2 && cen2(slotEt(bv2.tipo)); if (q) { bv2.f.verificata2 = q.c.clli; ridisegna(); } return; }   /* V11.26|087 */
     var vr = t.closest('[data-cmpver]'); if (vr) { var bv = catena.filter(function (x) { return x.id === +vr.getAttribute('data-cmpver'); })[0]; if (bv && bv.r) { bv.f.verificata = bv.r.c.clli; ridisegna(); } return; }
     var mg = t.closest('[data-mapgr]'); if (mg) return mappaGrande(mg.getAttribute('data-mapgr') || null);
     var ps = t.closest('[data-pal-sch]'); if (ps) { var pp0 = el('cmpPalPop'); if (pp0) pp0.hidden = true; return convertiSchema(ps.getAttribute('data-pal-sch')); }
     var cz = t.closest('[data-cpz]'); if (cz) { var bc = catena.filter(function (x) { return x.id === +cz.getAttribute('data-cpz'); })[0], bo = bc && trova(bc.tipo === 'codaA' ? 'codaZ' : 'codaA');
-      if (bc && bo && window.confirm('Copiare gli apparati di ' + nomeCorto(bc) + ' (anche la 2a Via) sulla ' + nomeCorto(bo) + '? Quelli che ci sono adesso vengono sostituiti.')) { ['app', 'app2', 'app2ug'].forEach(function (k) { bo.f[k] = bc.f[k] === undefined ? undefined : JSON.parse(JSON.stringify(bc.f[k])); }); ridisegna(); if (typeof showToast === 'function') showToast('Apparati copiati sulla ' + nomeCorto(bo) + '.', 'success'); } return; }
+      if (bc && bo && window.confirm('Copiare gli apparati di ' + nomeCorto(bc) + ' (anche la 2a Via) sulla ' + nomeCorto(bo) + '? Quelli che ci sono adesso vengono sostituiti.')) { ['app', 'app2', 'app2ug'].forEach(function (k) { bo.f[k] = bc.f[k] === undefined ? undefined : JSON.parse(JSON.stringify(bc.f[k])); }); notaDaApp(bo); ridisegna(); if (typeof showToast === 'function') showToast('Apparati copiati sulla ' + nomeCorto(bo) + '.', 'success'); } return; }
     var pa = t.closest('[data-pal-add]'); if (pa) { var pp = el('cmpPalPop'); if (pp) pp.hidden = true; if (pa.getAttribute('data-pal-add')) aggiungi(pa.getAttribute('data-pal-add')); return; }
     var pl = t.closest('[data-pal]'); if (pl) return aggiungiTipo(pl.getAttribute('data-pal'), pl);
     var del = t.closest('[data-cmpdel]'); if (del) { var id = +del.getAttribute('data-cmpdel'), bd = catena.filter(function (x) { return x.id === id; })[0];
@@ -7982,7 +8126,7 @@ window.croCmp = (function () {
     var bl = catena.map(function (b) {
       var f = {}; Object.keys(b.f).forEach(function (k) { if (k !== 'std' && k !== 'div') f[k] = b.f[k]; });
       var o = { tipo: b.tipo, f: JSON.parse(JSON.stringify(f)) };
-      ['std', 'div'].forEach(function (x) { var r = b.f[x]; if (r && r.edges) o[x] = { sig: sigRoute(r), idx: r.idx, km: r.dist }; });
+      ['std', 'div'].forEach(function (x) { var r = b.f[x]; if (r && r.edges) o[x] = { sig: sigRoute(r), idx: r.idx, km: r.dist, n0: String((r.nodes || [])[0] || '').replace(/::(RA|RC)$/, ''), nN: String((r.nodes || []).slice(-1)[0] || '').replace(/::(RA|RC)$/, '') }; });
       return o;
     });
     var cen = function (t) { var b = trova(t); return b && b.r && b.r.c ? { nome: b.r.c.nome, clli: b.r.c.clli } : null; };
@@ -8034,7 +8178,7 @@ window.croCmp = (function () {
       if (!b.ep || !b.ep.a || !b.ep.z) { esito.push(T.nome + ': mancano le centrali ai lati'); return passo(i + 1); }
       if (!!cfg.soloRC !== (window._uRcOnlyAttivo === true) && typeof window._uRcOnlyChanged === 'function') window._uRcOnlyChanged();
       if (window._uRtnModeAttivo === true && typeof window._uRtnModeChanged === 'function') window._uRtnModeChanged();
-      var s = el('uRouteStartInput'), z = el('uRouteEndInput'); if (s) s.value = etichetta(b.ep.a); if (z) z.value = etichetta(b.ep.z);
+      var s = el('uRouteStartInput'), z = el('uRouteEndInput'); if (s) s.value = etichetta(b.ep.a); if (z) z.value = etichetta(b.ep.z); impostaDue(b);   /* V11.26|087 */
       window._baseRoutesUNIFIED = null;
       window._croAttesa('Ripristino della Progettazione', 'Std di ' + T.nome + ': ' + etichetta(b.ep.a) + ' \u2192 ' + etichetta(b.ep.z), function () { return Array.isArray(window._baseRoutesUNIFIED); }, 40000);
       try { window.runUnifiedRouteSearch(); } catch (x) {}
@@ -8045,6 +8189,9 @@ window.croCmp = (function () {
         var r = L[ix]; b.f.std = { edges: r.edges, nodes: r.nodes, dist: r.dist, da: s ? s.value : '', a: z ? z.value : '', idx: ix, base: ix };
         esito.push('Std di ' + T.nome + ' ritrovato (n. ' + (ix + 1) + ')');
         if (!sv.div || !cfg.div) return passo(i + 1);
+        (function () { var a2 = el('uRouteStart2Input'), z2 = el('uRouteEnd2Input'), et = function (k) { carica(); var c = centrali[k]; return c ? etichetta(c) : k; };
+          var n0 = sv.div.n0, nN = sv.div.nN, s0 = b.ep && b.ep.a ? b.ep.a.clli : '', sN = b.ep && b.ep.z ? b.ep.z.clli : '';
+          if (a2) a2.value = n0 && n0 !== s0 ? et(n0) : ''; if (z2) z2.value = nN && nN !== sN ? et(nN) : ''; })();
         window._altRoutesUNIFIED = null;
         window._croAttesa('Ripristino della Progettazione', 'Div dello Std ' + (ix + 1), function () { return Array.isArray(window._altRoutesUNIFIED) && window._altRoutesUNIFIED.length; }, 60000);
         try { window.runAltRoutesSearchUNIFIED(ix); } catch (x) {}
@@ -8440,7 +8587,8 @@ window.croCmp = (function () {
     var reti = catena.filter(function (x) { return TIPI[x.tipo].cl === 'rete'; });
     var st = function (m, tipo) { WDS.expStato = m; var s = el('wzExpStato'); if (s && WZ) s.textContent = m; else if (typeof showToast === 'function') showToast(m, tipo || 'info'); };
     if (!reti.length) return st('Nella Progettazione non c\u2019\u00e8 una rete RTR da esportare.', 'warning');
-    if (reti.length !== 1) return st('Con lo schema interregionale le reti RTR sono due e l\u2019Unificato ne tiene una sola: esporta dal TXT della Progettazione.', 'warning');
+    if (reti.length === 2) return wzEsportaInter(reti, st);   /* V11.26|085: un solo Excel con le due zone */
+    if (reti.length !== 1) return st('Lo schema ha pi\u00f9 reti RTR di quante l\u2019export sa unire: esporta dal TXT della Progettazione.', 'warning');
     /* V11.26|028: gli indici si ritrovano dai percorsi scelti, cos\u00ec vale anche per lo Std e il Div importati a mano */
     var b = reti[0], L = window._baseRoutesUNIFIED || [], A = window._altRoutesUNIFIED || [];
     var iS = -1, iD = -1; L.forEach(function (r, i) { if (b.f.std && r.edges === b.f.std.edges) iS = i; });
@@ -8474,6 +8622,41 @@ window.croCmp = (function () {
       setTimeout(function () { try { window._croExportXlsx(dv ? 'unified_std_div' : 'unified_std', selS, selD); } catch (e) { console.error(e); } }, 900);
       setTimeout(function () { window._croKmzScelta = null; window._croProtExport = null; window._codaExport = null; window._croCfgExport = null; }, 3000);
       st('Export avviato: TXT, Modulo KMZ ed Excel (con Dati Servizio e foglio IRP) dello Std' + (dv ? ' e del Div scelti' : ' scelto') + (vuoleDiv && !dv ? ' (il Div non \u00e8 pi\u00f9 fra quelli dell\u2019Unificato: ricalcolalo per includerlo)' : '') + '. Se il browser lo chiede, consenti i download multipli.', 'success');
+    } catch (e) { st('Export non riuscito: ' + e.message, 'error'); window._croKmzScelta = null; window._croProtExport = null; window._codaExport = null; window._croCfgExport = null; }
+  }
+  /* V11.26|085: export completo dell'Interregionale. Un solo Excel: nel foglio IRP ogni via va dalla A alla Z
+     (Zona A, riga RTN non valorizzata, Zona Z); TXT della Progettazione con le due zone; Modulo KMZ con i quattro percorsi */
+  function wzEsportaInter(reti, st) {
+    var rA = reti.filter(function (x) { return x.tipo === 'rtrA'; })[0] || reti[0], rZ = reti.filter(function (x) { return x.tipo === 'rtrZ'; })[0] || reti[1];
+    if (!rA.f.std || !rZ.f.std) return st('Per l\u2019export servono lo Std della Rete Zona A e quello della Rete Zona Z.', 'warning');
+    var dv = !!(el('cmpDiv') || {}).checked && rA.f.div && rZ.f.div;
+    var cap = (el('cmpCap') || {}).value || '1G';
+    var setv = function (id, v) { var i = el(id); if (i) i.value = v || ''; };
+    setv('unifiedSdfRefStd', WDS.sdfStd); setv('unifiedSdfRefDiv', WDS.sdfDiv); setv('unifiedCostCapacity', cap); var ce = el('unifiedCostEnabled'); if (ce) ce.checked = true;
+    var ds = el('unifiedSelBarDsChk'); if (ds) { ds.checked = true; if (window.expsmToggleDs) window.expsmToggleDs('unified'); }
+    setv('unifiedSelBarDs_profilo', WDS.profilo); setv('unifiedSelBarDs_velocita', cap); setv('unifiedSelBarDs_interfaccia', WDS.interfaccia); setv('unifiedSelBarDs_car', WDS.car);
+    var sn = { mpls: WDS.mpls, alice: WDS.alice, drop: WDS.drop, doppio: WDS.doppio, dual: WDS.dual, protetto: WDS.protetto, divers: dv ? 'SI' : 'NO' };
+    Object.keys(sn).forEach(function (k) { var r = document.querySelector('input[name="unifiedSelBarDs_' + k + '"][value="' + (sn[k] === 'SI' ? 'SI' : 'NO') + '"]'); if (r) r.checked = true; });
+    window._exportSdfRef = { std: WDS.sdfStd || '', div: WDS.sdfDiv || WDS.sdfStd || '' };
+    window._unifiedExportCostOpts = { enabled: true, capacity: cap, threshold: Number((el('unifiedCostThreshold') || {}).value) || 250, protetto: false, protSol: 'auto', protNodi: '2', protTec: 'huawei' };
+    window._exportDatiServizio = window._readDatiServizio ? window._readDatiServizio('unifiedSelBar') : null;
+    window._croProtExport = protExport(); window._codaExport = window._croProtExport ? null : codaDaBlocchi(); window._croCfgExport = cfgStudio();
+    if (!WZ) { var nEx = archSalva('export', window._croCfgExport); if (nEx) avvisa('Progettazione salvata nell\u2019archivio con il n. ' + nEx + ' (Undo, ultimi 20).', 'success'); }
+    calcola();
+    var nA = trova('nodoA'), nZ = trova('nodoZ');
+    var rtn = { a: nA && nA.r ? { nome: nA.r.c.nome, clli: nA.r.c.clli } : null, z: nZ && nZ.r ? { nome: nZ.r.c.nome, clli: nZ.r.c.clli } : null };
+    var it = function (r, et, tipo) { return { label: et, tipo: tipo, route: r }; };
+    var sA = it(rA.f.std, 'STD Zona A', 'Std'), sZ = it(rZ.f.std, 'STD Zona Z', 'Std'), items = [sA, sZ], vie = [{ parti: [sA, sZ], rtn: rtn }];
+    var n2A = nodo2('A'), n2Z = nodo2('Z'), rtn2 = { a: n2A ? { nome: n2A.c.nome, clli: n2A.c.clli } : rtn.a, z: n2Z ? { nome: n2Z.c.nome, clli: n2Z.c.clli } : rtn.z };   /* V11.26|088 */
+    if (dv) { var dA = it(rA.f.div, 'DIV Zona A', 'Div'), dZ = it(rZ.f.div, 'DIV Zona Z', 'Div'); items = [sA, dA, sZ, dZ]; vie.push({ parti: [dA, dZ], rtn: rtn2 }); }
+    window._croKmzScelta = [{ percorso: rA.f.std, div: false, base: 0, alt: 0 }, { percorso: rZ.f.std, div: false, base: 1, alt: 1 }].concat(dv ? [{ percorso: rA.f.div, div: true, base: 0, alt: 0 }, { percorso: rZ.f.div, div: true, base: 1, alt: 1 }] : []);
+    var _fine = Date.now() + 4500; window._croAttesa('Export interregionale', 'Zona A e Zona Z: TXT della Progettazione, Modulo KMZ ed Excel con un solo foglio IRP', function () { return Date.now() > _fine; }, 8000);
+    try {
+      esportaTxt();
+      setTimeout(function () { try { if (typeof window.croEsportaModelloKmz === 'function') window.croEsportaModelloKmz('UNIFIED'); } catch (e) { console.error(e); } }, 600);
+      setTimeout(function () { try { window._croExportXlsx(dv ? 'unified_std_div' : 'unified_std', null, null, { items: items, vie: vie, nome: 'CRO_PROGETTAZIONE_Interregionale_' + (dv ? 'StdDiv' : 'Std') }); } catch (e) { console.error(e); } }, 1300);
+      setTimeout(function () { window._croKmzScelta = null; window._croProtExport = null; window._codaExport = null; window._croCfgExport = null; }, 4000);
+      st('Export interregionale avviato: TXT della Progettazione, Modulo KMZ ed Excel con un solo foglio IRP (' + (dv ? 'Std e Div' : 'Std') + ' dalla Zona A alla Zona Z, con la RTN in mezzo). Se il browser lo chiede, consenti i download multipli.', 'success');
     } catch (e) { st('Export non riuscito: ' + e.message, 'error'); window._croKmzScelta = null; window._croProtExport = null; window._codaExport = null; window._croCfgExport = null; }
   }
   function wzRidisegna() { if (WZ && el('wzVelo') && !el('wzVelo').hidden) wzMostra(false); }
@@ -8526,7 +8709,7 @@ window.croCmp = (function () {
       calcola(); WZ.rete = { b: b.id, tipo: 'std', lista: null, stato: 'Calcolo dei percorsi Std nell\u2019Unificato\u2026' }; wzRidisegna();
       if (!!WZ.soloRC !== (window._uRcOnlyAttivo === true) && typeof window._uRcOnlyChanged === 'function') window._uRcOnlyChanged();   /* V11.26|060 */
       if (window._uRtnModeAttivo === true && typeof window._uRtnModeChanged === 'function') window._uRtnModeChanged();
-      var s = el('uRouteStartInput'), z = el('uRouteEndInput'); if (s) s.value = etichetta(b.ep.a); if (z) z.value = etichetta(b.ep.z);
+      var s = el('uRouteStartInput'), z = el('uRouteEndInput'); if (s) s.value = etichetta(b.ep.a); if (z) z.value = etichetta(b.ep.z); impostaDue(b);   /* V11.26|087 */
       window._baseRoutesUNIFIED = null; window._cmpRicercaPer = b.id;
       window._croAttesa('Calcolo dei percorsi Std', etichetta(b.ep.a) + ' \u2192 ' + etichetta(b.ep.z) + ' \u00b7 rete RA + RC nell\u2019Unificato', function () { return Array.isArray(window._baseRoutesUNIFIED); }, 40000);   /* V11.26|044 */
       try { window.runUnifiedRouteSearch(); } catch (x) {}
@@ -27263,7 +27446,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 084 | Nov 2026</div>
+<div class="version-tag">V11.26 | 089 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -27521,7 +27704,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 084</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 089</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -27538,7 +27721,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 084</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 089</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -27559,7 +27742,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 084</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 089</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -27577,7 +27760,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 084</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 089</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -27594,7 +27777,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 084</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 089</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -27610,7 +27793,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 084</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 089</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -28074,7 +28257,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 084</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 089</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -28224,8 +28407,58 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🛡️ Novità V11.26 | 084 | Nov 2026</span>
+                  <span class="cl-ver">📋 Novità V11.26 | 089 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📋 Riepilogo per via</strong>: le righe seguono le vie: la coda di Zona A comune in testa, poi la fascia blu «1° Via (STD)» con Rete RTR [RC] Zona A, RTN e Rete RTR [RC] Zona Z, poi la fascia viola «2° Via (DIV)» con le stesse righe del Div, e in fondo la coda di Zona Z comune. Se la coda di una zona è doppia, le sue due righe stanno dentro la via giusta. «da stimare» diventa «da verificare prima di IRP», la RTN dice «Non Valorizzata» e nella nota «Rete Interregionale RTN non gestita dal Gruppo RTR.», anche nel foglio IRP</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🔀 Novità V11.26 | 088 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🏢 Due vie nelle card</strong>: con Std + Div le card di Centrale (Colt) e Nodo A1 hanno due blocchi uguali, «1a Via (Std)» in blu e «2a Via (Div)» in viola, ognuno con centrale, seconda riga, etichette, km e verifica</li><li><strong>🔀 Nodo A1 della 2a Via</strong>: proposto in automatico come l’altro Nodo A1 della stessa area più vicino alla centrale (Lazio: ROMA SUD e ROMA INVIOLATELLA); se l’area ne ha uno solo resta lo stesso; si sceglie anche a mano. Va in Arrivo 2 o Partenza 2 per i Div, nella RTN della 2a Via (riepilogo e foglio IRP) e sulla mappa; un avviso dice se il Div importato non lo usa</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🏢 Novità V11.26 | 087 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🏢 Colt 2a Via</strong>: con Std + Div la Sede cliente e la Centrale (Colt) di A e Z hanno un secondo campo per la Colt della 2a Via (Div), facoltativo: se resta vuoto il Div usa la stessa Colt della 1a Via. Sede e centrale si compilano a vicenda, con «da verificare» e «✔ Verificata» come per la prima. «Cerca nell’Unificato» (e il wizard) mettono la Colt 2a Via in Partenza 2 o Arrivo 2, la coda diventa doppia già prima di importare il Div, la card della rete avvisa se il Div importato non parte o non arriva da quella Colt, e sulla mappa compare come A2 o Z2</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">〰️ Novità V11.26 | 086 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>〰️ Coda doppia</strong>: con Std + Div, se lo Std e il Div partono (o arrivano) da Colt diverse, la coda di quella zona vale per due Colt: la card della coda lo dice con le due centrali e i km in linea d’aria, e il riepilogo ha due righe (1° Via STD e 2° Via DIV) con la propria Colt, la propria nota e il proprio costo. Se la Colt è la stessa resta una riga</li><li><strong>🧩 Barra del totale</strong>: resta su una riga; il dettaglio delle voci si accorcia (completo al passaggio del mouse) e «Export completo» non va più a capo</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🌐 Novità V11.26 | 085 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🌐 Export interregionale</strong>: con lo schema Interregionale «Export completo» funziona e produce un solo Excel; nel foglio IRP ogni via va dalla A alla Z: coda A, Rete Zona A, una riga RTN (Nodo A1 A → Nodo A1 Z, non valorizzata), Rete Zona Z, coda Z. Il TXT è quello della Progettazione e il Modulo KMZ contiene i percorsi delle due zone</li><li><strong>📋 Riepilogo</strong>: la RTN ha una riga per via (1° Via STD e 2° Via DIV); copiando la coda sull’altra zona si copia anche la nota «Coda Cliente», così compare nelle Note per IRP</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🛡️ Novità V11.26 | 084 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -35873,18 +36106,18 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧩 Schemi</strong>: «Stessa regione» prepara 7 blocchi (Sede A, Coda A, Centrale A, Rete RTR, Centrale Z, Coda Z, Sede Z). «Interregionale» ne prepara 11: Rete RTR Zona A e Zona Z, i due Nodi A1 e la RTN in mezzo. «Verso Nodo A1» ne prepara 5: Sede A, Coda A, Centrale A, Rete RTR e Nodo A1. Cambiando schema i dati già inseriti restano: la Rete RTR diventa Rete Zona A e viceversa, e un avviso dice se qualche blocco compilato viene tolto.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">👀 Come si legge la pagina</strong>: tre colonne. A sinistra il lato A (sede, coda, centrale e, con l’Interregionale, il Nodo A1), al centro la rete, a destra il lato Z in ordine speculare. Ogni card mostra un riassunto e lo stato (completa, valorizzata, da completare, da verificare, a mano…). Il clic sulla card, o su ⤢, apre il dettaglio in un popup con tutti i campi; «←» e «→» passano al blocco vicino. I popup si chiudono solo con «Fatto» o con ✕. ✕ sulla card toglie il blocco, dopo una conferma.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">➕ Aggiungere un blocco</strong>: la fila «Aggiungi un blocco» ha sei tipi (Sede cliente, Coda, Centrale Colt, Rete RTR, Nodo A1, RTN) con i loro lati: verdi quelli già presenti. Il clic mette il blocco nel primo lato libero dello schema, prima A e poi Z; se sono tutti occupati compare l’avviso «Forse hai scelto il blocco sbagliato». La RTN aggiunta a «Stessa regione» o «Verso Nodo A1» propone di passare all’Interregionale; un Nodo A1 in «Stessa regione» propone «Verso Nodo A1» o l’Interregionale; togliendo la RTN si torna a «Stessa regione».</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏠 Sede cliente</strong>: nome, indirizzo (con «Geocodifica»), coordinate e «Centrale indicata (Colt)», cioè la centrale passata dal cliente. La centrale indicata e la «Centrale a mano» della Centrale della stessa zona sono sempre uguali: scrivendo l’una si compila l’altra, e se dall’altra parte c’è già una centrale diversa lo strumento chiede se sostituirla.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏢 Centrale Colt di attestazione</strong>: l’ordine è questo. Prima la centrale scelta a mano o indicata nella sede (se arriva dalla sede è «da verificare» finché non premi «✔ Verificata»). Altrimenti la più vicina in linea d’aria alla sede fra le centrali RC e le RA di tipo 1 e 2: le RA di tipo 3 sono solo di transito. Le alternative vicine sono elencate con i km. Il menu delle centrali è quello dei tab di ricerca: nome, CLLI, [Tn] per la RA, seconda riga [Area – Zona – Regione] ed etichette RC, RA, Nodo A1.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🔀 Nodo A1</strong>: per ogni zona, il più vicino in linea d’aria alla centrale della zona; si può sceglierne un altro. Nel campo «Nodo A1 a mano» i Nodi A1 stanno in testa al menu, le altre centrali sotto con l’avviso «non sono Nodi A1». Sul lato di un Nodo A1 la coda non serve.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">〰️ Coda</strong>: collega la sede del cliente alla centrale Colt. I km sono in linea d’aria e, se il servizio delle strade risponde, anche a piedi; si possono scrivere a mano. Il costo si costruisce con «Apparati…» dal listino Apparati &amp; Cestelli dell’Analisi Costi, divisi fra «Sede Cliente» (presso il cliente) e «Centrale per il Cliente», più un eventuale importo libero. Con Std + Div non protetto la coda vale per due vie: nel popup ci sono «1a Via (Std)» e «2a Via (Div)», con «2a Via uguale alla 1a» spuntata di partenza. «Applica e copia su Coda Zona Z» (o A) copia tutto sull’altra zona. Con Protetto vale la coda del listino dei protetti.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏠 Sede cliente</strong>: nome, indirizzo (con «Geocodifica»), coordinate e «Centrale indicata (Colt)», cioè la centrale passata dal cliente. La centrale indicata e la «Centrale a mano» della Centrale della stessa zona sono sempre uguali: scrivendo l’una si compila l’altra, e se dall’altra parte c’è già una centrale diversa lo strumento chiede se sostituirla. Con Std + Div c’è anche la «Centrale indicata (Colt) 2a Via (Div)», facoltativa: se resta vuota il Div usa la stessa Colt della 1a Via.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏢 Centrale Colt di attestazione</strong>: l’ordine è questo. Prima la centrale scelta a mano o indicata nella sede (se arriva dalla sede è «da verificare» finché non premi «✔ Verificata»). Altrimenti la più vicina in linea d’aria alla sede fra le centrali RC e le RA di tipo 1 e 2: le RA di tipo 3 sono solo di transito. Le alternative vicine sono elencate con i km. Il menu delle centrali è quello dei tab di ricerca: nome, CLLI, [Tn] per la RA, seconda riga [Area – Zona – Regione] ed etichette RC, RA, Nodo A1. Con Std + Div la card ha anche la «Colt 2a Via (Div)», scelta a mano o indicata nella sede (allineate come la prima, «da verificare» finché non premi «✔ Verificata»): «Cerca nell’Unificato» la mette in Partenza 2 o Arrivo 2, la coda diventa doppia (una per Colt) e nella card della rete un avviso dice se il Div importato non parte o non arriva da lì. Sulla mappa è il cerchio verde scuro A2 o Z2.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🔀 Nodo A1</strong>: per ogni zona, il più vicino in linea d’aria alla centrale della zona; si può sceglierne un altro. Nel campo «Nodo A1 a mano» i Nodi A1 stanno in testa al menu, le altre centrali sotto con l’avviso «non sono Nodi A1». Con Std + Div la card ha anche il Nodo A1 della 2a Via: di partenza è l’altro Nodo A1 della stessa area più vicino (per esempio ROMA SUD per lo Std e ROMA INVIOLATELLA per il Div); se l’area ne ha uno solo resta lo stesso; si può scegliere a mano. La ricerca dei Div usa questi nodi in Arrivo 2 e Partenza 2, e la RTN della 2a Via va fra i Nodi A1 della 2a Via. Sul lato di un Nodo A1 la coda non serve.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">〰️ Coda</strong>: collega la sede del cliente alla centrale Colt. I km sono in linea d’aria e, se il servizio delle strade risponde, anche a piedi; si possono scrivere a mano. Il costo si costruisce con «Apparati…» dal listino Apparati &amp; Cestelli dell’Analisi Costi, divisi fra «Sede Cliente» (presso il cliente) e «Centrale per il Cliente», più un eventuale importo libero. Con Std + Div non protetto la coda vale per due vie: nel popup ci sono «1a Via (Std)» e «2a Via (Div)», con «2a Via uguale alla 1a» spuntata di partenza. «Applica e copia su Coda Zona Z» (o A) copia tutto sull’altra zona, nota compresa. Se lo Std e il Div partono (o arrivano) da Colt diverse, la coda di quella zona è doppia: la card lo segnala con le due Colt e i km, e nel riepilogo ci sono due righe, «1° Via (STD)» e «2° Via (DIV)», ognuna verso la sua Colt. Con Protetto vale la coda del listino dei protetti.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🟢 Rete RTR</strong>: partenza e arrivo sono la centrale o il Nodo A1 subito prima e subito dopo nella catena. «Cerca nell’Unificato» lancia la ricerca nel tab Unificato; quando gli Std, e poi i Div, sono pronti, un riquadro in basso a destra riporta qui e prende da solo lo Std e il Div scelti nella tabella (spuntati nella barra export, o lo Std di cui hai aperto i Div). «Importa Std» e «Importa Div» li scelgono da una lista. La card mostra per Std e Div prima il routing delle centrali («Nome (CLLI) [Tn]», [Tn] solo per la RA, gateway «RA ⇄ RC» in viola), poi i collegamenti con lo stato del DB (verde attivo, ambra da verificare; per la RA l’Id Collegamento univoco del DB RA). «Verificare su NNI lo stato di N Collegamenti» conta quelli non attivi. Sotto c’è il controllo delle C-FOS in comune fra Std e Div.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">⚙️ Capacità, Std + Div e Protezione</strong>: la capacità (1G, 10G, 100G) vale per i costi di tutte le reti. Con «Solo Std» ogni rete ha solo lo Std, con «Std + Div» anche il Div. Con SNCP o E2E il trasporto protetto esiste solo su rete RC: i percorsi che passano dalla RA sono «da rivedere», e nel wizard l’interruttore «Solo RC» (spento di partenza) li esclude.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🌐 RTN</strong>: è la rete interregionale non gestita da noi e indica solo il passaggio fra i due Nodi A1. Non ha configurazione e non si valorizza nei costi; la consegna va condivisa con Stefano Gentile.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🌐 RTN</strong>: è la rete interregionale non gestita da noi e indica solo il passaggio fra i due Nodi A1. Non ha configurazione e non si valorizza nei costi; la consegna va condivisa con Stefano Gentile. Nel riepilogo e nel foglio IRP c’è una riga RTN per ogni via (1° Via e, con il Div, 2° Via).</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📋 Riepilogo e totale</strong>: sotto le card, una riga per la coda di ogni zona e una riga per ogni sezione di rete di Std e Div (per esempio «Rete RTR STD [RA1]», «[RC]», «[RA2]»), con Dettaglio (km e collegamenti), «Note per IRP» (la nota da riportare nell’IRP, con apparati, collegamenti e i 180 giorni se c’è da realizzare) e costo. La barra in fondo somma reti e code, dice cosa resta da completare e ha «Mappa», «TXT della Progettazione» ed «Export completo».</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🗺️ Mappa</strong>: nel popup della rete, delle centrali e dei Nodi A1, e a tutto schermo con «Mappa» o ⤢. Gli sfondi sono quelli dei tab. Linee rosse per la RC e blu per la RA, piene per lo Std e tratteggiate per il Div; coda verde (gialla sugli sfondi satellitari); RTN grigia. Centrale Colt in verde acqua con A o Z, Nodo A1 a rombo viola, sede arancio, centrali RA e RC piene, gateway più grande con ⇄. Col mouse ogni collegamento e ogni centrale mostrano tutte le informazioni. I livelli «Percorso stradale RA» e «Percorso stradale RC» disegnano il tragitto sulle strade, solo come disegno: i km restano quelli del DB. Con l’Interregionale ci sono le viste Italia intera, A e Z affiancate, Solo zona A, Solo zona Z. La legenda si apre e si chiude. Serve la libreria delle mappe (Leaflet): se la rete la blocca compare un avviso.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧭 Wizard</strong>: compila la progettazione passo per passo. Si apre dal bottone «Wizard», dall’Overview («Avvia Wizard»), dai tab RC e Unificato («Wizard da questa ricerca», con Partenza, Arrivo e Posizione Cliente) e dalla barra export dell’Unificato («Continua nel wizard», con Std e Div già scelti). Anche il wizard è sperimentale.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">↩️ Undo e Importa</strong>: la progettazione si salva da sola con un numero progressivo a ogni «Fine» del wizard e, se lavori senza wizard, a ogni «Export completo» o «TXT della Progettazione»; se è identica all’ultima salvata non si crea un doppione. «Undo (Ultime 20)» le elenca con data, centrali, configurazione, percorsi e SdF, e le riapre nella pagina o nel wizard: Std e Div si ritrovano ricalcolando sul DB di oggi, e se non ci sono più un avviso lo dice. L’archivio sta nel browser di questo PC. Gli export portano la configurazione (righe CROCFG1 in fondo al TXT, foglio nascosto _CRO_CONFIG nell’Excel) e «Importa» la rilegge; da un TXT di prima della 062 prende solo Partenza e Arrivo.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">⬇️ Export</strong>: «Export completo» produce, come nell’Unificato, il TXT, il Modulo KMZ e l’Excel con Dati Servizio e foglio IRP dello Std e del Div scelti, comprese le code; «TXT della Progettazione» produce il riassunto di tutti i blocchi. Tutto va verificato prima di usarlo.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">⬇️ Export</strong>: «Export completo» produce, come nell’Unificato, il TXT, il Modulo KMZ e l’Excel con Dati Servizio e foglio IRP dello Std e del Div scelti, comprese le code; «TXT della Progettazione» produce il riassunto di tutti i blocchi. Con l’Interregionale l’Excel è uno solo: nel foglio IRP ogni via va dalla Zona A alla Zona Z (coda A, Rete Zona A, una riga RTN non valorizzata, Rete Zona Z, coda Z), il TXT è quello della Progettazione e il Modulo KMZ ha i percorsi delle due zone. Tutto va verificato prima di usarlo.</p></li>
         </ul></div>
       </div>
     </div>
@@ -47448,7 +47681,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 084 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 089 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -47467,6 +47700,61 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📋 V11.26 | 089 | Nov 2026 | Riepilogo diviso per via
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📋 riepilogo()</strong>: riscritto con tre gruppi (<code>testa</code>, <code>via.std</code>/<code>via.div</code>, <code>fine</code>) e righe-fascia <code>tr.v-sep</code>; etichette «Rete RTR [RC] Zona A» da <code>T.nome</code>. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🔀 V11.26 | 088 | Nov 2026 | Due vie nelle card e Nodo A1 della 2a Via
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🔀 nodo2(L)</strong>: <code>manuale2</code> del nodo oppure il Nodo A1 di <code>CENTRALI_POP_NODO_A1</code> con la stessa <code>area</code> più vicino alla centrale della zona; <code>viaBox()</code> disegna i blocchi delle due vie; <code>impostaDue()</code>, il riepilogo e <code>wzEsportaInter()</code> (RTN della 2a Via) lo usano. L’archivio salva anche gli estremi del Div (<code>n0</code>, <code>nN</code>) e al richiamo rimette Partenza 2 e Arrivo 2 di allora. Richieste di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🏢 V11.26 | 087 | Nov 2026 | Colt della 2a Via nella Progettazione
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🏢 cen2(L)</strong>: Colt 2a Via da <code>centrale.f.manuale2</code> o <code>sede.f.centrale2</code> (allineati in <code>campo()</code>, con <code>daSede2</code> e <code>verificata2</code>); <code>impostaDue(b)</code> scrive <code>uRouteStart2Input</code>/<code>uRouteEnd2Input</code> in <code>cerca()</code>, nel wizard e nel ripristino dall’Undo; <code>coltVie()</code> la usa prima del percorso del Div. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            〰️ V11.26 | 086 | Nov 2026 | Coda doppia con Colt diverse e barra del totale su una riga
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>〰️ coltVie(L)</strong>: confronta il primo (lato A) o l’ultimo (lato Z) nodo dello Std e del Div della rete di quella zona; se sono diversi dà le due Colt e i km dalla sede; usata dalla card della coda e da <code>riepilogo()</code>. Nel foglio IRP la riga della coda della 2° Via usa già la centrale del Div. <code>.cmp-foot</code> con <code>flex-wrap: nowrap</code>. Richieste di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🌐 V11.26 | 085 | Nov 2026 | Export interregionale con un solo Excel
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🌐 Export</strong>: <code>_croExportXlsx(mode, sel, selDiv, opz)</code> accetta <code>opz.items</code> (percorsi passati da fuori), <code>opz.vie</code> (ogni via è una lista di parti con la RTN fra l’una e l’altra) e <code>opz.nome</code>; <code>_irpFoglio</code> compone le righe di ogni via con <code>_irpRighe</code> per parte e una riga <code>RTN</code>. <code>wzEsportaInter()</code> nella Progettazione; <code>notaDaApp()</code> per la nota della coda copiata. Richieste di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             🛡️ V11.26 | 084 | Nov 2026 | Riepilogo della Progettazione con le note del Protetto
           </summary>
@@ -89467,7 +89755,16 @@ window._buildUnifiedCostBlock = function(opts) {
     var capEl = document.getElementById(isUni ? 'unifiedCostCapacity' : 'rcIrpCapacity'), thEl = isUni ? document.getElementById('unifiedCostThreshold') : null;
     var cap = capEl ? capEl.value : '', soglia = thEl ? (Number(thEl.value) || 250) : 250;
     var tutte = [];
-    data.forEach(function(d, iv){ _irpRighe(d, isUni, cap, soglia, iv + 1).forEach(function(x){ tutte.push(x); }); });
+    data.forEach(function(d, iv){
+      if (d && d.parti){   /* V11.26|085: una via dalla A alla Z con la RTN in mezzo */
+        d.parti.forEach(function(pt, ip){
+          if (ip > 0 && d.rtn) tutte.push({ via: (iv + 1) + '\u00b0 Via', ba: 'RTN', a: d.rtn.a, z: d.rtn.z, note: 'RTN ' + (d.rtn.a ? d.rtn.a.nome : '') + ' \u2192 ' + (d.rtn.z ? d.rtn.z.nome : '') + ': Rete Interregionale RTN non gestita dal Gruppo RTR.' });
+          _irpRighe(pt, isUni, cap, soglia, iv + 1).forEach(function(x){ tutte.push(x); });
+        });
+        return;
+      }
+      _irpRighe(d, isUni, cap, soglia, iv + 1).forEach(function(x){ tutte.push(x); });
+    });
     var nDati = Math.max(17, tutte.length + 1), ultima = IRP_PRIMA + nDati - 1;
     for (var i = 0; i < nDati; i++) _irpRiga(ws, 13, IRP_PRIMA + i);
     ws.getCell('B' + IRP_PRIMA).value = 1;
@@ -89531,13 +89828,13 @@ window._buildUnifiedCostBlock = function(opts) {
   }
 
   // ── API pubblica ─────────────────────────────────────────────────────────────
-  window._croExportXlsx = function(mode, selStdIdx, selDivByBase){
+  window._croExportXlsx = function(mode, selStdIdx, selDivByBase, opz){   /* V11.26|085: opz = { items, vie, nome } per l'interregionale */
     try {
       if (typeof ExcelJS === 'undefined'){
         alert('Libreria ExcelJS non disponibile. Ricarica la pagina.');
         return;
       }
-      var items = _collect(mode, selStdIdx, selDivByBase);
+      var items = opz && opz.items ? opz.items : _collect(mode, selStdIdx, selDivByBase);
       if (!items.length){
         alert('Nessun percorso selezionato da esportare.');
         return;
@@ -89547,7 +89844,7 @@ window._buildUnifiedCostBlock = function(opts) {
       if (typeof window.showLoading === 'function') window.showLoading('Export Excel in corso', items.length + (items.length === 1 ? ' percorso' : ' percorsi') + ': Riepilogo, Note, Centrali, Collegamenti, KMZ, IRP');   /* V11.26|044 */
       var wb    = _build(mode, items);
       /* V11.26|015: foglio IRP in coda agli altri */
-      try { _irpFoglio(wb, items.map(function(it){ return _routeData(it, isUni); }), isUni); }
+      try { _irpFoglio(wb, opz && opz.vie ? opz.vie.map(function(v){ return { parti: v.parti.map(function(it){ return _routeData(it, isUni); }), rtn: v.rtn }; }) : items.map(function(it){ return _routeData(it, isUni); }), isUni); }
       catch (eIrp){ console.error('[EXPORT XLSX] foglio IRP', eIrp); }
       try {   /* V11.26|035: dall'export protetto dell'Unificato si usa il primo Std */
         var _pxTemp = false;
@@ -89560,7 +89857,7 @@ window._buildUnifiedCostBlock = function(opts) {
       var _imgP = (_PXf && _PXf.sp && window.croProt && croProt.png) ? croProt.png(_PXf.sp) : Promise.resolve(null);
       var _cfgX = window._croCfgExport || null;   /* V11.26|062: configurazione della Progettazione, foglio nascosto */
       var hasD  = items.some(function(i){ return i.tipo === 'Div'; });
-      var name  = _sdfPrefix() + 'CRO_' + (isUni ? 'UNIFIED' : 'RC') + '_' +
+      var name  = opz && opz.nome ? _sdfPrefix() + opz.nome + '_' + window.getFileStamp() + '.xlsx' : _sdfPrefix() + 'CRO_' + (isUni ? 'UNIFIED' : 'RC') + '_' +
                   (hasD ? 'StdDiv' : 'Std') + '_' +
                   window.getFileStamp() + '.xlsx';
 
@@ -99403,6 +99700,23 @@ body.dark-mode .exb-grp, body.dark-mode .exb .exb-chip { background: #1e293b; bo
 body.dark-mode .expsm-ds-ctrl { background: #052e16; border-color: #166534; } body.dark-mode .expsm-ds-ctrl-et { color: #86efac; }
 .cmp-modale { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
 .cmp-modale[hidden] { display: none; }
+/* V11.26|089: riepilogo diviso per via */
+#cmpRiep tr.v-sep td { padding: 5px 8px; font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #fff !important; }
+#cmpRiep tr.v-sep.std td { background: #1d4ed8 !important; } #cmpRiep tr.v-sep.div td { background: #7c3aed !important; }
+#cmpRiep tr.v-std td:first-child { box-shadow: inset 4px 0 0 #1d4ed8; } #cmpRiep tr.v-div td:first-child { box-shadow: inset 4px 0 0 #7c3aed; }
+#cmpRiep tr.v-std td { background: #f8faff; } #cmpRiep tr.v-div td { background: #faf8ff; }
+.cmp-rb { display: inline-block; font-size: .6rem; font-weight: 800; padding: 1px 6px; border-radius: 4px; margin-right: 4px; vertical-align: 1px; } .cmp-rb.std { background: #dbeafe; color: #1d4ed8; } .cmp-rb.div { background: #ede9fe; color: #6d28d9; }
+/* V11.26|088: card di centrale e nodo con le due vie, stesso formato */
+.cmp-vb { border-left: 3px solid #1d4ed8; background: #f8faff; border-radius: 7px; padding: 5px 8px 6px; margin-top: 5px; }
+.cmp-vb.div { border-left-color: #7c3aed; background: #faf8ff; }
+.cmp-vb-t { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #1d4ed8; margin-bottom: 3px; } .cmp-vb.div .cmp-vb-t { color: #7c3aed; }
+.cmp-vb .cmp-verb { margin-top: 4px; }
+.cmp-c2b { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin-top: 6px; padding-top: 5px; border-top: 1px dashed #e2e8f0; font-size: .74rem; }   /* V11.26|087 */
+.mk-c.mk-c2 { font-size: 9px; letter-spacing: -.02em; background: #0f766e; }   /* V11.26|087 */
+.cmp-c2 { margin-top: 5px; padding: 5px 8px; border-radius: 7px; background: #fff7ed; border: 1px solid #fdba74; color: #7c2d12; font-size: .72rem; line-height: 1.45; }   /* V11.26|086 */
+/* V11.26|086: barra del totale su una riga, i bottoni non vanno a capo */
+.cmp-foot { flex-wrap: nowrap !important; } .cmp-foot-v { flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; } .cmp-foot .cmp-sp { display: none; }
+.cmp-foot > b, .cmp-foot-k, .cmp-foot-m, .cmp-foot-ok, #tab-compositore .cmp-foot .cmp-azb { flex: none; white-space: nowrap; }
 /* V11.26|077: colori RC/RA unificati */
 .cmp-act.rc { background: #ffe5e5 !important; color: #ff0000 !important; } .cmp-act.ra { background: #e5e5ff !important; color: #0000ff !important; }
 .cmp-lk.ra, .cmp-cn.ra { box-shadow: inset 3px 0 0 #0000ff !important; } .cmp-lk.rc, .cmp-cn.rc { box-shadow: inset 3px 0 0 #ff0000 !important; }
@@ -102031,7 +102345,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 084';
+  var REVISIONE = 'V11.26 | 089';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
