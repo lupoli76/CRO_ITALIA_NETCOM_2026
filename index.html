@@ -4,13 +4,25 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 081  (rev. pubblicata: V11.26 | 081 | Nov 2026)              ║
+║   Versione: 11.26 | 083  (rev. pubblicata: V11.26 | 083 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 083 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • INFO LIVE: con la striscia accesa i cassetti Note e regole, i veli e le      ║
+║     finestre finiscono sopra di lei invece di finirci sotto; con la striscia     ║
+║     chiusa arrivano in fondo allo schermo; lo stesso per il menu centrali        ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 082 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • NOTE E REGOLE: i cassetti di tutti i tab si chiudono di nuovo anche          ║
+║     cliccando fuori; quello della Progettazione SdF ha lo stesso aspetto degli   ║
+║     altri (titoli blu con icona, voci separate, indice con le icone)             ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 081 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -4920,7 +4932,7 @@ window.croProt = (function () {
     }
     var apri = function () { velo.classList.add('aperto'); drawer.classList.add('aperto'); corpo.scrollTop = 0; };
     var chiudi = function () { velo.classList.remove('aperto'); drawer.classList.remove('aperto'); };
-    btn.addEventListener('click', apri);   /* V11.26|078: si chiude solo con la X o con Esc */
+    btn.addEventListener('click', apri); velo.addEventListener('click', chiudi);
     head.querySelector('.rn-chiudi').addEventListener('click', chiudi);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && drawer.classList.contains('aperto')) chiudi(); });
   }
@@ -7260,7 +7272,8 @@ window.croCmp = (function () {
     AC.el.innerHTML = h;
     var r = inp.getBoundingClientRect(), w = Math.max(r.width, 420);
     AC.el.style.left = Math.min(r.left, window.innerWidth - w - 8) + 'px'; AC.el.style.width = w + 'px';
-    var giu = window.innerHeight - r.bottom, alto = Math.min(340, Math.max(giu, r.top) - 12);
+    var fondo = window.innerHeight - (document.body.classList.contains('cro-infolive-on') ? 30 : 0);   /* V11.26|083: sopra la striscia Info live */
+    var giu = fondo - r.bottom, alto = Math.min(340, Math.max(giu, r.top) - 12);
     AC.el.style.maxHeight = alto + 'px';
     if (giu >= 200 || giu >= r.top) { AC.el.style.top = (r.bottom + 2) + 'px'; AC.el.style.bottom = 'auto'; }
     else { AC.el.style.top = 'auto'; AC.el.style.bottom = (window.innerHeight - r.top + 2) + 'px'; }
@@ -7836,7 +7849,7 @@ window.croCmp = (function () {
     if (sott && sott.parentNode) { var riga = document.createElement('div'); riga.className = 'rn-riga'; sott.parentNode.insertBefore(riga, sott); riga.appendChild(sott); riga.appendChild(btn); }
     var apri = function () { velo.classList.add('aperto'); drawer.classList.add('aperto'); corpo.scrollTop = 0; };
     var chiudi = function () { velo.classList.remove('aperto'); drawer.classList.remove('aperto'); };
-    btn.addEventListener('click', apri);   /* V11.26|078: si chiude solo con la X o con Esc */
+    btn.addEventListener('click', apri); velo.addEventListener('click', chiudi);
     head.querySelector('.rn-chiudi').addEventListener('click', chiudi);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && drawer.classList.contains('aperto')) chiudi(); });
   }
@@ -27234,7 +27247,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 081 | Nov 2026</div>
+<div class="version-tag">V11.26 | 083 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -27492,7 +27505,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 081</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 083</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -27509,7 +27522,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 081</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 083</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -27530,7 +27543,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 081</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 083</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -27548,7 +27561,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 081</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 083</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -27565,7 +27578,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 081</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 083</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -27581,7 +27594,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 081</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 083</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -28045,7 +28058,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 081</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 083</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -28195,8 +28208,28 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🧭 Novità V11.26 | 081 | Nov 2026</span>
+                  <span class="cl-ver">📡 Novità V11.26 | 083 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📡 Info live</strong>: con la striscia Info live accesa i cassetti «Note e regole» di tutti i tab, i veli, le finestre (popup, dettaglio e mappa della Progettazione SdF, wizard) e il menu delle centrali si fermano sopra la striscia, così l’ultima riga non resta nascosta; con la striscia chiusa arrivano in fondo allo schermo</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📘 Novità V11.26 | 082 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📘 Note e regole come negli altri tab</strong>: nella Progettazione SdF le 16 voci hanno il titolo blu con l’icona, sono separate da una linea e l’indice in alto mostra le icone, come nei tab RA, RC e Unificato</li><li><strong>✕ Cassetti</strong>: i cassetti «Note e regole» di tutti i tab si chiudono di nuovo anche cliccando fuori, oltre che con la X e con Esc; i popup di dettaglio della Progettazione SdF restano chiusi solo con «Fatto» o ✕</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧭 Novità V11.26 | 081 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -35809,23 +35842,23 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         <div class="cmp-catena" id="cmpCatena"></div>
         <div class="cmp-avvisi" id="cmpAvvisi"></div>
         <div class="cmp-riep" id="cmpRiep"></div>
-        <div id="cmpNote" hidden><ul>
-          <li><strong>A cosa serve:</strong> la Progettazione SdF costruisce la fattibilità completa, dalla sede del cliente al trasporto sulla rete e ritorno: sedi, code, centrali Colt, reti RTR, Nodi A1 e RTN. I percorsi si cercano nel tab Unificato, i costi vengono dagli stessi calcoli degli export, e alla fine escono il TXT, l’Excel con il foglio IRP e il Modulo KMZ. È una funzione sperimentale: i risultati vanno sempre controllati.</li>
-          <li><strong>Schemi:</strong> «Stessa regione» prepara 7 blocchi (Sede A, Coda A, Centrale A, Rete RTR, Centrale Z, Coda Z, Sede Z). «Interregionale» ne prepara 11: Rete RTR Zona A e Zona Z, i due Nodi A1 e la RTN in mezzo. «Verso Nodo A1» ne prepara 5: Sede A, Coda A, Centrale A, Rete RTR e Nodo A1. Cambiando schema i dati già inseriti restano: la Rete RTR diventa Rete Zona A e viceversa, e un avviso dice se qualche blocco compilato viene tolto.</li>
-          <li><strong>Come si legge la pagina:</strong> tre colonne. A sinistra il lato A (sede, coda, centrale e, con l’Interregionale, il Nodo A1), al centro la rete, a destra il lato Z in ordine speculare. Ogni card mostra un riassunto e lo stato (completa, valorizzata, da completare, da verificare, a mano…). Il clic sulla card, o su ⤢, apre il dettaglio in un popup con tutti i campi; «←» e «→» passano al blocco vicino. I popup si chiudono solo con «Fatto» o con ✕. ✕ sulla card toglie il blocco, dopo una conferma.</li>
-          <li><strong>Aggiungere un blocco:</strong> la fila «Aggiungi un blocco» ha sei tipi (Sede cliente, Coda, Centrale Colt, Rete RTR, Nodo A1, RTN) con i loro lati: verdi quelli già presenti. Il clic mette il blocco nel primo lato libero dello schema, prima A e poi Z; se sono tutti occupati compare l’avviso «Forse hai scelto il blocco sbagliato». La RTN aggiunta a «Stessa regione» o «Verso Nodo A1» propone di passare all’Interregionale; un Nodo A1 in «Stessa regione» propone «Verso Nodo A1» o l’Interregionale; togliendo la RTN si torna a «Stessa regione».</li>
-          <li><strong>Sede cliente:</strong> nome, indirizzo (con «Geocodifica»), coordinate e «Centrale indicata (Colt)», cioè la centrale passata dal cliente. La centrale indicata e la «Centrale a mano» della Centrale della stessa zona sono sempre uguali: scrivendo l’una si compila l’altra, e se dall’altra parte c’è già una centrale diversa lo strumento chiede se sostituirla.</li>
-          <li><strong>Centrale Colt di attestazione:</strong> l’ordine è questo. Prima la centrale scelta a mano o indicata nella sede (se arriva dalla sede è «da verificare» finché non premi «✔ Verificata»). Altrimenti la più vicina in linea d’aria alla sede fra le centrali RC e le RA di tipo 1 e 2: le RA di tipo 3 sono solo di transito. Le alternative vicine sono elencate con i km. Il menu delle centrali è quello dei tab di ricerca: nome, CLLI, [Tn] per la RA, seconda riga [Area – Zona – Regione] ed etichette RC, RA, Nodo A1.</li>
-          <li><strong>Nodo A1:</strong> per ogni zona, il più vicino in linea d’aria alla centrale della zona; si può sceglierne un altro. Nel campo «Nodo A1 a mano» i Nodi A1 stanno in testa al menu, le altre centrali sotto con l’avviso «non sono Nodi A1». Sul lato di un Nodo A1 la coda non serve.</li>
-          <li><strong>Coda:</strong> collega la sede del cliente alla centrale Colt. I km sono in linea d’aria e, se il servizio delle strade risponde, anche a piedi; si possono scrivere a mano. Il costo si costruisce con «Apparati…» dal listino Apparati &amp; Cestelli dell’Analisi Costi, divisi fra «Sede Cliente» (presso il cliente) e «Centrale per il Cliente», più un eventuale importo libero. Con Std + Div non protetto la coda vale per due vie: nel popup ci sono «1a Via (Std)» e «2a Via (Div)», con «2a Via uguale alla 1a» spuntata di partenza. «Applica e copia su Coda Zona Z» (o A) copia tutto sull’altra zona. Con Protetto vale la coda del listino dei protetti.</li>
-          <li><strong>Rete RTR:</strong> partenza e arrivo sono la centrale o il Nodo A1 subito prima e subito dopo nella catena. «Cerca nell’Unificato» lancia la ricerca nel tab Unificato; quando gli Std, e poi i Div, sono pronti, un riquadro in basso a destra riporta qui e prende da solo lo Std e il Div scelti nella tabella (spuntati nella barra export, o lo Std di cui hai aperto i Div). «Importa Std» e «Importa Div» li scelgono da una lista. La card mostra per Std e Div prima il routing delle centrali («Nome (CLLI) [Tn]», [Tn] solo per la RA, gateway «RA ⇄ RC» in viola), poi i collegamenti con lo stato del DB (verde attivo, ambra da verificare; per la RA l’Id Collegamento univoco del DB RA). «Verificare su NNI lo stato di N Collegamenti» conta quelli non attivi. Sotto c’è il controllo delle C-FOS in comune fra Std e Div.</li>
-          <li><strong>Capacità, Std + Div e Protezione:</strong> la capacità (1G, 10G, 100G) vale per i costi di tutte le reti. Con «Solo Std» ogni rete ha solo lo Std, con «Std + Div» anche il Div. Con SNCP o E2E il trasporto protetto esiste solo su rete RC: i percorsi che passano dalla RA sono «da rivedere», e nel wizard l’interruttore «Solo RC» (spento di partenza) li esclude.</li>
-          <li><strong>RTN:</strong> è la rete interregionale non gestita da noi e indica solo il passaggio fra i due Nodi A1. Non ha configurazione e non si valorizza nei costi; la consegna va condivisa con Stefano Gentile.</li>
-          <li><strong>Riepilogo e totale:</strong> sotto le card, una riga per la coda di ogni zona e una riga per ogni sezione di rete di Std e Div (per esempio «Rete RTR STD [RA1]», «[RC]», «[RA2]»), con Dettaglio (km e collegamenti), «Note per IRP» (la nota da riportare nell’IRP, con apparati, collegamenti e i 180 giorni se c’è da realizzare) e costo. La barra in fondo somma reti e code, dice cosa resta da completare e ha «Mappa», «TXT della Progettazione» ed «Export completo».</li>
-          <li><strong>Mappa:</strong> nel popup della rete, delle centrali e dei Nodi A1, e a tutto schermo con «Mappa» o ⤢. Gli sfondi sono quelli dei tab. Linee rosse per la RC e blu per la RA, piene per lo Std e tratteggiate per il Div; coda verde (gialla sugli sfondi satellitari); RTN grigia. Centrale Colt in verde acqua con A o Z, Nodo A1 a rombo viola, sede arancio, centrali RA e RC piene, gateway più grande con ⇄. Col mouse ogni collegamento e ogni centrale mostrano tutte le informazioni. I livelli «Percorso stradale RA» e «Percorso stradale RC» disegnano il tragitto sulle strade, solo come disegno: i km restano quelli del DB. Con l’Interregionale ci sono le viste Italia intera, A e Z affiancate, Solo zona A, Solo zona Z. La legenda si apre e si chiude. Serve la libreria delle mappe (Leaflet): se la rete la blocca compare un avviso.</li>
-          <li><strong>Wizard:</strong> compila la progettazione passo per passo. Si apre dal bottone «Wizard», dall’Overview («Avvia Wizard»), dai tab RC e Unificato («Wizard da questa ricerca», con Partenza, Arrivo e Posizione Cliente) e dalla barra export dell’Unificato («Continua nel wizard», con Std e Div già scelti). Anche il wizard è sperimentale.</li>
-          <li><strong>Undo e Importa:</strong> la progettazione si salva da sola con un numero progressivo a ogni «Fine» del wizard e, se lavori senza wizard, a ogni «Export completo» o «TXT della Progettazione»; se è identica all’ultima salvata non si crea un doppione. «Undo (Ultime 20)» le elenca con data, centrali, configurazione, percorsi e SdF, e le riapre nella pagina o nel wizard: Std e Div si ritrovano ricalcolando sul DB di oggi, e se non ci sono più un avviso lo dice. L’archivio sta nel browser di questo PC. Gli export portano la configurazione (righe CROCFG1 in fondo al TXT, foglio nascosto _CRO_CONFIG nell’Excel) e «Importa» la rilegge; da un TXT di prima della 062 prende solo Partenza e Arrivo.</li>
-          <li><strong>Export:</strong> «Export completo» produce, come nell’Unificato, il TXT, il Modulo KMZ e l’Excel con Dati Servizio e foglio IRP dello Std e del Div scelti, comprese le code; «TXT della Progettazione» produce il riassunto di tutti i blocchi. Tutto va verificato prima di usarlo.</li>
+        <div id="cmpNote" class="route-help-panel" style="margin-top:0;" hidden><ul>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🎯 A cosa serve</strong>: la Progettazione SdF costruisce la fattibilità completa, dalla sede del cliente al trasporto sulla rete e ritorno: sedi, code, centrali Colt, reti RTR, Nodi A1 e RTN. I percorsi si cercano nel tab Unificato, i costi vengono dagli stessi calcoli degli export, e alla fine escono il TXT, l’Excel con il foglio IRP e il Modulo KMZ. È una funzione sperimentale: i risultati vanno sempre controllati.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧩 Schemi</strong>: «Stessa regione» prepara 7 blocchi (Sede A, Coda A, Centrale A, Rete RTR, Centrale Z, Coda Z, Sede Z). «Interregionale» ne prepara 11: Rete RTR Zona A e Zona Z, i due Nodi A1 e la RTN in mezzo. «Verso Nodo A1» ne prepara 5: Sede A, Coda A, Centrale A, Rete RTR e Nodo A1. Cambiando schema i dati già inseriti restano: la Rete RTR diventa Rete Zona A e viceversa, e un avviso dice se qualche blocco compilato viene tolto.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">👀 Come si legge la pagina</strong>: tre colonne. A sinistra il lato A (sede, coda, centrale e, con l’Interregionale, il Nodo A1), al centro la rete, a destra il lato Z in ordine speculare. Ogni card mostra un riassunto e lo stato (completa, valorizzata, da completare, da verificare, a mano…). Il clic sulla card, o su ⤢, apre il dettaglio in un popup con tutti i campi; «←» e «→» passano al blocco vicino. I popup si chiudono solo con «Fatto» o con ✕. ✕ sulla card toglie il blocco, dopo una conferma.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">➕ Aggiungere un blocco</strong>: la fila «Aggiungi un blocco» ha sei tipi (Sede cliente, Coda, Centrale Colt, Rete RTR, Nodo A1, RTN) con i loro lati: verdi quelli già presenti. Il clic mette il blocco nel primo lato libero dello schema, prima A e poi Z; se sono tutti occupati compare l’avviso «Forse hai scelto il blocco sbagliato». La RTN aggiunta a «Stessa regione» o «Verso Nodo A1» propone di passare all’Interregionale; un Nodo A1 in «Stessa regione» propone «Verso Nodo A1» o l’Interregionale; togliendo la RTN si torna a «Stessa regione».</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏠 Sede cliente</strong>: nome, indirizzo (con «Geocodifica»), coordinate e «Centrale indicata (Colt)», cioè la centrale passata dal cliente. La centrale indicata e la «Centrale a mano» della Centrale della stessa zona sono sempre uguali: scrivendo l’una si compila l’altra, e se dall’altra parte c’è già una centrale diversa lo strumento chiede se sostituirla.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏢 Centrale Colt di attestazione</strong>: l’ordine è questo. Prima la centrale scelta a mano o indicata nella sede (se arriva dalla sede è «da verificare» finché non premi «✔ Verificata»). Altrimenti la più vicina in linea d’aria alla sede fra le centrali RC e le RA di tipo 1 e 2: le RA di tipo 3 sono solo di transito. Le alternative vicine sono elencate con i km. Il menu delle centrali è quello dei tab di ricerca: nome, CLLI, [Tn] per la RA, seconda riga [Area – Zona – Regione] ed etichette RC, RA, Nodo A1.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🔀 Nodo A1</strong>: per ogni zona, il più vicino in linea d’aria alla centrale della zona; si può sceglierne un altro. Nel campo «Nodo A1 a mano» i Nodi A1 stanno in testa al menu, le altre centrali sotto con l’avviso «non sono Nodi A1». Sul lato di un Nodo A1 la coda non serve.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">〰️ Coda</strong>: collega la sede del cliente alla centrale Colt. I km sono in linea d’aria e, se il servizio delle strade risponde, anche a piedi; si possono scrivere a mano. Il costo si costruisce con «Apparati…» dal listino Apparati &amp; Cestelli dell’Analisi Costi, divisi fra «Sede Cliente» (presso il cliente) e «Centrale per il Cliente», più un eventuale importo libero. Con Std + Div non protetto la coda vale per due vie: nel popup ci sono «1a Via (Std)» e «2a Via (Div)», con «2a Via uguale alla 1a» spuntata di partenza. «Applica e copia su Coda Zona Z» (o A) copia tutto sull’altra zona. Con Protetto vale la coda del listino dei protetti.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🟢 Rete RTR</strong>: partenza e arrivo sono la centrale o il Nodo A1 subito prima e subito dopo nella catena. «Cerca nell’Unificato» lancia la ricerca nel tab Unificato; quando gli Std, e poi i Div, sono pronti, un riquadro in basso a destra riporta qui e prende da solo lo Std e il Div scelti nella tabella (spuntati nella barra export, o lo Std di cui hai aperto i Div). «Importa Std» e «Importa Div» li scelgono da una lista. La card mostra per Std e Div prima il routing delle centrali («Nome (CLLI) [Tn]», [Tn] solo per la RA, gateway «RA ⇄ RC» in viola), poi i collegamenti con lo stato del DB (verde attivo, ambra da verificare; per la RA l’Id Collegamento univoco del DB RA). «Verificare su NNI lo stato di N Collegamenti» conta quelli non attivi. Sotto c’è il controllo delle C-FOS in comune fra Std e Div.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">⚙️ Capacità, Std + Div e Protezione</strong>: la capacità (1G, 10G, 100G) vale per i costi di tutte le reti. Con «Solo Std» ogni rete ha solo lo Std, con «Std + Div» anche il Div. Con SNCP o E2E il trasporto protetto esiste solo su rete RC: i percorsi che passano dalla RA sono «da rivedere», e nel wizard l’interruttore «Solo RC» (spento di partenza) li esclude.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🌐 RTN</strong>: è la rete interregionale non gestita da noi e indica solo il passaggio fra i due Nodi A1. Non ha configurazione e non si valorizza nei costi; la consegna va condivisa con Stefano Gentile.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📋 Riepilogo e totale</strong>: sotto le card, una riga per la coda di ogni zona e una riga per ogni sezione di rete di Std e Div (per esempio «Rete RTR STD [RA1]», «[RC]», «[RA2]»), con Dettaglio (km e collegamenti), «Note per IRP» (la nota da riportare nell’IRP, con apparati, collegamenti e i 180 giorni se c’è da realizzare) e costo. La barra in fondo somma reti e code, dice cosa resta da completare e ha «Mappa», «TXT della Progettazione» ed «Export completo».</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🗺️ Mappa</strong>: nel popup della rete, delle centrali e dei Nodi A1, e a tutto schermo con «Mappa» o ⤢. Gli sfondi sono quelli dei tab. Linee rosse per la RC e blu per la RA, piene per lo Std e tratteggiate per il Div; coda verde (gialla sugli sfondi satellitari); RTN grigia. Centrale Colt in verde acqua con A o Z, Nodo A1 a rombo viola, sede arancio, centrali RA e RC piene, gateway più grande con ⇄. Col mouse ogni collegamento e ogni centrale mostrano tutte le informazioni. I livelli «Percorso stradale RA» e «Percorso stradale RC» disegnano il tragitto sulle strade, solo come disegno: i km restano quelli del DB. Con l’Interregionale ci sono le viste Italia intera, A e Z affiancate, Solo zona A, Solo zona Z. La legenda si apre e si chiude. Serve la libreria delle mappe (Leaflet): se la rete la blocca compare un avviso.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧭 Wizard</strong>: compila la progettazione passo per passo. Si apre dal bottone «Wizard», dall’Overview («Avvia Wizard»), dai tab RC e Unificato («Wizard da questa ricerca», con Partenza, Arrivo e Posizione Cliente) e dalla barra export dell’Unificato («Continua nel wizard», con Std e Div già scelti). Anche il wizard è sperimentale.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">↩️ Undo e Importa</strong>: la progettazione si salva da sola con un numero progressivo a ogni «Fine» del wizard e, se lavori senza wizard, a ogni «Export completo» o «TXT della Progettazione»; se è identica all’ultima salvata non si crea un doppione. «Undo (Ultime 20)» le elenca con data, centrali, configurazione, percorsi e SdF, e le riapre nella pagina o nel wizard: Std e Div si ritrovano ricalcolando sul DB di oggi, e se non ci sono più un avviso lo dice. L’archivio sta nel browser di questo PC. Gli export portano la configurazione (righe CROCFG1 in fondo al TXT, foglio nascosto _CRO_CONFIG nell’Excel) e «Importa» la rilegge; da un TXT di prima della 062 prende solo Partenza e Arrivo.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">⬇️ Export</strong>: «Export completo» produce, come nell’Unificato, il TXT, il Modulo KMZ e l’Excel con Dati Servizio e foglio IRP dello Std e del Div scelti, comprese le code; «TXT della Progettazione» produce il riassunto di tutti i blocchi. Tutto va verificato prima di usarlo.</p></li>
         </ul></div>
       </div>
     </div>
@@ -47389,7 +47422,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 081 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 083 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -47408,6 +47441,28 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📡 V11.26 | 083 | Nov 2026 | Cassetti e finestre sopra la striscia Info live
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📡 Info live</strong>: regole <code>body.cro-infolive-on</code> con <code>bottom: 30px</code> per <code>.rn-drawer</code>, <code>.rn-velo</code>, <code>.cmp-dett</code>, <code>.cmp-mapfull</code>, <code>.cmp-chiedi</code>, <code>.cmp-modale</code>, <code>#wzVelo</code>, <code>.cro-popup-overlay</code>; il menu delle centrali calcola lo spazio sotto il campo togliendo la striscia. Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📘 V11.26 | 082 | Nov 2026 | Note e regole della Progettazione come negli altri tab
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📘 Note</strong>: <code>#cmpNote</code> con la classe <code>route-help-panel</code> e le voci nella forma degli altri tab (<code>&lt;p&gt;&lt;strong style="color:#004C99"&gt;icona Titolo&lt;/strong&gt;: testo&lt;/p&gt;</code>); tolta la modifica della 078 che impediva la chiusura al clic sul velo. Correzione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             🧭 V11.26 | 081 | Nov 2026 | Mappa del codice completa: moduli e funzioni
           </summary>
@@ -93530,6 +93585,7 @@ body.dark-mode .rn-nota-fine { background: #1a1a2e; border-color: #374151; color
       drawer.classList.remove('aperto');
     }
     btn.addEventListener('click', apri);
+    velo.addEventListener('click', chiudi);
     head.querySelector('.rn-chiudi').addEventListener('click', chiudi);
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && drawer.classList.contains('aperto')) chiudi();
@@ -96973,6 +97029,7 @@ body.dark-mode #tab-verifica-pxm #pxmGeoResults .route-table-v2 { background-col
       drawer.classList.remove('aperto');
     }
     btn.addEventListener('click', apri);
+    velo.addEventListener('click', chiudi);
     head.querySelector('.rn-chiudi').addEventListener('click', chiudi);
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && drawer.classList.contains('aperto')) chiudi();
@@ -98994,6 +99051,12 @@ body.dark-mode #tab-analisi-fattibilita .af-wip { background: repeating-linear-g
 #croInfoLiveApri[hidden] { display: none; }
 body.cro-infolive-on { padding-bottom: 30px; }
 body.cro-infolive-on .cro-toast-container { bottom: 44px !important; }
+/* V11.26|083: con la striscia Info live accesa (30 px in fondo) cassetti, veli e finestre finiscono sopra di lei */
+body.cro-infolive-on .rn-drawer, body.cro-infolive-on .rn-velo,
+body.cro-infolive-on .cmp-dett, body.cro-infolive-on .cmp-mapfull, body.cro-infolive-on .cmp-chiedi,
+body.cro-infolive-on .cmp-modale, body.cro-infolive-on #wzVelo, body.cro-infolive-on .cro-popup-overlay { bottom: 30px !important; }
+body.cro-infolive-on .cmp-rit { bottom: 44px; }
+
 @media (prefers-reduced-motion: reduce) { #croInfoLive .cil-nastro { animation: none; } #croInfoLive .cil-vista { overflow-x: auto; } #croInfoLive .cil-led { animation: none; } }
 @media print { #croInfoLive, #croInfoLiveApri { display: none !important; } body.cro-infolive-on { padding-bottom: 0; } }
 </style>
@@ -101931,7 +101994,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 081';
+  var REVISIONE = 'V11.26 | 083';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
