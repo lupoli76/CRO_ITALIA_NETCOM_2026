@@ -4,13 +4,19 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 090  (rev. pubblicata: V11.26 | 090 | Nov 2026)              ║
+║   Versione: 11.26 | 091  (rev. pubblicata: V11.26 | 091 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 091 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • RACCORDO IN FIBRA: tolto il caso di ROZZANO IDC V. TOSCANA (MLNOITAE), che   ║
+║     ora ha una doppia via; il Div si cerca come per le altre centrali, senza     ║
+║     sede gemella, riga RACCORDO FIBRA e nota del rilancio                        ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 090 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -27452,7 +27458,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 090 | Nov 2026</div>
+<div class="version-tag">V11.26 | 091 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -27710,7 +27716,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 090</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 091</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -27727,7 +27733,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 090</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 091</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -27748,7 +27754,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 090</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 091</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -27766,7 +27772,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 090</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 091</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -27783,7 +27789,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 090</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 091</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -27799,7 +27805,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 090</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 091</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -28263,7 +28269,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 090</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 091</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -28331,7 +28337,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     <h3 class="feature-title" style="color: #d1008f;">🔀 Raccordo in fibra per DC con una sola via</h3>
     <span class="feature-badge" style="background:#fdf2f8;color:#d1008f;">Latest</span>
   </div>
-  <p class="feature-desc">Se un estremo del percorso è una sede con un unico SubPath di ingresso/uscita e chiedi la diversificazione, il tool avvisa che il 100% non è raggiungibile su quella sede. Propone di cercare il Div sulla <strong>sede gemella dello stesso complesso</strong>, prevedendo un rilancio in fibra fra le due. Il raccordo entra nel percorso con i suoi 0,4 km nel totale e compare nella tabella, negli export TXT/XLSX e nel documento KMZ. Importando il TXT nel Generatore Note Standard IRP, la nota del raccordo viene riconosciuta e aggiunta da sola alla <strong>Nota Lavorante</strong> e alla <strong>Nota File Condiviso</strong>. Attivo nei tab <strong>RC</strong> e <strong>Unificato</strong>.</p>
+  <p class="feature-desc">Se un estremo del percorso è una sede con un unico SubPath di ingresso/uscita e chiedi la diversificazione, il tool avvisa che il 100% non è raggiungibile su quella sede. Propone di cercare il Div sulla <strong>sede gemella dello stesso complesso</strong>, prevedendo un rilancio in fibra fra le due. Il raccordo entra nel percorso con i suoi 0,4 km nel totale e compare nella tabella, negli export TXT/XLSX e nel documento KMZ. Importando il TXT nel Generatore Note Standard IRP, la nota del raccordo viene riconosciuta e aggiunta da sola alla <strong>Nota Lavorante</strong> e alla <strong>Nota File Condiviso</strong>. Attivo nei tab <strong>RC</strong> e <strong>Unificato</strong>. Oggi nessuna sede è in tabella: ROZZANO IDC V. TOSCANA (MLNOITAE), l’unico caso, ha ora una seconda via e il Div si cerca come per le altre centrali.</p>
   <div class="feature-specs">
     <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Note IRP</span>
     <span class="spec-tag" style="background:#fdf2f8;color:#d1008f;">Hop Virtuale</span>
@@ -28413,8 +28419,18 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🗄️ Novità V11.26 | 090 | Nov 2026</span>
+                  <span class="cl-ver">🔀 Novità V11.26 | 091 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🔀 Niente raccordo su MLNOITAE</strong>: chiedendo il diversificato con ROZZANO IDC V. TOSCANA (MLNOITAE) come estremo, il tool non propone più la sede gemella ROZZANO TELECOM IT. PAL.H, non aggiunge la riga «RACCORDO FIBRA» da 0,4 km né la nota del rilancio in fibra (in tabella, TXT, Excel, KMZ e Note Standard IRP): la sede ha ora una doppia via e il Div si cerca come per le altre centrali. Il meccanismo resta disponibile per altri casi</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🗄️ Novità V11.26 | 090 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -47697,7 +47713,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 090 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 091 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -47716,6 +47732,17 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🔀 V11.26 | 091 | Nov 2026 | Niente raccordo in fibra su MLNOITAE
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🔀 DC_RACCORDO_FIBRA</strong>: tabella svuotata (era una riga per MLNOITAE con viaUnica CLO310 e gemello MILAITMA); <code>croRaccordoCheck()</code> restituisce sempre null e i tab RC e Unificato calcolano il Div senza il raccordo. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             🗄️ V11.26 | 090 | Nov 2026 | CLO310 attivo nel DB RC
           </summary>
@@ -90280,16 +90307,9 @@ window._buildUnifiedCostBlock = function(opts) {
   'use strict';
 
   // Tabella: per aggiungere un caso basta una riga
-  window.DC_RACCORDO_FIBRA = window.DC_RACCORDO_FIBRA || [
-    {
-      clli:        'MLNOITAE',
-      gat:         'ROZZANO IDC V. TOSCANA',
-      viaUnica:    'CLO310',
-      gemelloClli: 'MILAITMA',
-      gemelloGat:  'ROZZANO TELECOM IT. PAL.H',
-      metri:       400
-    }
-  ];
+  /* V11.26|091: ROZZANO IDC V. TOSCANA (MLNOITAE) ora ha una doppia via: niente piu' raccordo, il routing e' come per le
+     altre centrali. La tabella resta vuota, pronta per altri casi: { clli, gat, viaUnica, gemelloClli, gemelloGat, metri } */
+  window.DC_RACCORDO_FIBRA = window.DC_RACCORDO_FIBRA || [];
 
   function _up(v){ return (v == null ? '' : String(v)).trim().toUpperCase(); }
 
@@ -102372,7 +102392,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 090';
+  var REVISIONE = 'V11.26 | 091';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
