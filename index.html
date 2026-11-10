@@ -4,13 +4,53 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 099  (rev. pubblicata: V11.26 | 099 | Nov 2026)              ║
+║   Versione: 11.26 | 106  (rev. pubblicata: V11.26 | 106 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 106 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE: Solo Std (quando e' scelto) e Wizard, al passaggio del        ║
+║     mouse la scritta diventa gialla                                              ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 105 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • DOCUMENTAZIONE: card dell'Overview, Note e regole (18 voci) e sezione        ║
+║     della Guida sulla Progettazione SdF riscritte con tutte le novita' fino      ║
+║     alla 104                                                                     ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 104 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE: sezione SdF con due minicard (1a Via Std, 2a Via Div)         ║
+║     allineate ai bottoni dei blocchi, senza pastiglia; bottoni della barra alti  ║
+║     come quelli dello Schema                                                     ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 103 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE: sezione SdF a larghezza fissa con la pastiglia su due         ║
+║     righe; tornano gli spazi fra barra, blocchi e colonne Lato A / Rete / Lato Z ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 102 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE: sezione Fattibilita' (SdF) accanto ad Aggiungi un blocco,     ║
+║     con SdF Std (1a Via) e SdF Div (2a Via); Div vuota = una sola SdF per le     ║
+║     due vie; stessi campi dei Dati Servizio del wizard                           ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 101 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE: i tooltip compaiono sopra la sezione (Schema, Capacita',      ║
+║     Rete RTR, Protezione, Progettazione, Aggiungi un blocco, barra del totale)   ║
+║     o sopra la card, senza coprire il bottone                                    ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 100 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • NOTE IRP DELLA CODA PROTETTA (SNCP ed E2E): Tratta DWDM interna al DC o      ║
+║     alla Centrale con la lambda della capacita'; 2a Via con il riferimento alla  ║
+║     Sdf della 1a Via quando le fattibilita' sono due                             ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 099 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -7630,7 +7670,7 @@ window.croCmp = (function () {
           via.div.push({ t: T.nome, det: 'verso ' + cvR.div.nome + ' (' + cvR.div.clli + ')' + (cvR.kmD != null ? ' \u00b7 ' + km(cvR.kmD) + ' km linea d\u2019aria' : ''), costo: cc.tot != null ? e2(cc.v2.tot) : DAV, nota: codaNotaApp({ f: { app: codaApp2(b) } }) || '' });
           return;
         }
-        (b.tipo === 'codaA' ? testa : fine).push({ t: T.nome, det: kmTxt, costo: cc.tot != null ? cc.tot.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac' + (pc ? '' : ' (stima)') : DAV, nota: pc ? pc.nota : (b.f.note ? String(b.f.note).replace(/\s*\n\s*/g, ' \u00b7 ') : '') });
+        (b.tipo === 'codaA' ? testa : fine).push({ t: T.nome, det: kmTxt, costo: cc.tot != null ? cc.tot.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac' + (pc ? '' : ' (stima)') : DAV, nota: pc ? window.croCodaNotaProt((function () { var cz = trova('centrale' + (/A$/.test(b.tipo) ? 'A' : 'Z')); return cz && cz.r && cz.r.c ? cz.r.c.clli : ''; })(), (el('cmpCap') || {}).value || '1G', 1, pc.nota, { std: WDS.sdfStd, div: WDS.sdfDiv }) : (b.f.note ? String(b.f.note).replace(/\s*\n\s*/g, ' \u00b7 ') : '') });   /* V11.26|100 */
         return;
       }
       if (T.cl === 'rete') {
@@ -7949,6 +7989,30 @@ window.croCmp = (function () {
     var t = b.tipo, l = slotEt(t);
     return { sede: 'Sede cliente ' + l, coda: 'Coda Zona ' + l, centrale: 'Centrale ' + l + ' (Colt)', nodo: 'Nodo A1 Zona ' + l, rtn: 'RTN', rete: TIPI[t].nome }[TIPI[t].cl] || TIPI[t].nome;
   }
+
+  /* V11.26|102: sezione «Fattibilita' (SdF)» accanto ad «Aggiungi un blocco». Sono gli stessi campi della pagina
+     Dati Servizio del wizard (WDS.sdfStd e WDS.sdfDiv): Div vuota o uguale = una sola SdF per le due vie */
+  function sdfStato() {   /* V11.26|104: testo breve sotto il titolo, senza pastiglia */
+    var sS = String(WDS.sdfStd || '').trim(), d = String(WDS.sdfDiv || '').trim(), dv = !!(el('cmpDiv') || {}).checked || !!protSol();
+    if (!dv) return 'solo 1a Via';
+    if (d && sS && d !== sS) return 'due SdF diverse';
+    return 'una SdF per le due vie';
+  }
+  function sdfDisegna() {
+    var pal = el('cmpPal'); if (!pal) return;
+    if (!el('cmpSdf')) {
+      var row = document.createElement('div'); row.className = 'cmp-palrow'; pal.parentNode.insertBefore(row, pal); row.appendChild(pal);
+      var box = document.createElement('div'); box.id = 'cmpSdf'; box.className = 'cmp-sdf'; row.appendChild(box);
+      box.innerHTML = '<div class="cmp-sdf-h"><span class="cmp-sdf-t">Fattibilit\u00e0 (SdF)</span><span class="cmp-sdf-s" id="cmpSdfS"></span></div>'
+        + '<label class="cmp-sdf-m std"><span>1a Via \u00b7 Std</span><input type="text" data-sdf="sdfStd" placeholder="es. SDF-001234" autocomplete="off"></label>'
+        + '<label class="cmp-sdf-m div"><span>2a Via \u00b7 Div</span><input type="text" data-sdf="sdfDiv" placeholder="vuota = come Std" autocomplete="off"></label>';
+      box.addEventListener('input', function (e) { var k = e.target.getAttribute('data-sdf'); if (!k) return; WDS[k] = e.target.value; var st = el('cmpSdfS'); if (st) st.textContent = sdfStato(); });
+      box.addEventListener('change', function (e) { if (e.target.getAttribute('data-sdf')) ridisegna(); });
+    }
+    var box2 = el('cmpSdf'), dvOn = !!(el('cmpDiv') || {}).checked || !!protSol();
+    box2.querySelectorAll('input[data-sdf]').forEach(function (i) { var k = i.getAttribute('data-sdf'); if (document.activeElement !== i) i.value = WDS[k] || ''; if (k === 'sdfDiv') { i.disabled = !dvOn; i.closest('label').classList.toggle('off', !dvOn); } });
+    var st = el('cmpSdfS'); if (st) st.textContent = sdfStato();
+  }
   function palHtml() {
     return PAL.map(function (p) {
       return '<button type="button" class="cmp-pc ' + p[0] + '" data-pal="' + p[0] + '" title="Aggiunge il blocco al primo lato libero">' + p[1] + ' ' + p[2] + ' ' + palSlots(p).map(function (t) { return '<i class="cmp-sl' + (trova(t) ? ' on' : '') + (inSchema(t) ? '' : ' fs') + '" title="' + esc(TIPI[t].nome) + (trova(t) ? ': presente' : ': libero') + '">' + slotEt(t) + '</i>'; }).join('') + '</button>';
@@ -8107,6 +8171,7 @@ window.croCmp = (function () {
     catena.forEach(function (b) { if (b.f.note && /Centrale Cliente/.test(b.f.note)) b.f.note = String(b.f.note).replace(/Centrale Cliente/g, 'Sede Cliente'); });   /* V11.26|076 */
     carica(); calcola(); _ccache = {};
     var pal = el('cmpPal'); if (pal) pal.innerHTML = palHtml();   /* V11.26|065 */
+    try { sdfDisegna(); } catch (e) { console.error('[SdF]', e); }   /* V11.26|102 */
     el('cmpCatena').innerHTML = catena.length ? catenaHtml() : '<div class="cmp-vuota">Scegli uno schema qui sopra, oppure aggiungi i blocchi uno alla volta.</div>';
     dettaglioDisegna();
     disegnaRisultati();
@@ -8911,7 +8976,7 @@ window.croCmp = (function () {
     if (a === 'vai') { wzChiudi(); if (typeof switchTab === 'function') switchTab('compositore'); var ch = el('croChat'); if (ch) ch.classList.remove('on'); return; }
   }
 
-  return { aggiungiTipo: aggiungiTipo, dettaglio: dettaglioApri, protezione: protezione, esportaCompleto: wzEsporta, wizard: wizard, wizardDa: wizardDa, archivio: archivioApri, importaFile: importaFile, archivioSalva: archSalva, configurazione: cfgStudio, spostaMappa: spostaMappa, geocodifica: geocodifica, apparati: apparati, apparatiPopup: apparatiPopup, appLato: appLato, codaDaBlocchi: codaDaBlocchi, diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
+  return { sdfStato: sdfStato, aggiungiTipo: aggiungiTipo, dettaglio: dettaglioApri, protezione: protezione, esportaCompleto: wzEsporta, wizard: wizard, wizardDa: wizardDa, archivio: archivioApri, importaFile: importaFile, archivioSalva: archSalva, configurazione: cfgStudio, spostaMappa: spostaMappa, geocodifica: geocodifica, apparati: apparati, apparatiPopup: apparatiPopup, appLato: appLato, codaDaBlocchi: codaDaBlocchi, diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
 })();
 
 /* [[CRO:MOD-72-CONTATORE-DELLE]] dentro [[CRO:JS-NUCLEO]]: Contatore delle modifiche della pagina */
@@ -27613,7 +27678,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 099 | Nov 2026</div>
+<div class="version-tag">V11.26 | 106 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -27850,17 +27915,20 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b45309;">🧩 Progettazione SdF</h3>
-                        <span class="feature-badge" style="background: #fef3c7; color: #92400e;">Sperimentale V10.26 | 64</span>
+                        <span class="feature-badge" style="background: #fef3c7; color: #92400e;">Sperimentale · V11.26 | 105</span>
                     </div>
-                    <p class="feature-desc">Tab nel menu Analisi Extra: si compone il collegamento a <strong>blocchi</strong>, dalla sede cliente A alla sede cliente Z (code stimate, centrali di attestazione, rete RTR, nodi A1, RTN), con gli schemi <strong>Stessa regione</strong> e <strong>Interregionale</strong>. La centrale di attestazione è quella indicata nella sede oppure la più vicina tra le centrali RC e le RA di tipo 1 o 2; il nodo A1 è il più vicino alla centrale. I percorsi Std e Div si cercano nel tab Unificato e si importano; le code si stimano a mano (km e costo); il compositore controlla le C-FOS in comune, calcola i costi standard come negli export e fa riepilogo ed export TXT. Il <strong>wizard</strong> (sperimentale) lo compila passo per passo e si avvia anche dall’Overview («Avvia Wizard»), dai tab RC e Unificato con Partenza, Arrivo e Posizione Cliente («Wizard da questa ricerca») e dalla barra export dell’Unificato con lo Std e il Div già scelti («Continua nel wizard»); con Protetto la pagina Rete propone «Solo RC». Ogni «Fine» del wizard (e, senza wizard, ogni «Export completo» o «TXT della Progettazione») salva la Progettazione con un progressivo: «Undo (Ultime 20)» lo riapre nella Progettazione o nel wizard, e «Importa» rilegge la configurazione dal TXT o dall’Excel esportati.</p>
+                    <p class="feature-desc">Tab del menu principale, subito dopo Ricerca Percorso Unificato, e bottone «Progettazione SdF» nell’Overview. Si compone la fattibilità a <strong>blocchi</strong>, dalla sede cliente A alla sede cliente Z: sedi, code, Centrali Colt, reti RTR, Nodi A1 e RTN, con tre schemi (<strong>Stessa regione</strong>, <strong>Interregionale</strong>, <strong>Verso Nodo A1</strong>), capacità, Solo Std o Std + Div e protezione (No, SNCP, E2E). Accanto ai blocchi si scrivono le fattibilità (SdF Std per la 1a Via, SdF Div per la 2a). Le card mostrano il dato principale in grande e, con il Div, la 1a e la 2a Via (Colt e Nodo A1 della 2a Via, anche diversi). La rete ha la linea del percorso con centrali e collegamenti e il loro stato; il riepilogo è diviso per via con le note per IRP pronte; l’Export completo produce TXT, Modulo KMZ ed Excel con un solo foglio IRP anche con l’Interregionale. Il <strong>wizard</strong> compila tutto passo per passo; Undo (ultime 20) e Importa riaprono le progettazioni salvate.</p>
                     <div class="feature-specs">
-                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">12 blocchi</span>
-                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Centrale e nodo A1 automatici</span>
-                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Std e Div</span>
-                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Costi</span>
-                        <span class="spec-tag" style="background: #ffedd5; color: #9a3412;">Wizard da Overview, tab e export</span>
-                        <span class="spec-tag" style="background: #ffedd5; color: #9a3412;">Undo e Importa</span>
-                        <span class="spec-tag" style="background: #ffedd5; color: #9a3412;">Centrali come nell’Unificato</span>
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">3 schemi</span>
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Fattibilità Std e Div</span>
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">1a e 2a Via</span>
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Nodi A1 della regione</span>
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Linea del percorso</span>
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Riepilogo per via</span>
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Protetto SNCP ed E2E</span>
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Export interregionale</span>
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Wizard</span>
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Undo e Importa</span>
                     </div>
                 </div>
 
@@ -27871,7 +27939,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 099</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 106</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -27888,7 +27956,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 099</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 106</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -27909,7 +27977,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 099</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 106</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -27927,7 +27995,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 099</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 106</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -27944,7 +28012,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 099</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 106</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -27960,7 +28028,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 099</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 106</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -28424,7 +28492,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 099</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 106</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -28574,8 +28642,78 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🟧 Novità V11.26 | 099 | Nov 2026</span>
+                  <span class="cl-ver">✨ Novità V11.26 | 106 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>✨ Scritta gialla</strong>: al passaggio del mouse su «Solo Std» (quando è scelto, grigio scuro) e sul «Wizard» la scritta diventa gialla, così si vede bene</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📘 Novità V11.26 | 105 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📘 Documentazione aggiornata</strong>: la card «Progettazione SdF» delle Funzionalità principali nell’Overview, il cassetto «Note e regole» del tab (18 voci: a cosa serve, barra, Fattibilità (SdF), pagina e card, blocchi, sede, Colt, Nodo A1, coda, rete, protezione, RTN, riepilogo, note per IRP, mappa, wizard, Undo e Importa, export) e la sezione della Guida (15 paragrafi) descrivono la Progettazione com’è oggi</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📄 Novità V11.26 | 104 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🟢 Linea del percorso</strong>: «mostra tutte» apre le tappe e la riga riassuntiva sparisce; in alto a destra compare «▴ Comprimi» per richiuderle. L’intestazione conta solo i collegamenti veri e scrive a parte i passaggi di rete («13 collegamenti · 2 passaggi RA ⇄ RC»)</li><li><strong>📄 SdF con due minicard</strong>: la sezione Fattibilità (SdF) ha due minicard, «1a Via · Std» (bordo blu) e «2a Via · Div» (bordo viola), alte e allineate come i bottoni di «Aggiungi un blocco»; sotto il titolo una riga breve dice «una SdF per le due vie», «due SdF diverse» o «solo 1a Via»</li><li><strong>🧩 Barra</strong>: i bottoni di Capacità, Rete RTR, Protezione e Progettazione sono alti come quelli dello Schema (40 px)</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📄 Novità V11.26 | 103 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🟢 Linea del percorso</strong>: «mostra tutte» apre le tappe e la riga riassuntiva sparisce; in alto a destra compare «▴ Comprimi» per richiuderle. L’intestazione conta solo i collegamenti veri e scrive a parte i passaggi di rete («13 collegamenti · 2 passaggi RA ⇄ RC»)</li><li><strong>📄 Sezione SdF sistemata</strong>: larghezza fissa qualunque cosa ci sia scritto; la pastiglia sta su due righe («una sola SdF» / «per le due vie», «due SdF» / «Std 1a Via · Div 2a Via», «1 via» / «sulla SdF Std»); fra la barra in alto, la riga dei blocchi e le colonne Lato A, Rete e Lato Z tornano gli spazi di prima</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📄 Novità V11.26 | 102 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🟢 Linea del percorso</strong>: «mostra tutte» apre le tappe e la riga riassuntiva sparisce; in alto a destra compare «▴ Comprimi» per richiuderle. L’intestazione conta solo i collegamenti veri e scrive a parte i passaggi di rete («13 collegamenti · 2 passaggi RA ⇄ RC»)</li><li><strong>📄 Fattibilità (SdF)</strong>: a destra di «Aggiungi un blocco» ci sono i campi «Std · 1a Via» e «Div · 2a Via». Con la Div vuota (o uguale alla Std) le due vie stanno sulla stessa SdF; con due numeri diversi la 1a Via va sulla SdF Std e la 2a sulla SdF Div. Una pastiglia lo dice («una sola SdF» o «due SdF»). Sono gli stessi campi della pagina Dati Servizio del wizard e vanno in Export completo, nelle note della coda protetta, nel TXT e nell’Undo; con Solo Std il campo Div si spegne</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">💬 Novità V11.26 | 101 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🟢 Linea del percorso</strong>: «mostra tutte» apre le tappe e la riga riassuntiva sparisce; in alto a destra compare «▴ Comprimi» per richiuderle. L’intestazione conta solo i collegamenti veri e scrive a parte i passaggi di rete («13 collegamenti · 2 passaggi RA ⇄ RC»)</li><li><strong>💬 Tooltip</strong>: nella Progettazione SdF il suggerimento compare sopra la sezione (Schema, Capacità, Rete RTR, Protezione, Progettazione, Aggiungi un blocco, barra del totale) o sopra la card, centrato sul mouse, senza coprire il bottone o il testo; se sopra non c’è spazio va sotto</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🛡️ Novità V11.26 | 100 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🟢 Linea del percorso</strong>: «mostra tutte» apre le tappe e la riga riassuntiva sparisce; in alto a destra compare «▴ Comprimi» per richiuderle. L’intestazione conta solo i collegamenti veri e scrive a parte i passaggi di rete («13 collegamenti · 2 passaggi RA ⇄ RC»)</li><li><strong>🛡️ Note della coda protetta</strong>: con SNCP ed E2E la nota della coda nella 1° Via inizia con «Tratta DWDM interna al DC per consentire la protezione del collegamento lambda 10G. Questi apparati sono da ospitare negli spazi acquisiti dal cliente all’interno del DC. -- Coda Cliente: …» (o «…interna… all’interno della Centrale» per centrali e Nodi A1), con la lambda della capacità scelta. Nella 2° Via: con una sola fattibilità la stessa frase seguita da «La valorizzazione dei costi è già inclusa nella Coda DWDM della 1° Via.»; con due fattibilità (Riferimento SdF Std e Div diversi) «…La valorizzazione è già stata inclusa nei costi della Coda DWDM (c/o DC) in 1a via dello Sdf [riferimento Std].». Vale nel foglio IRP (Unificato e Progettazione) e nel riepilogo</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🟧 Novità V11.26 | 099 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -36369,22 +36507,24 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         <div class="cmp-avvisi" id="cmpAvvisi"></div>
         <div class="cmp-riep" id="cmpRiep"></div>
         <div id="cmpNote" class="route-help-panel" style="margin-top:0;" hidden><ul>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🎯 A cosa serve</strong>: la Progettazione SdF costruisce la fattibilità completa, dalla sede del cliente al trasporto sulla rete e ritorno: sedi, code, centrali Colt, reti RTR, Nodi A1 e RTN. I percorsi si cercano nel tab Unificato, i costi vengono dagli stessi calcoli degli export, e alla fine escono il TXT, l’Excel con il foglio IRP e il Modulo KMZ. È una funzione sperimentale: i risultati vanno sempre controllati.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧩 Schemi</strong>: «Stessa regione» prepara 7 blocchi (Sede A, Coda A, Centrale A, Rete RTR, Centrale Z, Coda Z, Sede Z). «Interregionale» ne prepara 11: Rete RTR Zona A e Zona Z, i due Nodi A1 e la RTN in mezzo. «Verso Nodo A1» ne prepara 5: Sede A, Coda A, Centrale A, Rete RTR e Nodo A1. Cambiando schema i dati già inseriti restano: la Rete RTR diventa Rete Zona A e viceversa, e un avviso dice se qualche blocco compilato viene tolto.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">👀 Come si legge la pagina</strong>: tre colonne. A sinistra il lato A (sede, coda, centrale e, con l’Interregionale, il Nodo A1), al centro la rete, a destra il lato Z in ordine speculare. Ogni card mostra un riassunto e lo stato (completa, valorizzata, da completare, da verificare, a mano…). Il clic sulla card, o su ⤢, apre il dettaglio in un popup con tutti i campi; «←» e «→» passano al blocco vicino. I popup si chiudono solo con «Fatto» o con ✕. ✕ sulla card toglie il blocco, dopo una conferma.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">➕ Aggiungere un blocco</strong>: la fila «Aggiungi un blocco» ha sei tipi (Sede cliente, Coda, Centrale Colt, Rete RTR, Nodo A1, RTN) con i loro lati: verdi quelli già presenti. Il clic mette il blocco nel primo lato libero dello schema, prima A e poi Z; se sono tutti occupati compare l’avviso «Forse hai scelto il blocco sbagliato». La RTN aggiunta a «Stessa regione» o «Verso Nodo A1» propone di passare all’Interregionale; un Nodo A1 in «Stessa regione» propone «Verso Nodo A1» o l’Interregionale; togliendo la RTN si torna a «Stessa regione».</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏠 Sede cliente</strong>: nome, indirizzo (con «Geocodifica»), coordinate e «Centrale indicata (Colt)», cioè la centrale passata dal cliente. La centrale indicata e la «Centrale a mano» della Centrale della stessa zona sono sempre uguali: comanda la card della Centrale (Colt): scegliendo lì la centrale, la sede si aggiorna da sola; scrivendo nella sede, la Colt si aggiorna se non era stata scelta a mano, altrimenti lo strumento chiede. Con Std + Div c’è anche la «Centrale indicata (Colt) 2a Via (Div)», facoltativa: se resta vuota il Div usa la stessa Colt della 1a Via.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏢 Centrale Colt di attestazione</strong>: l’ordine è questo. Prima la centrale scelta a mano o indicata nella sede (se arriva dalla sede è «da verificare» finché non premi «✔ Verificata»). Altrimenti la più vicina in linea d’aria alla sede fra le centrali RC e le RA di tipo 1 e 2: le RA di tipo 3 sono solo di transito. Le alternative vicine sono elencate con i km. Il menu delle centrali è quello dei tab di ricerca: nome, CLLI, [Tn] per la RA, seconda riga [Area – Zona – Regione] ed etichette RC, RA, Nodo A1. Con Std + Div la card ha anche la «Colt 2a Via (Div)», scelta a mano o indicata nella sede (allineate come la prima, «da verificare» finché non premi «✔ Verificata»): «Cerca nell’Unificato» la mette in Partenza 2 o Arrivo 2, la coda diventa doppia (una per Colt) e nella card della rete un avviso dice se il Div importato non parte o non arriva da lì. Sulla mappa è il cerchio verde scuro A2 o Z2.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🔀 Nodo A1</strong>: per ogni zona, il più vicino in linea d’aria alla Centrale Colt fra i Nodi A1 della sua regione; nel popup ci sono tutti i Nodi A1 della regione con i km dalla Colt e se ne può scegliere un altro. Nel campo «Nodo A1 a mano» i Nodi A1 stanno in testa al menu, le altre centrali sotto con l’avviso «non sono Nodi A1». Con Std + Div la card ha anche il Nodo A1 della 2a Via: di partenza è l’altro Nodo A1 della stessa area più vicino (per esempio ROMA SUD per lo Std e ROMA INVIOLATELLA per il Div); se l’area ne ha uno solo resta lo stesso; si può scegliere a mano. La ricerca dei Div usa questi nodi in Arrivo 2 e Partenza 2, e la RTN della 2a Via va fra i Nodi A1 della 2a Via. Nel popup la spunta «2a Via: stesso Nodo A1 della 1a Via» usa lo stesso nodo per le due vie, con o senza protezione. Sul lato di un Nodo A1 la coda non serve.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">〰️ Coda</strong>: collega la sede del cliente alla centrale Colt. I km sono in linea d’aria e, se il servizio delle strade risponde, anche a piedi; si possono scrivere a mano. Il costo si costruisce con «Apparati…» dal listino Apparati &amp; Cestelli dell’Analisi Costi, divisi fra «Sede Cliente» (presso il cliente) e «Centrale per il Cliente», più un eventuale importo libero. Con Std + Div non protetto la coda vale per due vie: nel popup ci sono «1a Via (Std)» e «2a Via (Div)», con «2a Via uguale alla 1a» spuntata di partenza. «Applica e copia su Coda Zona Z» (o A) copia tutto sull’altra zona, nota compresa. Se lo Std e il Div partono (o arrivano) da Colt diverse, la coda di quella zona è doppia: la card lo segnala con le due Colt e i km, e nel riepilogo ci sono due righe, «1° Via (STD)» e «2° Via (DIV)», ognuna verso la sua Colt. Con Protetto vale la coda del listino dei protetti.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🟢 Rete RTR</strong>: partenza e arrivo sono la centrale o il Nodo A1 subito prima e subito dopo nella catena. «Cerca nell’Unificato» lancia la ricerca nel tab Unificato; quando gli Std, e poi i Div, sono pronti, un riquadro in basso a destra riporta qui e prende da solo lo Std e il Div scelti nella tabella (spuntati nella barra export, o lo Std di cui hai aperto i Div). «Importa Std» e «Importa Div» li scelgono da una lista. La card mostra per Std e Div la linea del percorso: le centrali sono pallini (rossi RC, blu RA con il [Tn], sfumati con ⇄ nel passaggio RA/RC) e fra un pallino e l’altro c’è il collegamento con lo stato del DB (verde attivo, ambra da verificare, linea tratteggiata; per la RA l’Id Collegamento univoco del DB RA). Oltre 8 centrali le tappe in mezzo si chiudono in una riga che dice quante sono e quante da verificare: un clic le apre. «Verificare su NNI lo stato di N Collegamenti» conta quelli non attivi. Sotto c’è il controllo delle C-FOS in comune fra Std e Div.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">⚙️ Capacità, Std + Div e Protezione</strong>: la capacità (1G, 10G, 100G) vale per i costi di tutte le reti. Con «Solo Std» ogni rete ha solo lo Std, con «Std + Div» anche il Div. Con SNCP o E2E il trasporto protetto esiste solo su rete RC: i percorsi che passano dalla RA sono «da rivedere», e nel wizard l’interruttore «Solo RC» (spento di partenza) li esclude.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🌐 RTN</strong>: è la Rete di Trasporto Nazionale, non gestita dal Nostro Gruppo RTR (Rete di Trasporto Regionale), e indica solo il passaggio fra i due Nodi A1. Non ha configurazione e non si valorizza nei costi; la consegna va condivisa con Stefano Gentile. Nel riepilogo e nel foglio IRP c’è una riga RTN per ogni via (1° Via e, con il Div, 2° Via).</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📋 Riepilogo e totale</strong>: sotto le card, una riga per la coda di ogni zona e una riga per ogni sezione di rete di Std e Div (per esempio «Rete RTR STD [RA1]», «[RC]», «[RA2]»), con Dettaglio (km e collegamenti), «Note per IRP» (la nota da riportare nell’IRP, con apparati, collegamenti e i 180 giorni se c’è da realizzare) e costo. La barra in fondo somma reti e code, dice cosa resta da completare e ha «Mappa», «TXT della Progettazione» ed «Export completo».</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🗺️ Mappa</strong>: nel popup della rete, delle centrali e dei Nodi A1, e a tutto schermo con «Mappa» o ⤢. Gli sfondi sono quelli dei tab. Linee rosse per la RC e blu per la RA, piene per lo Std e tratteggiate per il Div; coda verde (gialla sugli sfondi satellitari); RTN grigia. Centrale Colt in verde acqua con A o Z, Nodo A1 a rombo viola, sede arancio, centrali RA e RC piene, gateway più grande con ⇄. Col mouse ogni collegamento e ogni centrale mostrano tutte le informazioni. I livelli «Percorso stradale RA» e «Percorso stradale RC» disegnano il tragitto sulle strade, solo come disegno: i km restano quelli del DB. Con l’Interregionale ci sono le viste Italia intera, A e Z affiancate, Solo zona A, Solo zona Z. La legenda si apre e si chiude. Serve la libreria delle mappe (Leaflet): se la rete la blocca compare un avviso.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧭 Wizard</strong>: compila la progettazione passo per passo. Si apre dal bottone «Wizard», dall’Overview («Avvia Wizard»), dai tab RC e Unificato («Wizard da questa ricerca», con Partenza, Arrivo e Posizione Cliente) e dalla barra export dell’Unificato («Continua nel wizard», con Std e Div già scelti). Anche il wizard è sperimentale.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">↩️ Undo e Importa</strong>: la progettazione si salva da sola con un numero progressivo a ogni «Fine» del wizard e, se lavori senza wizard, a ogni «Export completo» o «TXT della Progettazione»; se è identica all’ultima salvata non si crea un doppione. «Undo (Ultime 20)» le elenca con data, centrali, configurazione, percorsi e SdF, e le riapre nella pagina o nel wizard: Std e Div si ritrovano ricalcolando sul DB di oggi, e se non ci sono più un avviso lo dice. L’archivio sta nel browser di questo PC. Gli export portano la configurazione (righe CROCFG1 in fondo al TXT, foglio nascosto _CRO_CONFIG nell’Excel) e «Importa» la rilegge; da un TXT di prima della 062 prende solo Partenza e Arrivo.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">⬇️ Export</strong>: «Export completo» produce, come nell’Unificato, il TXT, il Modulo KMZ e l’Excel con Dati Servizio e foglio IRP dello Std e del Div scelti, comprese le code; «TXT della Progettazione» produce il riassunto di tutti i blocchi. Con l’Interregionale l’Excel è uno solo: nel foglio IRP ogni via va dalla Zona A alla Zona Z (coda A, Rete Zona A, una riga RTN non valorizzata, Rete Zona Z, coda Z), il TXT è quello della Progettazione e il Modulo KMZ ha i percorsi delle due zone. Tutto va verificato prima di usarlo.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🎯 A cosa serve</strong>: la Progettazione SdF costruisce la fattibilità completa dalla sede del cliente A alla sede del cliente Z: sedi, code, Centrali Colt, reti RTR, Nodi A1 e RTN. I percorsi si cercano nel tab Unificato, i costi vengono dagli stessi calcoli degli export, e alla fine escono il TXT, l’Excel con il foglio IRP e il Modulo KMZ. È una funzione sperimentale: i risultati vanno sempre controllati.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧩 Barra in alto</strong>: Schema («Stessa regione» 7 blocchi, «Interregionale» 11 blocchi con RTN, «Verso Nodo A1» 5 blocchi), Capacità (1G, 10G, 100G), Rete RTR (Solo Std o Std + Div), Protezione (No, SNCP, E2E) e Progettazione (Undo, Importa, Wizard, Svuota). Cambiando schema i dati restano. Il suggerimento di ogni bottone compare sopra la sua sezione.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📄 Fattibilità (SdF)</strong>: accanto ad «Aggiungi un blocco» ci sono due minicard: «1a Via · Std» e «2a Via · Div». Con la Div vuota (o uguale) le due vie stanno sulla stessa SdF, anche con il protetto; con due numeri diversi la 1a Via va sulla SdF Std e la 2a sulla SdF Div. Sono gli stessi campi della pagina Dati Servizio del wizard e vanno negli export e nelle note.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">👀 Come si legge la pagina</strong>: tre colonne: lato A a sinistra, rete al centro, lato Z a destra. Ogni card ha una fascia colorata con l’icona, il tipo in piccolo e il dato principale in grande; nome e CLLI stanno su due righe, il tipo («◆ DATA CENTER ◆», «◆ NODO A1 ◆») e la zona su altre due, poi le etichette di rete del ruolo con «✔ Verificata». Il clic sulla card apre il dettaglio in un popup che si chiude con «Fatto» o ✕; «←» e «→» passano al blocco vicino.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">➕ Aggiungere un blocco</strong>: sei tipi (Sede cliente, Coda, Centrale Colt, Rete RTR, Nodo A1, RTN) con i loro lati; il clic mette il blocco nel primo lato libero. La RTN propone l’Interregionale, un Nodo A1 in «Stessa regione» propone «Verso Nodo A1», togliendo la RTN si torna a «Stessa regione».</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏠 Sede cliente</strong>: nome, indirizzo con geocodifica, coordinate e «Colt indicata» (con Std + Div anche quella della 2a Via). Comanda la card della Centrale (Colt): scegliendo lì la centrale, la sede si aggiorna da sola; scrivendo nella sede, la Colt si aggiorna se non era stata scelta a mano.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏢 Centrale Colt</strong>: prima la centrale scelta a mano o indicata nella sede («da verificare» finché non premi «✔ Verificata»), altrimenti la più vicina alla sede fra RC e RA di tipo 1 e 2. Con Std + Div la card ha due blocchi, «1a Via (Std)» in blu e «2a Via (Div)» in viola: la Colt della 2a Via è facoltativa e, se vuota, coincide con la prima. Etichette di rete: RC e RA T1/T2.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🔀 Nodo A1</strong>: il più vicino alla Colt fra i Nodi A1 della sua regione; il popup li elenca tutti con i km dalla Colt. Per la 2a Via il tool propone l’altro Nodo A1 della regione (Lazio: ROMA SUD e ROMA INVIOLATELLA) o lo scegli a mano; l’interruttore «2a Via: stesso Nodo A1 della 1a Via» usa lo stesso nodo per le due vie e la card ne mostra uno solo. Etichette: RC, RA T1 e Nodo A1.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">〰️ Coda</strong>: collega la sede alla Colt. Il costo si fa con «Apparati…» (Sede Cliente e Centrale per il Cliente) più un importo libero; con Std + Div non protetto ci sono «1a Via (Std)» e «2a Via (Div)» e «Applica e copia» sull’altra zona, nota compresa. Se Std e Div usano Colt diverse la coda è doppia. Con il protetto vale la coda protetta del listino. I km stanno nel popup.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🟢 Rete RTR</strong>: ① Cerca percorsi nell’Unificato → ② Importa Std → ③ Importa Div, in fila. La ricerca usa anche Partenza 2 e Arrivo 2 (Colt e Nodi A1 della 2a Via). Per Std e Div c’è la linea del percorso: pallini rossi RC e blu RA con [Tn], passaggio RA ⇄ RC sfumato con i due lati, collegamenti con lo stato (tratteggiati se da verificare su NNI). Oltre 8 centrali le tappe in mezzo si chiudono: «mostra tutte» le apre, «▴ Comprimi» le richiude. Sotto, il controllo C-FOS e, con il protetto, il trasporto protetto.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">⚙️ Protezione</strong>: SNCP o E2E valgono solo su rete RC: i percorsi con la RA sono «da rivedere». Il costo del trasporto protetto sta nella 1a Via; la 2a Via è già inclusa.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🌐 RTN</strong>: è la Rete di Trasporto Nazionale, non gestita dal Nostro Gruppo RTR (Rete di Trasporto Regionale): indica solo il passaggio fra i Nodi A1, non si valorizza e la consegna va condivisa con Stefano Gentile. Nel riepilogo e nel foglio IRP c’è una riga RTN per ogni via.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📋 Riepilogo</strong>: la coda comune di Zona A in testa, poi «1° VIA (STD)» e «2° VIA (DIV)» con le loro righe (Rete RTR [RC] Zona A, RTN, Rete RTR [RC] Zona Z), poi la coda comune di Zona Z; con la coda doppia le code entrano nella loro via. Tratta e dettaglio su due righe, costo su una. «da verificare prima di IRP» dove manca un dato.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📝 Note per IRP</strong>: ogni riga di trasporto inizia con «1° Via Zona A…» o «2° Via Zona Z…». Con il protetto la 1a Via porta l’hardware e il costo, la 2a Via dice «La valorizzazione dei costi è già inclusa nel Trasporto DWDM della 1° Via.». La coda protetta inizia con «Tratta DWDM interna (al DC) per consentire la protezione del collegamento lambda 10G…»; nella 2a Via, con due SdF, rimanda alla «Coda DWDM (c/o DC) in 1a via dello Sdf [SdF Std]». Le stesse note vanno nel foglio IRP.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🗺️ Mappa</strong>: nel popup e a tutto schermo: linee rosse RC e blu RA, piene per lo Std e tratteggiate per il Div; coda verde (gialla sul satellite); Centrale Colt in verde acqua con A o Z (A2 e Z2 per la 2a Via), Nodo A1 a rombo viola, centrali RA e RC piene, gateway più grande con ⇄. Legenda richiudibile, livelli «Percorso stradale RA» e «RC» (solo disegno), zoom a passi corti.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧭 Wizard</strong>: compila la progettazione passo per passo; si apre dalla barra, dall’Overview («Wizard SdF»), dai tab RC e Unificato e dalla barra export dell’Unificato. È sperimentale.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">↩️ Undo e Importa</strong>: la progettazione si salva da sola a ogni «Fine» del wizard o, senza wizard, a ogni Export completo o TXT, senza doppioni. «Undo (Ultime 20)» la riapre ricalcolando Std e Div sul DB di oggi (con Partenza 2 e Arrivo 2 di allora); «Importa» rilegge la configurazione dal TXT o dall’Excel.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">⬇️ Export</strong>: «Export completo» produce TXT, Modulo KMZ ed Excel con Dati Servizio, foglio IRP e foglio Protezione (coda A, trasporto, coda Z, con colonne e importi). Con l’Interregionale l’Excel è uno solo: ogni via va dalla Zona A alla Zona Z con la riga RTN in mezzo. Tutto va verificato prima di usarlo.</p></li>
         </ul></div>
       </div>
     </div>
@@ -45744,33 +45884,24 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
               <!-- V10.26|64: Progettazione SdF -->
               <details id="docs-compositore">
                 <summary style="font-weight:700;font-size:0.95rem;cursor:pointer;color:#b45309;padding:6px 0;">
-                  🧩 Progettazione SdF — collegamento a blocchi (sperimentale)
+                  🧩 Progettazione SdF: fattibilità a blocchi dalla Sede Cliente A alla Sede Cliente Z (sperimentale)
                 </summary>
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
-                  <p><strong>Dove si trova:</strong> menu Analisi Extra, «Progettazione SdF 🚧». È sperimentale: i risultati vanno verificati. Le regole sono nel cassetto «📘 Note e regole» accanto al sottotitolo.</p>
-                  <p><strong>Barra dei comandi:</strong> Schema con due bottoni separati (Stessa regione, 7 blocchi senza RTN; Interregionale, 11 blocchi con RTN), Capacità (1G, 10G, 100G, per i costi), Rete RTR con la scelta Solo Std oppure Std + Div, Esporta TXT e Svuota.</p>
-                  <p><strong>Blocchi:</strong> 🏠 Sede cliente A e Z, 〰️ Coda (stima) Zona A e Z, 🏢 Centrale A e Z di attestazione (Colt), 🟢 Rete RTR (due centrali della stessa regione), 🟢 Rete RTR Zona A e Zona Z (centrale ↔ nodo A1), 🔀 Nodo A1 Zona A e Z, 🌐 RTN. I bottoni «Stessa regione» e «Interregionale (RTN)» preparano la catena; i blocchi si aggiungono e si tolgono anche uno alla volta e restano nell’ordine da A a Z.</p>
-                  <p><strong>Sede:</strong> nome del cliente, coordinate (lat, lon) e centrale indicata. Se c’è la centrale indicata (per esempio la centrale Colt passata dal cliente) si usa quella, senza calcolare distanze.</p>
-                  <p><strong>Centrale di attestazione automatica:</strong> la più vicina alle coordinate della sede in linea d’aria, tra le centrali RC e le centrali RA di tipo 1 o 2 (le RA di tipo 3 sono solo di transito). Il blocco mostra le alternative più vicine; se le distanze sono quasi uguali lo segnala. Il tragitto urbano dalla sede non è nei dati del tool, quindi a parità di distanza la scelta è dell’utente.</p>
-                  <p><strong>Nodo A1 automatico:</strong> Zona A il più vicino alla Centrale A, Zona Z il più vicino alla Centrale Z, con le alternative.</p>
-                  <p><strong>Estremi delle reti:</strong> per ogni blocco di rete (Rete RTR, Rete RTR Zona A o Z, RTN) partenza e arrivo sono la centrale o il nodo A1 compilati subito prima e subito dopo nella catena. Se ne manca uno, «Cerca nell’Unificato» lo dice.</p>
-                  <p><strong>Rete RTR:</strong> «Cerca nell’Unificato» apre l’Unificato con partenza e arrivo del blocco (RTN spento) e avvia la ricerca; «Importa Std» e «Importa Div» mostrano tutti i percorsi trovati, con lo stesso numero dell’Unificato e un filtro per numero, subpath o km, e si sceglie con un clic. Per i Div va selezionato prima un percorso Std nell’Unificato, che calcola i suoi Div. Il blocco mostra km, collegamenti, stati, costo standard (stesso calcolo degli export, con la capacità scelta) e se Std e Div hanno C-FOS in comune.</p>
-                  <p><strong>Wizard:</strong> «🧭 Wizard» nella barra della Progettazione (oppure «Wizard della Progettazione» nell’Assistente CRO) compila la catena passo per passo, una pagina per volta senza scorrere: collegamento (dalla sede A verso un’altra sede cliente, stessa regione o interregionale, oppure verso un Nodo A1; Velocità, che è anche la capacità, e Solo Std o Std + Div, con Solo Std come partenza), dati servizio come nel foglio Dati Servizio dell’export, Sede cliente A, Coda A, Centrale A, Nodo A1 A, poi lo stesso per il lato Z, poi la rete (i percorsi si calcolano nell’Unificato in sottofondo e si sceglie lo Std e il Div), nella pagina della sede anche la centrale Colt proposta (si può cambiare, e la scelta a mano vale su quella automatica); nella pagina della rete i percorsi come nell’Unificato, con i migliori 3 in evidenza, il percorso delle centrali, i collegamenti RA e RC con i salti e i km; il riepilogo e infine l’export, con «Scarica TXT + Excel + Modulo KMZ» (lo stesso export c’è nella barra della Progettazione, «⬇ Export completo»): lo stesso export dell’Unificato (TXT, Modulo KMZ, Excel con Dati Servizio e foglio IRP) per lo Std e il Div scelti, con i riferimenti SdF. Scrive nei blocchi veri, che restano modificabili a mano. Dall’Assistente, alla fine, «Vai alla Progettazione» porta alla catena compilata.</p>
-                  <p><strong>Wizard da altri punti (sperimentale):</strong> «Avvia Wizard» nell’Overview, accanto ad «Avvia Ricerca UNIFICATA», lo apre vuoto. «Wizard da questa ricerca», nei tab RC e Unificato subito dopo Calcola, lo apre con Partenza come Centrale A, Arrivo come Centrale Z (o come Nodo A1, se lo è) e la Posizione Cliente, se compilata, come Sede A; una riga arancio sotto i passi dice da dove arrivano i dati. «Continua nel wizard», nella barra export dell’Unificato, porta lo Std selezionato e al massimo un suo Div: il wizard parte da Dati servizio con la rete già scelta. Se la Progettazione contiene già dati, prima chiede se ripartire. <strong>Solo RC</strong>: nella pagina Rete l’interruttore parte spento; ogni percorso ha l’etichetta Solo RC o RA + RC. Con Protetto, se i percorsi trovati passano tutti dalla RA (o i migliori 3 sì e altri no) compare un avviso con «Ricalcola con Solo RC»; con Solo RC acceso e nessun percorso, il wizard lo dice. Chiudendo il wizard, Solo RC del tab Unificato torna com’era.</p>
-                  <p><strong>Undo (Ultime 20) e Importa:</strong> ogni volta che premi «Fine» nell’ultima pagina del wizard la Progettazione si salva da solo con un numero progressivo; se lavori senza wizard si salva con «Export completo» o «TXT della Progettazione». Se la Progettazione è identica all’ultimo salvato non si crea un doppione. L’archivio tiene gli ultimi 20 e sotto la data dice da dove viene il salvataggio. «Undo (Ultime 20)», nella barra della Progettazione, li elenca con numero, data e ora, centrali di partenza e arrivo, configurazione (schema, velocità, Solo Std o Std + Div, protezione, Solo RC), percorsi scelti e SdF; «Apri» lo rimette nella Progettazione, «Wizard» lo riapre nel wizard dal passo 2, ✕ lo elimina. Dei percorsi si salvano gli identificativi dei collegamenti: al richiamo lo Std e il Div si ritrovano ricalcolando nell’Unificato; se nel frattempo il DB è cambiato e non ci sono più, un avviso dice di ricalcolarli. Gli export della Progettazione (TXT ed Excel dell’Export completo, TXT della Progettazione) portano la configurazione: in fondo al TXT le righe CROCFG1, nell’Excel il foglio nascosto _CRO_CONFIG. «Importa» (anche dall’Undo) rilegge il file, ricostruisce la Progettazione e lo salva nell’archivio; da un TXT di prima della 062 prende solo Partenza e Arrivo, un Excel di prima della 062 non si importa.</p>
-                  <p><strong>Centrali e costi come nei tab:</strong> i campi delle centrali della Progettazione e del wizard (centrale indicata nella sede, centrale a mano, Nodo A1 a mano) hanno lo stesso menu dei tab di ricerca: nome e CLLI, [Tn] per le RA, seconda riga [AREA – Zona – Regione] ed etichette RC, RA, Nodo A1; si cerca per nome o CLLI e si sceglie anche con le frecce e Invio. Nel campo Nodo A1 a mano i Nodi A1 stanno in testa, le altre centrali sotto con l’avviso «non sono Nodi A1». Le card delle centrali e le alternative proposte mostrano gli stessi dati, con i km. Nella card della rete il dettaglio dei costi è una tabella (tratta con km, listino Italia Std o Nord Ovest, apparati, costo, rigeneratore, totale) invece del testo del TXT. Le card sono più larghe (rete 460 px, centrali 320 px, le altre 300 px).</p>
-                  <p><strong>Impaginazione a tre colonne (dalla 065):</strong> a sinistra il lato A (sede, coda, centrale), al centro la rete (Std e Div affiancati con la tabella dei costi e il controllo C-FOS; con l’Interregionale anche Nodi A1 e RTN), a destra il lato Z in ordine speculare (centrale, coda, sede; con «Verso Nodo A1» il Nodo A1). Le card mostrano il riassunto e lo stato (completa, da valorizzare, a mano…); un clic sulla card o su ⤢ apre il dettaglio in un popup con tutti i campi, con «←» e «→» per passare al blocco vicino. In alto Schema (Stessa regione, Interregionale, Verso Nodo A1), Capacità, Rete RTR, Protezione e Progettazione (Undo, Importa, Wizard, Svuota) sono riquadri separati. «Aggiungi un blocco» ha sei tipi con i loro lati (A, Z o 1, verdi se già presenti): il clic mette il blocco nel primo lato libero dello schema; un blocco fuori schema chiede «come Zona A» o «come Zona Z»; se tutto è occupato compare un avviso. In fondo la barra del totale stimato (reti e code), con le cose da completare, «TXT della Progettazione» ed «Export completo».</p>
-                  <p><strong>Rete: stato e note (dalla 071):</strong> per lo Std e per il Div i collegamenti sono in fila con il loro stato (verde Attivo, ambra quelli da verificare, bordo blu RA e rosso RC; col mouse lo stato del DB); se ce ne sono non attivi compare «Verificare su NNI lo stato di N Collegamenti». Per la RA si legge l’Id Collegamento univoco del DB RA, con lo stato preso dal DB RA. Sopra i collegamenti c’è il routing delle centrali, «Nome (CLLI) [Tn]» ([Tn] solo per la RA), con il bordo della rete e il passaggio RA ⇄ RC in viola. I costi non sono più nella card: il riepilogo ha una riga per ogni sezione di rete (per esempio «Rete RTR STD [RA1]», «[RC]», «[RA2]») con km, collegamenti, nota e costo parziale. Le note da mettere nell’IRP (per esempio «Rete RC: LTX OCH 100G &gt; 4x10G -- [CRM071 → CRM069] -- 180 Giorni a causa del Subpath CRM069 che è da realizzare.» e le note delle code) sono nel riepilogo sotto le card, nella colonna «Note per IRP», una tratta per riga, separate da Dettaglio (km e collegamenti) e Costo.</p>
-                  <p><strong>Mappa (dalla 067):</strong> i popup della rete, delle centrali e dei Nodi A1 hanno la mappa del punto; «⤢ A tutto schermo» e il bottone «🗺️ Mappa» della barra in fondo aprono la mappa grande. Sfondi come nei tab di ricerca; livelli Std (blu), Div (viola tratteggiato), Centrali, Code e sedi (arancio), RTN (grigio tratteggiato: rete interregionale non gestita). Col mouse sui collegamenti: identificativo, rete, centrali, km, stato, C-FOS, vendor e zona; sulle centrali: nome, CLLI, [Tn], seconda riga, rete, ruolo nella Progettazione e se è nello Std, nel Div o in entrambi. Con l’Interregionale: Italia intera, A e Z affiancate (RTN escluso dallo zoom), Solo zona A, Solo zona Z. Serve Leaflet: se la rete lo blocca compare un avviso.</p>
-                  <p><strong>Centrale indicata nella sede:</strong> la Colt scritta in «Centrale indicata» della sede passa nella card della Centrale della stessa zona con lo stato «da verificare»; «✔ Verificata» (nella card o nel popup) la conferma. Se cambia la centrale indicata, torna da verificare. La Colt indicata nella Sede e la Centrale a mano della stessa zona restano uguali: scrivendo l’una si compila l’altra (dalla Sede la centrale è «da verificare»); se dall’altra parte c’è già una centrale diversa, la Progettazione chiede con una finestra sua se sostituirla.</p>
-                  <p><strong>Coda con Std e Div (dalla 069):</strong> se la Progettazione è Std + Div e non protetto, il popup Apparati della coda ha le schede «1a Via (Std)» e «2a Via (Div)» con «2a Via uguale alla 1a» (spuntata: la 2a replica la 1a); la card mostra le due vie e il totale le somma; negli export la 1a Via va sulle righe dello Std e la 2a su quelle del Div. «Copia questi apparati sulla Coda Zona Z» (o A) copia tutte e due le vie sull’altra zona.</p>
-                  <p><strong>Schemi e blocchi:</strong> la RTN aggiunta a «Stessa regione» o «Verso Nodo A1» propone di passare all’Interregionale; un Nodo A1 in «Stessa regione» propone «Verso Nodo A1» o l’Interregionale; togliendo la RTN si torna a «Stessa regione». Il cambio tiene i dati già inseriti (la Rete RTR diventa Rete Zona A e viceversa) e avvisa se toglie blocchi compilati. I popup della Progettazione si chiudono solo con «Fatto» o con ✕.</p>
-                  <p><strong>Ritorno dall’Unificato:</strong> «Cerca nell’Unificato» della rete e «↗️ Cerca nel tab Unificato» nella pagina Rete del wizard portano nel tab Unificato; quando gli Std sono pronti, e poi quando sono pronti i Div dello Std aperto, un riquadro in basso a destra propone «Torna alla Progettazione» o «Torna al wizard». Tornando, la rete prende da sola lo Std e il Div scelti nella tabella: lo Std spuntato nella barra export (o quello del Div spuntato, o quello di cui hai aperto i Div) e il Div spuntato; nel wizard resta anche la lista degli Std per cambiarli.</p>
-                  <p><strong>Sede cliente:</strong> nei blocchi «🏠 Sede cliente A» e «Z» si può scrivere l’<strong>indirizzo</strong> e premere «🔍 Geocodifica» (o Invio): come nella Posizione Cliente dei tab di ricerca, il tool chiede le coordinate a OpenStreetMap (Nominatim), le scrive nel campo Coordinate e mostra il luogo trovato. Se l’indirizzo completo non c’è (nei comuni piccoli OpenStreetMap spesso non ha i numeri civici, o ha la via con un altro nome, per esempio «Via Manzoni» invece di «Via Alessandro Manzoni»), prova da solo per gradi: via e comune separati, via senza numero, via con il solo cognome, solo comune; un avviso arancione dice quando il punto è solo sulla via o al centro del comune. In quel caso «🗺️ Sposta sulla mappa» apre una mappa, con gli stessi sfondi delle mappe dei percorsi (anche il satellite, dal selettore in basso a sinistra), su cui cliccare la casa giusta, e «🔎 Cerca su Google Maps» apre la ricerca dell’indirizzo su Google Maps: lì clic destro sulla casa, clic sulle coordinate per copiarle e incollarle nel campo Indirizzo. Il campo Indirizzo accetta anche coordinate («40.967334, 14.269830») e link di Google Maps, che vengono usati direttamente; da lì la centrale più vicina e i km della coda si calcolano da soli. Le coordinate si possono sempre scrivere a mano.</p>
-                  <p><strong>Protezione:</strong> nella barra della Progettazione e nella prima pagina del wizard si sceglie Non protetto, SNCP (protezione per sezioni, «a caramella») o E2E (punto-punto); la protezione accende Std + Div (due vie diversificate). Costi e hardware vengono dal listino delle Soluzioni Protette (lo stesso del tab Analisi per Soluzioni Protette): la coda protetta è Adtran/Sirti (per esempio 10G SNCP 28.590 € con 2x 9HU + 4x 4WCC + 2x Splitter su 2 vie diversificate, 10G E2E 33.490 €); il trasporto protetto vale solo se il percorso è tutto su rete RC, con Huawei in Italia (10G SNCP 34.400 €, E2E 34.200 €) o Adtran/Sirti in Lombardia e Piemonte (10G SNCP 42.613,41 €, E2E 42.413,41 €), scelto dalla zona del percorso e modificabile. Con tratte su rete RA la protezione va rivista e costo e hardware si scrivono a mano. Costo e hardware di code e trasporto si possono sempre modificare, e «↺ Valori di riferimento» torna al listino. Con «Export completo» la protezione entra nel TXT (blocco PROTEZIONE), nell’Excel (foglio «Protezione») e nel foglio IRP: nelle code della 1° Via, con SNCP metà costo in BN (sede cliente) e metà in BO (centrale per il cliente), con E2E l’intero costo in BP, e in NOTE «Coda Cliente: Sede Cliente […] - Centrale per il Cliente […].»; nelle code della 2° Via «Coda già valorizzata su Prima Via.»; il trasporto protetto, solo su rete RC, in BP su tutte le righe di trasporto della 1° e della 2° Via, arrotondato all’euro per eccesso (Huawei 1G SNCP 36150, 1G E2E 37650, 10G SNCP 34400, 10G E2E 34200; Adtran/Sirti 1G SNCP 52008, 1G E2E 59282, 10G SNCP 42614, 10G E2E 42414), con la nota «Rete RC: [Protetto SNCP] [2x Splitter + 2x OCH 10x10G] - [subpath] - …180 giorni…» (1G Huawei: ELOM OCH 8x1G; 1G Adtran/Sirti: 1063701044-01 (F7/16TCC-PCN-4GUS+10G)).</p>
-                  <p><strong>Code:</strong> nel blocco «Coda (stima)» di Zona A e Zona Z i <strong>km</strong> si calcolano da soli fra le coordinate della sede cliente e la centrale Colt della stessa zona: linea d’aria e percorso pedonale, quest’ultimo chiesto a un servizio internet (OSRM, profilo a piedi); se il servizio non risponde resta la linea d’aria. Un valore scritto a mano vince sul calcolo. Il <strong>costo</strong> si sceglie con «🧮 Apparati…»: il listino 📲 Apparati &amp; Cestelli dell’Analisi Costi, con la quantità di ogni voce in Sede Cliente (sede) e in Centrale per il Cliente (si può svuotare un lato solo o tutto); nel blocco compare per esempio «Sede Cliente: 8200,00 € + Centrale per il Cliente: 8200,00 € = 16.400,00 €». Il campo «Altro» accetta un importo da aggiungere o testo libero. Nelle <strong>note</strong> la prima riga «Coda Cliente: Sede Cliente […] -- Centrale per il Cliente: […]» si scrive da sola; il resto delle note è libero.</p>
-                  <p><strong>Riepilogo ed export:</strong> tabella con km e costi per tratta e totale (code stimate comprese, RTN non valorizzata); «Esporta TXT» scrive ogni blocco e, per le reti RTR, gli stessi blocchi del TXT dell’Unificato con i costi.</p>
-                  <p><strong>Controlli:</strong> avvisa se manca un nodo A1 con la RTN, se si usa «Rete RTR» insieme alla RTN, se le due centrali di una «Rete RTR» sono in regioni diverse.</p>
+                  <p><strong>Dove si trova:</strong> nel menu principale, «Progettazione SdF 🚧» subito dopo Ricerca Percorso Unificato, e nell’Overview con il bottone «Progettazione SdF» (accanto a «Wizard SdF»). È sperimentale: i risultati vanno verificati. Il cassetto «📘 Note e regole» ha tutte le regole in 18 voci.</p>
+                  <p><strong>Barra in alto:</strong> cinque sezioni con i bottoni tutti alti uguali: Schema (Stessa regione, 7 blocchi; Interregionale, 11 blocchi con due reti RTR, i Nodi A1 e la RTN; Verso Nodo A1, 5 blocchi), Capacità (1G, 10G, 100G), Rete RTR (Solo Std o Std + Div), Protezione (No, SNCP a caramella, E2E) e Progettazione (Undo, Importa, Wizard, Svuota). I bottoni scelti tengono il loro colore anche al passaggio del mouse; il suggerimento compare sopra la sezione senza coprire i bottoni.</p>
+                  <p><strong>Aggiungi un blocco e Fattibilità (SdF):</strong> nella riga sotto la barra si aggiungono i blocchi uno alla volta (nel primo lato libero) e, a destra, si scrivono le fattibilità nelle due minicard «1a Via · Std» e «2a Via · Div». Div vuota o uguale: una sola SdF per le due vie. Due numeri diversi: 1a Via sulla SdF Std, 2a Via sulla SdF Div. Sotto il titolo una riga dice quale dei due casi vale.</p>
+                  <p><strong>Card:</strong> tre colonne (lato A, rete, lato Z). Ogni card ha una fascia colorata con l’icona, il tipo in piccolo e il dato principale in grande: il nome del cliente nella sede (con la Colt indicata su due righe, nome e CLLI), il costo nella coda, nome e CLLI su due righe nella Colt e nel Nodo A1, con il tipo e la zona su altre due righe e le etichette di rete del ruolo (Colt: RC, RA T1/T2; Nodo A1: RC, RA T1, Nodo A1) insieme a «✔ Verificata». «Scelta a mano» e simili stanno solo nel popup.</p>
+                  <p><strong>1a e 2a Via:</strong> con Std + Div (o con il protetto) la Colt e il Nodo A1 hanno due blocchi, «1a Via (Std)» blu e «2a Via (Div)» viola. La Colt della 2a Via è facoltativa, si indica nella sede o si sceglie nella centrale e, se vuota, è la stessa della 1a. Il Nodo A1 della 2a Via è proposto come l’altro Nodo A1 della regione, si sceglie a mano o, con l’interruttore «2a Via: stesso Nodo A1 della 1a Via», coincide con il primo. Questi punti vanno in Partenza 2 e Arrivo 2 della ricerca nell’Unificato, e la card della rete avvisa se il Div importato non li usa.</p>
+                  <p><strong>Colt e Nodi A1:</strong> la Colt è quella scelta a mano o indicata nella sede, altrimenti la più vicina alla sede fra RC e RA di tipo 1 e 2; la card della Colt comanda e la sede si aggiorna da sola. Il Nodo A1 è il più vicino alla Colt fra quelli della stessa regione; il popup li elenca tutti con i km dalla Colt.</p>
+                  <p><strong>Coda:</strong> costo da «Apparati…» (Sede Cliente e Centrale per il Cliente) più un importo libero; con Std + Div non protetto le schede «1a Via (Std)» e «2a Via (Div)», la copia sull’altra zona (nota compresa) e la coda doppia quando Std e Div usano Colt diverse. Con il protetto vale la coda protetta del listino delle Soluzioni Protette.</p>
+                  <p><strong>Rete RTR:</strong> i bottoni ① Cerca percorsi nell’Unificato, ② Importa Std, ③ Importa Div stanno in fila. Il ritorno dall’Unificato prende da solo lo Std e il Div scelti. Per ogni via c’è la linea del percorso: centrali come pallini (rossi RC, blu RA con il tipo sede, sfumati con ⇄ nel passaggio di rete, con i due lati) e collegamenti con lo stato del DB; oltre 8 centrali le tappe in mezzo si chiudono, «mostra tutte» le apre e «▴ Comprimi», nell’intestazione della via, le richiude. Seguono il controllo delle C-FOS in comune e, con il protetto, il riquadro del trasporto protetto.</p>
+                  <p><strong>RTN:</strong> Rete di Trasporto Nazionale, non gestita dal Nostro Gruppo RTR (Rete di Trasporto Regionale): è solo il passaggio fra i Nodi A1 di Zona A e Zona Z, non si valorizza e c’è una riga per ogni via.</p>
+                  <p><strong>Riepilogo e note per IRP:</strong> sotto le card: coda di Zona A comune, fascia «1° VIA (STD)» con le sue righe, fascia «2° VIA (DIV)», coda di Zona Z comune (con la coda doppia le code stanno nella loro via). Le note iniziano con «1° Via Zona A…»; con il protetto la 1a Via ha hardware e costo, la 2a Via «La valorizzazione dei costi è già inclusa nel Trasporto DWDM della 1° Via.» (costo «Inclusi nella 1° Via»); la coda protetta inizia con «Tratta DWDM interna (al DC) per consentire la protezione del collegamento lambda …» e, con due SdF, nella 2a Via rimanda alla SdF Std. La RTN dice «Rete di Trasporto Nazionale RTN non gestita dal Gruppo RTR.». Le stesse note vanno nel foglio IRP.</p>
+                  <p><strong>Barra del totale:</strong> totale stimato, voci, pastiglia «N cose da completare» o «tutto compilato» (forma fissa), «🗺️ Mappa», «TXT della Progettazione» ed «Export completo» (verde anche al passaggio del mouse); resta su una riga.</p>
+                  <p><strong>Mappa:</strong> nel popup di rete, Colt e Nodo A1 e a tutto schermo: colori RC #ff0000 e RA #0000ff, Std pieno e Div tratteggiato, coda verde (gialla sugli sfondi satellitari), RTN grigia; Colt in verde acqua con A o Z (A2 e Z2 per la 2a Via), Nodo A1 a rombo, centrali piene, gateway più grande con ⇄ e il verso nel tooltip. Legenda in basso a destra (chiusa nel popup, aperta a tutto schermo), livelli «Percorso stradale RA» e «RC» che disegnano il tragitto sulle strade (i km restano quelli del DB), zoom a passi corti, viste RTN per l’Interregionale.</p>
+                  <p><strong>Wizard, Undo e Importa:</strong> il wizard (sperimentale) compila tutto passo per passo e si apre dalla barra, dall’Overview, dai tab RC e Unificato e dalla barra export dell’Unificato. Ogni «Fine», Export completo o TXT salva la progettazione (ultime 20, senza doppioni); l’Undo la riapre ricalcolando Std e Div con le Partenza 2 e Arrivo 2 di allora, e «Importa» rilegge la configurazione dal TXT o dall’Excel.</p>
+                  <p><strong>Export:</strong> «Export completo» scarica TXT, Modulo KMZ ed Excel (Dati Servizio, foglio IRP e foglio Protezione con coda A, trasporto e coda Z, e le note con colonna e importo). Con l’Interregionale l’Excel è uno solo: nel foglio IRP ogni via va dalla Zona A alla Zona Z con la riga RTN in mezzo, il TXT è quello della Progettazione e il KMZ ha le due zone.</p>
+                  <p><strong>Popup e cassetti:</strong> i popup di dettaglio delle card si chiudono solo con «Fatto» o ✕; i cassetti «Note e regole» anche cliccando fuori. Con la striscia Info live accesa, cassetti, popup e menu delle centrali si fermano sopra la striscia.</p>
                 </div>
               </details>
 
@@ -47948,7 +48079,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 099 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 106 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -47967,6 +48098,83 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            ✨ V11.26 | 106 | Nov 2026 | Scritta gialla su Solo Std e Wizard
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>✨ 106</strong>: <code>color: #fde047</code> al passaggio del mouse per <code>.cmp-seg-div button.on[data-v="0"]</code> e <code>.cmp-wzb</code>. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📘 V11.26 | 105 | Nov 2026 | Documentazione della Progettazione SdF aggiornata
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📘 105</strong>: testi in <code>p99zzzzzzzzzzz_doc</code>: <code>.feature-desc</code> e <code>.feature-specs</code> della card, <code>#cmpNote</code> e il corpo di <code>details#docs-compositore</code>. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📄 V11.26 | 104 | Nov 2026 | SdF con due minicard e bottoni della barra uguali
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📄 104</strong>: <code>.cmp-sdf-m</code> per le minicard; regole con <code>#tab-compositore #cmpSdf</code> per vincere su quelle della 102 e 103; <code>.cmp-barra .cmp-seg</code> e <code>.cmp-azb</code> a 40 px. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📄 V11.26 | 103 | Nov 2026 | Sezione SdF a larghezza fissa e spazi della pagina
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📄 103</strong>: <code>.cmp-palrow</code> con il margine che aveva <code>.cmp-pal</code>; <code>.cmp-sdf</code> largo 560 px (430 sotto i 1500 px); <code>.cmp-sdf-s</code> a colonna fissa. Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📄 V11.26 | 102 | Nov 2026 | Sezione Fattibilità (SdF)
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📄 102</strong>: <code>sdfDisegna()</code> crea <code>.cmp-palrow</code> con <code>#cmpPal</code> e <code>#cmpSdf</code>; i campi scrivono <code>WDS.sdfStd</code> e <code>WDS.sdfDiv</code>; <code>sdfStato()</code> per la pastiglia. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            💬 V11.26 | 101 | Nov 2026 | Tooltip sopra la sezione nella Progettazione
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>💬 101</strong>: nel tooltip globale <code>moveTip()</code> usa il contenitore (<code>.cmp-grp</code>, <code>#cmpPal</code>, <code>.cmp-foot</code>, <code>.cmp-c</code>, <code>.cmp-az</code>, <code>.cmp-via</code>) per l’altezza quando l’elemento è nella Progettazione. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🛡️ V11.26 | 100 | Nov 2026 | Note IRP della coda protetta (DC, centrale, due fattibilità)
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🛡️ croCodaNotaProt(clli, cap, nVia, base, ref)</strong>: DC da <code>DATA_CENTER_CLLI</code>, due fattibilità se <code>ref.std</code> e <code>ref.div</code> sono diversi; usata in <code>rigaCoda()</code> del foglio IRP (con <code>_exportSdfRef</code>) e in <code>riepilogo()</code> (con i riferimenti del wizard). Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             🟧 V11.26 | 099 | Nov 2026 | Pastiglia della barra con forma fissa
           </summary>
@@ -90059,11 +90267,12 @@ window._buildUnifiedCostBlock = function(opts) {
     function rigaCoda(c, lato){
       var r = { via: via, ba: 'DWDM/C', gg: 60, a: c ? { nome: c.nome, clli: _s(c.clli).toUpperCase() } : null, z: null };
       if (PX){
-        if ((nVia || 1) > 1){ r.note = 'La valorizzazione dei costi \u00e8 gi\u00e0 inclusa nella Coda DWDM della 1\u00b0 Via.'; return r; }   /* V11.26|093 */
+        var _ref = window._exportSdfRef || {};   /* V11.26|100: tratta DWDM interna (DC o centrale) e fattibilita' */
+        if ((nVia || 1) > 1){ r.note = window.croCodaNotaProt(c && c.clli, cap, nVia, '', _ref); return r; }
         var q = lato === 'Z' ? PX.codaZ : PX.codaA;
         if (q){
           if (q.costo != null){ if (PX.sol === 'SNCP'){ r.bn = Math.round(q.costo / 2); r.bo = Math.round(q.costo / 2); } else r.bp = Math.round(q.costo); }
-          r.note = q.nota;
+          r.note = window.croCodaNotaProt(c && c.clli, cap, 1, q.nota, _ref);
         }
         return r;
       }
@@ -90213,6 +90422,18 @@ window._buildUnifiedCostBlock = function(opts) {
   }
 
   // ── API pubblica ─────────────────────────────────────────────────────────────
+
+  /* V11.26|100: note della coda protetta con la tratta DWDM interna (DC o centrale) e il riferimento alla
+     fattibilita' della 1a Via. Usate dal foglio IRP (Unificato e Progettazione) e dal riepilogo della Progettazione */
+  window.croCodaNotaProt = function (clli, cap, nVia, base, ref) {
+    var dc = (window.DATA_CENTER_CLLI || []).indexOf(String(clli || '').toUpperCase()) >= 0, lam = String(cap || '1G').toUpperCase();
+    var tratta = dc ? 'Tratta DWDM interna al DC per consentire la protezione del collegamento lambda ' + lam + '. Questi apparati sono da ospitare negli spazi acquisiti dal cliente all\u2019interno del DC.'
+                    : 'Tratta DWDM interna per consentire la protezione del collegamento lambda ' + lam + '. Questi apparati sono da ospitare negli spazi acquisiti dal cliente all\u2019interno della Centrale.';
+    ref = ref || {}; var sS = String(ref.std || '').trim(), sD = String(ref.div || '').trim(), due = !!(sS && sD && sS !== sD);
+    if ((nVia || 1) <= 1) return tratta + ' -- ' + (base || '');
+    if (due) return tratta + ' La valorizzazione \u00e8 gi\u00e0 stata inclusa nei costi della Coda DWDM ' + (dc ? 'c/o DC ' : '') + 'in 1a via dello Sdf [' + (sS || 'xxxxx') + '].';
+    return tratta + ' La valorizzazione dei costi \u00e8 gi\u00e0 inclusa nella Coda DWDM della 1\u00b0 Via.';
+  };
   window._croExportXlsx = function(mode, selStdIdx, selDivByBase, opz){   /* V11.26|085: opz = { items, vie, nome } per l'interregionale */
     try {
       if (typeof ExcelJS === 'undefined'){
@@ -90900,7 +91121,15 @@ window._buildUnifiedCostBlock = function(opts) {
     tip.classList.remove('visible');
   }
 
+  var _curEl = null;   /* V11.26|101: nella Progettazione il tooltip va sopra la sezione o la card, senza coprire il bottone */
   function moveTip(e) {
+    if (_curEl && _curEl.closest && _curEl.closest('#tab-compositore, #cmpDett, #cmpModale')) {
+      var an = _curEl.closest('.cmp-grp, #cmpPal, .cmp-foot, .cmp-c, .cmp-az, .cmp-via, .cmp-dett-h, .cmp-dett-f') || _curEl;
+      var r = an.getBoundingClientRect(), w = tip.offsetWidth || 260, h = tip.offsetHeight || 30;
+      var xx = Math.max(6, Math.min(window.innerWidth - w - 6, e.clientX - w / 2)), yy = r.top - h - 8;
+      if (yy < 6) yy = r.bottom + 8;
+      tip.style.left = xx + 'px'; tip.style.top = yy + 'px'; return;
+    }
     var x = e.clientX + 14;
     var y = e.clientY - 36;
     // Evita uscita a destra
@@ -90916,7 +91145,7 @@ window._buildUnifiedCostBlock = function(opts) {
     // Tooltip personalizzato per ID
     var t = el.dataset.tip || TIPS[el.id] || el.getAttribute('title') || '';
     if (!t || t.length < 4) return;
-    showTip(el, t);
+    _curEl = el; showTip(el, t);
   });
 
   document.addEventListener('mouseout', function(e) {
@@ -100078,7 +100307,32 @@ body.dark-mode .exb-grp, body.dark-mode .exb .exb-chip { background: #1e293b; bo
 .expsm-ds-ctrl-et { font-size: .72rem; font-weight: 700; color: #15803d; white-space: nowrap; }
 body.dark-mode .expsm-ds-ctrl { background: #052e16; border-color: #166534; } body.dark-mode .expsm-ds-ctrl-et { color: #86efac; }
 .cmp-modale { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
-.cmp-modale[hidden] { display: none; }/* V11.26|096: card, popup, riepilogo e bottoni */
+.cmp-modale[hidden] { display: none; }
+/* V11.26|104: SdF con due minicard (1a Via, 2a Via) allineate ai bottoni dei blocchi */
+#tab-compositore #cmpSdf { display: flex !important; align-items: center !important; gap: 8px !important; padding: 0 12px !important; width: 600px !important; flex-basis: 600px !important; }
+#tab-compositore #cmpSdf .cmp-sdf-h { flex: 0 0 112px; display: flex; flex-direction: column; gap: 2px; }
+#tab-compositore #cmpSdf .cmp-sdf-s { display: block !important; flex: none !important; width: auto !important; font-size: .62rem; color: #64748b; line-height: 1.2; }
+#tab-compositore #cmpSdf .cmp-sdf-m { flex: 1 1 0 !important; min-width: 0; display: flex !important; flex-direction: row !important; align-items: center; gap: 6px; height: 30px !important; padding: 0 4px 0 8px; border: 1px solid #e2e8f0; border-left: 3px solid #1d4ed8; border-radius: 7px; background: #f8fafc; box-sizing: border-box; margin: 0; }
+#tab-compositore #cmpSdf .cmp-sdf-m.div { border-left-color: #7c3aed; }
+#tab-compositore #cmpSdf .cmp-sdf-m span { flex: none; white-space: nowrap; font-size: .62rem; font-weight: 800; color: #1d4ed8; } #tab-compositore #cmpSdf .cmp-sdf-m.div span { color: #7c3aed; }
+#tab-compositore #cmpSdf .cmp-sdf-m input { flex: 1 1 auto !important; width: auto !important; min-width: 0; height: 22px !important; border: 0 !important; background: transparent !important; padding: 0 4px !important; font-size: .76rem; box-shadow: none !important; }
+#tab-compositore #cmpSdf .cmp-sdf-m:focus-within { border-color: #93c5fd; background: #fff; } #tab-compositore #cmpSdf .cmp-sdf-m.off { opacity: .45; }
+@media (max-width: 1500px) { #tab-compositore #cmpSdf { width: 470px !important; flex-basis: 470px !important; } #tab-compositore #cmpSdf .cmp-sdf-s { display: none !important; } }
+/* V11.26|104: bottoni della barra alti come quelli dello Schema */
+#tab-compositore .cmp-barra .cmp-seg { height: 40px !important; align-items: stretch; } #tab-compositore .cmp-barra .cmp-seg button { height: 100% !important; }
+#tab-compositore .cmp-barra .cmp-azb { height: 40px !important; display: inline-flex !important; align-items: center; }
+
+/* V11.26|102: sezione SdF accanto ad Aggiungi un blocco, bassa come la riga dei blocchi */
+.cmp-palrow { display: flex; gap: 10px; align-items: stretch; margin: 10px 0 .9rem; } .cmp-palrow > .cmp-pal { flex: 1 1 auto; min-width: 0; margin: 0 !important; }
+.cmp-sdf { flex: 0 0 560px; width: 560px; box-sizing: border-box; display: flex; align-items: center; gap: 8px; padding: 5px 12px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; }
+.cmp-sdf-t { font-size: .6rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #64748b; }
+.cmp-sdf label { display: flex; flex-direction: column; gap: 1px; font-size: .6rem; font-weight: 800; margin: 0; } .cmp-sdf label.std span { color: #1d4ed8; } .cmp-sdf label.div span { color: #7c3aed; } .cmp-sdf label.off { opacity: .45; }
+.cmp-sdf label { flex: 1 1 0; min-width: 0; } .cmp-sdf input { width: 100%; border: 1px solid #cbd5e1; border-radius: 7px; padding: 3px 7px; font-size: .74rem; height: 26px; box-sizing: border-box; }
+.cmp-sdf input:focus { outline: none; border-color: #0066CC; box-shadow: 0 0 0 2px rgba(0,102,204,.15); }
+.cmp-sdf-s { flex: 0 0 150px; width: 150px; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; font-size: .64rem; color: #64748b; line-height: 1.25; } .cmp-sdf-c { display: inline-block; padding: 0 7px; border-radius: 999px; background: #dcfce7; color: #166534; font-size: .6rem; } .cmp-sdf-c.due { background: #ede9fe; color: #5b21b6; }
+.cmp-palrow .cmp-pal-k { display: none; }   /* il suggerimento resta nel tooltip dei bottoni */
+.cmp-palrow > .cmp-pal { flex-wrap: nowrap; }
+@media (max-width: 1500px) { .cmp-sdf-s { display: none; } .cmp-sdf { flex-basis: 390px; width: 390px; } .cmp-sdf input { width: 125px; } }/* V11.26|096: card, popup, riepilogo e bottoni */
 .cmp-bv { line-height: 1.2; } .cmp-bc { font-size: .72rem; font-weight: 700; color: #64748b; margin-bottom: 3px; }
 .cmp-gb { display: inline-flex; flex-direction: column; gap: 0; padding: 2px 7px; border-radius: 5px; font-size: .66rem; line-height: 1.35; margin: 1px 0 3px; border: 1px solid #fed7aa; background: #fff7ed; color: #9a3412; }
 .cmp-gb.cro-geo-a1 { border-color: #ddd6fe; background: #f5f3ff; color: #5b21b6; } .cmp-gb.cro-geo-dc { border-color: #fecdd3; background: #fff1f2; color: #be123c; } .cmp-gb.cro-geo-div { border-color: #fdba74; background: #fff7ed; color: #c2410c; }
@@ -100108,6 +100362,22 @@ body.dark-mode .expsm-ds-ctrl { background: #052e16; border-color: #166534; } bo
 #tab-compositore .cmp-azb.cmp-expb:hover, #tab-compositore .cmp-foot .cmp-azb.cmp-expb:hover { background: #15803d !important; border-color: #15803d !important; color: #fff !important; }
 /* V11.26|099: pastiglie della barra sempre con la stessa forma (angoli come i bottoni accanto) */
 #tab-compositore .cmp-foot .cmp-foot-m, #tab-compositore .cmp-foot .cmp-foot-ok, .cmp-foot-m, .cmp-foot-ok { border-radius: 8px !important; height: 28px !important; }
+/* V11.26|104: sezione SdF con due minicard allineate ai bottoni dei blocchi */
+#cmpSdf.cmp-sdf { width: auto !important; gap: 8px; padding: 0 12px; align-items: center; }
+#cmpSdf .cmp-sdf-s { display: none !important; }
+#cmpSdf .cmp-sdf-m { flex: 0 0 auto; display: inline-flex !important; flex-direction: row !important; align-items: center; gap: 6px; height: 32px; box-sizing: border-box; padding: 0 4px 0 9px; border: 1px solid #e2e8f0; border-left: 3px solid #1d4ed8; border-radius: 8px; background: #fff; }
+#cmpSdf .cmp-sdf-m.div { border-left-color: #7c3aed; }
+#cmpSdf .cmp-sdf-m > span { font-size: .66rem; font-weight: 800; white-space: nowrap; }
+#cmpSdf .cmp-sdf-m input { width: 150px; height: 24px; border: 0; background: #f8fafc; border-radius: 5px; padding: 0 7px; font-size: .76rem; }
+#cmpSdf .cmp-sdf-m input:focus { box-shadow: 0 0 0 2px rgba(0,102,204,.25); background: #fff; }
+#cmpSdf .cmp-sdf-m.off { opacity: .45; }
+/* V11.26|104: bottoni della barra in alto tutti alti come quelli dello Schema */
+#tab-compositore .cmp-barra .cmp-sch, #tab-compositore .cmp-barra .cmp-seg, #tab-compositore .cmp-barra .cmp-azb { height: 44px !important; box-sizing: border-box; }
+#tab-compositore .cmp-barra .cmp-seg button { height: 100% !important; display: inline-flex; align-items: center; }
+#tab-compositore .cmp-barra .cmp-azb { display: inline-flex; align-items: center; }
+/* V11.26|106: Solo Std scelto e Wizard, al passaggio del mouse la scritta diventa gialla */
+#tab-compositore .cmp-seg-div button.on[data-v="0"]:hover, #tab-compositore .cmp-barra .cmp-seg-div button.on[data-v="0"]:hover { color: #fde047 !important; }
+#tab-compositore .cmp-azb.cmp-wzb:hover, #tab-compositore .cmp-barra .cmp-azb.cmp-wzb:hover { color: #fde047 !important; }
 
 /* V11.26|095: interruttore dello stesso Nodo A1 */
 .cmp-sw { display: flex; align-items: center; gap: 10px; margin: 8px 0 10px; font-size: .8rem; color: #334155; text-align: left; }
@@ -102806,7 +103076,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 099';
+  var REVISIONE = 'V11.26 | 106';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
