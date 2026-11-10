@@ -4,13 +4,43 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 092  (rev. pubblicata: V11.26 | 092 | Nov 2026)              ║
+║   Versione: 11.26 | 096  (rev. pubblicata: V11.26 | 096 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 096 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE (tutti gli schemi): nome e CLLI su due righe in sede, Colt e   ║
+║     Nodo A1; tipo (DATA CENTER, NODO A1) e zona su due righe; etichette di rete  ║
+║     solo per il ruolo, con Verificata; Comprimi nell'intestazione della via;     ║
+║     interruttore del Nodo A1 sistemato; riepilogo sobrio; Wizard grigio          ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 095 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE: interruttore Stesso Nodo A1 allineato; con lo stesso nodo     ║
+║     la card ne mostra uno solo; zoom delle mappe a passi corti; RTN = Rete di    ║
+║     Trasporto Nazionale (note per IRP, card, tooltip, Note e regole)             ║
+║   • LINEA DEL PERCORSO: aperte le tappe la riga riassuntiva sparisce; per        ║
+║     richiuderle c'e' Comprimi in alto a destra della via                         ║
+║   • LINEA DEL PERCORSO: aperta, la riga riassuntiva sparisce e compare           ║
+║     Comprimi; i passaggi RA/RC non contano piu' come collegamenti                ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 094 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE, RETE RTR: linea del percorso per via (pallini rossi RC, blu   ║
+║     RA con [Tn], gateway sfumato), collegamenti con lo stato, tappe chiuse oltre ║
+║     8 centrali; stesso Nodo A1 per le due vie; bottoni senza sollevamento        ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 093 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE: card nel formato B; Nodi A1 della regione della Colt;         ║
+║     la Colt comanda sulla sede; bottoni della rete numerati in sequenza;         ║
+║     riepilogo su due righe, note con 1°/2° Via e zona, protetto: costi solo      ║
+║     nella 1° Via (anche nel foglio IRP); animazioni nella barra                  ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 092 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -6761,10 +6791,10 @@ window.croCmp = (function () {
         else chiedi('Nella Centrale ' + Ls + ' la Colt 2a Via scelta a mano \u00e8 \u00ab' + c2.f.manuale2 + '\u00bb. Metto al suo posto \u00ab' + v + '\u00bb, indicata nella sede (da verificare)?', function () { c2.f.manuale2 = v; c2.f.daSede2 = true; c2.f.verificata2 = ''; ridisegna(); }); }
       if (c2 && !v && c2.f.daSede2) { c2.f.manuale2 = ''; c2.f.daSede2 = false; } }
     if (Ls && TIPI[b.tipo].cl === 'centrale' && k === 'manuale2') { b.f.daSede2 = false; var s2 = trova('sede' + Ls);
-      if (s2 && v && s2.f.centrale2 !== v) { if (!s2.f.centrale2) s2.f.centrale2 = v; else chiedi('Nella Sede cliente ' + Ls + ' la Colt 2a Via indicata \u00e8 \u00ab' + s2.f.centrale2 + '\u00bb. La sostituisco con \u00ab' + v + '\u00bb?', function () { s2.f.centrale2 = v; ridisegna(); }); } }
+      if (s2 && v && s2.f.centrale2 !== v) { s2.f.centrale2 = v; if (false) chiedi('Nella Sede cliente ' + Ls + ' la Colt 2a Via indicata \u00e8 \u00ab' + s2.f.centrale2 + '\u00bb. La sostituisco con \u00ab' + v + '\u00bb?', function () { s2.f.centrale2 = v; ridisegna(); }); } }
     if (Ls && TIPI[b.tipo].cl === 'centrale' && k === 'manuale') { b.f.daSede = false; var ss = trova('sede' + Ls);
-      if (ss && v && ss.f.centrale !== v) { if (!ss.f.centrale) ss.f.centrale = v; else chiedi('Nella Sede cliente ' + Ls + ' la centrale indicata \u00e8 \u00ab' + ss.f.centrale + '\u00bb. La sostituisco con \u00ab' + v + '\u00bb?', function () { ss.f.centrale = v; ridisegna(); }); } }
-    if (k === 'manuale' || k === 'centrale' || k === 'coord' || k === 'manuale2' || k === 'centrale2') ridisegna(); else disegnaRisultati(); }
+      if (ss && v && ss.f.centrale !== v) { ss.f.centrale = v; if (false) chiedi('Nella Sede cliente ' + Ls + ' la centrale indicata \u00e8 \u00ab' + ss.f.centrale + '\u00bb. La sostituisco con \u00ab' + v + '\u00bb?', function () { ss.f.centrale = v; ridisegna(); }); } }
+    if (k === 'manuale' || k === 'centrale' || k === 'coord' || k === 'manuale2' || k === 'centrale2' || k === 'stesso2') ridisegna(); else disegnaRisultati(); }
 
   /* ── calcolo dei blocchi automatici ── */
   function sedeCoord(lato) { var s = trova(lato === 'A' ? 'sedeA' : 'sedeZ'); return s ? coord(s.f.coord) : null; }
@@ -6780,9 +6810,10 @@ window.croCmp = (function () {
       else { var p = sedeCoord(L); if (p) { var v = vicine(p.lat, p.lon, centrali, 4); if (v.length) c.r = { c: v[0].c, d: v[0].d, modo: 'auto', alt: v.slice(1), pari: v[1] && Math.abs(v[1].d - v[0].d) < 0.05 }; } }
       var n = trova('nodo' + L); if (!n) return;
       n.r = null;
-      var nm = n.f.manuale ? trovaCentrale(n.f.manuale) : null;
-      if (nm) n.r = { c: nm, modo: 'man' };
-      else if (c.r && !isNaN(c.r.c.lat)) { var w = vicine(c.r.c.lat, c.r.c.lon, nodiA1, 4); if (w.length) n.r = { c: w[0].c, d: w[0].d, modo: 'auto', alt: w.slice(1) }; }
+      var nm = n.f.manuale ? trovaCentrale(n.f.manuale) : null;   /* V11.26|093: Nodi A1 della regione della Colt, con i km dalla Colt */
+      var wR = c.r && !isNaN(c.r.c.lat) ? vicine(c.r.c.lat, c.r.c.lon, nodiRegione(c.r.c), 12) : [];
+      if (nm) { var dm = c.r && !isNaN(c.r.c.lat) && !isNaN(nm.lat) ? hav(c.r.c.lat, c.r.c.lon, nm.lat, nm.lon) : null; n.r = { c: nm, d: dm, modo: 'man', alt: wR.filter(function (x) { return x.c.clli !== nm.clli; }) }; }
+      else if (wR.length) n.r = { c: wR[0].c, d: wR[0].d, modo: 'auto', alt: wR.slice(1) };
     });
     /* V10.26|66: gli estremi di una rete sono i blocchi centrale o nodo A1 che le stanno
        subito prima e subito dopo nella catena, qualunque sia il tipo di rete */
@@ -6816,7 +6847,9 @@ window.croCmp = (function () {
     ed.forEach(function (e) { var x = e.raw || {}; kmT += parseFloat(String(x.Distanza_km || e.weight || 0).replace(',', '.')) || 0;
       if (String(x.Stato_IdCollegamento || '').toUpperCase() !== 'ATTIVO' && x.Stato_IdCollegamento) non++; if (e.id) ids.push(e.id);
       String(x.IdCavo || '').split(' + ').forEach(function (c) { c = c.trim(); if (c && c !== '-') cav[c] = 1; }); });
-    return { km: kmT, n: ed.length, non: non, ids: ids, cavi: cav };
+    var veri = ed.filter(function (e) { return e.source === 'RA' || e.source === 'RC'; }), gwC = {};   /* V11.26|095: i salti RA/RC non sono collegamenti */
+    ed.forEach(function (e) { if (e.source === 'XFER') gwC[String(e.from).replace(/::(RA|RC)$/, '')] = 1; });
+    return { km: kmT, n: veri.length || ed.length, gw: Object.keys(gwC).length, non: non, ids: ids, cavi: cav };
   }
   function importa(id, tipo) {
     var b = catena.filter(function (x) { return x.id === id; })[0]; if (!b) return;
@@ -7050,8 +7083,9 @@ window.croCmp = (function () {
 
   /* V11.26|087: Colt della 2a Via (Div), facoltativa. Vale solo con Std + Div: se e' vuota coincide con la prima.
      Si sceglie a mano nella Centrale (manuale2) o si indica nella Sede (centrale2); le due restano uguali. */
+  function divOn() { return !!(el('cmpDiv') || {}).checked; }   /* V11.26|093: 2a Via presente (anche con il protetto) */
   function cen2(L) {
-    if (!viaDoppia()) return null;
+    if (!divOn()) return null;
     var c = trova('centrale' + L), s = trova('sede' + L); if (!c) return null;
     var t = c.f.manuale2 || (s && s.f.centrale2) || ''; if (!t) return null;
     var x = trovaCentrale(t); if (!x) return null;
@@ -7069,19 +7103,64 @@ window.croCmp = (function () {
      centrale della zona (es. Lazio: ROMA SUD per lo Std, ROMA INVIOLATELLA per il Div); se l'area ne ha uno solo
      resta lo stesso. Si puo' scegliere a mano (manuale2). */
   function nodo2(L) {
-    if (!viaDoppia()) return null;
+    if (!divOn()) return null;
     var b = trova('nodo' + L); if (!b || !b.r || !b.r.c) return null;
+    if (b.f.stesso2) return { c: b.r.c, modo: 'stesso', d: b.r.d, scelto: true };   /* V11.26|094: stesso Nodo A1 per le due vie */
     if (b.f.manuale2) { var xm = trovaCentrale(b.f.manuale2); if (xm) return { c: xm, modo: 'man', d: null }; }
     var lista = typeof CENTRALI_POP_NODO_A1 !== 'undefined' ? CENTRALI_POP_NODO_A1 : [];
     var me = lista.filter(function (x) { return x.clli === b.r.c.clli; })[0]; if (!me) return { c: b.r.c, modo: 'stesso', d: b.r.d };
     var ce = trova('centrale' + L), rif = ce && ce.r && ce.r.c ? ce.r.c : b.r.c; carica();
-    var alt = lista.filter(function (x) { return x.area === me.area && x.clli !== me.clli && centrali[x.clli]; }).map(function (x) { var c = centrali[x.clli]; return { c: c, d: (!isNaN(c.lat) && !isNaN(rif.lat)) ? hav(rif.lat, rif.lon, c.lat, c.lon) : 1e9 }; })
+    var regN = nodiRegione(rif); var alt = Object.keys(regN).filter(function (k) { return k !== me.clli; }).map(function (k) { return { clli: k }; }).filter(function (x) { return centrali[x.clli]; }).map(function (x) { var c = centrali[x.clli]; return { c: c, d: (!isNaN(c.lat) && !isNaN(rif.lat)) ? hav(rif.lat, rif.lon, c.lat, c.lon) : 1e9 }; })
       .sort(function (p, q) { return p.d - q.d; })[0];
     return alt ? { c: alt.c, modo: 'auto', d: alt.d } : { c: b.r.c, modo: 'stesso', d: b.r.d };
   }
   /* blocco uniforme di una via nella card di centrale o nodo */
   function viaBox(tit, cls, c, sotto, extra) {
     return '<div class="cmp-vb ' + cls + '"><div class="cmp-vb-t">' + tit + '</div>' + (c ? '<div class="cmp-cen"><span class="cmp-acico">' + SVG_CEN + '</span><span class="cmp-actx"><b>' + esc(acEt(c)) + '</b><span class="cmp-cen-k">' + acGeo(c) + acTag(c) + '</span><span class="cmp-k">' + sotto + '</span>' + (extra || '') + '</span></div>' : '<div class="cmp-k">' + sotto + '</div>') + '</div>';
+  }
+
+  /* V11.26|093: regione di una centrale (dalla seconda riga [Area – Zona – Regione]) e Nodi A1 della regione della Colt */
+  function regioneDi(c) { var g = c && typeof window.croGeoBadge === 'function' ? window.croGeoBadge(c.nome + ' (' + c.clli + ')', false) : null; var t = g ? String(g.txt).replace(/[\[\]]/g, '') : ''; var p = t.split('\u2013'); return p.length ? p[p.length - 1].trim() : ''; }
+  function nodiRegione(colt) {
+    var rg = regioneDi(colt), out = {};
+    Object.keys(nodiA1).forEach(function (k) { if (rg && regioneDi(nodiA1[k]) === rg) out[k] = nodiA1[k]; });
+    return Object.keys(out).length ? out : nodiA1;
+  }
+
+  /* V11.26|094: linea del percorso (concept B). Centrali come pallini (rosso RC, blu RA, sfumato con ⇄ per il
+     passaggio RA/RC), collegamenti fra un pallino e l'altro con il loro stato; oltre 8 centrali le tappe in mezzo
+     si chiudono in una riga che dice quante sono e quante da verificare */
+  function lineaPercorso(r) {
+    var NI = null; try { NI = buildUnifiedLabelsAndInfo().nodeInfo; } catch (e) { NI = null; }
+    var tappe = [];
+    (r.nodes || []).forEach(function (k) {
+      var pulito = String(k).replace(/::(RA|RC)$/, ''), m = /::(RA|RC)$/.exec(String(k)), rete = m ? m[1] : '', info = NI ? NI.get(pulito) : null;
+      var clli = info ? info.clli : pulito, u = tappe[tappe.length - 1];
+      if (u && u.clli === clli) { if (u.reti.indexOf(rete) < 0) u.reti.push(rete); return; }
+      tappe.push({ clli: clli, nome: info ? info.gat : pulito, tipo: info ? info.tipo : null, reti: [rete] });
+    });
+    var links = (r.edges || []).filter(function (e) { return e.source === 'RA' || e.source === 'RC'; });
+    var nodo = function (t) {
+      var gw = t.reti.length > 1, cl = gw ? 'gw' : (t.reti[0] === 'RA' ? 'ra' : 'rc');
+      var et = t.nome + ' (' + t.clli + ')' + (t.reti.indexOf('RA') >= 0 && t.tipo != null ? ' [T' + t.tipo + ']' : '');
+      if (gw) {   /* come nella 077: lato RA con [Tn], poi il passaggio, poi l'altro lato */
+        var lato = function (rt) { return t.nome + ' (' + t.clli + ')' + (rt === 'RA' && t.tipo != null ? ' [T' + t.tipo + ']' : ''); };
+        return '<div class="cmp-tn gw"><span class="cmp-td">\u21c4</span><span class="cmp-tt">' + esc(lato(t.reti[0])) + ' <i class="cmp-tgw">' + t.reti.join(' \u21c4 ') + '</i> ' + esc(lato(t.reti[1])) + '</span></div>';
+      }
+      return '<div class="cmp-tn ' + cl + '"><span class="cmp-td"></span><span class="cmp-tt">' + esc(et) + '</span></div>';
+    };
+    var link = function (e) {
+      var rw = e.raw || {}, st = rw.Stato_IdCollegamento || 'stato non indicato', ko = nonAtt(e), idU = e.source === 'RA' ? String(rw.IdCollegamento || e.id) : String(e.id);
+      if (e.source === 'RA' && typeof findRARecordById === 'function') { try { var rr = findRARecordById(e.id); if (rr) { idU = String(rr.IdCollegamento || idU); if (rr.Stato_IdCollegamento) { st = rr.Stato_IdCollegamento; ko = String(st).toUpperCase() !== 'ATTIVO'; } } } catch (x) {} }
+      return '<div class="cmp-tk ' + (e.source === 'RA' ? 'ra' : 'rc') + (ko ? ' ko' : '') + '" title="' + esc(idU) + ' \u00b7 Stato: ' + esc(st) + '"><span>' + esc(idU) + '</span><i class="' + (ko ? 'wn' : 'ok') + '">' + esc(ko ? st : 'ATTIVO') + '</i></div>';
+    };
+    var pezzi = []; tappe.forEach(function (t, i) { pezzi.push({ n: t }); if (links[i]) pezzi.push({ l: links[i] }); });
+    var html = function (arr) { return arr.map(function (p) { return p.n ? nodo(p.n) : link(p.l); }).join(''); };
+    if (tappe.length <= 8) return '<div class="cmp-tl">' + html(pezzi) + '</div>';
+    var testa = [], coda = [], mezzo = [], ni = 0;
+    pezzi.forEach(function (p) { if (p.n) ni++; if (ni <= 3 && !(p.l && ni === 3)) testa.push(p); else if (ni > tappe.length - 2) coda.push(p); else mezzo.push(p); });
+    var nN = mezzo.filter(function (p) { return p.n; }).length, nL = mezzo.filter(function (p) { return p.l; }).length, nK = mezzo.filter(function (p) { return p.l && nonAtt(p.l); }).length;
+    return '<div class="cmp-tl">' + html(testa) + '<div class="cmp-tmore" data-tlx="1">\u25B8 altre ' + nN + ' centrali e ' + nL + ' collegamenti' + (nK ? ' (' + nK + ' da verificare)' : '') + ' \u00b7 mostra tutte</div><div class="cmp-tmid" hidden>' + html(mezzo) + '</div>' + html(coda) + '</div>';
   }
   function codaCostoHtml(b) {
     var c = codaCosto(b), h = c.prot ? protHtml(c.prot, 'Coda') : c.riga ? '<b>' + esc(c.riga) + '</b>' : '<span class="cmp-k">nessun apparato scelto</span>';
@@ -7443,24 +7522,24 @@ window.croCmp = (function () {
       + '<div class="cmp-sez">Indirizzo <button type="button" class="cmp-geo-b" onclick="croCmp.geocodifica(' + b.id + ')" title="Cerca le coordinate dell’indirizzo (OpenStreetMap)">\uD83D\uDD0D Geocodifica</button></div>'   /* V11.26|010 */
       + '<input type="text" class="cmp-ind" data-ind="' + b.id + '" value="' + esc(b.f.indirizzo || '') + '" placeholder="es. Via Roma 10, Milano \u00b7 o incolla coordinate o link di Google Maps" onchange="croCmp.campo(' + b.id + ',\'indirizzo\',this.value)" onkeydown="if(event.key===\'Enter\'){event.preventDefault();croCmp.geocodifica(' + b.id + ');}">'
       + '<div class="cmp-geo" data-geo="' + b.id + '">' + geoHtml(b) + '</div>'
-      + inp('coord', 'es. 41.9619, 12.4421', 'Coordinate (lat, lon)') + inp('centrale', 'es. TOMBA DI NERONE (ROMAITFT)', viaDoppia() ? 'Centrale indicata (Colt) 1a Via (Std)' : 'Centrale indicata (Colt)')
-      + (viaDoppia() ? inp('centrale2', 'facoltativa: se vuota vale la 1a Via', 'Centrale indicata (Colt) 2a Via (Div)') : '');   /* V11.26|087 */
+      + inp('coord', 'es. 41.9619, 12.4421', 'Coordinate (lat, lon)') + inp('centrale', 'es. TOMBA DI NERONE (ROMAITFT)', divOn() ? 'Centrale indicata (Colt) 1a Via (Std)' : 'Centrale indicata (Colt)')
+      + (divOn() ? inp('centrale2', 'facoltativa: se vuota vale la 1a Via', 'Centrale indicata (Colt) 2a Via (Div)') : '');   /* V11.26|087 */
     else if (T.cl === 'coda') h += '<div class="cmp-sez">Km stimati</div><div class="cmp-ris" data-km="' + b.id + '"></div>'   /* V11.26|009 */
       + '<label>Km a mano (facoltativo)<input type="text" value="' + esc(b.f.km || '') + '" placeholder="vince sul calcolo, es. 1,5" onchange="croCmp.campo(' + b.id + ',\'km\',this.value)"></label>'
       + '<div class="cmp-sez">Costo stimato (\u20ac) <button type="button" class="cmp-app-b" onclick="croCmp.apparati(' + b.id + ')">\uD83E\uDDEE Apparati\u2026</button></div><div class="cmp-ris" data-costo="' + b.id + '"></div>'
       + '<label>Altro (importo o testo libero)<input type="text" value="' + esc(b.f.costo || '') + '" placeholder="es. 1.200 scavo" onchange="croCmp.campo(' + b.id + ',\'costo\',this.value)"></label>'
       + '<label>Note<textarea rows="3" placeholder="tracciato, permessi, fonte del costo\u2026" onchange="croCmp.campo(' + b.id + ',\'note\',this.value)">' + esc(b.f.note || '') + '</textarea></label>';
     else if (T.cl === 'centrale' || T.cl === 'nodo') {
-      h += '<div class="cmp-ris" data-ris="' + b.id + '"></div>' + inp('manuale', 'scegli un’altra centrale', T.cl === 'nodo' ? 'Nodo A1 a mano' : (viaDoppia() ? 'Centrale a mano 1a Via (Std)' : 'Centrale a mano'));
-      if (T.cl === 'nodo' && viaDoppia()) { var n2 = nodo2(slotEt(b.tipo));   /* V11.26|088 */
-        h += '<div class="cmp-sez">Nodo A1 2a Via (Div)</div>' + (n2 ? '<div class="cmp-k">' + esc(acEt(n2.c)) + ' \u00b7 ' + (n2.modo === 'auto' ? 'proposto: l\u2019altro Nodo A1 dell\u2019area' : n2.modo === 'man' ? 'scelto a mano' : 'stesso della 1a Via') + '</div>' : '') + inp('manuale2', 'facoltativo: vince sulla proposta', 'Nodo A1 a mano 2a Via (Div)'); }
-      if (T.cl === 'centrale' && viaDoppia()) { var q2 = cen2(slotEt(b.tipo));   /* V11.26|087 */
+      h += '<div class="cmp-ris" data-ris="' + b.id + '"></div>' + inp('manuale', 'scegli un’altra centrale', T.cl === 'nodo' ? 'Nodo A1 a mano' : (divOn() ? 'Centrale a mano 1a Via (Std)' : 'Centrale a mano'));
+      if (T.cl === 'nodo' && divOn()) { var n2 = nodo2(slotEt(b.tipo));   /* V11.26|088 */
+        h += '<div class="cmp-sez">Nodo A1 2a Via (Div)</div>' + (n2 ? '<div class="cmp-k">' + esc(acEt(n2.c)) + ' \u00b7 ' + (n2.modo === 'auto' ? 'proposto: l\u2019altro Nodo A1 dell\u2019area' : n2.modo === 'man' ? 'scelto a mano' : 'stesso della 1a Via') + '</div>' : '') + '<div class="cmp-sw"><button type="button" class="cmp-swb' + (b.f.stesso2 ? ' on' : '') + '" onclick="croCmp.campo(' + b.id + ',\'stesso2\',' + (b.f.stesso2 ? '\'\'' : '\'1\'') + ')"><i></i></button><span>2a Via: stesso Nodo A1 della 1a Via</span></div>' + (b.f.stesso2 ? '' : inp('manuale2', 'facoltativo: vince sulla proposta', 'Nodo A1 a mano 2a Via (Div)')); }
+      if (T.cl === 'centrale' && divOn()) { var q2 = cen2(slotEt(b.tipo));   /* V11.26|087 */
         h += '<div class="cmp-sez">Colt 2a Via (Div)</div>' + (q2 ? '<div class="cmp-cen"><span class="cmp-acico">' + SVG_CEN + '</span><span class="cmp-actx"><b>' + esc(acEt(q2.c)) + '</b><span class="cmp-cen-k">' + acGeo(q2.c) + acTag(q2.c) + '</span><span class="cmp-k">' + (q2.d != null ? km(q2.d) + ' km dalla sede \u00b7 ' : '') + (q2.modo === 'indicata' ? 'indicata nella sede' : 'scelta a mano') + '</span></span></div>' : '<div class="cmp-k">vuota: il Div usa la stessa Colt della 1a Via</div>')
           + inp('manuale2', 'facoltativa: se vuota vale la 1a Via', 'Centrale a mano 2a Via (Div)'); }
     } else if (T.cl === 'rtn') h += '<div class="cmp-ris" data-ris="' + b.id + '"></div>';
     else if (T.cl === 'rete') {
-      h += '<div class="cmp-ris" data-ris="' + b.id + '"></div><div class="cmp-az"><button type="button" onclick="croCmp.cerca(' + b.id + ')">\uD83D\uDD0E Cerca nell’Unificato</button><button type="button" onclick="croCmp.importa(' + b.id + ',\'std\')">\uD83D\uDCE5 Importa Std</button>'
-        + ((el('cmpDiv') || {}).checked ? '<button type="button" onclick="croCmp.importa(' + b.id + ',\'div\')">\uD83D\uDCE5 Importa Div</button>' : '') + '</div>';
+      h += '<div class="cmp-ris" data-ris="' + b.id + '"></div><div class="cmp-az cmp-azr"><button type="button" class="cmp-st1" onclick="croCmp.cerca(' + b.id + ')"><i>1</i>\uD83D\uDD0E Cerca percorsi nell’Unificato</button><span class="cmp-azf">\u2192</span><button type="button" class="cmp-st2" onclick="croCmp.importa(' + b.id + ',\'std\')"><i>2</i>\u2B07 Importa Std</button>'
+        + ((el('cmpDiv') || {}).checked ? '<span class="cmp-azf">\u2192</span><button type="button" class="cmp-st3" onclick="croCmp.importa(' + b.id + ',\'div\')"><i>3</i>\u2B07 Importa Div</button>' : '') + '</div>';   /* V11.26|093 */
     }
     return h + '</div>';
   }
@@ -7489,8 +7568,8 @@ window.croCmp = (function () {
         var r = b.f[k];
         if (!r) { h2 += '<div class="cmp-via ' + k + '"><div class="cmp-via-h"><b>' + k.toUpperCase() + '</b>: <span class="cmp-tag dv">da importare</span></div></div>'; return; }
         var q = riassunto(r), c = costo(r);
-        h2 += '<div class="cmp-via ' + k + '"><div class="cmp-via-h"><b class="cmp-via-t">' + k.toUpperCase() + (r.idx != null ? ' ' + (k === 'div' && r.base != null ? (r.base + 1) + '.' : '') + (r.idx + 1) : '') + '</b>: ' + km(q.km) + ' km \u00b7 ' + q.n + (q.n === 1 ? ' collegamento ' : ' collegamenti ') + (q.non ? '<span class="cmp-tag dv">' + nnLabel(q.non) + '</span>' : '<span class="cmp-tag ok">tutti attivi</span>')
-          + '<div class="cmp-rt-k">Centrali</div><div class="cmp-lks">' + centraliChips(r) + '</div><div class="cmp-rt-k">Collegamenti</div><div class="cmp-lks">' + linkChips(r) + '</div>'
+        h2 += '<div class="cmp-via ' + k + '"><div class="cmp-via-h"><b class="cmp-via-t">' + k.toUpperCase() + (r.idx != null ? ' ' + (k === 'div' && r.base != null ? (r.base + 1) + '.' : '') + (r.idx + 1) : '') + '</b>: ' + km(q.km) + ' km \u00b7 ' + q.n + (q.n === 1 ? ' collegamento' : ' collegamenti') + (q.gw ? ' \u00b7 ' + q.gw + (q.gw === 1 ? ' passaggio RA \u21c4 RC' : ' passaggi RA \u21c4 RC') : '') + ' ' + (q.non ? '<span class="cmp-tag dv">' + nnLabel(q.non) + '</span>' : '<span class="cmp-tag ok">tutti attivi</span>')
+          + lineaPercorso(r)   /* V11.26|094 */
           + '</div></div>';   /* V11.26|076: i costi sono nel riepilogo */
       });
       h2 += '</div>';
@@ -7550,11 +7629,13 @@ window.croCmp = (function () {
           var q = riassunto(r), c = prR ? null : costo(r); kmT += q.km; if (c && c.tot) tot += c.tot;
           sezioniRete(r, c).forEach(function (z, iz) {
             var nota = z.nota, costoTxt = eu(z.costo);
-            if (prR) {   /* V11.26|084 */
-              nota = prR.ra ? 'Protezione ' + solR + ' da rivedere (percorso con rete RA). ' + nota.replace(/^(Rete R[AC]\d*): .*? -- \[/, '$1: [') : nota.replace(/^(Rete R[AC]\d*): .*? -- \[/, '$1: [Protetto ' + solR + '] ' + hwR + ' -- [');
-              costoTxt = x === 'std' && iz === 0 ? (prR.costo != null ? eu(prR.costo) + ' (protetto)' : 'da indicare') : 'incluso nel protetto';
+            if (prR) {   /* V11.26|084, 093 */
+              nota = prR.ra ? 'Protezione ' + solR + ' da rivedere (percorso con rete RA). ' + nota.replace(/^(Rete R[AC]\d*): .*? -- \[/, '$1: [') : nota.replace(/^(Rete R[AC]\d*): .*? -- \[/, '$1: [Protetto ' + solR + '] ' + (x === 'std' ? hwR + ' ' : '') + '-- [');
+              if (x === 'div' && !prR.ra) nota = nota.replace(/\.?$/, '.') + ' La valorizzazione dei costi \u00e8 gi\u00e0 inclusa nel Trasporto DWDM della 1\u00b0 Via.';
+              costoTxt = x === 'std' ? (iz === 0 ? (prR.costo != null ? eu(prR.costo) : 'da indicare') : 'incluso sopra') : 'Inclusi nella 1\u00b0 Via';
             }
-            via[x].push({ t: zn.base + ' [' + z.lbl + ']' + (zn.zona ? ' ' + zn.zona : ''), det: km(z.km) + ' km \u00b7 ' + z.n + (z.n === 1 ? ' collegamento' : ' collegamenti'), costo: costoTxt, nota: nota });
+            nota = (x === 'std' ? '1\u00b0 Via' : '2\u00b0 Via') + (zn.zona ? ' ' + zn.zona : '') + ' ' + nota;
+            via[x].push({ t: zn.base + ' [' + z.lbl + ']' + (zn.zona ? ' ' + zn.zona : ''), det: [z.n + (z.n === 1 ? ' collegamento' : ' collegamenti'), km(z.km) + ' km'], costo: costoTxt, nota: nota });
           });
         });
         return;
@@ -7562,16 +7643,17 @@ window.croCmp = (function () {
       if (T.cl === 'rtn') ['std', 'div'].forEach(function (x) {
         if (x === 'div' && !dv) return;
         var na = x === 'div' && nodo2('A') ? nodo2('A').c.nome : (b.ep && b.ep.a ? b.ep.a.nome : ''), nz = x === 'div' && nodo2('Z') ? nodo2('Z').c.nome : (b.ep && b.ep.z ? b.ep.z.nome : '');
-        via[x].push({ t: 'RTN', det: 'Non Valorizzata', costo: '', nota: 'RTN ' + na + ' \u2192 ' + nz + ': Rete Interregionale RTN non gestita dal Gruppo RTR.' });
+        via[x].push({ t: 'RTN', det: 'Non Valorizzata', costo: '', nota: 'RTN ' + na + ' \u2192 ' + nz + ': Rete di Trasporto Nazionale RTN non gestita dal Gruppo RTR.' });
       });
     });
     var n = testa.length + via.std.length + via.div.length + fine.length;
     if (!n) { el('cmpRiep').innerHTML = ''; return; }
-    var riga = function (r, v) { return '<tr' + (v ? ' class="v-' + v + '"' : '') + '><td>' + (v ? '<span class="cmp-rb ' + v + '">' + (v === 'std' ? '1\u00b0 Via (STD)' : '2\u00b0 Via (DIV)') + '</span> ' : '') + esc(r.t) + '</td><td class="dt">' + esc(r.det) + '</td><td class="nt">' + esc(r.nota || '') + '</td><td class="n">' + esc(r.costo || '') + '</td></tr>'; };
+    var riga = function (r, v) { var tt = String(r.t), i = tt.indexOf(' ['); var tH = i > 0 ? esc(tt.slice(0, i)) + '<br><span class="cmp-r2">' + esc(tt.slice(i + 1)) + '</span>' : esc(tt); var dH = Array.isArray(r.det) ? esc(r.det[0]) + '<br><span class="cmp-r2">' + esc(r.det[1]) + '</span>' : esc(r.det);   /* V11.26|093 */
+      return '<tr' + (v ? ' class="v-' + v + '"' : '') + '><td>' + tH + '</td><td class="dt">' + dH + '</td><td class="nt">' + esc(r.nota || '') + '</td><td class="n">' + esc(r.costo || '') + '</td></tr>'; };
     var gruppo = function (v) { return via[v].length ? '<tr class="v-sep ' + v + '"><td colspan="4">' + (v === 'std' ? '1\u00b0 Via (STD)' : '2\u00b0 Via (DIV)') + '</td></tr>' + via[v].map(function (r) { return riga(r, v); }).join('') : ''; };
     el('cmpRiep').innerHTML = '<table class="cmp-riep"><tr><th>Tratta</th><th>Dettaglio</th><th>Note per IRP</th><th>Costo</th></tr>'
       + testa.map(function (r) { return riga(r, ''); }).join('') + gruppo('std') + gruppo('div') + fine.map(function (r) { return riga(r, ''); }).join('')
-      + '<tr><th>Totale</th><th>' + km(kmT) + ' km (code stimate comprese)</th><th></th><th class="n">' + tot.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac</th></tr></table>';
+      + '<tr><th>Totale</th><th>' + km(kmT) + ' km<br><span class="cmp-r2">(code comprese)</span></th><th></th><th class="n">' + tot.toLocaleString('it-IT', { minimumFractionDigits: 2 }) + ' \u20ac</th></tr></table>';
   }
 /* [[CRO:MOD-067-PROGETTAZIONE-MAPPA]] dentro [[CRO:JS-NUCLEO]]: Progettazione: mappa nel popup e a tutto schermo (sfondi, livelli, legenda, gateway, percorso stradale) */
   /* ═══ V11.26|067: MAPPA DELLA PROGETTAZIONE (popup e tutto schermo) ═══
@@ -7631,7 +7713,7 @@ window.croCmp = (function () {
       + gwT + '<div>Rete ' + Object.keys(n.reti).join(' + ') + (ruolo ? ' \u00b7 <b>' + esc(ruolo) + '</b>' : '') + (dove ? ' \u00b7 nel percorso ' + dove.replace(/^nel(lo)? /, '') : '') + '</div></div>';
   }
   function disegnaMappa(div, zona, piccola) {
-    var D = datiMappa(), map = L.map(div, { zoomControl: true, preferCanvas: false });
+    var D = datiMappa(), map = L.map(div, { zoomControl: true, preferCanvas: false, zoomSnap: 0.25, zoomDelta: 0.5, wheelPxPerZoomLevel: 120 });   /* V11.26|095: zoom a passi corti */
     if (typeof window.croSfondoMappa === 'function') window.croSfondoMappa(map);
     else L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(map);
     var g = { std: L.layerGroup(), div: L.layerGroup(), code: L.layerGroup(), cen: L.layerGroup(), rtn: L.layerGroup() }, pts = [], tutti = [];
@@ -7673,7 +7755,7 @@ window.croCmp = (function () {
     D.code.forEach(function (c) { L.polyline([[c.a.lat, c.a.lon], [c.c.lat, c.c.lon]], { color: '#ffffff', weight: 7, opacity: .85 }).addTo(g.code); var lc = L.polyline([[c.a.lat, c.a.lon], [c.c.lat, c.c.lon]], { color: colCoda(), weight: 4, dashArray: '3 5' }); lineeCoda.push(lc); lc.bindTooltip('<div class="cmp-mt"><b>\u3030\uFE0F Coda Zona ' + c.z + '</b><div>' + km(hav(c.a.lat, c.a.lon, c.c.lat, c.c.lon)) + ' km in linea d\u2019aria</div></div>', { sticky: true, className: 'cmp-mtt' }).addTo(g.code); });
     if (D.rtn) {
       var l = L.polyline([[D.rtn.a.lat, D.rtn.a.lon], [D.rtn.b.lat, D.rtn.b.lon]], { color: '#64748b', weight: 4, dashArray: '2 10', opacity: .9 });
-      l.bindTooltip('<div class="cmp-mt"><b>\uD83C\uDF10 RTN</b><div>Rete interregionale non gestita da noi</div><div class="cmp-k">' + esc(D.rtn.a.nome) + ' \u2192 ' + esc(D.rtn.b.nome) + ' \u00b7 ' + km(hav(D.rtn.a.lat, D.rtn.a.lon, D.rtn.b.lat, D.rtn.b.lon)) + ' km in linea d\u2019aria</div></div>', { sticky: true, className: 'cmp-mtt' }).addTo(g.rtn);
+      l.bindTooltip('<div class="cmp-mt"><b>\uD83C\uDF10 RTN</b><div>Rete di Trasporto Nazionale non gestita dal Nostro Gruppo RTR (Rete di Trasporto Regionale)</div><div class="cmp-k">' + esc(D.rtn.a.nome) + ' \u2192 ' + esc(D.rtn.b.nome) + ' \u00b7 ' + km(hav(D.rtn.a.lat, D.rtn.a.lon, D.rtn.b.lat, D.rtn.b.lon)) + ' km in linea d\u2019aria</div></div>', { sticky: true, className: 'cmp-mtt' }).addTo(g.rtn);
       if (!zona) tutti.push([D.rtn.a.lat, D.rtn.a.lon], [D.rtn.b.lat, D.rtn.b.lon]);
     }
     Object.keys(g).forEach(function (k) { g[k].addTo(map); });
@@ -7712,6 +7794,12 @@ window.croCmp = (function () {
       + '<div><span class="mk-s"></span>Sede cliente</div><div><span class="mk-c">A</span>Centrale Colt</div><div><span class="mk-a1"></span>Nodo A1 (RTN)</div>'
       + '<div><span class="mk-n ra"></span>Centrale RA</div><div><span class="mk-n rc"></span>Centrale RC</div><div><span class="mk-n gw"></span>Passaggio RA \u21c4 RC</div></div></div></div>';
   }
+  document.addEventListener('click', function (e) {   /* V11.26|094, 096: la riga riassuntiva apre le tappe e sparisce; nell'intestazione della via compare «Comprimi» */
+    var t = e.target && e.target.closest ? e.target : null; if (!t) return;
+    var mx = t.closest('[data-tlx]'), cz = t.closest('[data-tlc]');
+    if (mx) { var md = mx.nextElementSibling; if (md) md.hidden = false; mx.hidden = true; var via = mx.closest('.cmp-via'), hh = via && via.querySelector('.cmp-via-h'); var tlx = via && via.querySelector('.cmp-tl'); if (tlx && !via.querySelector('[data-tlc]')) (hh || tlx).insertAdjacentHTML(hh ? 'beforeend' : 'beforebegin', '<button type="button" class="cmp-tlc" data-tlc="1" title="Richiudi le tappe in mezzo">\u25B4 Comprimi</button>'); e.stopPropagation(); return; }
+    if (cz) { var v2 = cz.closest('.cmp-via'); if (v2) { v2.querySelectorAll('[data-tlx]').forEach(function (x) { x.hidden = false; }); v2.querySelectorAll('.cmp-tmid').forEach(function (x) { x.hidden = true; }); } cz.remove(); e.stopPropagation(); }
+  }, true);
   document.addEventListener('click', function (e) { var t = e.target && e.target.closest ? e.target.closest('.cmp-leg-t') : null; if (!t) return; e.stopPropagation(); t.parentNode.classList.toggle('chiusa'); }, true);
   function mappaPiccola(cont, zona) {
     if (_dMap) { try { _dMap.remove(); } catch (e) {} _dMap = null; }
@@ -7797,6 +7885,52 @@ window.croCmp = (function () {
     ['rete', '\uD83D\uDFE2', 'Rete RTR', null], ['nodo', '\uD83D\uDD00', 'Nodo A1', ['nodoA', 'nodoZ']], ['rtn', '\uD83C\uDF10', 'RTN', ['rtn']]];
   function palSlots(p) { return p[3] || slotsRete(); }
   function slotEt(t) { return /A$/.test(t) ? 'A' : /Z$/.test(t) ? 'Z' : '1'; }
+
+  /* V11.26|096: righe della card per centrale e nodo. Nome sopra, CLLI sotto; tipo (DATA CENTER, NODO A1…) e
+     zona su due righe; etichette di rete solo quelle che contano per il ruolo, con il bottone di verifica */
+  function nomeDue(c) { return '<div class="cmp-bv">' + esc(c.nome) + '</div><div class="cmp-bc">' + esc(c.clli) + (c.reti && c.reti.RA && !c.reti.RC && Object.keys(c.tipi || {}).sort()[0] ? ' [T' + Object.keys(c.tipi).sort()[0] + ']' : '') + '</div>'; }
+  function geoDue(c) {
+    var g = typeof window.croGeoBadge === 'function' ? window.croGeoBadge(c.nome + ' (' + c.clli + ')', !(c.reti && c.reti.RC)) : null; if (!g) return '';
+    var t = String(g.txt), i = t.indexOf('['), pre = i > 0 ? t.slice(0, i).replace(/[\u25C6\u2666\u00b7\s]+$/, '').replace(/^[\u25C6\u2666\s]+/, '').trim() : '', zona = i >= 0 ? t.slice(i) : t;
+    return '<div class="cmp-gb ' + g.cls + '">' + (pre ? '<span class="cmp-gb-t">\u25C6 ' + esc(pre) + ' \u25C6</span>' : '') + '<span class="cmp-gb-z">' + esc(zona) + '</span></div>';
+  }
+  function tagRuolo(c, ruolo) {
+    var t = [], ti = Object.keys(c.tipi || {}).sort()[0];
+    if (c.reti && c.reti.RC) t.push('<i class="cmp-act rc">RC</i>');
+    if (c.reti && c.reti.RA && ti && (ruolo === 'nodo' ? ti === '1' : (ti === '1' || ti === '2'))) t.push('<i class="cmp-act ra">RA T' + ti + '</i>');
+    if (ruolo === 'nodo' && nodiA1[c.clli]) t.push('<i class="cmp-act a1">Nodo A1</i>');
+    return t.join('');
+  }
+  function etichettaDue(t) { var m = /^(.*?)\s*\(([A-Z0-9]+)\)\s*(\[T\d\])?\s*$/.exec(String(t || '')); return m ? esc(m[1]) + '<small>' + esc(m[2] + (m[3] ? ' ' + m[3] : '')) + '</small>' : esc(t); }
+  function cardB(b, T, cVecchio) {
+    var Lb = slotEt(b.tipo), riga = function (k, v, cls) { return '<div class="cmp-br"><span>' + k + '</span><b' + (cls ? ' class="' + cls + '"' : '') + '>' + v + '</b></div>'; };
+    var grande = function (c, ver) { return nomeDue(c) + geoDue(c) + '<div class="cmp-btag">' + tagRuolo(c, T.cl) + (ver || '') + '</div>'; };   /* V11.26|096 */
+    if (T.cl === 'sede') {
+      if (!b.f.nome && !b.f.indirizzo && !b.f.coord && !b.f.centrale) return '<div class="cmp-k">indirizzo, coordinate o centrale indicata</div>';
+      return '<div class="cmp-bv">' + esc(b.f.nome || '\u2014') + '</div>' + (b.f.centrale ? riga('Colt indicata', etichettaDue(b.f.centrale), 'blu due') : '') + (b.f.centrale2 && divOn() ? riga('Colt 2a Via', etichettaDue(b.f.centrale2), 'vio due') : '')
+        + (b.f.indirizzo ? riga('Indirizzo', esc(b.f.indirizzo)) : '') + (b.f.coord ? riga('Coordinate', esc(b.f.coord)) : '');
+    }
+    if (T.cl === 'coda') {
+      var qc = codaCosto(b), cv = coltVie(Lb);
+      var h = '<div class="cmp-bv">' + (qc && qc.tot != null ? eur(qc.tot) : '<span class="cmp-k">da valorizzare</span>') + '</div>';
+      if (qc && qc.prot) h += riga('Protetta ' + esc(protSol() || ''), esc(String(qc.prot.hw || '').replace(/\s*\[.*$/, ''))) + '<div class="cmp-k">' + esc((String(qc.prot.hw || '').match(/\[(.*)\]/) || [])[1] || '') + '</div>';
+      else if (qc && qc.v2 && qc.tot != null) h += riga('1a Via (Std)', eur(qc.A.tot + qc.B.tot)) + riga('2a Via (Div)' + (qc.v2.uguale ? ' \u00b7 come la 1a' : ''), eur(qc.v2.tot));
+      else if (qc && qc.tot != null) { if (qc.A.tot) h += riga('Sede Cliente', eur(qc.A.tot)); if (qc.B.tot) h += riga('Centrale per il Cliente', eur(qc.B.tot)); if (qc.altro != null) h += riga('Altro', eur(qc.altro)); }
+      if (cv) h += '<div class="cmp-c2"><b>Coda doppia</b>: 1a Via \u2192 ' + esc(cv.std.nome) + ' \u00b7 2a Via \u2192 ' + esc(cv.div.nome) + '</div>';
+      return h;
+    }
+    if ((T.cl === 'centrale' || T.cl === 'nodo') && b.r && b.r.c) {
+      var kmLab = T.cl === 'centrale' ? 'Dalla Sede Cliente' : 'Dalla Centrale Colt';
+      var ver1 = (T.cl === 'centrale' && (b.r.modo === 'indicata' || b.f.daSede) && b.f.verificata !== b.r.c.clli) ? '<button type="button" class="cmp-verb" data-cmpver="' + b.id + '">\u2714 Verificata</button>' : '';
+      var corpo1 = grande(b.r.c, ver1) + (b.r.d != null ? riga(kmLab, km(b.r.d) + ' km') : '');
+      if (!divOn()) return corpo1;
+      if (T.cl === 'nodo' && b.f.stesso2) return corpo1 + '<div class="cmp-stesso">\u21c4 Stesso Nodo A1 per 1a Via (Std) e 2a Via (Div)</div>';   /* V11.26|095 */
+      var q2 = T.cl === 'centrale' ? cen2(Lb) : nodo2(Lb), ver2 = (T.cl === 'centrale' && q2 && q2.modo === 'indicata' && !q2.ver) ? '<button type="button" class="cmp-verb" data-cmpver2="' + b.id + '">\u2714 Verificata</button>' : '';
+      var d2 = q2 ? (T.cl === 'centrale' ? q2.d : (q2.d != null && q2.d < 1e8 ? q2.d : null)) : null;
+      return '<div class="cmp-vb std"><div class="cmp-vb-t">1a Via (Std)</div>' + corpo1 + '</div><div class="cmp-vb div"><div class="cmp-vb-t">2a Via (Div)</div>' + (q2 ? grande(q2.c, ver2) + (d2 != null ? riga(kmLab, km(d2) + ' km') : '') : '<div class="cmp-k">' + (T.cl === 'centrale' ? 'stessa Colt della 1a Via' : 'stesso Nodo A1 della 1a Via') + '</div>') + '</div>';
+    }
+    return cVecchio;
+  }
   function nomeCorto(b) {
     var t = b.tipo, l = slotEt(t);
     return { sede: 'Sede cliente ' + l, coda: 'Coda Zona ' + l, centrale: 'Centrale ' + l + ' (Colt)', nodo: 'Nodo A1 Zona ' + l, rtn: 'RTN', rete: TIPI[t].nome }[TIPI[t].cl] || TIPI[t].nome;
@@ -7846,7 +7980,7 @@ window.croCmp = (function () {
     var T = TIPI[b.tipo];
     if (T.cl === 'sede') return b.f.coord ? ['ok', 'completa'] : b.f.centrale ? ['ok', 'con centrale indicata'] : b.f.indirizzo ? ['wn', 'da geocodificare'] : ['wn', 'da completare'];
     if (T.cl === 'coda') { var q = codaCosto(b); return q && q.tot != null ? ['ok', 'valorizzata'] : ['wn', 'da valorizzare']; }
-    if (T.cl === 'centrale' && viaDoppia()) { var q2s = cen2(slotEt(b.tipo)); if (q2s && q2s.modo === 'indicata' && !q2s.ver) return ['wn', 'da verificare (2a Via)']; }   /* V11.26|087 */
+    if (T.cl === 'centrale' && divOn()) { var q2s = cen2(slotEt(b.tipo)); if (q2s && q2s.modo === 'indicata' && !q2s.ver) return ['wn', 'da verificare (2a Via)']; }   /* V11.26|087 */
     if (T.cl === 'centrale' && b.r && (b.r.modo === 'indicata' || b.f.daSede)) return b.f.verificata === b.r.c.clli ? ['ok', 'indicata e verificata'] : ['wn', 'da verificare'];   /* V11.26|067, 070 */
     if (T.cl === 'centrale' || T.cl === 'nodo') return b.r ? ['ok', b.r.modo === 'man' ? 'a mano' : b.r.modo === 'indicata' ? 'indicata' : 'automatica'] : ['wn', 'da scegliere'];
     if (T.cl === 'rete') return b.f.std ? ['ok', b.f.div ? 'Std e Div scelti' : 'Std scelto'] : ['wn', 'percorsi da scegliere'];
@@ -7865,7 +7999,7 @@ window.croCmp = (function () {
     else if (T.cl === 'centrale' || T.cl === 'nodo') c = b.r ? '<div class="cmp-cen"><span class="cmp-acico">' + SVG_CEN + '</span><span class="cmp-actx"><b>' + esc(acEt(b.r.c)) + '</b><span class="cmp-cen-k">' + acGeo(b.r.c) + acTag(b.r.c) + '</span><span class="cmp-k">' + (b.r.d != null ? km(b.r.d) + ' km dalla sede \u00b7 ' : '') + (b.r.modo === 'auto' ? 'la pi\u00f9 vicina' : (b.r.modo === 'indicata' || b.f.daSede) ? 'scelta nella ' + esc(nomeCorto(trova('sede' + slotEt(b.tipo)) || b)) : 'scelta a mano') + '</span></span></div>' + ((b.r.modo === 'indicata' || b.f.daSede) && b.f.verificata !== b.r.c.clli ? '<button type="button" class="cmp-verb" data-cmpver="' + b.id + '" title="Confermi che la centrale indicata nella sede \u00e8 giusta">\u2714 Verificata</button>' : '')
       : '<div class="cmp-k">' + (T.cl === 'nodo' ? 'serve la centrale della zona' : 'servono le coordinate della sede o una centrale indicata') + '</div>';
     else if (T.cl === 'rtn') c = b.ep && b.ep.a && b.ep.z ? '<div class="cmp-k">' + esc(b.ep.a.nome) + ' \u2192 ' + esc(b.ep.z.nome) + '</div>' : '';
-    if ((T.cl === 'centrale' || T.cl === 'nodo') && viaDoppia() && b.r && b.r.c) {   /* V11.26|088: due blocchi uguali, 1a Via blu e 2a Via viola */
+    if ((T.cl === 'centrale' || T.cl === 'nodo') && divOn() && b.r && b.r.c) {   /* V11.26|088: due blocchi uguali, 1a Via blu e 2a Via viola */
       var Lv = slotEt(b.tipo), m1 = b.r.modo === 'auto' ? 'la pi\u00f9 vicina' : (b.r.modo === 'indicata' || b.f.daSede) ? 'scelta nella ' + esc(nomeCorto(trova('sede' + Lv) || b)) : 'scelta a mano';
       var v1 = (b.r.d != null ? km(b.r.d) + ' km dalla sede \u00b7 ' : '') + m1, x1 = (T.cl === 'centrale' && (b.r.modo === 'indicata' || b.f.daSede) && b.f.verificata !== b.r.c.clli) ? '<button type="button" class="cmp-verb" data-cmpver="' + b.id + '">\u2714 Verificata</button>' : '';
       var q2 = T.cl === 'centrale' ? cen2(Lv) : nodo2(Lv), v2, x2 = '';
@@ -7873,8 +8007,9 @@ window.croCmp = (function () {
       else v2 = q2 ? (q2.modo === 'auto' ? 'l\u2019altro Nodo A1 dell\u2019area' + (q2.d != null && q2.d < 1e8 ? ' \u00b7 ' + km(q2.d) + ' km dalla centrale' : '') : q2.modo === 'man' ? 'scelto a mano' : 'stesso Nodo A1 della 1a Via (l\u2019area ne ha uno solo)') : 'stesso della 1a Via';
       c = viaBox('1a Via (Std)', 'std', b.r.c, v1, x1) + viaBox('2a Via (Div)', 'div', q2 ? q2.c : null, v2, x2);
     }
-    return '<div class="cmp-c ' + T.cl + '" data-cmpc="' + b.id + '"><div class="cmp-c-h">' + T.ic + '<b>' + esc(nomeCorto(b)) + '</b>' + (T.cl === 'rtn' ? '<i class="cmp-rtn-k">(rete interregionale non gestita da noi, solo passaggio fra le zone)</i>' : '') + '<span class="cmp-st ' + st[0] + '">' + st[1] + '</span>'
-      + (T.cl !== 'rtn' ? '<button type="button" class="cmp-cx" data-cmpx="' + b.id + '" title="Apri il dettaglio">\u2922</button>' : '') + '<button type="button" class="cmp-cx" data-cmpdel="' + b.id + '" title="Togli il blocco">\u2715</button></div><div class="cmp-c-b">' + c + '</div></div>';
+    c = cardB(b, T, c);   /* V11.26|093: contenuto nel formato B */
+    return '<div class="cmp-c cmp-cb ' + T.cl + '" data-cmpc="' + b.id + '"><div class="cmp-cb-ic">' + T.ic + '</div><div class="cmp-cb-b"><div class="cmp-c-h"><b>' + esc(nomeCorto(b)) + '</b>' + (T.cl === 'rtn' ? '<i class="cmp-rtn-k">(Rete di Trasporto Nazionale non gestita dal Nostro Gruppo RTR (Rete di Trasporto Regionale))</i>' : '') + '<span class="cmp-st ' + st[0] + '">' + st[1] + '</span>'
+      + (T.cl !== 'rtn' ? '<button type="button" class="cmp-cx" data-cmpx="' + b.id + '" title="Apri il dettaglio">\u2922</button>' : '') + '<button type="button" class="cmp-cx" data-cmpdel="' + b.id + '" title="Togli il blocco">\u2715</button></div><div class="cmp-c-b">' + c + '</div></div></div>';
   }
   var _ccache = {};
   function costoC(r) { var k = (r.edges || []).map(function (e) { return e.id; }).join('|') + '#' + ((el('cmpCap') || {}).value || ''); if (!_ccache[k]) _ccache[k] = costo(r); return _ccache[k]; }
@@ -27464,7 +27599,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 092 | Nov 2026</div>
+<div class="version-tag">V11.26 | 096 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -27722,7 +27857,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 092</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 096</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -27739,7 +27874,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 092</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 096</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -27760,7 +27895,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 092</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 096</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -27778,7 +27913,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 092</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 096</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -27795,7 +27930,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 092</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 096</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -27811,7 +27946,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 092</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 096</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -28275,7 +28410,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 092</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 096</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -28425,8 +28560,48 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🛡️ Novità V11.26 | 092 | Nov 2026</span>
+                  <span class="cl-ver">🧩 Novità V11.26 | 096 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🟢 Linea del percorso</strong>: «mostra tutte» apre le tappe e la riga riassuntiva sparisce; in alto a destra compare «▴ Comprimi» per richiuderle. L’intestazione conta solo i collegamenti veri e scrive a parte i passaggi di rete («13 collegamenti · 2 passaggi RA ⇄ RC»)</li><li><strong>🧩 Card</strong>: in tutti e tre gli schemi nome e CLLI stanno sempre su due righe (anche la «Colt indicata» della sede); il tipo e la zona vanno su due righe («◆ DATA CENTER ◆», «◆ NODO A1 ◆», «◆ NODO A1 Div · NO PE ◆» e sotto [Area – Zona – Regione]); le etichette di rete stanno su una riga con «✔ Verificata» e mostrano solo quelle del ruolo (Colt: RC e RA T1/T2; Nodo A1: RC, RA T1 e Nodo A1)</li><li><strong>🟢 Comprimi</strong>: compare nell’intestazione della via, a destra, senza spingere in basso le centrali</li><li><strong>🔀 Interruttore del Nodo A1</strong>: a tutta larghezza, leggibile anche nel popup stretto</li><li><strong>📋 Riepilogo</strong>: intestazione grigia sobria, fasce «1° Via» e «2° Via» chiare con il colore solo nel testo e nel bordo, righe bianche</li><li><strong>✨ Bottoni</strong>: Schema e Progettazione hanno la stessa animazione di Capacità; il Wizard è grigio scuro e al passaggio del mouse diventa blu scuro</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🌐 Novità V11.26 | 095 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🟢 Linea del percorso</strong>: «mostra tutte» apre le tappe e la riga riassuntiva sparisce; in alto a destra compare «▴ Comprimi» per richiuderle. L’intestazione conta solo i collegamenti veri e scrive a parte i passaggi di rete («13 collegamenti · 2 passaggi RA ⇄ RC»)</li><li><strong>🔀 Stesso Nodo A1</strong>: nel popup è un interruttore allineato sotto «Nodo A1 2a Via (Div)»; acceso, la card mostra un solo nodo con la riga «Stesso Nodo A1 per 1a Via (Std) e 2a Via (Div)»</li><li><strong>🗺️ Zoom</strong>: le mappe della Progettazione ingrandiscono a passi più corti (mezzo livello con i bottoni, rotella più dolce)</li><li><strong>🟢 Mostra e comprimi</strong>: nella linea del percorso, cliccando «mostra tutte» la riga riassuntiva sparisce e compaiono tutte le tappe; per richiuderle c’è «▴ Comprimi» in alto a destra della via</li><li><strong>🌐 RTN</strong>: nelle note per IRP «Rete di Trasporto Nazionale RTN non gestita dal Gruppo RTR.»; nella card e sulla mappa «Rete di Trasporto Nazionale non gestita dal Nostro Gruppo RTR (Rete di Trasporto Regionale)»</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🟢 Novità V11.26 | 094 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🟢 Linea del percorso</strong>: nella card della rete lo Std e il Div sono due colonne con la linea del percorso: le centrali sono pallini allineati al nome (rossi RC, blu RA con il tipo sede [Tn], sfumati con ⇄ dove si passa da RA a RC, con i due lati come «AVERSA (AVERITAH) [T1] RA ⇄ RC AVERSA (AVERITAH)») e fra l’uno e l’altro c’è il collegamento con il suo stato. Con più di 8 centrali le tappe in mezzo si chiudono in una riga blu («altre N centrali e M collegamenti (K da verificare) · mostra tutte»)</li><li><strong>🔀 Stesso Nodo A1</strong>: nel popup del Nodo A1 la spunta «2a Via: stesso Nodo A1 della 1a Via», con o senza protezione</li><li><strong>✨ Bottoni</strong>: al passaggio del mouse non si sollevano più, come negli altri tab</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧩 Novità V11.26 | 093 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧩 Card nuove</strong>: sede, coda, Colt e Nodo A1 hanno una fascia colorata con l’icona, il tipo in piccolo e il dato principale in grande; la sede mostra la «Colt indicata» in blu; la coda il costo, la protezione e gli apparati (i km stanno nel popup); la Colt «Dalla Sede Cliente», il Nodo A1 «Dalla Centrale Colt»; «scelta a mano» e simili solo nel popup</li><li><strong>🔀 Nodi A1 della regione</strong>: il Nodo A1 proposto è il più vicino alla Colt fra quelli della sua regione; il popup li elenca tutti con i km dalla Colt, anche dopo una scelta a mano</li><li><strong>🏢 La Colt comanda</strong>: scegliendo la centrale nella card della Colt, la sede si aggiorna da sola</li><li><strong>📋 Riepilogo e note</strong>: tratta e dettaglio su due righe («Rete RTR» / «[RC] Zona A», collegamenti / km), totale «(code comprese)» sotto, costo su una riga; note con «1° Via Zona A …»; con il protetto la 2° Via non ha hardware né costi e dice «La valorizzazione dei costi è già inclusa nel Trasporto DWDM della 1° Via.» («Inclusi nella 1° Via» nel costo), uguale nel foglio IRP</li><li><strong>✨ Bottoni</strong>: ① Cerca percorsi nell’Unificato → ② Importa Std → ③ Importa Div in fila; schema, capacità, rete, protezione scelti e Wizard si animano al passaggio del mouse</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🛡️ Novità V11.26 | 092 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -36154,13 +36329,13 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧩 Schemi</strong>: «Stessa regione» prepara 7 blocchi (Sede A, Coda A, Centrale A, Rete RTR, Centrale Z, Coda Z, Sede Z). «Interregionale» ne prepara 11: Rete RTR Zona A e Zona Z, i due Nodi A1 e la RTN in mezzo. «Verso Nodo A1» ne prepara 5: Sede A, Coda A, Centrale A, Rete RTR e Nodo A1. Cambiando schema i dati già inseriti restano: la Rete RTR diventa Rete Zona A e viceversa, e un avviso dice se qualche blocco compilato viene tolto.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">👀 Come si legge la pagina</strong>: tre colonne. A sinistra il lato A (sede, coda, centrale e, con l’Interregionale, il Nodo A1), al centro la rete, a destra il lato Z in ordine speculare. Ogni card mostra un riassunto e lo stato (completa, valorizzata, da completare, da verificare, a mano…). Il clic sulla card, o su ⤢, apre il dettaglio in un popup con tutti i campi; «←» e «→» passano al blocco vicino. I popup si chiudono solo con «Fatto» o con ✕. ✕ sulla card toglie il blocco, dopo una conferma.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">➕ Aggiungere un blocco</strong>: la fila «Aggiungi un blocco» ha sei tipi (Sede cliente, Coda, Centrale Colt, Rete RTR, Nodo A1, RTN) con i loro lati: verdi quelli già presenti. Il clic mette il blocco nel primo lato libero dello schema, prima A e poi Z; se sono tutti occupati compare l’avviso «Forse hai scelto il blocco sbagliato». La RTN aggiunta a «Stessa regione» o «Verso Nodo A1» propone di passare all’Interregionale; un Nodo A1 in «Stessa regione» propone «Verso Nodo A1» o l’Interregionale; togliendo la RTN si torna a «Stessa regione».</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏠 Sede cliente</strong>: nome, indirizzo (con «Geocodifica»), coordinate e «Centrale indicata (Colt)», cioè la centrale passata dal cliente. La centrale indicata e la «Centrale a mano» della Centrale della stessa zona sono sempre uguali: scrivendo l’una si compila l’altra, e se dall’altra parte c’è già una centrale diversa lo strumento chiede se sostituirla. Con Std + Div c’è anche la «Centrale indicata (Colt) 2a Via (Div)», facoltativa: se resta vuota il Div usa la stessa Colt della 1a Via.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏠 Sede cliente</strong>: nome, indirizzo (con «Geocodifica»), coordinate e «Centrale indicata (Colt)», cioè la centrale passata dal cliente. La centrale indicata e la «Centrale a mano» della Centrale della stessa zona sono sempre uguali: comanda la card della Centrale (Colt): scegliendo lì la centrale, la sede si aggiorna da sola; scrivendo nella sede, la Colt si aggiorna se non era stata scelta a mano, altrimenti lo strumento chiede. Con Std + Div c’è anche la «Centrale indicata (Colt) 2a Via (Div)», facoltativa: se resta vuota il Div usa la stessa Colt della 1a Via.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏢 Centrale Colt di attestazione</strong>: l’ordine è questo. Prima la centrale scelta a mano o indicata nella sede (se arriva dalla sede è «da verificare» finché non premi «✔ Verificata»). Altrimenti la più vicina in linea d’aria alla sede fra le centrali RC e le RA di tipo 1 e 2: le RA di tipo 3 sono solo di transito. Le alternative vicine sono elencate con i km. Il menu delle centrali è quello dei tab di ricerca: nome, CLLI, [Tn] per la RA, seconda riga [Area – Zona – Regione] ed etichette RC, RA, Nodo A1. Con Std + Div la card ha anche la «Colt 2a Via (Div)», scelta a mano o indicata nella sede (allineate come la prima, «da verificare» finché non premi «✔ Verificata»): «Cerca nell’Unificato» la mette in Partenza 2 o Arrivo 2, la coda diventa doppia (una per Colt) e nella card della rete un avviso dice se il Div importato non parte o non arriva da lì. Sulla mappa è il cerchio verde scuro A2 o Z2.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🔀 Nodo A1</strong>: per ogni zona, il più vicino in linea d’aria alla centrale della zona; si può sceglierne un altro. Nel campo «Nodo A1 a mano» i Nodi A1 stanno in testa al menu, le altre centrali sotto con l’avviso «non sono Nodi A1». Con Std + Div la card ha anche il Nodo A1 della 2a Via: di partenza è l’altro Nodo A1 della stessa area più vicino (per esempio ROMA SUD per lo Std e ROMA INVIOLATELLA per il Div); se l’area ne ha uno solo resta lo stesso; si può scegliere a mano. La ricerca dei Div usa questi nodi in Arrivo 2 e Partenza 2, e la RTN della 2a Via va fra i Nodi A1 della 2a Via. Sul lato di un Nodo A1 la coda non serve.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🔀 Nodo A1</strong>: per ogni zona, il più vicino in linea d’aria alla Centrale Colt fra i Nodi A1 della sua regione; nel popup ci sono tutti i Nodi A1 della regione con i km dalla Colt e se ne può scegliere un altro. Nel campo «Nodo A1 a mano» i Nodi A1 stanno in testa al menu, le altre centrali sotto con l’avviso «non sono Nodi A1». Con Std + Div la card ha anche il Nodo A1 della 2a Via: di partenza è l’altro Nodo A1 della stessa area più vicino (per esempio ROMA SUD per lo Std e ROMA INVIOLATELLA per il Div); se l’area ne ha uno solo resta lo stesso; si può scegliere a mano. La ricerca dei Div usa questi nodi in Arrivo 2 e Partenza 2, e la RTN della 2a Via va fra i Nodi A1 della 2a Via. Nel popup la spunta «2a Via: stesso Nodo A1 della 1a Via» usa lo stesso nodo per le due vie, con o senza protezione. Sul lato di un Nodo A1 la coda non serve.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">〰️ Coda</strong>: collega la sede del cliente alla centrale Colt. I km sono in linea d’aria e, se il servizio delle strade risponde, anche a piedi; si possono scrivere a mano. Il costo si costruisce con «Apparati…» dal listino Apparati &amp; Cestelli dell’Analisi Costi, divisi fra «Sede Cliente» (presso il cliente) e «Centrale per il Cliente», più un eventuale importo libero. Con Std + Div non protetto la coda vale per due vie: nel popup ci sono «1a Via (Std)» e «2a Via (Div)», con «2a Via uguale alla 1a» spuntata di partenza. «Applica e copia su Coda Zona Z» (o A) copia tutto sull’altra zona, nota compresa. Se lo Std e il Div partono (o arrivano) da Colt diverse, la coda di quella zona è doppia: la card lo segnala con le due Colt e i km, e nel riepilogo ci sono due righe, «1° Via (STD)» e «2° Via (DIV)», ognuna verso la sua Colt. Con Protetto vale la coda del listino dei protetti.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🟢 Rete RTR</strong>: partenza e arrivo sono la centrale o il Nodo A1 subito prima e subito dopo nella catena. «Cerca nell’Unificato» lancia la ricerca nel tab Unificato; quando gli Std, e poi i Div, sono pronti, un riquadro in basso a destra riporta qui e prende da solo lo Std e il Div scelti nella tabella (spuntati nella barra export, o lo Std di cui hai aperto i Div). «Importa Std» e «Importa Div» li scelgono da una lista. La card mostra per Std e Div prima il routing delle centrali («Nome (CLLI) [Tn]», [Tn] solo per la RA, gateway «RA ⇄ RC» in viola), poi i collegamenti con lo stato del DB (verde attivo, ambra da verificare; per la RA l’Id Collegamento univoco del DB RA). «Verificare su NNI lo stato di N Collegamenti» conta quelli non attivi. Sotto c’è il controllo delle C-FOS in comune fra Std e Div.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🟢 Rete RTR</strong>: partenza e arrivo sono la centrale o il Nodo A1 subito prima e subito dopo nella catena. «Cerca nell’Unificato» lancia la ricerca nel tab Unificato; quando gli Std, e poi i Div, sono pronti, un riquadro in basso a destra riporta qui e prende da solo lo Std e il Div scelti nella tabella (spuntati nella barra export, o lo Std di cui hai aperto i Div). «Importa Std» e «Importa Div» li scelgono da una lista. La card mostra per Std e Div la linea del percorso: le centrali sono pallini (rossi RC, blu RA con il [Tn], sfumati con ⇄ nel passaggio RA/RC) e fra un pallino e l’altro c’è il collegamento con lo stato del DB (verde attivo, ambra da verificare, linea tratteggiata; per la RA l’Id Collegamento univoco del DB RA). Oltre 8 centrali le tappe in mezzo si chiudono in una riga che dice quante sono e quante da verificare: un clic le apre. «Verificare su NNI lo stato di N Collegamenti» conta quelli non attivi. Sotto c’è il controllo delle C-FOS in comune fra Std e Div.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">⚙️ Capacità, Std + Div e Protezione</strong>: la capacità (1G, 10G, 100G) vale per i costi di tutte le reti. Con «Solo Std» ogni rete ha solo lo Std, con «Std + Div» anche il Div. Con SNCP o E2E il trasporto protetto esiste solo su rete RC: i percorsi che passano dalla RA sono «da rivedere», e nel wizard l’interruttore «Solo RC» (spento di partenza) li esclude.</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🌐 RTN</strong>: è la rete interregionale non gestita da noi e indica solo il passaggio fra i due Nodi A1. Non ha configurazione e non si valorizza nei costi; la consegna va condivisa con Stefano Gentile. Nel riepilogo e nel foglio IRP c’è una riga RTN per ogni via (1° Via e, con il Div, 2° Via).</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🌐 RTN</strong>: è la Rete di Trasporto Nazionale, non gestita dal Nostro Gruppo RTR (Rete di Trasporto Regionale), e indica solo il passaggio fra i due Nodi A1. Non ha configurazione e non si valorizza nei costi; la consegna va condivisa con Stefano Gentile. Nel riepilogo e nel foglio IRP c’è una riga RTN per ogni via (1° Via e, con il Div, 2° Via).</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📋 Riepilogo e totale</strong>: sotto le card, una riga per la coda di ogni zona e una riga per ogni sezione di rete di Std e Div (per esempio «Rete RTR STD [RA1]», «[RC]», «[RA2]»), con Dettaglio (km e collegamenti), «Note per IRP» (la nota da riportare nell’IRP, con apparati, collegamenti e i 180 giorni se c’è da realizzare) e costo. La barra in fondo somma reti e code, dice cosa resta da completare e ha «Mappa», «TXT della Progettazione» ed «Export completo».</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🗺️ Mappa</strong>: nel popup della rete, delle centrali e dei Nodi A1, e a tutto schermo con «Mappa» o ⤢. Gli sfondi sono quelli dei tab. Linee rosse per la RC e blu per la RA, piene per lo Std e tratteggiate per il Div; coda verde (gialla sugli sfondi satellitari); RTN grigia. Centrale Colt in verde acqua con A o Z, Nodo A1 a rombo viola, sede arancio, centrali RA e RC piene, gateway più grande con ⇄. Col mouse ogni collegamento e ogni centrale mostrano tutte le informazioni. I livelli «Percorso stradale RA» e «Percorso stradale RC» disegnano il tragitto sulle strade, solo come disegno: i km restano quelli del DB. Con l’Interregionale ci sono le viste Italia intera, A e Z affiancate, Solo zona A, Solo zona Z. La legenda si apre e si chiude. Serve la libreria delle mappe (Leaflet): se la rete la blocca compare un avviso.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧭 Wizard</strong>: compila la progettazione passo per passo. Si apre dal bottone «Wizard», dall’Overview («Avvia Wizard»), dai tab RC e Unificato («Wizard da questa ricerca», con Partenza, Arrivo e Posizione Cliente) e dalla barra export dell’Unificato («Continua nel wizard», con Std e Div già scelti). Anche il wizard è sperimentale.</p></li>
@@ -47729,7 +47904,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 092 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 096 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -47748,6 +47923,50 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🧩 V11.26 | 096 | Nov 2026 | Card su due righe, riepilogo sobrio, bottoni
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧩 096</strong>: <code>nomeDue()</code>, <code>geoDue()</code> (dal testo di <code>croGeoBadge</code>), <code>tagRuolo(c, ruolo)</code>, <code>etichettaDue()</code> in <code>cardB()</code>; «Comprimi» inserito in <code>.cmp-via-h</code>; regole CSS del riepilogo con specificità più alta. Richieste di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🌐 V11.26 | 095 | Nov 2026 | Stesso Nodo A1, zoom e Rete di Trasporto Nazionale
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🗺️ 095</strong>: <code>L.map</code> con <code>zoomSnap: 0.25</code>, <code>zoomDelta: 0.5</code>, <code>wheelPxPerZoomLevel: 120</code>; interruttore <code>.cmp-sw</code>; <code>cardB()</code> con un solo blocco quando <code>b.f.stesso2</code>. Richieste di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🟢 V11.26 | 094 | Nov 2026 | Linea del percorso nella Rete RTR
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🟢 lineaPercorso(r)</strong>: tappe da <code>r.nodes</code> (gateway uniti), collegamenti da <code>r.edges</code> senza XFER, chiusura delle tappe oltre 8 con <code>data-tlx</code>; <code>b.f.stesso2</code> per il Nodo A1 della 2a Via. Richieste di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🧩 V11.26 | 093 | Nov 2026 | Card nuove, Nodi A1 della regione, note per via
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧩 093</strong>: <code>cardB()</code> per il contenuto delle card; <code>regioneDi()</code> e <code>nodiRegione()</code> in <code>calcola()</code> e <code>nodo2()</code>; <code>divOn()</code> per la 2a Via anche con il protetto; nel foglio IRP le righe di trasporto protette della 2° Via senza <code>bp</code> e con la frase sui costi, prefisso «N° Via Zona X» con <code>_pref()</code>. Richieste di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             🛡️ V11.26 | 092 | Nov 2026 | Foglio Protezione nell’ordine del percorso
           </summary>
@@ -89763,7 +89982,7 @@ window._buildUnifiedCostBlock = function(opts) {
     function rigaCoda(c, lato){
       var r = { via: via, ba: 'DWDM/C', gg: 60, a: c ? { nome: c.nome, clli: _s(c.clli).toUpperCase() } : null, z: null };
       if (PX){
-        if ((nVia || 1) > 1){ r.note = 'La valorizzazione \u00e8 gi\u00e0 stata inclusa nei costi della Coda DWDM in 1a Via.'; return r; }
+        if ((nVia || 1) > 1){ r.note = 'La valorizzazione dei costi \u00e8 gi\u00e0 inclusa nella Coda DWDM della 1\u00b0 Via.'; return r; }   /* V11.26|093 */
         var q = lato === 'Z' ? PX.codaZ : PX.codaA;
         if (q){
           if (q.costo != null){ if (PX.sol === 'SNCP'){ r.bn = Math.round(q.costo / 2); r.bo = Math.round(q.costo / 2); } else r.bp = Math.round(q.costo); }
@@ -89818,8 +90037,9 @@ window._buildUnifiedCostBlock = function(opts) {
         if (x.ba !== 'DWDM/R') return;
         if (tr.ra || raQui){ x.bp = null; x.note = 'Protezione ' + PX.nome + ' da rivedere (percorso con rete RA). ' + String(x.note || '').replace(/^(Rete R[AC]): [^\[]*?-- \[/, '$1: ['); return; }
         var tz = (tr.perTec && tr.perTec[x.no ? 'adtran' : 'huawei']) || tr;   /* V11.26|046: listino della zona della sezione */
-        x.bp = tz.costo != null ? Math.ceil(tz.costo - 1e-9) : null;   /* arrotondato per eccesso */
-        x.note = 'Rete ' + (x.rete || 'RC') + ': [Protetto ' + PX.sol + '] ' + (tz.irpHw || tz.hw) + ' - [' + (x.lista || '') + ']' + (x.giorni ? ' - ' + x.giorni : '') + '.';
+        var v1 = (nVia || 1) === 1;   /* V11.26|093: costo e hardware solo nella 1\u00b0 Via */
+        x.bp = v1 && tz.costo != null ? Math.ceil(tz.costo - 1e-9) : null;   /* arrotondato per eccesso */
+        x.note = 'Rete ' + (x.rete || 'RC') + ': [Protetto ' + PX.sol + '] ' + (v1 ? (tz.irpHw || tz.hw) + ' ' : '') + '-- [' + String(x.lista || '').replace(/ \+ /g, ' \u2192 ') + ']' + (x.giorni ? ' -- ' + x.giorni : '') + '.' + (v1 ? '' : ' La valorizzazione dei costi \u00e8 gi\u00e0 inclusa nel Trasporto DWDM della 1\u00b0 Via.');
       });
     }
     return righe;
@@ -89836,16 +90056,18 @@ window._buildUnifiedCostBlock = function(opts) {
     var capEl = document.getElementById(isUni ? 'unifiedCostCapacity' : 'rcIrpCapacity'), thEl = isUni ? document.getElementById('unifiedCostThreshold') : null;
     var cap = capEl ? capEl.value : '', soglia = thEl ? (Number(thEl.value) || 250) : 250;
     var tutte = [];
+    var _pref = function(){ tutte.forEach(function(x){ if (x.ba === 'DWDM/R' && x.note && !/^\d\u00b0 Via/.test(x.note)) x.note = x.via + (x.zona ? ' ' + x.zona : '') + ' ' + x.note; }); };   /* V11.26|093 */
     data.forEach(function(d, iv){
       if (d && d.parti){   /* V11.26|085: una via dalla A alla Z con la RTN in mezzo */
         d.parti.forEach(function(pt, ip){
-          if (ip > 0 && d.rtn) tutte.push({ via: (iv + 1) + '\u00b0 Via', ba: 'RTN', a: d.rtn.a, z: d.rtn.z, note: 'RTN ' + (d.rtn.a ? d.rtn.a.nome : '') + ' \u2192 ' + (d.rtn.z ? d.rtn.z.nome : '') + ': Rete Interregionale RTN non gestita dal Gruppo RTR.' });
-          _irpRighe(pt, isUni, cap, soglia, iv + 1).forEach(function(x){ tutte.push(x); });
+          if (ip > 0 && d.rtn) tutte.push({ via: (iv + 1) + '\u00b0 Via', ba: 'RTN', a: d.rtn.a, z: d.rtn.z, note: 'RTN ' + (d.rtn.a ? d.rtn.a.nome : '') + ' \u2192 ' + (d.rtn.z ? d.rtn.z.nome : '') + ': Rete di Trasporto Nazionale RTN non gestita dal Gruppo RTR.' });
+          _irpRighe(pt, isUni, cap, soglia, iv + 1).forEach(function(x){ if (d.parti.length > 1) x.zona = ip === 0 ? 'Zona A' : 'Zona Z'; tutte.push(x); });
         });
         return;
       }
       _irpRighe(d, isUni, cap, soglia, iv + 1).forEach(function(x){ tutte.push(x); });
     });
+    _pref();
     var nDati = Math.max(17, tutte.length + 1), ultima = IRP_PRIMA + nDati - 1;
     for (var i = 0; i < nDati; i++) _irpRiga(ws, 13, IRP_PRIMA + i);
     ws.getCell('B' + IRP_PRIMA).value = 1;
@@ -89900,7 +90122,7 @@ window._buildUnifiedCostBlock = function(opts) {
     var rigaCodaP = function (nome, q) { if (!q) return; var nt = q.costo == null ? 'IRP: costo da indicare' : P.sol === 'SNCP' ? 'IRP: met\u00e0 in colonna BN (' + euT(Math.round(q.costo / 2)) + '), met\u00e0 in colonna BO (' + euT(Math.round(q.costo / 2)) + ')' : 'IRP: unica cifra in colonna BP (' + euT(Math.round(q.costo)) + ')';
       riga([nome, P.nome, 'Adtran/Sirti', q.hw, q.sede ? '[' + q.sede + ']' : '', q.centrale ? '[' + q.centrale + ']' : '', eu(q.costo), nt + (q.mod ? ' \u00b7 valore modificato' : '')]); };
     rigaCodaP('Coda lato A', P.codaA);
-    if (P.trasporto) riga(['Trasporto RC', P.nome, P.trasporto.ra ? 'da rivedere (rete RA)' : P.trasporto.tec, P.trasporto.hw || '', '', '', eu(P.trasporto.costo), P.trasporto.nota || ('IRP: in colonna BP' + (P.trasporto.costo != null ? ' (' + euT(Math.ceil(P.trasporto.costo - 1e-9)) + ')' : '') + ' su tutte le righe di trasporto, 1\u00b0 e 2\u00b0 Via, arrotondato per eccesso')]);
+    if (P.trasporto) riga(['Trasporto RC', P.nome, P.trasporto.ra ? 'da rivedere (rete RA)' : P.trasporto.tec, P.trasporto.hw || '', '', '', eu(P.trasporto.costo), P.trasporto.nota || ('IRP: in colonna BP' + (P.trasporto.costo != null ? ' (' + euT(Math.ceil(P.trasporto.costo - 1e-9)) + ')' : '') + ' sulle righe di trasporto della 1\u00b0 Via, arrotondato per eccesso; la 2\u00b0 Via \u00e8 gi\u00e0 inclusa')]);
     rigaCodaP('Coda lato Z', P.codaZ);
     var tot = [P.codaA, P.codaZ, P.trasporto].reduce(function (s, x) { return s + (x && x.costo != null ? x.costo : 0); }, 0);
     var ct = ws.getCell(r, 6); ct.value = 'Totale'; ct.font = { bold: true }; var cv = ws.getCell(r, 7); cv.value = eu(tot); cv.numFmt = '#,##0.00'; cv.font = { bold: true };
@@ -99656,7 +99878,8 @@ body.dark-mode .wz-in { background: #0f172a; color: #e2e8f0; border-color: #3341
 .wz-sns { display: grid; grid-template-columns: 1fr 1fr; gap: .35rem .8rem; margin-top: .5rem; } .wz-sn { display: flex; align-items: center; justify-content: space-between; gap: .5rem; font-size: .76rem; color: #334155; border: 1px solid #e2e8f0; border-radius: 8px; padding: .3rem .5rem; background: #fff; }
 .wz-seg-s button { padding: 3px 12px; font-size: .74rem; } .wz-seg-s button[data-v="SI"].on, .wz-seg-s button[data-v="1"].on { background: #16a34a; } .wz-seg-s button[data-v="NO"].on, .wz-seg-s button[data-v="0"].on { background: #64748b; }
 body.dark-mode .wz-sn { background: #1e293b; border-color: #334155; color: #e2e8f0; }
-.cmp-wzb { background: #1f3864 !important; color: #fff !important; border-color: #1f3864 !important; font-weight: 700; }   /* V11.26|024: wizard */
+.cmp-wzb { background: #475569 !important; color: #fff !important; border-color: #475569 !important; font-weight: 700; transition: background .15s, border-color .15s; }
+.cmp-wzb:hover { background: #1f3864 !important; border-color: #1f3864 !important; }   /* V11.26|096 */   /* V11.26|024: wizard */
 .wz-velo { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100005; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(2px); animation: wzVelo .2s ease; }
 .wz-velo[hidden] { display: none; }
 .wz-box { width: min(940px, 94vw); height: min(700px, 90vh); background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(0,0,0,.35); display: flex; flex-direction: column; overflow: hidden; animation: wzBox .26s cubic-bezier(.2,.8,.2,1); }
@@ -99778,7 +100001,79 @@ body.dark-mode .exb-grp, body.dark-mode .exb .exb-chip { background: #1e293b; bo
 .expsm-ds-ctrl-et { font-size: .72rem; font-weight: 700; color: #15803d; white-space: nowrap; }
 body.dark-mode .expsm-ds-ctrl { background: #052e16; border-color: #166534; } body.dark-mode .expsm-ds-ctrl-et { color: #86efac; }
 .cmp-modale { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
-.cmp-modale[hidden] { display: none; }
+.cmp-modale[hidden] { display: none; }/* V11.26|096: card, popup, riepilogo e bottoni */
+.cmp-bv { line-height: 1.2; } .cmp-bc { font-size: .72rem; font-weight: 700; color: #64748b; margin-bottom: 3px; }
+.cmp-gb { display: inline-flex; flex-direction: column; gap: 0; padding: 2px 7px; border-radius: 5px; font-size: .66rem; line-height: 1.35; margin: 1px 0 3px; border: 1px solid #fed7aa; background: #fff7ed; color: #9a3412; }
+.cmp-gb.cro-geo-a1 { border-color: #ddd6fe; background: #f5f3ff; color: #5b21b6; } .cmp-gb.cro-geo-dc { border-color: #fecdd3; background: #fff1f2; color: #be123c; } .cmp-gb.cro-geo-div { border-color: #fdba74; background: #fff7ed; color: #c2410c; }
+.cmp-gb-t { font-weight: 800; letter-spacing: .03em; }
+.cmp-btag { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 2px 0 3px; } .cmp-btag .cmp-verb { margin: 0 0 0 auto; }
+.cmp-br b.due { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.2; } .cmp-br b.due small { font-size: .7rem; font-weight: 700; opacity: .8; }
+/* interruttore del popup a tutta larghezza */
+.cmp-sw { width: 100%; flex: 1 1 100%; grid-column: 1 / -1; } .cmp-sw span { flex: 1; min-width: 0; white-space: normal; display: block; }
+#tab-compositore .cmp-dett-c .cmp-sez { grid-column: 1 / -1; width: 100%; }
+/* riepilogo: fasce delle vie discrete, intestazione sobria */
+#cmpRiep table.cmp-riep { border-collapse: separate; border-spacing: 0; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; }
+#cmpRiep table.cmp-riep th { background: #f1f5f9 !important; color: #475569 !important; font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; }
+#cmpRiep table.cmp-riep tr.v-sep td { padding: 4px 10px !important; font-size: .64rem !important; letter-spacing: .06em; border-top: 1px solid #e2e8f0; }
+#cmpRiep table.cmp-riep tr.v-sep.std td { background: #eff6ff !important; color: #1d4ed8 !important; box-shadow: inset 3px 0 0 #1d4ed8; }
+#cmpRiep table.cmp-riep tr.v-sep.div td { background: #f5f3ff !important; color: #6d28d9 !important; box-shadow: inset 3px 0 0 #7c3aed; }
+#cmpRiep table.cmp-riep tr.v-std td, #cmpRiep table.cmp-riep tr.v-div td { background: #fff !important; } #cmpRiep table.cmp-riep tr.v-std td:first-child { box-shadow: inset 3px 0 0 #93c5fd !important; } #cmpRiep table.cmp-riep tr.v-div td:first-child { box-shadow: inset 3px 0 0 #c4b5fd !important; }
+#cmpRiep table.cmp-riep tr:last-child th { background: #f8fafc !important; color: #0f172a !important; font-size: .78rem; text-transform: none; letter-spacing: 0; }
+/* Schema e Progettazione con la stessa animazione di Capacita' */
+#tab-compositore .cmp-sch:hover, #tab-compositore .cmp-sch.on:hover, #tab-compositore .cmp-azb:hover { transform: none !important; box-shadow: none !important; filter: none !important; background: #eff6ff !important; border-color: #0066CC !important; color: #0066CC; }
+#tab-compositore .cmp-sch.on:hover { background: #dbeafe !important; }
+#tab-compositore .cmp-b .cmp-sw, #cmpDett .cmp-sw { width: 100% !important; max-width: none !important; align-self: stretch !important; box-sizing: border-box; }
+#tab-compositore .cmp-b .cmp-sw span, #cmpDett .cmp-sw span { flex: 1 1 auto !important; width: auto !important; }
+
+/* V11.26|095: interruttore dello stesso Nodo A1 */
+.cmp-sw { display: flex; align-items: center; gap: 10px; margin: 8px 0 10px; font-size: .8rem; color: #334155; text-align: left; }
+.cmp-swb { position: relative; flex: none; width: 40px; height: 22px; border-radius: 999px; border: 0; background: #cbd5e1; cursor: pointer; padding: 0; transition: background .15s; }
+.cmp-swb i { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.3); transition: left .15s; }
+.cmp-swb.on { background: #7c3aed; } .cmp-swb.on i { left: 21px; }
+.cmp-stesso { margin-top: 6px; padding: 4px 8px; border-radius: 6px; background: #f5f3ff; color: #5b21b6; font-size: .7rem; font-weight: 700; }/* V11.26|094: linea del percorso nella card della rete */
+.cmp-tl { position: relative; margin: 6px 0 2px; }
+.cmp-tn { display: flex; align-items: center; gap: 8px; min-height: 18px; }
+.cmp-td { flex: 0 0 14px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px currentColor; background: currentColor; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; color: #fff; }
+.cmp-tn.rc .cmp-td { color: #ff0000; background: #ff0000; } .cmp-tn.ra .cmp-td { color: #0000ff; background: #0000ff; }
+.cmp-tn.gw .cmp-td { width: 18px; height: 18px; flex-basis: 18px; margin-left: -2px; background: linear-gradient(135deg, #0000ff, #8000c0 50%, #ff0000); box-shadow: 0 0 0 2px #7c3aed; color: #fff; }
+.cmp-tt { font-size: .74rem; font-weight: 700; color: #0f172a; line-height: 1.2; }
+.cmp-tgw { font-style: normal; font-size: .58rem; font-weight: 800; padding: 0 5px; border-radius: 3px; background: #ede9fe; color: #5b21b6; margin-left: 4px; }
+.cmp-tk { display: flex; align-items: center; gap: 6px; margin-left: 6px; padding: 2px 0 2px 14px; border-left: 3px solid #ff0000; font-size: .66rem; color: #475569; }
+.cmp-tk.ra { border-left-color: #0000ff; } .cmp-tk.ko { border-left-style: dashed; }
+.cmp-tk i { font-style: normal; font-size: .56rem; font-weight: 800; padding: 0 5px; border-radius: 3px; } .cmp-tk i.ok { background: #dcfce7; color: #166534; } .cmp-tk i.wn { background: #fef3c7; color: #92400e; }
+.cmp-tmore { margin: 2px 0 2px 6px; padding: 3px 0 3px 14px; border-left: 3px dotted #94a3b8; font-size: .68rem; font-weight: 700; color: #1d4ed8; cursor: pointer; }
+.cmp-tmid[hidden] { display: none; }
+.cmp-chk { display: flex; align-items: center; gap: 6px; font-size: .78rem; margin: 6px 0; }
+/* animazioni come negli altri tab: niente sollevamento */
+#tab-compositore .cmp-sch:hover, #tab-compositore .cmp-sch.on:hover, #tab-compositore .cmp-azb:hover, .cmp-wzb:hover, #tab-compositore .cmp-azr button:hover { transform: none !important; }
+#tab-compositore .cmp-sch:hover { box-shadow: 0 0 0 3px rgba(0,102,204,.12); border-color: #93c5fd; }
+#tab-compositore .cmp-azb:hover, #tab-compositore .cmp-azr button:hover { box-shadow: none; filter: brightness(.97); border-color: #93c5fd; }
+.cmp-wzb:hover { box-shadow: none !important; }
+/* V11.26|096: «Comprimi» nell'intestazione della via */
+.cmp-tmore[hidden] { display: none; }
+.cmp-tlc { display: inline-block; margin: 0 0 0 auto; border: 1px solid #cbd5e1; background: #fff; color: #1d4ed8; font-size: .66rem; font-weight: 700; border-radius: 6px; padding: 1px 8px; cursor: pointer; }
+.cmp-tlc:hover { border-color: #93c5fd; background: #eff6ff; }
+/* V11.26|093: card nel formato B, bottoni della rete in sequenza, riepilogo su due righe, animazioni della barra */
+.cmp-c.cmp-cb { display: flex; padding: 0; overflow: hidden; border-top-width: 1px; }
+.cmp-cb-ic { flex: 0 0 42px; display: flex; justify-content: center; padding-top: 11px; font-size: 18px; }
+.cmp-c.sede .cmp-cb-ic { background: #fff7ed; } .cmp-c.coda .cmp-cb-ic { background: #fffbeb; } .cmp-c.centrale .cmp-cb-ic { background: #eff6ff; } .cmp-c.nodo .cmp-cb-ic { background: #f5f3ff; } .cmp-c.rtn .cmp-cb-ic { background: #f1f5f9; }
+.cmp-c.sede.cmp-cb { border-left: 4px solid #ea580c; } .cmp-c.coda.cmp-cb { border-left: 4px solid #f59e0b; } .cmp-c.centrale.cmp-cb { border-left: 4px solid #2563eb; } .cmp-c.nodo.cmp-cb { border-left: 4px solid #7c3aed; } .cmp-c.rtn.cmp-cb { border-left: 4px solid #64748b; }
+.cmp-cb-b { flex: 1; min-width: 0; padding: 9px 12px; }
+.cmp-cb .cmp-c-h b { font-size: .64rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #64748b; }
+.cmp-bv { font-size: 1rem; font-weight: 800; color: #0f172a; margin: 2px 0 3px; } .cmp-bv small { font-size: .72rem; font-weight: 700; color: #64748b; }
+.cmp-br { display: flex; justify-content: space-between; gap: 8px; font-size: .76rem; padding: 2px 0; } .cmp-br span { color: #64748b; } .cmp-br b { font-weight: 600; color: #0f172a; text-align: right; } .cmp-br b.blu { color: #1d4ed8; font-weight: 800; } .cmp-br b.vio { color: #7c3aed; font-weight: 800; }
+.cmp-azr { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+#tab-compositore .cmp-azr button { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 9px; font-weight: 700; font-size: .76rem; border: 1px solid #cbd5e1; background: #fff; color: #334155; cursor: pointer; transition: transform .12s, box-shadow .12s; }
+#tab-compositore .cmp-azr button i { font-style: normal; display: inline-flex; align-items: center; justify-content: center; width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid currentColor; font-size: .62rem; font-weight: 800; }
+#tab-compositore .cmp-azr .cmp-st1 { background: #eff6ff; border-color: #93c5fd; color: #1d4ed8; } #tab-compositore .cmp-azr .cmp-st3 { background: #f5f3ff; border-color: #c4b5fd; color: #6d28d9; }
+#tab-compositore .cmp-azr button:hover { transform: translateY(-1px); box-shadow: 0 3px 8px rgba(15,23,42,.12); }
+.cmp-azf { color: #94a3b8; font-size: .8rem; }
+#cmpRiep .cmp-r2 { color: #64748b; font-size: .92em; } #cmpRiep td.n, #cmpRiep th.n { white-space: nowrap; } #cmpRiep td:first-child, #cmpRiep td.dt { white-space: nowrap; }
+#tab-compositore .cmp-seg button, #tab-compositore .cmp-sch, #tab-compositore .cmp-azb { transition: transform .12s, box-shadow .12s, background .12s; }
+#tab-compositore .cmp-seg button.on:hover { background: #0057ad; box-shadow: inset 0 0 0 2px rgba(255,255,255,.35); }
+#tab-compositore .cmp-sch:hover, #tab-compositore .cmp-sch.on:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,102,204,.18); }
+#tab-compositore .cmp-azb:hover, .cmp-wzb:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(15,23,42,.18); } .cmp-wzb:hover { background: #2a4a80 !important; }
+
 /* V11.26|089: riepilogo diviso per via */
 #cmpRiep tr.v-sep td { padding: 5px 8px; font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: #fff !important; }
 #cmpRiep tr.v-sep.std td { background: #1d4ed8 !important; } #cmpRiep tr.v-sep.div td { background: #7c3aed !important; }
@@ -102424,7 +102719,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 092';
+  var REVISIONE = 'V11.26 | 096';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
