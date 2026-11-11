@@ -4,13 +4,27 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 106  (rev. pubblicata: V11.26 | 106 | Nov 2026)              ║
+║   Versione: 11.26 | 108  (rev. pubblicata: V11.26 | 108 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 108 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ARIADNE: domande sui DB (collegamenti, Subpath RA, centrali, Nodi A1, DC,    ║
+║     elenchi per stato e luogo) con export TXT ed Excel; progettazione da una     ║
+║     frase; domande non capite salvate sul PC; bottone sulla riga del titolo,     ║
+║     pannello sotto il bottone e spostabile (al refresh torna al suo posto)       ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 107 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ARIADNE (HelpMe!): assistente della Progettazione SdF senza modello          ║
+║     generativo; bollino con le cose da sistemare, guida passo per passo che      ║
+║     accende card e campo (Portami li'), controllo prima dell'IRP anche in TXT,   ║
+║     glossario; le altre domande vanno all'Assistente CRO                         ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 106 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -8013,6 +8027,639 @@ window.croCmp = (function () {
     box2.querySelectorAll('input[data-sdf]').forEach(function (i) { var k = i.getAttribute('data-sdf'); if (document.activeElement !== i) i.value = WDS[k] || ''; if (k === 'sdfDiv') { i.disabled = !dvOn; i.closest('label').classList.toggle('off', !dvOn); } });
     var st = el('cmpSdfS'); if (st) st.textContent = sdfStato();
   }
+  /* ═══ V11.26|107: ARIADNE, il filo per uscire dal labirinto ════════════════════════════════════════
+     Assistente della Progettazione SdF senza modello generativo: controlla la progettazione, conta le cose
+     da sistemare (bollino sul bottone), guida passo per passo evidenziando la card e il campo su cui agire,
+     fa il controllo prima dell'IRP (anche in TXT) e risponde a poche domande; il resto va all'Assistente CRO. */
+  var ARI = { aperta: false, passi: [], i: -1, guida: false };
+  var ARI_ICO = '<svg class="ari-ico" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="7.5" cy="16.5" r="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4.2 14.2c2-1 4.6-1 6.6.4M3.6 17.6c2.4-.6 5.2-.2 7 1.2M5 20.4c1.6-1.8 2.2-4.6 1.6-7.4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M11.6 13.6c2.6-2.4 3.4-6.2 6.2-8.2 1.2-.9 2.6-1 3.6-.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="2.6 2.2"/></svg>';
+  function ariCard(id) { var c = document.querySelector('#tab-compositore [data-cmpc="' + id + '"]'); if (c) return c; var r = document.querySelector('#tab-compositore [data-ris="' + id + '"]'); return r ? r.closest('.cmp-b') : null; }
+  function ariControlli() {
+    var out = [], add = function (o) { out.push(o); }, dv = divOn();
+    if (!catena.length) {
+      add({ g: 'manca', t: 'Scegli uno schema', sel: '#tab-compositore .cmp-barra .cmp-grp', d: 'La Progettazione \u00e8 vuota. In alto, nella sezione <b>Schema</b>, scegli come \u00e8 fatto il collegamento: <b>Stessa regione</b> se le due sedi stanno nella stessa regione (7 blocchi), <b>Interregionale</b> se stanno in regioni diverse e passano dalla RTN (11 blocchi), <b>Verso Nodo A1</b> se il collegamento finisce su un Nodo A1 (5 blocchi). Poi scegli capacit\u00e0, <b>Solo Std</b> o <b>Std + Div</b> e la protezione. I blocchi compaiono sotto e io ti guido uno alla volta.' });
+      return out;
+    }
+    catena.forEach(function (b) {
+      var T = TIPI[b.tipo], L = slotEt(b.tipo), nome = nomeCorto(b);
+      if (T.cl === 'sede' && !b.f.coord && !b.f.centrale && !b.f.indirizzo)
+        add({ g: 'manca', b: b.id, k: 'coord', t: nome + ': mancano i dati', d: 'La sede del cliente non ha ancora n\u00e9 coordinate n\u00e9 una Colt indicata, quindi il tool non pu\u00f2 scegliere la centrale n\u00e9 stimare la coda. Con <b>Portami l\u00ec</b> apro la card e accendo il campo <b>Coordinate (lat, lon)</b>: scrivile nel formato <i>41.8634, 12.5011</i>. Se hai solo l\u2019indirizzo, scrivilo in <b>Indirizzo</b> e premi <b>Geocodifica</b>. Se il cliente ti ha gi\u00e0 indicato la centrale, scrivila in <b>Centrale indicata (Colt)</b>: la porto io nella card della Colt.' });
+      if (T.cl === 'centrale') {
+        if (!b.r || !b.r.c) add({ g: 'manca', b: b.id, k: 'manuale', t: nome + ': Colt da scegliere', d: 'Non so ancora quale Colt usare: mi servono le coordinate della sede (allora prendo la pi\u00f9 vicina fra RC e RA di tipo 1 e 2) oppure una centrale indicata. Puoi anche sceglierla tu: con <b>Portami l\u00ec</b> accendo il campo <b>Centrale a mano</b>; inizia a scrivere il nome o il CLLI e scegli dal menu.' });
+        else if ((b.r.modo === 'indicata' || b.f.daSede) && b.f.verificata !== b.r.c.clli) add({ g: 'verifica', b: b.id, btn: '[data-cmpver="' + b.id + '"]', t: nome + ': Colt da verificare', d: 'La Colt <b>' + esc(b.r.c.nome + ' (' + b.r.c.clli + ')') + '</b> arriva dalla sede del cliente. Controlla che nome, CLLI e regione siano quelli giusti e premi <b>\u2714 Verificata</b> nella card: con <b>Portami l\u00ec</b> lo accendo io. Se non \u00e8 quella giusta, apri la card e scegline un\u2019altra in <b>Centrale a mano</b>: la sede si aggiorna da sola.' });
+        var q2 = cen2(L); if (q2 && q2.modo === 'indicata' && !q2.ver) add({ g: 'verifica', b: b.id, btn: '[data-cmpver2="' + b.id + '"]', t: nome + ': Colt della 2a Via da verificare', d: 'Per la 2a Via (Div) \u00e8 indicata la Colt <b>' + esc(q2.c.nome + ' (' + q2.c.clli + ')') + '</b>. Controllala e premi <b>\u2714 Verificata</b> nel blocco viola \u00ab2a Via (Div)\u00bb della card.' });
+      }
+      if (T.cl === 'nodo' && (!b.r || !b.r.c)) add({ g: 'manca', b: b.id, k: 'manuale', t: nome + ': Nodo A1 da scegliere', d: 'Il Nodo A1 si sceglie da solo appena c\u2019\u00e8 la Colt della zona (il pi\u00f9 vicino fra quelli della sua regione). Se la Colt c\u2019\u00e8 gi\u00e0, sceglilo tu nel campo <b>Nodo A1 a mano</b>: i Nodi A1 stanno in testa al menu.' });
+      if (T.cl === 'coda' && !protSol()) { var cc = codaCosto(b); if (!cc || cc.tot == null)
+        add({ g: 'manca', b: b.id, pop: '.cmp-app-b', t: nome + ': coda senza costo', d: 'La coda non ha ancora un costo. Con <b>Portami l\u00ec</b> apro la card e accendo il bottone <b>Apparati\u2026</b>: si apre il listino; con il <b>+</b> accanto a ogni riga scegli gli apparati per la <b>Sede Cliente</b> e per la <b>Centrale per il Cliente</b>, poi premi <b>Applica</b>.' + (viaDoppia() ? ' Con Std + Div trovi due schede, 1a Via e 2a Via; \u00ab2a Via uguale alla 1a\u00bb \u00e8 gi\u00e0 spuntata. <b>Applica e copia</b> mette gli stessi apparati anche nell\u2019altra zona.' : '') }); }
+      if (T.cl === 'rete') {
+        if (!b.ep) { add({ g: 'manca', b: b.id, t: nome + ': mancano gli estremi', d: 'La rete va dalla centrale (o Nodo A1) che le sta prima a quella che le sta dopo: finch\u00e9 mancano, non si pu\u00f2 cercare il percorso. Sistema prima le card della Colt e del Nodo A1 vicine.' }); return; }
+        if (!b.f.std) add({ g: 'manca', b: b.id, btn: '[onclick="croCmp.cerca(' + b.id + ')"]', t: nome + ': manca lo Std', d: 'Manca il percorso Std. Premi <b>\u2460 Cerca percorsi nell\u2019Unificato</b>: ti porto nel tab Unificato con Partenza e Arrivo gi\u00e0 scritti e lancio la ricerca. Quando i percorsi sono pronti, il riquadro in basso a destra ti riporta qui con lo Std scelto (la riga spuntata, o il primo). Se hai gi\u00e0 cercato, usa <b>\u2461 Importa Std</b> e scegli dall\u2019elenco.' });
+        else if (dv && !b.f.div) add({ g: 'manca', b: b.id, btn: '[onclick*="importa(' + b.id + ',\'div\')"]', t: nome + ': manca il Div', d: 'C\u2019\u00e8 lo Std ma non il Div. Nell\u2019Unificato apri <b>Percorsi Div</b> dello Std scelto; poi torna qui e premi <b>\u2462 Importa Div</b>, oppure usa <b>\u2460 Cerca</b> che fa tutto in fila. Se hai indicato Colt o Nodo A1 della 2a Via, la ricerca li usa gi\u00e0 come Partenza 2 e Arrivo 2.' });
+        var card = ariCard(b.id), txt = card ? card.textContent : '';
+        var m = /il Div non (parte|arriva)[^:]*/.exec(txt); if (m) add({ g: 'verifica', b: b.id, t: nome + ': il Div non usa la 2a Via', d: 'Il Div importato non usa la Colt o il Nodo A1 scelti per la 2a Via (' + esc(m[0]) + '). Rifai <b>\u2460 Cerca percorsi nell\u2019Unificato</b>: Partenza 2 e Arrivo 2 si compilano da soli. Se vuoi che le due vie usino lo stesso Nodo A1, accendi l\u2019interruttore nella card del Nodo A1.' });
+        var cf = /(\d+) C-FOS in comune/.exec(txt); if (cf) add({ g: 'verifica', b: b.id, t: nome + ': ' + cf[1] + ' C-FOS in comune', d: 'Std e Div condividono ' + cf[1] + ' cavi C-FOS: la diversificazione non \u00e8 piena. Valuta un altro Div con <b>\u2462 Importa Div</b> o controlla i cavi con <b>Confronto C-FOS</b> nel tab Unificato.' });
+        var pr = protRete(b); if (pr && pr.ra) add({ g: 'verifica', b: b.id, t: nome + ': protetto con la RA', d: 'Il percorso passa dalla rete RA, ma la protezione SNCP o E2E esiste solo su rete RC: la riga \u00e8 \u00abda rivedere\u00bb. Cerca un percorso solo RC (nel wizard c\u2019\u00e8 \u00abSolo RC\u00bb) o togli la protezione.' });
+        ['std', 'div'].forEach(function (x) { var r = b.f[x]; if (!r || (x === 'div' && !dv)) return; var q = riassunto(r); if (q.non) add({ g: 'info', b: b.id, t: nome + ' ' + x.toUpperCase() + ': ' + q.non + ' collegament' + (q.non === 1 ? 'o' : 'i') + ' da verificare su NNI', d: 'Nel DB ' + (q.non === 1 ? 'un collegamento non risulta attivo' : q.non + ' collegamenti non risultano attivi') + ' (linea tratteggiata e stato ambra nella linea del percorso). Prima dell\u2019IRP verificali su NNI. Le note per IRP hanno gi\u00e0 i 180 giorni per i Subpath da realizzare.' }); });
+      }
+    });
+    if (catena.some(function (b) { return TIPI[b.tipo].cl === 'rete'; }) && !String(WDS.sdfStd || '').trim())
+      add({ g: 'manca', sel: '#cmpSdf input[data-sdf="sdfStd"]', t: 'SdF Std vuota', d: 'Manca il numero della fattibilit\u00e0. Scrivilo nella minicard <b>1a Via \u00b7 Std</b> della sezione <b>Fattibilit\u00e0 (SdF)</b>, accanto ad \u00abAggiungi un blocco\u00bb: va nel nome dei file e nell\u2019Excel. Se le due vie stanno sulla stessa fattibilit\u00e0 lascia vuota la Div; se sono due fattibilit\u00e0 diverse, scrivi anche la <b>2a Via \u00b7 Div</b>: le note della 2a Via rimanderanno alla SdF Std.' });
+    return out;
+  }
+  function ariConta() { return ariControlli().filter(function (x) { return x.g !== 'info'; }).length; }
+  function ariAggiorna() {
+    var btn = el('ariBtn');
+    if (!btn) {
+      var tab = el('tab-compositore'); if (!tab) return;
+      btn = document.createElement('button'); btn.type = 'button'; btn.id = 'ariBtn'; btn.className = 'ari-btn'; btn.title = 'Ariadne ti guida passo per passo e controlla la progettazione prima dell\u2019IRP';
+      btn.addEventListener('click', function () { ariApri(); });
+      var tit = tab.querySelector('.db-header .section-title'); if (tit) { tit.classList.add('ari-titolo'); tit.appendChild(btn); } else tab.insertBefore(btn, tab.firstChild);   /* V11.26|108: sulla riga del titolo */
+    }
+    var n = ariConta(); btn.innerHTML = ARI_ICO + '<span>HelpMe! <b>Ariadne</b></span>' + (n ? '<i class="ari-n">' + n + '</i>' : '<i class="ari-n ok">\u2714</i>');
+    if (ARI.aperta && !ARI.guida) ariElenco();
+  }
+  function ariPannello() {
+    var p = el('ariPan'); if (p) return p;
+    p = document.createElement('div'); p.id = 'ariPan'; p.className = 'ari-pan';
+    p.innerHTML = '<div class="ari-h">' + ARI_ICO + '<b>Ariadne</b><small>il filo per uscire dal labirinto</small><button type="button" class="ari-x" title="Chiudi">\u2715</button></div><div class="ari-b" id="ariBody"></div>'
+      + '<div class="ari-chips" id="ariChips"></div><div class="ari-in"><input id="ariIn" type="text" placeholder="Scrivi ad Ariadne\u2026 (es. stato CLO311, nodi A1 Lazio, guidami)" autocomplete="off"><button type="button" id="ariGo">\u27A4</button></div>';
+    document.body.appendChild(p);
+    p.querySelector('.ari-x').addEventListener('click', ariChiudi);
+    var invia = function () { var i = el('ariIn'), t = i.value.trim(); if (!t) return; i.value = ''; ariChiedi(t); };
+    el('ariGo').addEventListener('click', invia); el('ariIn').addEventListener('keydown', function (e) { if (e.key === 'Enter') invia(); });
+    p.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('[data-ari]'); if (!a) return; var v = a.getAttribute('data-ari');
+      if (v.indexOf('exp:') === 0) return ariExport(v.slice(4)); if (v === 'nc') return ariNcMostra(); if (v === 'ncdel') { try { localStorage.removeItem(ARI_NC); } catch (z) {} return ariNcMostra(); }
+      if (v === 'guida') ariGuida(0); else if (v === 'irp') ariIrp(); else if (v === 'txt') ariTxt(); else if (v === 'elenco') ariElenco(); else if (v.indexOf('vai:') === 0) ariGuida(+v.slice(4)); else if (v.indexOf('chiedi:') === 0) ariChiedi(v.slice(7));
+      else if (v.indexOf('exp:') === 0) ariEsporta(v.slice(4)); else if (v === 'logvia') { try { localStorage.removeItem(ARI_LOG); } catch (z) {} ariChiedi('domande non capite'); }
+      else if (v.indexOf('usa:') === 0) { var pz = v.split(':'), bb = trova('centrale' + pz[1]); if (bb) { croCmp.campo(bb.id, 'manuale', etichetta(centrali[pz[2]])); ridisegna(); ariElenco('Fatto: <b>' + esc(centrali[pz[2]].nome) + '</b> è ora la Colt ' + pz[1] + '.'); } } });
+    return p;
+  }
+  function ariChips(lista) { el('ariChips').innerHTML = lista.map(function (c) { return '<button type="button" data-ari="' + c[0] + '">' + c[1] + '</button>'; }).join(''); }
+  function ariIcona(g) { return g === 'manca' ? '\uD83D\uDFE0' : g === 'verifica' ? '\uD83D\uDFE1' : '\u2139\uFE0F'; }
+  function ariElenco(intro) {
+    var c = ariControlli(), nM = c.filter(function (x) { return x.g !== 'info'; }).length, ore = new Date().getHours();
+    var saluto = ore < 13 ? 'Buongiorno!' : ore < 18 ? 'Buon pomeriggio!' : 'Buonasera!';
+    var h = '<div class="ari-msg">' + (intro || (nM ? saluto + ' Ci sono <b>' + nM + ' cos' + (nM === 1 ? 'a' : 'e') + ' da sistemare</b> prima dell\u2019IRP. Te le mostro una alla volta sulla pagina: premi <b>Guidami</b>, oppure clicca una voce.' : (c.length ? saluto + ' Niente da sistemare: restano solo delle cose da sapere.' : saluto + ' La progettazione \u00e8 completa: puoi fare l\u2019<b>Export completo</b>.'))) + '</div>';
+    h += c.map(function (x, i) { return '<button type="button" class="ari-ck ' + x.g + '" data-ari="vai:' + i + '"><i>' + ariIcona(x.g) + '</i><span><b>' + esc(x.t) + '</b></span></button>'; }).join('');
+    el('ariBody').innerHTML = h;
+    var nNc = ariNcLeggi().length;
+    ariChips([['guida', '\uD83E\uDDF5 Guidami'], ['irp', '\u2705 Controlla prima dell\u2019IRP'], ['txt', '\u2B07 Controllo in TXT'], ['chiedi:che stato ha clo311', 'Che stato ha CLO311?'], ['chiedi:nodi a1 lazio', 'Nodi A1 del Lazio'], ['chiedi:collegamenti in attivazione in lombardia', 'In attivazione in Lombardia'], ['chiedi:progettazione da eur a firenze castello 10g protetta sncp', 'Progettazione da EUR a FIRENZE CASTELLO 10G SNCP'], ['chiedi:cosa sai fare', 'Cosa sai fare?']].concat(nNc ? [['nc', '\uD83D\uDCDD Domande non capite (' + nNc + ')']] : []));
+  }
+  function ariApri() { ariPannello(); ARI.aperta = true; ARI.guida = false; el('ariPan').classList.add('on'); ariTrascina(el('ariPan')); ariPosPannello(); ariElenco(); }
+  function ariChiudi() { ARI.aperta = false; ARI.guida = false; var p = el('ariPan'); if (p) p.classList.remove('on'); ariTogli(); }
+  function ariTogli() { document.querySelectorAll('.ari-hl, .ari-fld').forEach(function (e) { e.classList.remove('ari-hl', 'ari-fld'); }); var t = el('ariTip'); if (t) t.remove(); }
+  function ariBersaglio(x) { return x.b != null ? ariCard(x.b) : (x.sel ? document.querySelector(x.sel) : null); }
+  function ariGuida(i) {
+    ariPannello(); ARI.aperta = true; el('ariPan').classList.add('on'); ariTrascina(el('ariPan')); ariPosPannello();
+    ARI.passi = ariControlli(); ARI.guida = true; ARI.i = i;
+    if (!ARI.passi.length) { ARI.guida = false; ariTogli(); return ariElenco('Ho controllato tutto: <b>non manca niente</b>. Puoi fare l\u2019Export completo.'); }
+    if (ARI.i >= ARI.passi.length) { ARI.guida = false; ariTogli(); return ariElenco('Abbiamo visto tutte le voci. Se ne hai saltata qualcuna la trovi qui sotto.'); }
+    var x = ARI.passi[ARI.i]; ariTogli();
+    var tg = ariBersaglio(x); if (tg) { tg.classList.add('ari-hl'); tg.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    el('ariBody').innerHTML = '<div class="ari-msg"><b>Passo ' + (ARI.i + 1) + ' di ' + ARI.passi.length + '</b> \u00b7 ' + esc(x.t) + '</div>';
+    ariChips([['elenco', '\u2630 Torna all\u2019elenco'], ['irp', '\u2705 Controlla prima dell\u2019IRP']]);
+    var tip = document.createElement('div'); tip.id = 'ariTip'; tip.className = 'ari-tip ' + x.g;
+    tip.innerHTML = '<div class="ari-tt">' + ariIcona(x.g) + ' Passo ' + (ARI.i + 1) + ' di ' + ARI.passi.length + ' \u00b7 ' + esc(x.t) + '</div><div class="ari-td">' + x.d + '</div><div class="ari-tb">'
+      + ((x.k || x.btn || x.pop || x.sel) ? '<button type="button" class="pri" data-t="vai">\uD83D\uDC49 Portami l\u00ec</button>' : '') + '<button type="button" data-t="ok">Fatto, avanti</button><button type="button" data-t="salta">Salta</button><button type="button" data-t="stop">Chiudi</button></div>';
+    document.body.appendChild(tip);
+    tip.addEventListener('click', function (e) { var t = e.target.getAttribute && e.target.getAttribute('data-t'); if (!t) return;
+      if (t === 'vai') ariPortami(x); else if (t === 'ok' || t === 'salta') ariGuida(ARI.i + 1); else if (t === 'stop') ariChiudi(); });
+    setTimeout(function () { ariPosiziona(tip, tg); }, 380);
+  }
+  function ariPosiziona(tip, tg) {
+    if (!tip || !document.body.contains(tip)) return;
+    var w = tip.offsetWidth, h = tip.offsetHeight, vw = window.innerWidth, vh = window.innerHeight - (document.body.classList.contains('cro-infolive-on') ? 30 : 0);
+    if (!tg) { tip.style.left = Math.max(10, (vw - w) / 2) + 'px'; tip.style.top = '120px'; return; }
+    var r = tg.getBoundingClientRect(), x = r.right + 14, y = r.top;
+    if (x + w > vw - 400) x = r.left - w - 14; if (x < 10) { x = Math.max(10, Math.min(vw - w - 10, r.left)); y = r.bottom + 12; }
+    y = Math.max(70, Math.min(vh - h - 10, y)); tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  }
+  function ariPortami(x) {
+    var accendi = function (e) { if (!e) return false; e.classList.add('ari-fld'); e.scrollIntoView({ behavior: 'smooth', block: 'center' }); if (e.focus) try { e.focus({ preventScroll: true }); } catch (z) { e.focus(); } return true; };
+    if (x.sel && accendi(document.querySelector(x.sel))) return;
+    if (x.btn) { var bt = document.querySelector('#tab-compositore ' + x.btn); if (accendi(bt)) return; }
+    if (x.b != null && (x.k || x.pop)) {
+      dettaglioApri(x.b);
+      setTimeout(function () {
+        var c = el('cmpDettC'); if (!c) return;
+        var f = x.k ? c.querySelector('[onchange*="campo(' + x.b + ',\'' + x.k + '\'"], [oninput*="campo(' + x.b + ',\'' + x.k + '\'"]') : c.querySelector(x.pop);
+        if (!accendi(f)) accendi(c.querySelector('input, button'));
+        var t = el('ariTip'); if (t) { t.style.zIndex = 100060; ariPosiziona(t, el('cmpDett') ? el('cmpDett').querySelector('.cmp-dett-box') || el('cmpDett') : null); }
+      }, 260);
+    }
+  }
+  function ariIrp() {
+    ARI.guida = false; ariTogli(); ariPannello();
+    var c = ariControlli(), m = c.filter(function (x) { return x.g === 'manca'; }), v = c.filter(function (x) { return x.g === 'verifica'; }), i = c.filter(function (x) { return x.g === 'info'; });
+    var intro = (m.length + v.length ? 'Ho guardato tutta la progettazione. Prima dell\u2019IRP: <b>' + m.length + ' da completare</b>, <b>' + v.length + ' da verificare</b>' + (i.length ? ' e <b>' + i.length + ' da sapere</b>' : '') + '.' : '\u2705 <b>Pronta per l\u2019IRP</b>' + (i.length ? ': restano ' + i.length + ' cose da sapere.' : '.')) + ' Clicca una voce per andarci.';
+    ariElenco(intro);
+  }
+  function ariTxt() {
+    var c = ariControlli(), d = new Date(), riga = function (x) { return '[' + (x.g === 'manca' ? 'DA COMPLETARE' : x.g === 'verifica' ? 'DA VERIFICARE' : 'DA SAPERE') + '] ' + x.t + '\n    ' + String(x.d).replace(/<[^>]+>/g, '').replace(/&amp;/g, '&'); };
+    var t = ['CONTROLLO PRIMA DELL\u2019IRP \u00b7 Ariadne \u00b7 CRO ITALIA', d.toLocaleString('it-IT'), 'SdF Std: ' + (WDS.sdfStd || '-') + '  \u00b7  SdF Div: ' + (WDS.sdfDiv || '(stessa della Std)'), ''].concat(c.length ? c.map(riga) : ['Nessuna voce: la progettazione \u00e8 completa.']).join('\n');
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([t], { type: 'text/plain;charset=utf-8' })); a.download = 'CRO_Controllo_IRP_' + d.toISOString().slice(0, 10) + '.txt'; document.body.appendChild(a); a.click(); a.remove();
+  }
+  var ARI_GLOSS = {
+    'sncp': 'SNCP \u00e8 la protezione per sezioni, \u00aba caramella\u00bb: ogni tratta ha due vie diversificate e uno splitter alle estremit\u00e0. Nel tool vale solo su rete RC; i costi della coda e del trasporto protetti vengono dal listino delle Soluzioni Protette e stanno nella 1a Via.',
+    'e2e': 'E2E \u00e8 la protezione da estremo a estremo: due vie complete dalla sede A alla sede Z. Vale solo su rete RC; nel foglio IRP il costo va in un\u2019unica cifra nella colonna BP.',
+    'cfos': 'Le C-FOS sono i cavi in fibra su cui passano i collegamenti. Se Std e Div usano lo stesso cavo C-FOS la diversificazione non \u00e8 piena: un guasto sul cavo li tocca entrambi.',
+    'colt': 'La Colt \u00e8 la centrale di attestazione del cliente, cio\u00e8 quella a cui arriva la coda dalla sede. Pu\u00f2 essere RC o RA di tipo 1 o 2.',
+    'nodo a1': 'I Nodi A1 sono le centrali dove la rete regionale (RTR) si collega alla Rete di Trasporto Nazionale (RTN). Per andare da una regione all\u2019altra si passa da un Nodo A1 di partenza e da uno di arrivo.',
+    'rtn': 'La RTN \u00e8 la Rete di Trasporto Nazionale, non gestita dal Nostro Gruppo RTR: nella Progettazione indica solo il passaggio fra i Nodi A1 e non si valorizza.',
+    'rtr': 'La RTR \u00e8 la Rete di Trasporto Regionale, la nostra: reti RA e RC dentro una regione.',
+    'sdf': 'La SdF \u00e8 lo Studio di Fattibilit\u00e0, la pratica a cui si riferisce la progettazione. Con una sola SdF le due vie stanno sulla stessa; con due SdF la 1a Via va sulla Std e la 2a sulla Div.',
+    'nni': 'NNI \u00e8 il sistema dove verificare lo stato reale dei collegamenti: quelli che nel DB non risultano attivi vanno controllati l\u00ec prima dell\u2019IRP.',
+    'irp': 'L\u2019IRP \u00e8 il modulo in cui si inserisce la fattibilit\u00e0: il foglio IRP dell\u2019Export completo ha gi\u00e0 le righe e le note da copiare.'
+  };
+  function ariChiedi(t) {
+    ARI.guida = false; ariTogli(); ariPannello();
+    var q = String(t).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+    var rispondi = function (h, chips) { el('ariBody').innerHTML = '<div class="ari-msg ari-me">' + esc(t) + '</div><div class="ari-msg">' + h + '</div>'; ariChips((chips || []).concat([['elenco', '\u2630 Cosa manca'], ['guida', '\uD83E\uDDF5 Guidami']])); };
+    if (/^(guida|guidami|aiuto|help|aiutami|mi sono perso|non so)/.test(q)) return ariGuida(0);
+    if (/(controll|verific|irp|pronto|pronta|cosa manca|manca)/.test(q)) return ariIrp();
+    if (/(txt|esporta|scarica)/.test(q)) { ariTxt(); return rispondi('Ti ho scaricato il controllo prima dell\u2019IRP in un file TXT.'); }
+    if (/(cosa sai fare|che sai fare|cosa fai|chi sei|come funzion)/.test(q)) return rispondi('Sono <b>Ariadne</b>: come il filo che serv\u00ec a uscire dal labirinto, ti porto fino in fondo alla Progettazione. Oggi so:<br>\u2022 dirti <b>cosa manca</b> e guidarti <b>passo per passo</b>, accendendo la card e il campo su cui agire;<br>\u2022 fare il <b>controllo prima dell\u2019IRP</b> e scaricarlo in TXT;<br>\u2022 spiegarti parole come SNCP, E2E, C-FOS, Colt, Nodo A1, RTN, RTR, SdF, NNI, IRP.<br>\u2022 rispondere sui <b>dati del DB</b>, con una breve descrizione ed export in TXT o Excel: <i>stato CLO311</i>, <i>subpath ACB020</i>, <i>scheda EUR</i> o <i>ROMAITDH</i>, <i>nodi A1 Lazio</i>, <i>data center Lombardia</i>, <i>collegamenti in attivazione Lombardia</i>, <i>collegamenti non attivi RC Milano</i>;<br>\u2022 <b>impostare una progettazione da una frase</b>: <i>progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP</i>;<br>\u2022 tenere le <b>domande non capite</b> (solo in questo browser) da scaricare e mandare, cos\u00ec imparo.');
+    var k = Object.keys(ARI_GLOSS).filter(function (w) { return q.indexOf(w.replace('-', '')) >= 0 || q.indexOf(w) >= 0 || (w === 'cfos' && /c fos/.test(q)); })[0];
+    if (k && !/\b[a-z]{3}\d{3}\b/.test(q) && !/(nod|collegament|centrale|scheda|progett)/.test(q)) return rispondi(ARI_GLOSS[k]);
+    try { if (ariDB(t, q, rispondi)) return; } catch (e) { console.error('[Ariadne DB]', e); }   /* V11.26|108 */
+    if (k) return rispondi(ARI_GLOSS[k]);
+    ariNcAggiungi(t);
+    rispondi('Questa non l\u2019ho capita, scusa: me la segno fra le <b>domande non capite</b>, cos\u00ec la impariamo. Prova a scriverla con un CLLI, un IdCollegamento o una regione (per esempio <i>stato CLO311</i>, <i>nodi A1 Lazio</i>, <i>collegamenti in attivazione Lombardia</i>), oppure passala all\u2019<b>Assistente CRO</b>, che pu\u00f2 prepararla per Claude.', [['chiedi:cosa sai fare', 'Cosa sai fare?'], ['chiedi:domande non capite', '\uD83D\uDCDD Domande non capite'], ['guida', '\uD83E\uDDF5 Guidami']]);
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'ari-alt'; b.textContent = 'Chiedi all\u2019Assistente CRO'; b.addEventListener('click', function () { if (window.croChat && croChat.chiedi) croChat.chiedi(t); });
+    el('ariBody').appendChild(b);
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ARI.aperta && !el('cmpDett')) ariChiudi(); });
+  window.addEventListener('resize', function () { var t = el('ariTip'); if (t && ARI.guida && ARI.passi[ARI.i]) ariPosiziona(t, ariBersaglio(ARI.passi[ARI.i])); });
+
+  /* ═══ V11.26|108: ARIADNE, domande sul DB, progettazione da una frase, domande non capite, pannello spostabile ═══ */
+  var ARI_POS = null;   /* posizione scelta trascinando: vale fino al refresh, poi torna quella di default */
+  function ariPosPannello() {
+    var p = el('ariPan'), b = el('ariBtn'); if (!p) return;
+    if (ARI_POS) { p.style.left = ARI_POS.x + 'px'; p.style.top = ARI_POS.y + 'px'; p.style.right = 'auto'; return; }
+    if (b) { var r = b.getBoundingClientRect(), w = p.offsetWidth || 380; var x = Math.max(10, Math.min(window.innerWidth - w - 10, r.right - w)); p.style.left = x + 'px'; p.style.right = 'auto'; p.style.top = Math.max(10, r.bottom + 8) + 'px'; }
+  }
+  function ariTrascina(p) {
+    var h = p.querySelector('.ari-h'); if (!h || h._ariDrag) return; h._ariDrag = true;
+    h.addEventListener('mousedown', function (e) {
+      if (e.target.closest('.ari-x')) return; e.preventDefault();
+      var r = p.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top;
+      var mv = function (ev) { var x = Math.max(0, Math.min(window.innerWidth - r.width, ev.clientX - dx)), y = Math.max(0, Math.min(window.innerHeight - 60, ev.clientY - dy)); ARI_POS = { x: x, y: y }; p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.right = 'auto'; };
+      var su = function () { document.removeEventListener('mousemove', mv); document.removeEventListener('mouseup', su); p.classList.remove('drag'); };
+      p.classList.add('drag'); document.addEventListener('mousemove', mv); document.addEventListener('mouseup', su);
+    });
+  }
+  /* ── domande non capite: solo su questo PC, per istruire Ariadne ── */
+  var ARI_NC = 'croAriadneNonCapite';
+  function ariNcLeggi() { try { return JSON.parse(localStorage.getItem(ARI_NC) || '[]'); } catch (e) { return []; } }
+  function ariNcAggiungi(t) { try { var l = ariNcLeggi(); l.push({ t: String(t).slice(0, 300), q: new Date().toISOString() }); localStorage.setItem(ARI_NC, JSON.stringify(l.slice(-200))); } catch (e) {} }
+  var ARI_LOG = ARI_NC;
+  function ariExport(f) {   /* chip «exp:…» del pannello */
+    if (f === 'nc') return ariEsporta('Domande non capite da Ariadne', ['Quando', 'Domanda'], ariNcLeggi().map(function (x) { return [new Date(x.q).toLocaleString('it-IT'), x.t]; }), 'txt');
+    if (ARI_ULT) ariEsporta(ARI_ULT.tit, ARI_ULT.cols, ARI_ULT.rows, f === 'xlsx' || f === 'xls' ? 'xlsx' : 'txt');
+  }
+  function ariNcMostra(rispondi) {
+    if (!rispondi) rispondi = function (h, chips) { ariPannello(); el('ariBody').innerHTML = '<div class="ari-msg">' + h + '</div>'; ariChips((chips || []).concat([['elenco', '\u2630 Cosa manca'], ['guida', '\uD83E\uDDF5 Guidami']])); };
+    var l = ariNcLeggi();
+    if (!l.length) return rispondi('Non ci sono domande non capite: per ora ho capito tutto. Quando qualcosa non mi \u00e8 chiaro me lo segno qui, cos\u00ec Giuseppe me lo pu\u00f2 insegnare.');
+    rispondi((l.length === 1 ? 'Ecco la <b>domanda</b> che non ho capito' : 'Ecco le <b>' + l.length + ' domande</b> che non ho capito') + ' (le tengo solo su questo PC). Esportale e allegale quando vuoi istruirmi:<br>' + l.slice(-15).reverse().map(function (x) { return '\u2022 ' + esc(x.t) + ' <small style="color:#64748b">' + new Date(x.q).toLocaleString('it-IT') + '</small>'; }).join('<br>'),
+      [['exp:nc', '\u2B07 Esporta in TXT'], ['ncdel', '\uD83D\uDDD1 Svuota l\u2019elenco']]);
+  }
+  /* ── esportazione degli elenchi ── */
+  function ariEsporta(tit, cols, rows, fmt) {
+    var d = new Date(), base = 'CRO_Ariadne_' + String(tit).replace(/[^A-Za-z0-9]+/g, '_').slice(0, 40) + '_' + d.toISOString().slice(0, 10);
+    var giu = function (blob, nome) { var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nome; document.body.appendChild(a); a.click(); a.remove(); };
+    if (fmt === 'xlsx' && typeof ExcelJS !== 'undefined') {
+      var wb = new ExcelJS.Workbook(), ws = wb.addWorksheet('Ariadne');
+      ws.addRow([tit]); ws.getRow(1).font = { bold: true, size: 13 }; ws.addRow(['Estratto da CRO ITALIA \u00b7 Ariadne \u00b7 ' + d.toLocaleString('it-IT')]); ws.addRow([]);
+      var hr = ws.addRow(cols); hr.font = { bold: true, color: { argb: 'FFFFFFFF' } }; hr.eachCell(function (c) { c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1F3864' } }; });
+      rows.forEach(function (r) { ws.addRow(r); }); cols.forEach(function (c, i) { ws.getColumn(i + 1).width = Math.min(60, Math.max(12, String(c).length + 4)); });
+      wb.xlsx.writeBuffer().then(function (buf) { giu(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), base + '.xlsx'); });
+      return;
+    }
+    if (fmt === 'xlsx') { var csv = [cols].concat(rows).map(function (r) { return r.map(function (v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n'); giu(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }), base + '.csv'); return; }
+    var t = [tit, 'Estratto da CRO ITALIA \u00b7 Ariadne \u00b7 ' + d.toLocaleString('it-IT'), ''].concat([cols.join('\t')], rows.map(function (r) { return r.join('\t'); })).join('\n');
+    giu(new Blob([t], { type: 'text/plain;charset=utf-8' }), base + '.txt');
+  }
+  var ARI_ULT = null;   /* ultimo elenco mostrato, per l'export */
+  function ariTabella(tit, cols, rows, max) {
+    ARI_ULT = { tit: tit, cols: cols, rows: rows }; max = max || 12;
+    return '<div class="ari-tab"><table><tr>' + cols.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr>' + rows.slice(0, max).map(function (r) { return '<tr>' + r.map(function (v) { return '<td>' + esc(v) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table></div>'
+      + (rows.length > max ? '<small>\u2026e altre ' + (rows.length - max) + ' righe: nell\u2019export ci sono tutte.</small>' : '');
+  }
+  var ARI_EXP = [['exp:txt', '\u2B07 Esporta TXT'], ['exp:xlsx', '\u2B07 Esporta Excel']];
+  /* ── dati ── */
+  function ariNorm(t) { return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function ariDb() { var rc = (typeof RAW_DB !== 'undefined' ? RAW_DB : []), ra = (typeof RAW_DB_RA !== 'undefined' ? RAW_DB_RA : []); return { rc: rc, ra: ra }; }
+  function ariRegioni() { var s = {}; var d = ariDb(); d.rc.concat(d.ra).forEach(function (x) { String(x.Regione || '').split('|').forEach(function (r) { r = r.trim(); if (r && r !== '-') s[r] = 1; }); }); return Object.keys(s); }
+  function ariRegioneIn(q) { var hit = ariRegioni().filter(function (r) { return (' ' + q + ' ').indexOf(' ' + ariNorm(r) + ' ') >= 0; }); return hit.sort(function (a, b) { return b.length - a.length; })[0] || null; }
+  function ariCentraleIn(q) {
+    carica(); var m = /\b([a-z]{4}it[a-z0-9]{2})\b/.exec(q); if (m && centrali[m[1].toUpperCase()]) return centrali[m[1].toUpperCase()];
+    var best = null; Object.keys(centrali).forEach(function (k) { var n = ariNorm(centrali[k].nome); if (n.length < 3) return; if ((' ' + q + ' ').indexOf(' ' + n + ' ') >= 0 && (!best || n.length > ariNorm(best.nome).length)) best = centrali[k]; });
+    return best;
+  }
+  function ariCentraleTesto(t) {   /* per «da X a Y»: CLLI, nome esatto o il nome piu' simile */
+    carica(); var q = ariNorm(t); if (!q) return null;
+    var m = /\b([a-z]{4}it[a-z0-9]{2})\b/.exec(q); if (m && centrali[m[1].toUpperCase()]) return centrali[m[1].toUpperCase()];
+    var ks = Object.keys(centrali), es = ks.filter(function (k) { return ariNorm(centrali[k].nome) === q; }); if (es.length) return centrali[es[0]];
+    var st = ks.filter(function (k) { return ariNorm(centrali[k].nome).indexOf(q) === 0; }).sort(function (a, b) { return centrali[a].nome.length - centrali[b].nome.length; }); if (st.length) return centrali[st[0]];
+    var inc = ks.filter(function (k) { return ariNorm(centrali[k].nome).indexOf(q) >= 0; }).sort(function (a, b) { return centrali[a].nome.length - centrali[b].nome.length; }); return inc.length ? centrali[inc[0]] : null;
+  }
+  function ariRigaColl(x, rete) { return [rete, String(x.IdCollegamento), x.GAT_A + ' (' + x.CLLI_A + ')', x.GAT_Z + ' (' + x.CLLI_Z + ')', String(x.Stato_IdCollegamento || ''), String(x.Distanza_km || ''), String(x.Regione || '')]; }
+  var ARI_COLS = ['Rete', 'IdCollegamento', 'Da', 'A', 'Stato', 'Km', 'Regione'];
+  function ariSchedaColl(x, rete) {
+    var cav = String(x.IdCavo || '').split(' + ').filter(function (c) { return c && c.trim() !== '-'; }).length, st = String(x.Stato_IdCollegamento || ''), at = st.toUpperCase() === 'ATTIVO';
+    return '<b>' + esc(x.IdCollegamento) + '</b> \u00e8 <b class="' + (at ? 'ari-ok' : 'ari-ko') + '">' + esc(st) + '</b>. \u00c8 un collegamento ' + rete + ' fra <b>' + esc(x.GAT_A) + '</b> (' + esc(x.CLLI_A) + ') e <b>' + esc(x.GAT_Z) + '</b> (' + esc(x.CLLI_Z) + '), ' + esc(String(x.Distanza_km || '?')) + ' km, ' + esc(x.Regione || '') + '.'
+      + (cav ? ' Passa su ' + cav + ' cav' + (cav === 1 ? 'o' : 'i') + ' C-FOS.' : '') + (at ? '' : ' Se un tuo percorso lo usa, va verificato su NNI e la nota IRP avr\u00e0 i 180 giorni.') + (x.Altro2 && x.Altro2 !== '-' ? '<br><small>Nota del DB: ' + esc(x.Altro2) + '</small>' : '');
+  }
+  function ariDB(t, q, rispondi) {
+    var d = ariDb();
+    if (/(non capit|domande non|non hai capito)/.test(q)) { ariNcMostra(rispondi); return true; }
+    /* 1. progettazione da una frase */
+    var pm = /\bda (.+?) (?:a|ad|verso|fino a) (.+?)(?: (?:con|in|a|protett|sncp|e2e|solo|std|\d{1,3}g)\b.*)?$/.exec(q);
+    if (pm && /(progett|progetta|crea|imposta|fammi|prepara|fattibilita)/.test(q)) {
+      var cA = ariCentraleTesto(pm[1]), cZ = ariCentraleTesto(pm[2]);
+      if (!cA || !cZ) { rispondi('Ho capito che vuoi una progettazione, ma non trovo ' + (!cA ? '\u00ab' + esc(pm[1]) + '\u00bb' : '') + (!cA && !cZ ? ' n\u00e9 ' : '') + (!cZ ? '\u00ab' + esc(pm[2]) + '\u00bb' : '') + ' fra le centrali. Prova con il nome come nel menu (per esempio \u00abEUR\u00bb o \u00abFIRENZE CASTELLO\u00bb) o con il CLLI.', [['chiedi:progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP', 'Esempio: da EUR a Firenze Castello']]); return true; }
+      var cap = /\b100 ?g\b/.test(q) ? '100G' : /\b10 ?g\b/.test(q) ? '10G' : /\b1 ?g\b/.test(q) ? '1G' : null;
+      var prot = /\bsncp|caramella/.test(q) ? 'sncp' : /\be2e\b/.test(q) ? 'e2e' : /(non protett|senza protez)/.test(q) ? 'no' : /protett/.test(q) ? 'sncp' : null;
+      var div = /(solo std|senza div|non divers)/.test(q) ? false : (/(div|diversific|std ?\+ ?div|due vie)/.test(q) || (prot && prot !== 'no')) ? true : null;
+      var rA = regioneDi(cA), rZ = regioneDi(cZ), sch = (/nodo a1/.test(q) && nodiA1[cZ.clli]) ? 'a1' : (rA && rZ && rA !== rZ ? 'rtn' : 'regione');
+      croCmp.schema(sch); if (cap) croCmp.capacita(cap); if (div != null) croCmp.diversificato(div); if (prot) croCmp.protezione(prot);
+      var bA = trova('centraleA'), bZ = trova(sch === 'a1' ? 'nodoA' : 'centraleZ');
+      if (bA) campo(bA.id, 'manuale', cA.nome + ' (' + cA.clli + ')'); if (bZ) campo(bZ.id, 'manuale', cZ.nome + ' (' + cZ.clli + ')');
+      ridisegna();
+      var nA = trova('nodoA'), nZ = trova('nodoZ');
+      rispondi('Fatto. Ho impostato:<br>\u2022 schema <b>' + (sch === 'rtn' ? 'Interregionale' : sch === 'a1' ? 'Verso Nodo A1' : 'Stessa regione') + '</b>' + (sch === 'rtn' ? ' (' + esc(rA) + ' \u2192 ' + esc(rZ) + ')' : '') + '<br>\u2022 Colt A <b>' + esc(cA.nome + ' (' + cA.clli + ')') + '</b>, ' + (sch === 'a1' ? 'Nodo A1' : 'Colt Z') + ' <b>' + esc(cZ.nome + ' (' + cZ.clli + ')') + '</b>'
+        + (sch === 'rtn' && nA && nA.r && nZ && nZ.r ? '<br>\u2022 Nodi A1: <b>' + esc(nA.r.c.nome) + '</b> e <b>' + esc(nZ.r.c.nome) + '</b> (i pi\u00f9 vicini della regione)' : '')
+        + '<br>\u2022 ' + ((el('cmpCap') || {}).value || '1G') + ', ' + (divOn() ? 'Std + Div' : 'Solo Std') + ', protezione ' + ({ no: 'no', sncp: 'SNCP', e2e: 'E2E' }[prot || 'no'] || 'no')
+        + '<br>Ora servono i percorsi: con <b>Guidami</b> ti porto sul bottone \u2460 Cerca percorsi nell\u2019Unificato' + (sch === 'rtn' ? ' (prima la Zona A, poi la Zona Z)' : '') + ' e poi su quello che resta.', [['guida', '\uD83E\uDDF5 Guidami'], ['irp', '\u2705 Cosa manca']]);
+      return true;
+    }
+    /* 2. stato di un collegamento RC o di un Subpath RA */
+    var im = /\b([a-z]{3}\d{3})\b/.exec(q);
+    if (im) {
+      var id = im[1].toUpperCase(), rc = d.rc.filter(function (x) { return String(x.IdCollegamento).toUpperCase() === id; })[0];
+      if (rc) { ARI_ULT = { tit: 'Collegamento ' + id, cols: ARI_COLS, rows: [ariRigaColl(rc, 'RC')] }; rispondi(ariSchedaColl(rc, 'RC'), ARI_EXP); return true; }
+      var ra = d.ra.filter(function (x) { return String(x.SubPath || '').toUpperCase().indexOf(id) === 0; });
+      if (ra.length) { var nk = ra.filter(function (x) { return String(x.Stato_IdCollegamento).toUpperCase() !== 'ATTIVO'; }).length;
+        rispondi('Il Subpath RA <b>' + id + '</b> ha <b>' + ra.length + '</b> collegament' + (ra.length === 1 ? 'o' : 'i') + (nk ? ', di cui <b class="ari-ko">' + nk + ' non attiv' + (nk === 1 ? 'o' : 'i') + '</b>' : ', tutti attivi') + ':' + ariTabella('Subpath RA ' + id, ARI_COLS, ra.map(function (x) { return ariRigaColl(x, 'RA'); })), ARI_EXP); return true; }
+    }
+    /* 3. Nodi A1 di una regione */
+    var reg = ariRegioneIn(q), cq = ariCentraleIn(q);
+    if (cq && reg && ariNorm(cq.nome).indexOf(ariNorm(reg)) >= 0) reg = null;   /* «ROZZANO IDC V. TOSCANA» e' una centrale, non la regione */
+    if (/nod[oi] ?a1/.test(q)) {
+      carica(); var lista = (typeof CENTRALI_POP_NODO_A1 !== 'undefined' ? CENTRALI_POP_NODO_A1 : []).filter(function (x) { var c = centrali[x.clli]; return !reg || (c && regioneDi(c) === reg) || (c && reg && regioneDi(c).indexOf(reg) >= 0); });
+      if (!lista.length) { rispondi('Non trovo Nodi A1' + (reg ? ' in ' + esc(reg) : '') + '.'); return true; }
+      var rows = lista.map(function (x) { var c = centrali[x.clli] || { nome: x.nome, clli: x.clli, reti: {} }; return [x.nome, x.clli, (c.reti && c.reti.RC ? 'RC' : '') + (c.reti && c.reti.RA ? ' RA' : ''), x.noPE ? 'A1 Div \u00b7 NO PE' : 'A1', c.nome ? regioneDi(c) : '']; });
+      rispondi((reg ? 'Nella regione <b>' + esc(reg) + '</b>' : 'In Italia') + ' i Nodi A1 sono <b>' + lista.length + '</b>. Sono le centrali dove la rete regionale si collega alla RTN: nella Progettazione il pi\u00f9 vicino alla Colt va sulla 1a Via e l\u2019altro della regione \u00e8 proposto per la 2a.' + ariTabella('Nodi A1' + (reg ? ' ' + reg : ''), ['Nodo A1', 'CLLI', 'Rete', 'Tipo', 'Regione'], rows), ARI_EXP); return true;
+    }
+    /* 4. Data Center */
+    if (/data ?center|\bdc\b/.test(q)) {
+      carica(); var dcs = (window.DATA_CENTER_CLLI || []).map(function (k) { var c = centrali[k]; return [(window.DATA_CENTER_INFO || {})[k] || (c ? c.nome : k), k, c ? regioneDi(c) : '']; }).filter(function (r) { return !reg || String(r[2]).indexOf(reg) >= 0; });
+      rispondi('I <b>Data Center</b>' + (reg ? ' in ' + esc(reg) : '') + ' sono <b>' + dcs.length + '</b>. Nella Progettazione, se la Colt \u00e8 un DC, le note della coda protetta parlano di \u00abTratta DWDM interna al DC\u00bb.' + ariTabella('Data Center' + (reg ? ' ' + reg : ''), ['Data Center', 'CLLI', 'Regione'], dcs), ARI_EXP); return true;
+    }
+    /* 5. elenco di collegamenti per stato e luogo */
+    var stato = /in attivazione/.test(q) ? 'IN ATTIVAZIONE' : /(non attiv|da verificar|nni)/.test(q) ? 'NON' : /\battiv/.test(q) ? 'ATTIVO' : null;
+    var luogo = reg ? null : cq, parola = null;
+    if (!reg && !luogo) { var pw = q.split(' ').filter(function (w) { return w.length >= 4 && !/^(collegament|link|quali|quanti|sono|della|delle|nella|nelle|stato|attiv|verific|elenco|rete|mostra|dammi|tutti|tutte|zona)/.test(w); }); carica(); parola = pw.filter(function (w) { return Object.keys(centrali).some(function (k) { return ariNorm(centrali[k].nome).indexOf(w) >= 0; }); })[0] || null; }
+    if ((/collegament|link/.test(q) || stato) && (reg || luogo || parola || stato)) {
+      var rete = /\bra\b/.test(q) ? 'RA' : /\brc\b/.test(q) ? 'RC' : null, rows2 = [];
+      [['RC', d.rc], ['RA', d.ra]].forEach(function (z) { if (rete && rete !== z[0]) return; z[1].forEach(function (x) {
+        var s = String(x.Stato_IdCollegamento || '').toUpperCase();
+        if (stato === 'ATTIVO' && s !== 'ATTIVO') return; if (stato === 'IN ATTIVAZIONE' && s !== 'IN ATTIVAZIONE') return; if (stato === 'NON' && s === 'ATTIVO') return;
+        if (reg && String(x.Regione || '').indexOf(reg) < 0) return;
+        if (luogo && x.CLLI_A !== luogo.clli && x.CLLI_Z !== luogo.clli) return;
+        if (parola && ariNorm(x.GAT_A).indexOf(parola) < 0 && ariNorm(x.GAT_Z).indexOf(parola) < 0) return;
+        rows2.push(ariRigaColl(x, z[0])); }); });
+      var dove = reg ? 'in ' + esc(reg) : luogo ? 'su ' + esc(luogo.nome + ' (' + luogo.clli + ')') : parola ? 'con \u00ab' + esc(parola.toUpperCase()) + '\u00bb nel nome di una centrale' : 'in tutta Italia';
+      var cosa = stato === 'ATTIVO' ? 'attivi' : stato === 'IN ATTIVAZIONE' ? 'in attivazione' : stato === 'NON' ? 'non attivi (da verificare su NNI)' : '';
+      rispondi('Ho trovato <b>' + rows2.length + '</b> ' + (rows2.length === 1 ? 'collegamento' : 'collegamenti') + (rete ? ' ' + rete : '') + (cosa ? ' ' + (rows2.length === 1 ? cosa.replace('attivi', 'attivo').replace(' (da verificare', ' (da verificare') : cosa) : '') + ' ' + dove + '.' + (rows2.length ? ariTabella('Collegamenti ' + (cosa || '') + ' ' + (reg || (luogo && luogo.nome) || parola || ''), ARI_COLS, rows2) : ''), rows2.length ? ARI_EXP : null); return true;
+    }
+    /* 6. scheda di una centrale */
+    var cc = luogo || ariCentraleIn(q);
+    if (cc) {
+      var tutti = [];
+      [['RC', d.rc], ['RA', d.ra]].forEach(function (z) { z[1].forEach(function (x) { if (x.CLLI_A === cc.clli || x.CLLI_Z === cc.clli) tutti.push(ariRigaColl(x, z[0])); }); });
+      var nonA = tutti.filter(function (r) { return String(r[4]).toUpperCase() !== 'ATTIVO'; }).length, ti = Object.keys(cc.tipi || {}).sort()[0];
+      var ruoli = [cc.reti && cc.reti.RC ? 'RC' : '', cc.reti && cc.reti.RA ? 'RA' + (ti ? ' T' + ti : '') : '', nodiA1[cc.clli] ? 'Nodo A1' : '', (window.DATA_CENTER_CLLI || []).indexOf(cc.clli) >= 0 ? 'Data Center' : ''].filter(Boolean).join(' \u00b7 ');
+      rispondi('<b>' + esc(cc.nome) + '</b> (' + esc(cc.clli) + ') \u00e8 in <b>' + esc(regioneDi(cc) || '?') + '</b>: ' + esc(ruoli || 'centrale') + '. Ha <b>' + tutti.length + '</b> collegamenti nei DB' + (nonA ? ', di cui <b class="ari-ko">' + nonA + ' non attivi</b>' : ', tutti attivi') + '.'
+        + (ti === '3' && !(cc.reti && cc.reti.RC) ? ' \u00c8 una RA di tipo 3: solo di transito, non pu\u00f2 essere una Colt.' : '') + (tutti.length ? ariTabella('Collegamenti di ' + cc.nome, ARI_COLS, tutti) : ''), tutti.length ? ARI_EXP : null); return true;
+    }
+    return false;
+  }
+
+  /* ═══ V11.26|108: ARIADNE, domande sul DB, progettazione da una frase, domande non capite, pannello spostabile ═══ */
+  var ARI_POS = null;   /* posizione scelta trascinando: vale fino al refresh, poi torna quella di default */
+  function ariPosPannello() {
+    var p = el('ariPan'), b = el('ariBtn'); if (!p) return;
+    if (ARI_POS) { p.style.left = ARI_POS.x + 'px'; p.style.top = ARI_POS.y + 'px'; p.style.right = 'auto'; return; }
+    if (b) { var r = b.getBoundingClientRect(), w = p.offsetWidth || 380; var x = Math.max(10, Math.min(window.innerWidth - w - 10, r.right - w)); p.style.left = x + 'px'; p.style.right = 'auto'; p.style.top = Math.max(10, r.bottom + 8) + 'px'; }
+  }
+  function ariTrascina(p) {
+    var h = p.querySelector('.ari-h'); if (!h || h._ariDrag) return; h._ariDrag = true;
+    h.addEventListener('mousedown', function (e) {
+      if (e.target.closest('.ari-x')) return; e.preventDefault();
+      var r = p.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top;
+      var mv = function (ev) { var x = Math.max(0, Math.min(window.innerWidth - r.width, ev.clientX - dx)), y = Math.max(0, Math.min(window.innerHeight - 60, ev.clientY - dy)); ARI_POS = { x: x, y: y }; p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.right = 'auto'; };
+      var su = function () { document.removeEventListener('mousemove', mv); document.removeEventListener('mouseup', su); p.classList.remove('drag'); };
+      p.classList.add('drag'); document.addEventListener('mousemove', mv); document.addEventListener('mouseup', su);
+    });
+  }
+  /* ── domande non capite: solo su questo PC, per istruire Ariadne ── */
+  var ARI_NC = 'croAriadneNonCapite';
+  function ariNcLeggi() { try { return JSON.parse(localStorage.getItem(ARI_NC) || '[]'); } catch (e) { return []; } }
+  function ariNcAggiungi(t) { try { var l = ariNcLeggi(); l.push({ t: String(t).slice(0, 300), q: new Date().toISOString() }); localStorage.setItem(ARI_NC, JSON.stringify(l.slice(-200))); } catch (e) {} }
+  var ARI_LOG = ARI_NC;
+  function ariExport(f) {   /* chip «exp:…» del pannello */
+    if (f === 'nc') return ariEsporta('Domande non capite da Ariadne', ['Quando', 'Domanda'], ariNcLeggi().map(function (x) { return [new Date(x.q).toLocaleString('it-IT'), x.t]; }), 'txt');
+    if (ARI_ULT) ariEsporta(ARI_ULT.tit, ARI_ULT.cols, ARI_ULT.rows, f === 'xlsx' || f === 'xls' ? 'xlsx' : 'txt');
+  }
+  function ariNcMostra(rispondi) {
+    if (!rispondi) rispondi = function (h, chips) { ariPannello(); el('ariBody').innerHTML = '<div class="ari-msg">' + h + '</div>'; ariChips((chips || []).concat([['elenco', '\u2630 Cosa manca'], ['guida', '\uD83E\uDDF5 Guidami']])); };
+    var l = ariNcLeggi();
+    if (!l.length) return rispondi('Non ci sono domande non capite: per ora ho capito tutto. Quando qualcosa non mi \u00e8 chiaro me lo segno qui, cos\u00ec Giuseppe me lo pu\u00f2 insegnare.');
+    rispondi((l.length === 1 ? 'Ecco la <b>domanda</b> che non ho capito' : 'Ecco le <b>' + l.length + ' domande</b> che non ho capito') + ' (le tengo solo su questo PC). Esportale e allegale quando vuoi istruirmi:<br>' + l.slice(-15).reverse().map(function (x) { return '\u2022 ' + esc(x.t) + ' <small style="color:#64748b">' + new Date(x.q).toLocaleString('it-IT') + '</small>'; }).join('<br>'),
+      [['exp:nc', '\u2B07 Esporta in TXT'], ['ncdel', '\uD83D\uDDD1 Svuota l\u2019elenco']]);
+  }
+  /* ── esportazione degli elenchi ── */
+  function ariEsporta(tit, cols, rows, fmt) {
+    var d = new Date(), base = 'CRO_Ariadne_' + String(tit).replace(/[^A-Za-z0-9]+/g, '_').slice(0, 40) + '_' + d.toISOString().slice(0, 10);
+    var giu = function (blob, nome) { var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nome; document.body.appendChild(a); a.click(); a.remove(); };
+    if (fmt === 'xlsx' && typeof ExcelJS !== 'undefined') {
+      var wb = new ExcelJS.Workbook(), ws = wb.addWorksheet('Ariadne');
+      ws.addRow([tit]); ws.getRow(1).font = { bold: true, size: 13 }; ws.addRow(['Estratto da CRO ITALIA \u00b7 Ariadne \u00b7 ' + d.toLocaleString('it-IT')]); ws.addRow([]);
+      var hr = ws.addRow(cols); hr.font = { bold: true, color: { argb: 'FFFFFFFF' } }; hr.eachCell(function (c) { c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1F3864' } }; });
+      rows.forEach(function (r) { ws.addRow(r); }); cols.forEach(function (c, i) { ws.getColumn(i + 1).width = Math.min(60, Math.max(12, String(c).length + 4)); });
+      wb.xlsx.writeBuffer().then(function (buf) { giu(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), base + '.xlsx'); });
+      return;
+    }
+    if (fmt === 'xlsx') { var csv = [cols].concat(rows).map(function (r) { return r.map(function (v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n'); giu(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }), base + '.csv'); return; }
+    var t = [tit, 'Estratto da CRO ITALIA \u00b7 Ariadne \u00b7 ' + d.toLocaleString('it-IT'), ''].concat([cols.join('\t')], rows.map(function (r) { return r.join('\t'); })).join('\n');
+    giu(new Blob([t], { type: 'text/plain;charset=utf-8' }), base + '.txt');
+  }
+  var ARI_ULT = null;   /* ultimo elenco mostrato, per l'export */
+  function ariTabella(tit, cols, rows, max) {
+    ARI_ULT = { tit: tit, cols: cols, rows: rows }; max = max || 12;
+    return '<div class="ari-tab"><table><tr>' + cols.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr>' + rows.slice(0, max).map(function (r) { return '<tr>' + r.map(function (v) { return '<td>' + esc(v) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table></div>'
+      + (rows.length > max ? '<small>\u2026e altre ' + (rows.length - max) + ' righe: nell\u2019export ci sono tutte.</small>' : '');
+  }
+  var ARI_EXP = [['exp:txt', '\u2B07 Esporta TXT'], ['exp:xlsx', '\u2B07 Esporta Excel']];
+  /* ── dati ── */
+  function ariNorm(t) { return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function ariDb() { var rc = (typeof RAW_DB !== 'undefined' ? RAW_DB : []), ra = (typeof RAW_DB_RA !== 'undefined' ? RAW_DB_RA : []); return { rc: rc, ra: ra }; }
+  function ariRegioni() { var s = {}; var d = ariDb(); d.rc.concat(d.ra).forEach(function (x) { String(x.Regione || '').split('|').forEach(function (r) { r = r.trim(); if (r && r !== '-') s[r] = 1; }); }); return Object.keys(s); }
+  function ariRegioneIn(q) { var hit = ariRegioni().filter(function (r) { return (' ' + q + ' ').indexOf(' ' + ariNorm(r) + ' ') >= 0; }); return hit.sort(function (a, b) { return b.length - a.length; })[0] || null; }
+  function ariCentraleIn(q) {
+    carica(); var m = /\b([a-z]{4}it[a-z0-9]{2})\b/.exec(q); if (m && centrali[m[1].toUpperCase()]) return centrali[m[1].toUpperCase()];
+    var best = null; Object.keys(centrali).forEach(function (k) { var n = ariNorm(centrali[k].nome); if (n.length < 3) return; if ((' ' + q + ' ').indexOf(' ' + n + ' ') >= 0 && (!best || n.length > ariNorm(best.nome).length)) best = centrali[k]; });
+    return best;
+  }
+  function ariCentraleTesto(t) {   /* per «da X a Y»: CLLI, nome esatto o il nome piu' simile */
+    carica(); var q = ariNorm(t); if (!q) return null;
+    var m = /\b([a-z]{4}it[a-z0-9]{2})\b/.exec(q); if (m && centrali[m[1].toUpperCase()]) return centrali[m[1].toUpperCase()];
+    var ks = Object.keys(centrali), es = ks.filter(function (k) { return ariNorm(centrali[k].nome) === q; }); if (es.length) return centrali[es[0]];
+    var st = ks.filter(function (k) { return ariNorm(centrali[k].nome).indexOf(q) === 0; }).sort(function (a, b) { return centrali[a].nome.length - centrali[b].nome.length; }); if (st.length) return centrali[st[0]];
+    var inc = ks.filter(function (k) { return ariNorm(centrali[k].nome).indexOf(q) >= 0; }).sort(function (a, b) { return centrali[a].nome.length - centrali[b].nome.length; }); return inc.length ? centrali[inc[0]] : null;
+  }
+  function ariRigaColl(x, rete) { return [rete, String(x.IdCollegamento), x.GAT_A + ' (' + x.CLLI_A + ')', x.GAT_Z + ' (' + x.CLLI_Z + ')', String(x.Stato_IdCollegamento || ''), String(x.Distanza_km || ''), String(x.Regione || '')]; }
+  var ARI_COLS = ['Rete', 'IdCollegamento', 'Da', 'A', 'Stato', 'Km', 'Regione'];
+  function ariSchedaColl(x, rete) {
+    var cav = String(x.IdCavo || '').split(' + ').filter(function (c) { return c && c.trim() !== '-'; }).length, st = String(x.Stato_IdCollegamento || ''), at = st.toUpperCase() === 'ATTIVO';
+    return '<b>' + esc(x.IdCollegamento) + '</b> \u00e8 <b class="' + (at ? 'ari-ok' : 'ari-ko') + '">' + esc(st) + '</b>. \u00c8 un collegamento ' + rete + ' fra <b>' + esc(x.GAT_A) + '</b> (' + esc(x.CLLI_A) + ') e <b>' + esc(x.GAT_Z) + '</b> (' + esc(x.CLLI_Z) + '), ' + esc(String(x.Distanza_km || '?')) + ' km, ' + esc(x.Regione || '') + '.'
+      + (cav ? ' Passa su ' + cav + ' cav' + (cav === 1 ? 'o' : 'i') + ' C-FOS.' : '') + (at ? '' : ' Se un tuo percorso lo usa, va verificato su NNI e la nota IRP avr\u00e0 i 180 giorni.') + (x.Altro2 && x.Altro2 !== '-' ? '<br><small>Nota del DB: ' + esc(x.Altro2) + '</small>' : '');
+  }
+  function ariDB(t, q, rispondi) {
+    var d = ariDb();
+    if (/(non capit|domande non|non hai capito)/.test(q)) { ariNcMostra(rispondi); return true; }
+    /* 1. progettazione da una frase */
+    var pm = /\bda (.+?) (?:a|ad|verso|fino a) (.+?)(?: (?:con|in|a|protett|sncp|e2e|solo|std|\d{1,3}g)\b.*)?$/.exec(q);
+    if (pm && /(progett|progetta|crea|imposta|fammi|prepara|fattibilita)/.test(q)) {
+      var cA = ariCentraleTesto(pm[1]), cZ = ariCentraleTesto(pm[2]);
+      if (!cA || !cZ) { rispondi('Ho capito che vuoi una progettazione, ma non trovo ' + (!cA ? '\u00ab' + esc(pm[1]) + '\u00bb' : '') + (!cA && !cZ ? ' n\u00e9 ' : '') + (!cZ ? '\u00ab' + esc(pm[2]) + '\u00bb' : '') + ' fra le centrali. Prova con il nome come nel menu (per esempio \u00abEUR\u00bb o \u00abFIRENZE CASTELLO\u00bb) o con il CLLI.', [['chiedi:progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP', 'Esempio: da EUR a Firenze Castello']]); return true; }
+      var cap = /\b100 ?g\b/.test(q) ? '100G' : /\b10 ?g\b/.test(q) ? '10G' : /\b1 ?g\b/.test(q) ? '1G' : null;
+      var prot = /\bsncp|caramella/.test(q) ? 'sncp' : /\be2e\b/.test(q) ? 'e2e' : /(non protett|senza protez)/.test(q) ? 'no' : /protett/.test(q) ? 'sncp' : null;
+      var div = /(solo std|senza div|non divers)/.test(q) ? false : (/(div|diversific|std ?\+ ?div|due vie)/.test(q) || (prot && prot !== 'no')) ? true : null;
+      var rA = regioneDi(cA), rZ = regioneDi(cZ), sch = (/nodo a1/.test(q) && nodiA1[cZ.clli]) ? 'a1' : (rA && rZ && rA !== rZ ? 'rtn' : 'regione');
+      croCmp.schema(sch); if (cap) croCmp.capacita(cap); if (div != null) croCmp.diversificato(div); if (prot) croCmp.protezione(prot);
+      var bA = trova('centraleA'), bZ = trova(sch === 'a1' ? 'nodoA' : 'centraleZ');
+      if (bA) campo(bA.id, 'manuale', cA.nome + ' (' + cA.clli + ')'); if (bZ) campo(bZ.id, 'manuale', cZ.nome + ' (' + cZ.clli + ')');
+      ridisegna();
+      var nA = trova('nodoA'), nZ = trova('nodoZ');
+      rispondi('Fatto. Ho impostato:<br>\u2022 schema <b>' + (sch === 'rtn' ? 'Interregionale' : sch === 'a1' ? 'Verso Nodo A1' : 'Stessa regione') + '</b>' + (sch === 'rtn' ? ' (' + esc(rA) + ' \u2192 ' + esc(rZ) + ')' : '') + '<br>\u2022 Colt A <b>' + esc(cA.nome + ' (' + cA.clli + ')') + '</b>, ' + (sch === 'a1' ? 'Nodo A1' : 'Colt Z') + ' <b>' + esc(cZ.nome + ' (' + cZ.clli + ')') + '</b>'
+        + (sch === 'rtn' && nA && nA.r && nZ && nZ.r ? '<br>\u2022 Nodi A1: <b>' + esc(nA.r.c.nome) + '</b> e <b>' + esc(nZ.r.c.nome) + '</b> (i pi\u00f9 vicini della regione)' : '')
+        + '<br>\u2022 ' + ((el('cmpCap') || {}).value || '1G') + ', ' + (divOn() ? 'Std + Div' : 'Solo Std') + ', protezione ' + ({ no: 'no', sncp: 'SNCP', e2e: 'E2E' }[prot || 'no'] || 'no')
+        + '<br>Ora servono i percorsi: con <b>Guidami</b> ti porto sul bottone \u2460 Cerca percorsi nell\u2019Unificato' + (sch === 'rtn' ? ' (prima la Zona A, poi la Zona Z)' : '') + ' e poi su quello che resta.', [['guida', '\uD83E\uDDF5 Guidami'], ['irp', '\u2705 Cosa manca']]);
+      return true;
+    }
+    /* 2. stato di un collegamento RC o di un Subpath RA */
+    var im = /\b([a-z]{3}\d{3})\b/.exec(q);
+    if (im) {
+      var id = im[1].toUpperCase(), rc = d.rc.filter(function (x) { return String(x.IdCollegamento).toUpperCase() === id; })[0];
+      if (rc) { ARI_ULT = { tit: 'Collegamento ' + id, cols: ARI_COLS, rows: [ariRigaColl(rc, 'RC')] }; rispondi(ariSchedaColl(rc, 'RC'), ARI_EXP); return true; }
+      var ra = d.ra.filter(function (x) { return String(x.SubPath || '').toUpperCase().indexOf(id) === 0; });
+      if (ra.length) { var nk = ra.filter(function (x) { return String(x.Stato_IdCollegamento).toUpperCase() !== 'ATTIVO'; }).length;
+        rispondi('Il Subpath RA <b>' + id + '</b> ha <b>' + ra.length + '</b> collegament' + (ra.length === 1 ? 'o' : 'i') + (nk ? ', di cui <b class="ari-ko">' + nk + ' non attiv' + (nk === 1 ? 'o' : 'i') + '</b>' : ', tutti attivi') + ':' + ariTabella('Subpath RA ' + id, ARI_COLS, ra.map(function (x) { return ariRigaColl(x, 'RA'); })), ARI_EXP); return true; }
+    }
+    /* 3. Nodi A1 di una regione */
+    var reg = ariRegioneIn(q), cq = ariCentraleIn(q);
+    if (cq && reg && ariNorm(cq.nome).indexOf(ariNorm(reg)) >= 0) reg = null;   /* «ROZZANO IDC V. TOSCANA» e' una centrale, non la regione */
+    if (/nod[oi] ?a1/.test(q)) {
+      carica(); var lista = (typeof CENTRALI_POP_NODO_A1 !== 'undefined' ? CENTRALI_POP_NODO_A1 : []).filter(function (x) { var c = centrali[x.clli]; return !reg || (c && regioneDi(c) === reg) || (c && reg && regioneDi(c).indexOf(reg) >= 0); });
+      if (!lista.length) { rispondi('Non trovo Nodi A1' + (reg ? ' in ' + esc(reg) : '') + '.'); return true; }
+      var rows = lista.map(function (x) { var c = centrali[x.clli] || { nome: x.nome, clli: x.clli, reti: {} }; return [x.nome, x.clli, (c.reti && c.reti.RC ? 'RC' : '') + (c.reti && c.reti.RA ? ' RA' : ''), x.noPE ? 'A1 Div \u00b7 NO PE' : 'A1', c.nome ? regioneDi(c) : '']; });
+      rispondi((reg ? 'Nella regione <b>' + esc(reg) + '</b>' : 'In Italia') + ' i Nodi A1 sono <b>' + lista.length + '</b>. Sono le centrali dove la rete regionale si collega alla RTN: nella Progettazione il pi\u00f9 vicino alla Colt va sulla 1a Via e l\u2019altro della regione \u00e8 proposto per la 2a.' + ariTabella('Nodi A1' + (reg ? ' ' + reg : ''), ['Nodo A1', 'CLLI', 'Rete', 'Tipo', 'Regione'], rows), ARI_EXP); return true;
+    }
+    /* 4. Data Center */
+    if (/data ?center|\bdc\b/.test(q)) {
+      carica(); var dcs = (window.DATA_CENTER_CLLI || []).map(function (k) { var c = centrali[k]; return [(window.DATA_CENTER_INFO || {})[k] || (c ? c.nome : k), k, c ? regioneDi(c) : '']; }).filter(function (r) { return !reg || String(r[2]).indexOf(reg) >= 0; });
+      rispondi('I <b>Data Center</b>' + (reg ? ' in ' + esc(reg) : '') + ' sono <b>' + dcs.length + '</b>. Nella Progettazione, se la Colt \u00e8 un DC, le note della coda protetta parlano di \u00abTratta DWDM interna al DC\u00bb.' + ariTabella('Data Center' + (reg ? ' ' + reg : ''), ['Data Center', 'CLLI', 'Regione'], dcs), ARI_EXP); return true;
+    }
+    /* 5. elenco di collegamenti per stato e luogo */
+    var stato = /in attivazione/.test(q) ? 'IN ATTIVAZIONE' : /(non attiv|da verificar|nni)/.test(q) ? 'NON' : /\battiv/.test(q) ? 'ATTIVO' : null;
+    var luogo = reg ? null : cq, parola = null;
+    if (!reg && !luogo) { var pw = q.split(' ').filter(function (w) { return w.length >= 4 && !/^(collegament|link|quali|quanti|sono|della|delle|nella|nelle|stato|attiv|verific|elenco|rete|mostra|dammi|tutti|tutte|zona)/.test(w); }); carica(); parola = pw.filter(function (w) { return Object.keys(centrali).some(function (k) { return ariNorm(centrali[k].nome).indexOf(w) >= 0; }); })[0] || null; }
+    if ((/collegament|link/.test(q) || stato) && (reg || luogo || parola || stato)) {
+      var rete = /\bra\b/.test(q) ? 'RA' : /\brc\b/.test(q) ? 'RC' : null, rows2 = [];
+      [['RC', d.rc], ['RA', d.ra]].forEach(function (z) { if (rete && rete !== z[0]) return; z[1].forEach(function (x) {
+        var s = String(x.Stato_IdCollegamento || '').toUpperCase();
+        if (stato === 'ATTIVO' && s !== 'ATTIVO') return; if (stato === 'IN ATTIVAZIONE' && s !== 'IN ATTIVAZIONE') return; if (stato === 'NON' && s === 'ATTIVO') return;
+        if (reg && String(x.Regione || '').indexOf(reg) < 0) return;
+        if (luogo && x.CLLI_A !== luogo.clli && x.CLLI_Z !== luogo.clli) return;
+        if (parola && ariNorm(x.GAT_A).indexOf(parola) < 0 && ariNorm(x.GAT_Z).indexOf(parola) < 0) return;
+        rows2.push(ariRigaColl(x, z[0])); }); });
+      var dove = reg ? 'in ' + esc(reg) : luogo ? 'su ' + esc(luogo.nome + ' (' + luogo.clli + ')') : parola ? 'con \u00ab' + esc(parola.toUpperCase()) + '\u00bb nel nome di una centrale' : 'in tutta Italia';
+      var cosa = stato === 'ATTIVO' ? 'attivi' : stato === 'IN ATTIVAZIONE' ? 'in attivazione' : stato === 'NON' ? 'non attivi (da verificare su NNI)' : '';
+      rispondi('Ho trovato <b>' + rows2.length + '</b> ' + (rows2.length === 1 ? 'collegamento' : 'collegamenti') + (rete ? ' ' + rete : '') + (cosa ? ' ' + (rows2.length === 1 ? cosa.replace('attivi', 'attivo').replace(' (da verificare', ' (da verificare') : cosa) : '') + ' ' + dove + '.' + (rows2.length ? ariTabella('Collegamenti ' + (cosa || '') + ' ' + (reg || (luogo && luogo.nome) || parola || ''), ARI_COLS, rows2) : ''), rows2.length ? ARI_EXP : null); return true;
+    }
+    /* 6. scheda di una centrale */
+    var cc = luogo || ariCentraleIn(q);
+    if (cc) {
+      var tutti = [];
+      [['RC', d.rc], ['RA', d.ra]].forEach(function (z) { z[1].forEach(function (x) { if (x.CLLI_A === cc.clli || x.CLLI_Z === cc.clli) tutti.push(ariRigaColl(x, z[0])); }); });
+      var nonA = tutti.filter(function (r) { return String(r[4]).toUpperCase() !== 'ATTIVO'; }).length, ti = Object.keys(cc.tipi || {}).sort()[0];
+      var ruoli = [cc.reti && cc.reti.RC ? 'RC' : '', cc.reti && cc.reti.RA ? 'RA' + (ti ? ' T' + ti : '') : '', nodiA1[cc.clli] ? 'Nodo A1' : '', (window.DATA_CENTER_CLLI || []).indexOf(cc.clli) >= 0 ? 'Data Center' : ''].filter(Boolean).join(' \u00b7 ');
+      rispondi('<b>' + esc(cc.nome) + '</b> (' + esc(cc.clli) + ') \u00e8 in <b>' + esc(regioneDi(cc) || '?') + '</b>: ' + esc(ruoli || 'centrale') + '. Ha <b>' + tutti.length + '</b> collegamenti nei DB' + (nonA ? ', di cui <b class="ari-ko">' + nonA + ' non attivi</b>' : ', tutti attivi') + '.'
+        + (ti === '3' && !(cc.reti && cc.reti.RC) ? ' \u00c8 una RA di tipo 3: solo di transito, non pu\u00f2 essere una Colt.' : '') + (tutti.length ? ariTabella('Collegamenti di ' + cc.nome, ARI_COLS, tutti) : ''), tutti.length ? ARI_EXP : null); return true;
+    }
+    return false;
+  }
+
+  /* ═══ V11.26|108: ARIADNE, domande sul DB, progettazione da una frase, domande non capite, pannello spostabile ═══ */
+  var ARI_POS = null;   /* posizione scelta trascinando: vale fino al refresh, poi torna quella di default */
+  function ariPosPannello() {
+    var p = el('ariPan'), b = el('ariBtn'); if (!p) return;
+    if (ARI_POS) { p.style.left = ARI_POS.x + 'px'; p.style.top = ARI_POS.y + 'px'; p.style.right = 'auto'; return; }
+    if (b) { var r = b.getBoundingClientRect(), w = p.offsetWidth || 380; var x = Math.max(10, Math.min(window.innerWidth - w - 10, r.right - w)); p.style.left = x + 'px'; p.style.right = 'auto'; p.style.top = Math.max(10, r.bottom + 8) + 'px'; }
+  }
+  function ariTrascina(p) {
+    var h = p.querySelector('.ari-h'); if (!h || h._ariDrag) return; h._ariDrag = true;
+    h.addEventListener('mousedown', function (e) {
+      if (e.target.closest('.ari-x')) return; e.preventDefault();
+      var r = p.getBoundingClientRect(), dx = e.clientX - r.left, dy = e.clientY - r.top;
+      var mv = function (ev) { var x = Math.max(0, Math.min(window.innerWidth - r.width, ev.clientX - dx)), y = Math.max(0, Math.min(window.innerHeight - 60, ev.clientY - dy)); ARI_POS = { x: x, y: y }; p.style.left = x + 'px'; p.style.top = y + 'px'; p.style.right = 'auto'; };
+      var su = function () { document.removeEventListener('mousemove', mv); document.removeEventListener('mouseup', su); p.classList.remove('drag'); };
+      p.classList.add('drag'); document.addEventListener('mousemove', mv); document.addEventListener('mouseup', su);
+    });
+  }
+  /* ── domande non capite: solo su questo PC, per istruire Ariadne ── */
+  var ARI_NC = 'croAriadneNonCapite';
+  function ariNcLeggi() { try { return JSON.parse(localStorage.getItem(ARI_NC) || '[]'); } catch (e) { return []; } }
+  function ariNcAggiungi(t) { try { var l = ariNcLeggi(); l.push({ t: String(t).slice(0, 300), q: new Date().toISOString() }); localStorage.setItem(ARI_NC, JSON.stringify(l.slice(-200))); } catch (e) {} }
+  var ARI_LOG = ARI_NC;
+  function ariExport(f) {   /* chip «exp:…» del pannello */
+    if (f === 'nc') return ariEsporta('Domande non capite da Ariadne', ['Quando', 'Domanda'], ariNcLeggi().map(function (x) { return [new Date(x.q).toLocaleString('it-IT'), x.t]; }), 'txt');
+    if (ARI_ULT) ariEsporta(ARI_ULT.tit, ARI_ULT.cols, ARI_ULT.rows, f === 'xlsx' || f === 'xls' ? 'xlsx' : 'txt');
+  }
+  function ariNcMostra(rispondi) {
+    if (!rispondi) rispondi = function (h, chips) { ariPannello(); el('ariBody').innerHTML = '<div class="ari-msg">' + h + '</div>'; ariChips((chips || []).concat([['elenco', '\u2630 Cosa manca'], ['guida', '\uD83E\uDDF5 Guidami']])); };
+    var l = ariNcLeggi();
+    if (!l.length) return rispondi('Non ci sono domande non capite: per ora ho capito tutto. Quando qualcosa non mi \u00e8 chiaro me lo segno qui, cos\u00ec Giuseppe me lo pu\u00f2 insegnare.');
+    rispondi((l.length === 1 ? 'Ecco la <b>domanda</b> che non ho capito' : 'Ecco le <b>' + l.length + ' domande</b> che non ho capito') + ' (le tengo solo su questo PC). Esportale e allegale quando vuoi istruirmi:<br>' + l.slice(-15).reverse().map(function (x) { return '\u2022 ' + esc(x.t) + ' <small style="color:#64748b">' + new Date(x.q).toLocaleString('it-IT') + '</small>'; }).join('<br>'),
+      [['exp:nc', '\u2B07 Esporta in TXT'], ['ncdel', '\uD83D\uDDD1 Svuota l\u2019elenco']]);
+  }
+  /* ── esportazione degli elenchi ── */
+  function ariEsporta(tit, cols, rows, fmt) {
+    var d = new Date(), base = 'CRO_Ariadne_' + String(tit).replace(/[^A-Za-z0-9]+/g, '_').slice(0, 40) + '_' + d.toISOString().slice(0, 10);
+    var giu = function (blob, nome) { var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = nome; document.body.appendChild(a); a.click(); a.remove(); };
+    if (fmt === 'xlsx' && typeof ExcelJS !== 'undefined') {
+      var wb = new ExcelJS.Workbook(), ws = wb.addWorksheet('Ariadne');
+      ws.addRow([tit]); ws.getRow(1).font = { bold: true, size: 13 }; ws.addRow(['Estratto da CRO ITALIA \u00b7 Ariadne \u00b7 ' + d.toLocaleString('it-IT')]); ws.addRow([]);
+      var hr = ws.addRow(cols); hr.font = { bold: true, color: { argb: 'FFFFFFFF' } }; hr.eachCell(function (c) { c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1F3864' } }; });
+      rows.forEach(function (r) { ws.addRow(r); }); cols.forEach(function (c, i) { ws.getColumn(i + 1).width = Math.min(60, Math.max(12, String(c).length + 4)); });
+      wb.xlsx.writeBuffer().then(function (buf) { giu(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), base + '.xlsx'); });
+      return;
+    }
+    if (fmt === 'xlsx') { var csv = [cols].concat(rows).map(function (r) { return r.map(function (v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }).join(';'); }).join('\r\n'); giu(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }), base + '.csv'); return; }
+    var t = [tit, 'Estratto da CRO ITALIA \u00b7 Ariadne \u00b7 ' + d.toLocaleString('it-IT'), ''].concat([cols.join('\t')], rows.map(function (r) { return r.join('\t'); })).join('\n');
+    giu(new Blob([t], { type: 'text/plain;charset=utf-8' }), base + '.txt');
+  }
+  var ARI_ULT = null;   /* ultimo elenco mostrato, per l'export */
+  function ariTabella(tit, cols, rows, max) {
+    ARI_ULT = { tit: tit, cols: cols, rows: rows }; max = max || 12;
+    return '<div class="ari-tab"><table><tr>' + cols.map(function (c) { return '<th>' + esc(c) + '</th>'; }).join('') + '</tr>' + rows.slice(0, max).map(function (r) { return '<tr>' + r.map(function (v) { return '<td>' + esc(v) + '</td>'; }).join('') + '</tr>'; }).join('') + '</table></div>'
+      + (rows.length > max ? '<small>\u2026e altre ' + (rows.length - max) + ' righe: nell\u2019export ci sono tutte.</small>' : '');
+  }
+  var ARI_EXP = [['exp:txt', '\u2B07 Esporta TXT'], ['exp:xlsx', '\u2B07 Esporta Excel']];
+  /* ── dati ── */
+  function ariNorm(t) { return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function ariDb() { var rc = (typeof RAW_DB !== 'undefined' ? RAW_DB : []), ra = (typeof RAW_DB_RA !== 'undefined' ? RAW_DB_RA : []); return { rc: rc, ra: ra }; }
+  function ariRegioni() { var s = {}; var d = ariDb(); d.rc.concat(d.ra).forEach(function (x) { String(x.Regione || '').split('|').forEach(function (r) { r = r.trim(); if (r && r !== '-') s[r] = 1; }); }); return Object.keys(s); }
+  function ariRegioneIn(q) { var hit = ariRegioni().filter(function (r) { return (' ' + q + ' ').indexOf(' ' + ariNorm(r) + ' ') >= 0; }); return hit.sort(function (a, b) { return b.length - a.length; })[0] || null; }
+  function ariCentraleIn(q) {
+    carica(); var m = /\b([a-z]{4}it[a-z0-9]{2})\b/.exec(q); if (m && centrali[m[1].toUpperCase()]) return centrali[m[1].toUpperCase()];
+    var best = null; Object.keys(centrali).forEach(function (k) { var n = ariNorm(centrali[k].nome); if (n.length < 3) return; if ((' ' + q + ' ').indexOf(' ' + n + ' ') >= 0 && (!best || n.length > ariNorm(best.nome).length)) best = centrali[k]; });
+    return best;
+  }
+  function ariCentraleTesto(t) {   /* per «da X a Y»: CLLI, nome esatto o il nome piu' simile */
+    carica(); var q = ariNorm(t); if (!q) return null;
+    var m = /\b([a-z]{4}it[a-z0-9]{2})\b/.exec(q); if (m && centrali[m[1].toUpperCase()]) return centrali[m[1].toUpperCase()];
+    var ks = Object.keys(centrali), es = ks.filter(function (k) { return ariNorm(centrali[k].nome) === q; }); if (es.length) return centrali[es[0]];
+    var st = ks.filter(function (k) { return ariNorm(centrali[k].nome).indexOf(q) === 0; }).sort(function (a, b) { return centrali[a].nome.length - centrali[b].nome.length; }); if (st.length) return centrali[st[0]];
+    var inc = ks.filter(function (k) { return ariNorm(centrali[k].nome).indexOf(q) >= 0; }).sort(function (a, b) { return centrali[a].nome.length - centrali[b].nome.length; }); return inc.length ? centrali[inc[0]] : null;
+  }
+  function ariRigaColl(x, rete) { return [rete, String(x.IdCollegamento), x.GAT_A + ' (' + x.CLLI_A + ')', x.GAT_Z + ' (' + x.CLLI_Z + ')', String(x.Stato_IdCollegamento || ''), String(x.Distanza_km || ''), String(x.Regione || '')]; }
+  var ARI_COLS = ['Rete', 'IdCollegamento', 'Da', 'A', 'Stato', 'Km', 'Regione'];
+  function ariSchedaColl(x, rete) {
+    var cav = String(x.IdCavo || '').split(' + ').filter(function (c) { return c && c.trim() !== '-'; }).length, st = String(x.Stato_IdCollegamento || ''), at = st.toUpperCase() === 'ATTIVO';
+    return '<b>' + esc(x.IdCollegamento) + '</b> \u00e8 <b class="' + (at ? 'ari-ok' : 'ari-ko') + '">' + esc(st) + '</b>. \u00c8 un collegamento ' + rete + ' fra <b>' + esc(x.GAT_A) + '</b> (' + esc(x.CLLI_A) + ') e <b>' + esc(x.GAT_Z) + '</b> (' + esc(x.CLLI_Z) + '), ' + esc(String(x.Distanza_km || '?')) + ' km, ' + esc(x.Regione || '') + '.'
+      + (cav ? ' Passa su ' + cav + ' cav' + (cav === 1 ? 'o' : 'i') + ' C-FOS.' : '') + (at ? '' : ' Se un tuo percorso lo usa, va verificato su NNI e la nota IRP avr\u00e0 i 180 giorni.') + (x.Altro2 && x.Altro2 !== '-' ? '<br><small>Nota del DB: ' + esc(x.Altro2) + '</small>' : '');
+  }
+  function ariDB(t, q, rispondi) {
+    var d = ariDb();
+    if (/(non capit|domande non|non hai capito)/.test(q)) { ariNcMostra(rispondi); return true; }
+    /* 1. progettazione da una frase */
+    var pm = /\bda (.+?) (?:a|ad|verso|fino a) (.+?)(?: (?:con|in|a|protett|sncp|e2e|solo|std|\d{1,3}g)\b.*)?$/.exec(q);
+    if (pm && /(progett|progetta|crea|imposta|fammi|prepara|fattibilita)/.test(q)) {
+      var cA = ariCentraleTesto(pm[1]), cZ = ariCentraleTesto(pm[2]);
+      if (!cA || !cZ) { rispondi('Ho capito che vuoi una progettazione, ma non trovo ' + (!cA ? '\u00ab' + esc(pm[1]) + '\u00bb' : '') + (!cA && !cZ ? ' n\u00e9 ' : '') + (!cZ ? '\u00ab' + esc(pm[2]) + '\u00bb' : '') + ' fra le centrali. Prova con il nome come nel menu (per esempio \u00abEUR\u00bb o \u00abFIRENZE CASTELLO\u00bb) o con il CLLI.', [['chiedi:progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP', 'Esempio: da EUR a Firenze Castello']]); return true; }
+      var cap = /\b100 ?g\b/.test(q) ? '100G' : /\b10 ?g\b/.test(q) ? '10G' : /\b1 ?g\b/.test(q) ? '1G' : null;
+      var prot = /\bsncp|caramella/.test(q) ? 'sncp' : /\be2e\b/.test(q) ? 'e2e' : /(non protett|senza protez)/.test(q) ? 'no' : /protett/.test(q) ? 'sncp' : null;
+      var div = /(solo std|senza div|non divers)/.test(q) ? false : (/(div|diversific|std ?\+ ?div|due vie)/.test(q) || (prot && prot !== 'no')) ? true : null;
+      var rA = regioneDi(cA), rZ = regioneDi(cZ), sch = (/nodo a1/.test(q) && nodiA1[cZ.clli]) ? 'a1' : (rA && rZ && rA !== rZ ? 'rtn' : 'regione');
+      croCmp.schema(sch); if (cap) croCmp.capacita(cap); if (div != null) croCmp.diversificato(div); if (prot) croCmp.protezione(prot);
+      var bA = trova('centraleA'), bZ = trova(sch === 'a1' ? 'nodoA' : 'centraleZ');
+      if (bA) campo(bA.id, 'manuale', cA.nome + ' (' + cA.clli + ')'); if (bZ) campo(bZ.id, 'manuale', cZ.nome + ' (' + cZ.clli + ')');
+      ridisegna();
+      var nA = trova('nodoA'), nZ = trova('nodoZ');
+      rispondi('Fatto. Ho impostato:<br>\u2022 schema <b>' + (sch === 'rtn' ? 'Interregionale' : sch === 'a1' ? 'Verso Nodo A1' : 'Stessa regione') + '</b>' + (sch === 'rtn' ? ' (' + esc(rA) + ' \u2192 ' + esc(rZ) + ')' : '') + '<br>\u2022 Colt A <b>' + esc(cA.nome + ' (' + cA.clli + ')') + '</b>, ' + (sch === 'a1' ? 'Nodo A1' : 'Colt Z') + ' <b>' + esc(cZ.nome + ' (' + cZ.clli + ')') + '</b>'
+        + (sch === 'rtn' && nA && nA.r && nZ && nZ.r ? '<br>\u2022 Nodi A1: <b>' + esc(nA.r.c.nome) + '</b> e <b>' + esc(nZ.r.c.nome) + '</b> (i pi\u00f9 vicini della regione)' : '')
+        + '<br>\u2022 ' + ((el('cmpCap') || {}).value || '1G') + ', ' + (divOn() ? 'Std + Div' : 'Solo Std') + ', protezione ' + ({ no: 'no', sncp: 'SNCP', e2e: 'E2E' }[prot || 'no'] || 'no')
+        + '<br>Ora servono i percorsi: con <b>Guidami</b> ti porto sul bottone \u2460 Cerca percorsi nell\u2019Unificato' + (sch === 'rtn' ? ' (prima la Zona A, poi la Zona Z)' : '') + ' e poi su quello che resta.', [['guida', '\uD83E\uDDF5 Guidami'], ['irp', '\u2705 Cosa manca']]);
+      return true;
+    }
+    /* 2. stato di un collegamento RC o di un Subpath RA */
+    var im = /\b([a-z]{3}\d{3})\b/.exec(q);
+    if (im) {
+      var id = im[1].toUpperCase(), rc = d.rc.filter(function (x) { return String(x.IdCollegamento).toUpperCase() === id; })[0];
+      if (rc) { ARI_ULT = { tit: 'Collegamento ' + id, cols: ARI_COLS, rows: [ariRigaColl(rc, 'RC')] }; rispondi(ariSchedaColl(rc, 'RC'), ARI_EXP); return true; }
+      var ra = d.ra.filter(function (x) { return String(x.SubPath || '').toUpperCase().indexOf(id) === 0; });
+      if (ra.length) { var nk = ra.filter(function (x) { return String(x.Stato_IdCollegamento).toUpperCase() !== 'ATTIVO'; }).length;
+        rispondi('Il Subpath RA <b>' + id + '</b> ha <b>' + ra.length + '</b> collegament' + (ra.length === 1 ? 'o' : 'i') + (nk ? ', di cui <b class="ari-ko">' + nk + ' non attiv' + (nk === 1 ? 'o' : 'i') + '</b>' : ', tutti attivi') + ':' + ariTabella('Subpath RA ' + id, ARI_COLS, ra.map(function (x) { return ariRigaColl(x, 'RA'); })), ARI_EXP); return true; }
+    }
+    /* 3. Nodi A1 di una regione */
+    var reg = ariRegioneIn(q), cq = ariCentraleIn(q);
+    if (cq && reg && ariNorm(cq.nome).indexOf(ariNorm(reg)) >= 0) reg = null;   /* «ROZZANO IDC V. TOSCANA» e' una centrale, non la regione */
+    if (/nod[oi] ?a1/.test(q)) {
+      carica(); var lista = (typeof CENTRALI_POP_NODO_A1 !== 'undefined' ? CENTRALI_POP_NODO_A1 : []).filter(function (x) { var c = centrali[x.clli]; return !reg || (c && regioneDi(c) === reg) || (c && reg && regioneDi(c).indexOf(reg) >= 0); });
+      if (!lista.length) { rispondi('Non trovo Nodi A1' + (reg ? ' in ' + esc(reg) : '') + '.'); return true; }
+      var rows = lista.map(function (x) { var c = centrali[x.clli] || { nome: x.nome, clli: x.clli, reti: {} }; return [x.nome, x.clli, (c.reti && c.reti.RC ? 'RC' : '') + (c.reti && c.reti.RA ? ' RA' : ''), x.noPE ? 'A1 Div \u00b7 NO PE' : 'A1', c.nome ? regioneDi(c) : '']; });
+      rispondi((reg ? 'Nella regione <b>' + esc(reg) + '</b>' : 'In Italia') + ' i Nodi A1 sono <b>' + lista.length + '</b>. Sono le centrali dove la rete regionale si collega alla RTN: nella Progettazione il pi\u00f9 vicino alla Colt va sulla 1a Via e l\u2019altro della regione \u00e8 proposto per la 2a.' + ariTabella('Nodi A1' + (reg ? ' ' + reg : ''), ['Nodo A1', 'CLLI', 'Rete', 'Tipo', 'Regione'], rows), ARI_EXP); return true;
+    }
+    /* 4. Data Center */
+    if (/data ?center|\bdc\b/.test(q)) {
+      carica(); var dcs = (window.DATA_CENTER_CLLI || []).map(function (k) { var c = centrali[k]; return [(window.DATA_CENTER_INFO || {})[k] || (c ? c.nome : k), k, c ? regioneDi(c) : '']; }).filter(function (r) { return !reg || String(r[2]).indexOf(reg) >= 0; });
+      rispondi('I <b>Data Center</b>' + (reg ? ' in ' + esc(reg) : '') + ' sono <b>' + dcs.length + '</b>. Nella Progettazione, se la Colt \u00e8 un DC, le note della coda protetta parlano di \u00abTratta DWDM interna al DC\u00bb.' + ariTabella('Data Center' + (reg ? ' ' + reg : ''), ['Data Center', 'CLLI', 'Regione'], dcs), ARI_EXP); return true;
+    }
+    /* 5. elenco di collegamenti per stato e luogo */
+    var stato = /in attivazione/.test(q) ? 'IN ATTIVAZIONE' : /(non attiv|da verificar|nni)/.test(q) ? 'NON' : /\battiv/.test(q) ? 'ATTIVO' : null;
+    var luogo = reg ? null : cq, parola = null;
+    if (!reg && !luogo) { var pw = q.split(' ').filter(function (w) { return w.length >= 4 && !/^(collegament|link|quali|quanti|sono|della|delle|nella|nelle|stato|attiv|verific|elenco|rete|mostra|dammi|tutti|tutte|zona)/.test(w); }); carica(); parola = pw.filter(function (w) { return Object.keys(centrali).some(function (k) { return ariNorm(centrali[k].nome).indexOf(w) >= 0; }); })[0] || null; }
+    if ((/collegament|link/.test(q) || stato) && (reg || luogo || parola || stato)) {
+      var rete = /\bra\b/.test(q) ? 'RA' : /\brc\b/.test(q) ? 'RC' : null, rows2 = [];
+      [['RC', d.rc], ['RA', d.ra]].forEach(function (z) { if (rete && rete !== z[0]) return; z[1].forEach(function (x) {
+        var s = String(x.Stato_IdCollegamento || '').toUpperCase();
+        if (stato === 'ATTIVO' && s !== 'ATTIVO') return; if (stato === 'IN ATTIVAZIONE' && s !== 'IN ATTIVAZIONE') return; if (stato === 'NON' && s === 'ATTIVO') return;
+        if (reg && String(x.Regione || '').indexOf(reg) < 0) return;
+        if (luogo && x.CLLI_A !== luogo.clli && x.CLLI_Z !== luogo.clli) return;
+        if (parola && ariNorm(x.GAT_A).indexOf(parola) < 0 && ariNorm(x.GAT_Z).indexOf(parola) < 0) return;
+        rows2.push(ariRigaColl(x, z[0])); }); });
+      var dove = reg ? 'in ' + esc(reg) : luogo ? 'su ' + esc(luogo.nome + ' (' + luogo.clli + ')') : parola ? 'con \u00ab' + esc(parola.toUpperCase()) + '\u00bb nel nome di una centrale' : 'in tutta Italia';
+      var cosa = stato === 'ATTIVO' ? 'attivi' : stato === 'IN ATTIVAZIONE' ? 'in attivazione' : stato === 'NON' ? 'non attivi (da verificare su NNI)' : '';
+      rispondi('Ho trovato <b>' + rows2.length + '</b> ' + (rows2.length === 1 ? 'collegamento' : 'collegamenti') + (rete ? ' ' + rete : '') + (cosa ? ' ' + (rows2.length === 1 ? cosa.replace('attivi', 'attivo').replace(' (da verificare', ' (da verificare') : cosa) : '') + ' ' + dove + '.' + (rows2.length ? ariTabella('Collegamenti ' + (cosa || '') + ' ' + (reg || (luogo && luogo.nome) || parola || ''), ARI_COLS, rows2) : ''), rows2.length ? ARI_EXP : null); return true;
+    }
+    /* 6. scheda di una centrale */
+    var cc = luogo || ariCentraleIn(q);
+    if (cc) {
+      var tutti = [];
+      [['RC', d.rc], ['RA', d.ra]].forEach(function (z) { z[1].forEach(function (x) { if (x.CLLI_A === cc.clli || x.CLLI_Z === cc.clli) tutti.push(ariRigaColl(x, z[0])); }); });
+      var nonA = tutti.filter(function (r) { return String(r[4]).toUpperCase() !== 'ATTIVO'; }).length, ti = Object.keys(cc.tipi || {}).sort()[0];
+      var ruoli = [cc.reti && cc.reti.RC ? 'RC' : '', cc.reti && cc.reti.RA ? 'RA' + (ti ? ' T' + ti : '') : '', nodiA1[cc.clli] ? 'Nodo A1' : '', (window.DATA_CENTER_CLLI || []).indexOf(cc.clli) >= 0 ? 'Data Center' : ''].filter(Boolean).join(' \u00b7 ');
+      rispondi('<b>' + esc(cc.nome) + '</b> (' + esc(cc.clli) + ') \u00e8 in <b>' + esc(regioneDi(cc) || '?') + '</b>: ' + esc(ruoli || 'centrale') + '. Ha <b>' + tutti.length + '</b> collegamenti nei DB' + (nonA ? ', di cui <b class="ari-ko">' + nonA + ' non attivi</b>' : ', tutti attivi') + '.'
+        + (ti === '3' && !(cc.reti && cc.reti.RC) ? ' \u00c8 una RA di tipo 3: solo di transito, non pu\u00f2 essere una Colt.' : '') + (tutti.length ? ariTabella('Collegamenti di ' + cc.nome, ARI_COLS, tutti) : ''), tutti.length ? ARI_EXP : null); return true;
+    }
+    return false;
+  }
+
   function palHtml() {
     return PAL.map(function (p) {
       return '<button type="button" class="cmp-pc ' + p[0] + '" data-pal="' + p[0] + '" title="Aggiunge il blocco al primo lato libero">' + p[1] + ' ' + p[2] + ' ' + palSlots(p).map(function (t) { return '<i class="cmp-sl' + (trova(t) ? ' on' : '') + (inSchema(t) ? '' : ' fs') + '" title="' + esc(TIPI[t].nome) + (trova(t) ? ': presente' : ': libero') + '">' + slotEt(t) + '</i>'; }).join('') + '</button>';
@@ -8172,6 +8819,7 @@ window.croCmp = (function () {
     carica(); calcola(); _ccache = {};
     var pal = el('cmpPal'); if (pal) pal.innerHTML = palHtml();   /* V11.26|065 */
     try { sdfDisegna(); } catch (e) { console.error('[SdF]', e); }   /* V11.26|102 */
+    try { ariAggiorna(); } catch (e) { console.error('[Ariadne]', e); }   /* V11.26|107 */
     el('cmpCatena').innerHTML = catena.length ? catenaHtml() : '<div class="cmp-vuota">Scegli uno schema qui sopra, oppure aggiungi i blocchi uno alla volta.</div>';
     dettaglioDisegna();
     disegnaRisultati();
@@ -8976,7 +9624,7 @@ window.croCmp = (function () {
     if (a === 'vai') { wzChiudi(); if (typeof switchTab === 'function') switchTab('compositore'); var ch = el('croChat'); if (ch) ch.classList.remove('on'); return; }
   }
 
-  return { sdfStato: sdfStato, aggiungiTipo: aggiungiTipo, dettaglio: dettaglioApri, protezione: protezione, esportaCompleto: wzEsporta, wizard: wizard, wizardDa: wizardDa, archivio: archivioApri, importaFile: importaFile, archivioSalva: archSalva, configurazione: cfgStudio, spostaMappa: spostaMappa, geocodifica: geocodifica, apparati: apparati, apparatiPopup: apparatiPopup, appLato: appLato, codaDaBlocchi: codaDaBlocchi, diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
+  return { ariadne: { apri: ariApri, guida: ariGuida, controlla: ariIrp, chiedi: ariChiedi, controlli: ariControlli }, sdfStato: sdfStato, aggiungiTipo: aggiungiTipo, dettaglio: dettaglioApri, protezione: protezione, esportaCompleto: wzEsporta, wizard: wizard, wizardDa: wizardDa, archivio: archivioApri, importaFile: importaFile, archivioSalva: archSalva, configurazione: cfgStudio, spostaMappa: spostaMappa, geocodifica: geocodifica, apparati: apparati, apparatiPopup: apparatiPopup, appLato: appLato, codaDaBlocchi: codaDaBlocchi, diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
 })();
 
 /* [[CRO:MOD-72-CONTATORE-DELLE]] dentro [[CRO:JS-NUCLEO]]: Contatore delle modifiche della pagina */
@@ -27678,7 +28326,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 106 | Nov 2026</div>
+<div class="version-tag">V11.26 | 108 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -27919,6 +28567,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <p class="feature-desc">Tab del menu principale, subito dopo Ricerca Percorso Unificato, e bottone «Progettazione SdF» nell’Overview. Si compone la fattibilità a <strong>blocchi</strong>, dalla sede cliente A alla sede cliente Z: sedi, code, Centrali Colt, reti RTR, Nodi A1 e RTN, con tre schemi (<strong>Stessa regione</strong>, <strong>Interregionale</strong>, <strong>Verso Nodo A1</strong>), capacità, Solo Std o Std + Div e protezione (No, SNCP, E2E). Accanto ai blocchi si scrivono le fattibilità (SdF Std per la 1a Via, SdF Div per la 2a). Le card mostrano il dato principale in grande e, con il Div, la 1a e la 2a Via (Colt e Nodo A1 della 2a Via, anche diversi). La rete ha la linea del percorso con centrali e collegamenti e il loro stato; il riepilogo è diviso per via con le note per IRP pronte; l’Export completo produce TXT, Modulo KMZ ed Excel con un solo foglio IRP anche con l’Interregionale. Il <strong>wizard</strong> compila tutto passo per passo; Undo (ultime 20) e Importa riaprono le progettazioni salvate.</p>
                     <div class="feature-specs">
+                        <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Ariadne (HelpMe!)</span>
                         <span class="spec-tag" style="background: #fef3c7; color: #92400e;">3 schemi</span>
                         <span class="spec-tag" style="background: #fef3c7; color: #92400e;">Fattibilità Std e Div</span>
                         <span class="spec-tag" style="background: #fef3c7; color: #92400e;">1a e 2a Via</span>
@@ -27939,7 +28588,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 106</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 108</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -27956,7 +28605,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 106</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 108</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -27977,7 +28626,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 106</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 108</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -27995,7 +28644,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 106</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 108</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -28012,7 +28661,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 106</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 108</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -28028,7 +28677,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 106</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 108</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -28492,7 +29141,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 106</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 108</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -28642,8 +29291,28 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">✨ Novità V11.26 | 106 | Nov 2026</span>
+                  <span class="cl-ver">🧵 Novità V11.26 | 108 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧵 Ariadne sui DB</strong>: risponde con una breve descrizione e, per gli elenchi, l’export in TXT ed Excel: stato di un collegamento RC («che stato ha CLO311») o di un Subpath RA («ACB020»), scheda di una centrale («scheda EUR»), Nodi A1 e Data Center di una regione, collegamenti per stato e luogo («in attivazione in Lombardia», «non attivi su ROZZANO IDC V. TOSCANA»)</li><li><strong>🧵 Progettazione da una frase</strong>: «progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP» imposta schema, Colt, capacità, Std + Div e protezione e poi guida sul resto</li><li><strong>📝 Domande non capite</strong>: restano su questo PC; «domande non capite» le mostra, le esporta in TXT e le svuota, per insegnarle ad Ariadne</li><li><strong>📍 Posizione</strong>: il bottone è sulla riga del titolo, a destra; il pannello si apre sotto il bottone e si sposta trascinando la testata; al refresh torna al suo posto</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧵 Novità V11.26 | 107 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧵 Ariadne</strong>: nella Progettazione SdF il bottone «HelpMe! Ariadne», con il bollino delle cose da sistemare, apre un pannello che elenca cosa manca o va verificato; «Guidami» accende una card alla volta e spiega in dettaglio cosa fare, «Portami lì» apre il popup e accende il campo o il bottone giusto; «Controlla prima dell’IRP» fa il riepilogo e si scarica in TXT; capisce anche alcune frasi e il glossario. Funziona tutto in locale, senza intelligenza artificiale esterna</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">✨ Novità V11.26 | 106 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -36507,6 +37176,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         <div class="cmp-avvisi" id="cmpAvvisi"></div>
         <div class="cmp-riep" id="cmpRiep"></div>
         <div id="cmpNote" class="route-help-panel" style="margin-top:0;" hidden><ul>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧵 Ariadne (HelpMe!)</strong>: il bottone «HelpMe! Ariadne» in alto a destra conta le cose da sistemare (bollino) e apre Ariadne, il filo per uscire dal labirinto. «Guidami» mostra una voce alla volta: accende la card interessata, spiega in dettaglio cosa manca e come compilarlo, e con «Portami lì» apre il popup e accende il campo o il bottone su cui agire. «Controlla prima dell’IRP» divide le voci in da completare, da verificare e da sapere, e si scarica in TXT. Risponde anche sui dati del DB, con descrizione ed export TXT o Excel («che stato ha CLO311», «ACB020», «scheda EUR», «nodi A1 Lazio», «data center Lombardia», «collegamenti in attivazione in Lombardia») e imposta una progettazione da una frase («progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP»). Le domande che non capisce restano su questo PC («domande non capite», esportabili). Il pannello si sposta trascinando la testata; al refresh torna sotto il bottone.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🎯 A cosa serve</strong>: la Progettazione SdF costruisce la fattibilità completa dalla sede del cliente A alla sede del cliente Z: sedi, code, Centrali Colt, reti RTR, Nodi A1 e RTN. I percorsi si cercano nel tab Unificato, i costi vengono dagli stessi calcoli degli export, e alla fine escono il TXT, l’Excel con il foglio IRP e il Modulo KMZ. È una funzione sperimentale: i risultati vanno sempre controllati.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧩 Barra in alto</strong>: Schema («Stessa regione» 7 blocchi, «Interregionale» 11 blocchi con RTN, «Verso Nodo A1» 5 blocchi), Capacità (1G, 10G, 100G), Rete RTR (Solo Std o Std + Div), Protezione (No, SNCP, E2E) e Progettazione (Undo, Importa, Wizard, Svuota). Cambiando schema i dati restano. Il suggerimento di ogni bottone compare sopra la sua sezione.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📄 Fattibilità (SdF)</strong>: accanto ad «Aggiungi un blocco» ci sono due minicard: «1a Via · Std» e «2a Via · Div». Con la Div vuota (o uguale) le due vie stanno sulla stessa SdF, anche con il protetto; con due numeri diversi la 1a Via va sulla SdF Std e la 2a sulla SdF Div. Sono gli stessi campi della pagina Dati Servizio del wizard e vanno negli export e nelle note.</p></li>
@@ -45887,6 +46557,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   🧩 Progettazione SdF: fattibilità a blocchi dalla Sede Cliente A alla Sede Cliente Z (sperimentale)
                 </summary>
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
+                  <p><strong>Ariadne (HelpMe!):</strong> il bottone arancio «HelpMe! Ariadne», accanto a Note e regole, ha un bollino con il numero di cose da sistemare (✔ quando non manca niente). Apre il pannello di Ariadne: l’elenco delle voci in ordine di catena, con 🟠 da completare, 🟡 da verificare e ℹ️ da sapere. «Guidami» le mostra una alla volta: la card si accende in arancio e un fumetto spiega cosa manca e come compilarlo; «Portami lì» apre il popup e accende il campo (o il bottone) su cui agire, con il cursore già dentro; poi «Fatto, avanti» o «Salta». «Controlla prima dell’IRP» riassume tutto e si scarica in TXT. Nel campo di scrittura capisce «guidami», «cosa manca», «cosa sai fare», le parole del glossario (SNCP, E2E, C-FOS, Colt, Nodo A1, RTN, RTR, SdF, NNI, IRP) e le domande sui DB: stato di un collegamento RC («che stato ha CLO311») o di un Subpath RA («ACB020»), scheda di una centrale («scheda EUR» o il CLLI), Nodi A1 e Data Center di una regione, elenchi di collegamenti per stato e luogo («collegamenti in attivazione in Lombardia», «non attivi su ROZZANO IDC V. TOSCANA»). Ogni risposta ha una breve descrizione e, per gli elenchi, «Esporta TXT» ed «Esporta Excel». Con una frase come «progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP» imposta da sola schema (Interregionale se le regioni sono diverse), Colt, capacità, Std + Div e protezione, poi ti guida sul resto. Le domande che non capisce le annota solo su questo PC: «domande non capite» le mostra e le esporta in TXT, così si possono insegnare. Il bottone sta sulla riga del titolo, a destra; il pannello si apre sotto il bottone, si sposta trascinando la testata e al refresh torna nella posizione di partenza. Le altre domande vanno all’Assistente CRO. Funziona tutto nel file, senza internet.</p>
                   <p><strong>Dove si trova:</strong> nel menu principale, «Progettazione SdF 🚧» subito dopo Ricerca Percorso Unificato, e nell’Overview con il bottone «Progettazione SdF» (accanto a «Wizard SdF»). È sperimentale: i risultati vanno verificati. Il cassetto «📘 Note e regole» ha tutte le regole in 18 voci.</p>
                   <p><strong>Barra in alto:</strong> cinque sezioni con i bottoni tutti alti uguali: Schema (Stessa regione, 7 blocchi; Interregionale, 11 blocchi con due reti RTR, i Nodi A1 e la RTN; Verso Nodo A1, 5 blocchi), Capacità (1G, 10G, 100G), Rete RTR (Solo Std o Std + Div), Protezione (No, SNCP a caramella, E2E) e Progettazione (Undo, Importa, Wizard, Svuota). I bottoni scelti tengono il loro colore anche al passaggio del mouse; il suggerimento compare sopra la sezione senza coprire i bottoni.</p>
                   <p><strong>Aggiungi un blocco e Fattibilità (SdF):</strong> nella riga sotto la barra si aggiungono i blocchi uno alla volta (nel primo lato libero) e, a destra, si scrivono le fattibilità nelle due minicard «1a Via · Std» e «2a Via · Div». Div vuota o uguale: una sola SdF per le due vie. Due numeri diversi: 1a Via sulla SdF Std, 2a Via sulla SdF Div. Sotto il titolo una riga dice quale dei due casi vale.</p>
@@ -48079,7 +48750,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 106 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 108 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -48098,6 +48769,28 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🧵 V11.26 | 108 | Nov 2026 | Ariadne risponde sui DB e imposta la progettazione da una frase
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧵 108</strong>: <code>ariadne2.js</code>: <code>ariDB()</code> (frase «da X a Y», IdCollegamento, Subpath, Nodi A1, DC, elenchi, scheda), <code>ariTabella()</code> e <code>ariEsporta()</code> (TXT, Excel con ExcelJS o CSV), <code>localStorage</code> <code>croAriadneNonCapite</code>, <code>ariTrascina()</code> e <code>ariPosPannello()</code> con posizione solo in memoria. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🧵 V11.26 | 107 | Nov 2026 | Ariadne, l’assistente della Progettazione SdF
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧵 107</strong>: <code>ariadne.js</code> dentro croCmp: <code>ariControlli()</code> (voci con gruppo, card, campo o bottone), <code>ariGuida()</code> con fumetto e <code>ariPortami()</code>, <code>ariIrp()</code>, <code>ariTxt()</code>, <code>ariChiedi()</code> con glossario; <code>croCmp.ariadne</code> per l’esterno. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             ✨ V11.26 | 106 | Nov 2026 | Scritta gialla su Solo Std e Wizard
           </summary>
@@ -100308,6 +101001,43 @@ body.dark-mode .exb-grp, body.dark-mode .exb .exb-chip { background: #1e293b; bo
 body.dark-mode .expsm-ds-ctrl { background: #052e16; border-color: #166534; } body.dark-mode .expsm-ds-ctrl-et { color: #86efac; }
 .cmp-modale { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
 .cmp-modale[hidden] { display: none; }
+/* V11.26|107: Ariadne */
+.ari-btn { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; margin-right: 8px; border: 0; border-radius: 9px; background: linear-gradient(135deg, #ea580c, #be185d); color: #fff; font-size: .78rem; font-weight: 600; cursor: pointer; box-shadow: 0 3px 10px rgba(190,24,93,.25); transition: filter .15s; }
+.ari-btn:hover { filter: brightness(1.08); } .ari-btn b { font-weight: 800; }
+.ari-n { font-style: normal; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: #fff; color: #be185d; font-size: .7rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; } .ari-n.ok { color: #16a34a; }
+.ari-ico { flex: none; }
+.ari-pan { position: fixed; right: 16px; top: 84px; width: 380px; max-height: calc(100vh - 120px); display: none; flex-direction: column; background: #fff; border: 1px solid #e2e8f0; border-radius: 14px; box-shadow: 0 16px 40px rgba(15,23,42,.22); z-index: 100050; overflow: hidden; }
+.ari-pan.on { display: flex; } body.cro-infolive-on .ari-pan { max-height: calc(100vh - 150px); }
+.ari-h { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: linear-gradient(135deg, #ea580c, #be185d); color: #fff; } .ari-h b { font-size: .95rem; } .ari-h small { opacity: .85; font-size: .7rem; flex: 1; }
+.ari-x { border: 0; background: rgba(255,255,255,.18); color: #fff; width: 26px; height: 26px; border-radius: 7px; cursor: pointer; }
+.ari-b { padding: 10px 12px; overflow: auto; flex: 1 1 auto; font-size: .8rem; color: #1e293b; }
+.ari-msg { background: #f1f5f9; border-radius: 10px; padding: 8px 10px; margin-bottom: 8px; line-height: 1.45; } .ari-msg.ari-me { background: #fff7ed; margin-left: 40px; text-align: right; }
+.ari-ck { display: flex; gap: 8px; align-items: flex-start; width: 100%; text-align: left; border: 0; border-bottom: 1px solid #f1f5f9; background: none; padding: 6px 4px; cursor: pointer; font-size: .78rem; color: #0f172a; border-radius: 6px; } .ari-ck:hover { background: #fff7ed; } .ari-ck i { font-style: normal; }
+.ari-chips { padding: 6px 12px 0; display: flex; flex-wrap: wrap; gap: 5px; } .ari-chips button, .ari-alt { border: 1px solid #c7d2fe; background: #eef2ff; color: #3730a3; border-radius: 999px; padding: 3px 9px; font-size: .7rem; font-weight: 700; cursor: pointer; } .ari-chips button:hover, .ari-alt:hover { background: #e0e7ff; }
+.ari-in { display: flex; gap: 6px; padding: 8px 12px 12px; } .ari-in input { flex: 1; border: 1px solid #cbd5e1; border-radius: 9px; padding: 7px 10px; font-size: .78rem; } .ari-in button { border: 0; border-radius: 9px; background: #be185d; color: #fff; width: 36px; cursor: pointer; }
+.ari-hl { outline: 3px solid #ea580c !important; outline-offset: 3px; box-shadow: 0 0 0 8px rgba(234,88,12,.15) !important; transition: outline-color .2s; }
+.ari-fld { outline: 3px solid #ea580c !important; outline-offset: 2px; animation: ariPulse 1.2s ease-in-out 3; }
+@keyframes ariPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(234,88,12,.45); } 50% { box-shadow: 0 0 0 8px rgba(234,88,12,0); } }
+.ari-tip { position: fixed; z-index: 100055; width: 340px; background: #1e293b; color: #fff; border-radius: 12px; padding: 11px 13px; box-shadow: 0 12px 28px rgba(0,0,0,.3); font-size: .78rem; line-height: 1.45; }
+.ari-tip.manca { border-top: 4px solid #ea580c; } .ari-tip.verifica { border-top: 4px solid #eab308; } .ari-tip.info { border-top: 4px solid #38bdf8; }
+.ari-tt { font-weight: 800; color: #fde047; margin-bottom: 4px; } .ari-td b { color: #fff; } .ari-td i { color: #cbd5e1; }
+.ari-tb { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; } .ari-tb button { border: 0; border-radius: 7px; padding: 4px 10px; font-size: .72rem; font-weight: 700; background: #334155; color: #fff; cursor: pointer; } .ari-tb button.pri { background: #ea580c; } .ari-tb button:hover { filter: brightness(1.15); }
+/* V11.26|108 */
+.ari-tbw { margin-top: 6px; max-height: 260px; overflow: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
+.ari-tb2 { border-collapse: collapse; width: 100%; font-size: .68rem; } .ari-tb2 th { position: sticky; top: 0; background: #1f3864; color: #fff; text-align: left; padding: 3px 6px; white-space: nowrap; } .ari-tb2 td { padding: 3px 6px; border-top: 1px solid #f1f5f9; vertical-align: top; }
+.ari-k { font-size: .68rem; color: #64748b; margin-top: 4px; } .ari-acts { display: flex; gap: 6px; margin-top: 6px; }
+/* V11.26|108: bottone sulla riga del titolo, pannello che si apre verso il basso e si sposta, tabelle */
+.section-title.ari-titolo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; } .section-title.ari-titolo .ari-btn { margin: 0 0 0 auto; }
+.ari-pan { right: auto; } .ari-h { user-select: none; }
+.ari-tab { margin-top: 6px; max-height: 260px; overflow: auto; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; }
+.ari-tab table { border-collapse: collapse; width: 100%; font-size: .68rem; } .ari-tab th { position: sticky; top: 0; background: #f1f5f9; color: #475569; text-align: left; padding: 4px 6px; white-space: nowrap; } .ari-tab td { padding: 3px 6px; border-top: 1px solid #f1f5f9; white-space: nowrap; }
+.ari-k { color: #64748b; font-size: .7rem; margin-top: 4px; }
+/* V11.26|108: bottone nella riga del titolo, pannello spostabile, tabelle */
+.ari-h { cursor: move; user-select: none; } .ari-pan.drag { opacity: .92; box-shadow: 0 20px 50px rgba(15,23,42,.3); }
+.ari-pan { left: auto; } .ari-tab { margin-top: 6px; max-height: 260px; overflow: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
+.ari-tab table { border-collapse: collapse; width: 100%; font-size: .68rem; } .ari-tab th { position: sticky; top: 0; background: #f1f5f9; text-align: left; padding: 3px 6px; color: #475569; } .ari-tab td { padding: 3px 6px; border-top: 1px solid #f1f5f9; white-space: nowrap; }
+.ari-ok { color: #15803d; } .ari-ko { color: #b45309; }
+
 /* V11.26|104: SdF con due minicard (1a Via, 2a Via) allineate ai bottoni dei blocchi */
 #tab-compositore #cmpSdf { display: flex !important; align-items: center !important; gap: 8px !important; padding: 0 12px !important; width: 600px !important; flex-basis: 600px !important; }
 #tab-compositore #cmpSdf .cmp-sdf-h { flex: 0 0 112px; display: flex; flex-direction: column; gap: 2px; }
@@ -103076,7 +103806,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 106';
+  var REVISIONE = 'V11.26 | 108';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
