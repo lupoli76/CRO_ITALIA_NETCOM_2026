@@ -4,13 +4,21 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 109  (rev. pubblicata: V11.26 | 109 | Nov 2026)              ║
+║   Versione: 11.26 | 110  (rev. pubblicata: V11.26 | 110 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 110 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • Cro' e Assistente CRO divisi: Cro' fa aiuto e guida nella Progettazione,     ║
+║     l'Assistente tutto il resto (dati, progettazione da una frase, Claude) con   ║
+║     export, Apri nel Database, Mostra sulla mappa e Guidami; corrette le         ║
+║     risposte su Nodi A1 di regione, scheda di centrale e luoghi; un solo         ║
+║     elenco di domande non capite                                                 ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 109 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -5922,6 +5930,7 @@ window.croChat = (function () {
   /* ════ V10.26|58 · domande guidate: filtri per stato e luogo, data center, C-FOS in comune,
      collegamenti diretti tra due centrali, novità dei DB. Tutto sui dati già caricati. ════ */
   function luogo(q) {
+    var cen = luogoCentrale(q); if (cen) return cen;   /* V11.26|110 */
     var reg = {}, are = { NORD: 1, CENTRO: 1, SUD: 1 };
     /* le regioni nei DB possono essere coppie («Piemonte | Valle d'Aosta»): si cerca ogni parte */
     var alias = {};
@@ -6168,8 +6177,15 @@ window.croChat = (function () {
   }
 
   /* ── domande che continuano quella prima ── */
+  var _cenNomi = null;
+  function luogoCentrale(q) {
+    if (!_cenNomi) { _cenNomi = {}; rc().concat(ra()).forEach(function (r) { [['GAT_A', 'CLLI_A'], ['GAT_Z', 'CLLI_Z']].forEach(function (k) { var n = norm(r[k[0]] || ''); if (n.length >= 6 && !_cenNomi[n]) _cenNomi[n] = { nome: r[k[0]], clli: r[k[1]] }; }); }); }
+    var best = null; Object.keys(_cenNomi).forEach(function (n) { if (q.indexOf(n) >= 0 && (!best || n.length > best.length)) best = n; });
+    if (!best) return null; var c = _cenNomi[best]; return { f: function (r) { return r.CLLI_A === c.clli || r.CLLI_Z === c.clli; }, nome: c.nome + ' (' + c.clli + ')', clli: c.clli };
+  }
   function seguito(q) {
     if (!ctx.clli) return '';
+    if (luogo(q)) return '';   /* V11.26|110: c'e' gia' un luogo nella domanda, niente riferimento alla domanda di prima */
     if (/\b(NODI? A1|A1 PIU VICIN|NODO PIU VICINO)\b/.test(q) && !/\b[A-Z]{4}IT[A-Z0-9]{2}\b/.test(q)) return '<div class="cc-k">Riferito a ' + esc(ctx.nome) + ' (' + esc(ctx.clli) + '), dalla domanda di prima.</div>' + rispostaA1(ctx.clli);
     if (/^(E |ED |MA |ANCHE )?(I |GLI |LE |IL |LA |LO )?(COLLEGAMENTI|SUBPATH|STATI?|CAVI|C-FOS|CFOS|DOVE|COORDINATE|MAPPA|ZONA|REGIONE|RETE|RETI|DETTAGLI|QUESTA CENTRALE|LA STESSA|STESSA CENTRALE)\b/.test(q) && q.split(' ').length <= 6)
       return '<div class="cc-k">Riferito a ' + esc(ctx.nome) + ' (' + esc(ctx.clli) + '), dalla domanda di prima.</div>' + rispostaCLLI(ctx.clli);
@@ -6261,6 +6277,16 @@ window.croChat = (function () {
       var tgt = String(testo).replace(/^.*?\b(?:vicin[oiae]?|vicini)\s+(?:a|al|alla|all'|di|per|da)\s+/i, '').replace(/^.*?\bnod[oi] a1\s+(?:di|per|a)\s+/i, '').replace(/[?!.]+$/, '').trim();
       if (tgt && tgt !== String(testo).trim()) { var ha = rispostaA1(tgt); if (ha) return ha + web(testo); }
     }
+    /* V11.26|110: progettazione da una frase (la imposta la Progettazione, poi guida Cro') */
+    if (/(PROGETT|IMPOSTA|CREA|PREPARA|FATTIBILITA)/.test(q) && /\bDA .+ (A|AD|VERSO) /.test(q) && window.croCmp && croCmp.ariadne && croCmp.ariadne.imposta) { var hi = croCmp.ariadne.imposta(testo); if (hi) return '<h6>\uD83E\uDDE9 Progettazione SdF</h6><div class="cc-card">' + hi + '</div><button type="button" class="cc-btn" onclick="switchTab(\'compositore\'); croCmp.ariadne.apri(); croCmp.ariadne.guida(0);">\uD83E\uDDF5 Guidami con Cr\u00f2</button>'; }
+    /* Nodi A1 di una regione */
+    if (/NOD[OI] ?A1/.test(q) && !/VICIN/.test(q)) { var Lr = luogo(q); if (Lr && typeof CENTRALI_POP_NODO_A1 !== 'undefined') {
+      var inf = {}; rc().concat(ra()).forEach(function (r) { [['CLLI_A', 'GAT_A'], ['CLLI_Z', 'GAT_Z']].forEach(function (k) { if (!inf[r[k[0]]]) inf[r[k[0]]] = r; }); });
+      var NA = CENTRALI_POP_NODO_A1.filter(function (x) { return inf[x.clli] && Lr.f(inf[x.clli]); });
+      return '<h6>\uD83D\uDD00 Nodi A1 \u00b7 ' + esc(Lr.nome) + ' (' + NA.length + ')</h6><div class="cc-k">Sono le centrali dove la rete regionale si collega alla RTN. Nella Progettazione il pi\u00f9 vicino alla Colt va sulla 1a Via e l\u2019altro della regione \u00e8 proposto per la 2a.</div><table><tr><th>CLLI</th><th>Nodo A1</th><th>Tipo</th><th>Regione</th></tr>'
+        + NA.map(function (x) { return '<tr><td><button type="button" data-q="' + esc(x.clli) + '" style="border:0;background:none;color:#0066CC;cursor:pointer;padding:0;font-weight:700">' + esc(x.clli) + '</button></td><td>' + esc(x.nome) + '</td><td>' + (x.noPE ? 'A1 Div \u00b7 NO PE' : 'A1') + '</td><td>' + esc(inf[x.clli].Regione || '') + '</td></tr>'; }).join('') + '</table>' + web(testo); } }
+    /* «scheda EUR», «info ARDEATINA»: la scheda della centrale */
+    var sch = /^(SCHEDA|INFO|DATI|CENTRALE) (?:DI |DELLA |DEL )?(.+)$/.exec(q); if (sch) { var Lc = luogoCentrale(' ' + sch[2] + ' '); if (!Lc) { var cn = norm(sch[2]).trim(); rc().concat(ra()).some(function (r) { if (norm(r.GAT_A) === cn) { Lc = { clli: r.CLLI_A }; return true; } if (norm(r.GAT_Z) === cn) { Lc = { clli: r.CLLI_Z }; return true; } }); } if (Lc) return rispostaCLLI(Lc.clli) + web(testo); }
     var hs = seguito(q); if (hs) return hs + web(testo);
     if (/^(LIMITI|AIUTO|HELP|\?)$/.test(q)) return LIMITI + '<div class="cc-k">Scrivi un CLLI, un subpath, una C-FOS, una centrale, una sigla o un argomento.</div>';
     var parole = q.split(/[^A-Z0-9\/_\-]+/).filter(Boolean);
@@ -6291,6 +6317,7 @@ window.croChat = (function () {
     if (!h && q.length >= 4 && parole.length <= 3) h += rispostaNome(q);
     var t = rispostaTesto(testo);
     if (t) h += t;
+    if (!h && window.croCmp && croCmp.ariadne && croCmp.ariadne.nc) croCmp.ariadne.nc(testo, 'Assistente CRO');   /* V11.26|110 */
     if (!h) h = '<h6>Non ho trovato niente nel tool.</h6>Prova con un CLLI (per esempio MILAITCG), un subpath (CLO201, AAM003/1), una C-FOS, il nome di una centrale, una sigla (OSNCP) o un argomento.';
     return h + web(testo);
   }
@@ -6302,6 +6329,7 @@ window.croChat = (function () {
     conv.push({ q: t, el: b, ora: new Date() });
     setTimeout(function () {
       try { b.innerHTML = rispondi(t); } catch (e) { b.innerHTML = 'Errore nella ricerca: ' + esc(e.message); }
+      try { if (window.croCmp && croCmp.ariadne && croCmp.ariadne.azioni) croCmp.ariadne.azioni(b, t); } catch (e) { console.error('[Assistente azioni]', e); }   /* V11.26|110 */
       /* V10.26|83: la risposta resta in alto, a partire dalla domanda; si scende leggendo */
       var m = el('croChatMsg'); m.scrollTop = Math.max(0, u.offsetTop - m.offsetTop - 8);
     }, 30);
@@ -8110,7 +8138,7 @@ window.croCmp = (function () {
     h += c.map(function (x, i) { return '<button type="button" class="ari-ck ' + x.g + '" data-ari="vai:' + i + '"><i>' + ariIcona(x.g) + '</i><span><b>' + esc(x.t) + '</b></span></button>'; }).join('');
     el('ariBody').innerHTML = h;
     var nNc = ariNcLeggi().length;
-    ariChips([['guida', '\uD83E\uDDF5 Guidami'], ['irp', '\u2705 Controlla prima dell\u2019IRP'], ['txt', '\u2B07 Controllo in TXT'], ['chiedi:che stato ha clo311', 'Che stato ha CLO311?'], ['chiedi:nodi a1 lazio', 'Nodi A1 del Lazio'], ['chiedi:collegamenti in attivazione in lombardia', 'In attivazione in Lombardia'], ['chiedi:progettazione da eur a firenze castello 10g protetta sncp', 'Progettazione da EUR a FIRENZE CASTELLO 10G SNCP'], ['chiedi:cosa sai fare', 'Cosa sai fare?']].concat(nNc ? [['nc', '\uD83D\uDCDD Domande non capite (' + nNc + ')']] : []));
+    ariChips([['guida', '\uD83E\uDDF5 Guidami'], ['irp', '\u2705 Controlla prima dell\u2019IRP'], ['txt', '\u2B07 Controllo in TXT'], ['chiedi:cosa sai fare', 'Cosa sai fare?'], ['chiedi:cos\u00e8 SNCP', 'Cos\u2019\u00e8 SNCP?'], ['nc', '\uD83D\uDCDD Non capite (' + ariNcLeggi().length + ')']]);   /* V11.26|110: solo aiuto e guida */
   }
   function ariApri() { ariPannello(); ARI.aperta = true; ARI.guida = false; el('ariPan').classList.add('on'); ariTrascina(el('ariPan')); ariPosPannello(); ariElenco(); }
   function ariChiudi() { ARI.aperta = false; ARI.guida = false; var p = el('ariPan'); if (p) p.classList.remove('on'); ariTogli(); }
@@ -8185,10 +8213,11 @@ window.croCmp = (function () {
     if (/^(guida|guidami|aiuto|help|aiutami|mi sono perso|non so)/.test(q)) return ariGuida(0);
     if (/(controll|verific|irp|pronto|pronta|cosa manca|manca)/.test(q)) return ariIrp();
     if (/(txt|esporta|scarica)/.test(q)) { ariTxt(); return rispondi('Ti ho scaricato il controllo prima dell\u2019IRP in un file TXT.'); }
-    if (/(cosa sai fare|che sai fare|cosa fai|chi sei|come funzion)/.test(q)) return rispondi('Sono <b>Cr\u00f2</b>, l\u2019assistente della Progettazione: ti accompagno fino in fondo, dalla sede A all\u2019Export completo. Oggi so:<br>\u2022 dirti <b>cosa manca</b> e guidarti <b>passo per passo</b>, accendendo la card e il campo su cui agire;<br>\u2022 fare il <b>controllo prima dell\u2019IRP</b> e scaricarlo in TXT;<br>\u2022 spiegarti parole come SNCP, E2E, C-FOS, Colt, Nodo A1, RTN, RTR, SdF, NNI, IRP.<br>\u2022 rispondere sui <b>dati del DB</b>, con una breve descrizione ed export in TXT o Excel: <i>stato CLO311</i>, <i>subpath ACB020</i>, <i>scheda EUR</i> o <i>ROMAITDH</i>, <i>nodi A1 Lazio</i>, <i>data center Lombardia</i>, <i>collegamenti in attivazione Lombardia</i>, <i>collegamenti non attivi RC Milano</i>;<br>\u2022 <b>impostare una progettazione da una frase</b>: <i>progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP</i>;<br>\u2022 tenere le <b>domande non capite</b> (solo in questo browser) da scaricare e mandare, cos\u00ec imparo.');
+    if (/(cosa sai fare|che sai fare|cosa fai|chi sei|come funzion)/.test(q)) return rispondi('Sono <b>Cr\u00f2</b>, l\u2019assistente della Progettazione: ti accompagno fino in fondo, dalla sede A all\u2019Export completo. Faccio da <b>aiuto e guida</b>:<br>\u2022 ti dico <b>cosa manca</b> (il numero sul bottone) e ti guido <b>passo per passo</b>, accendendo la card e, con <b>Portami l\u00ec</b>, il campo su cui agire;<br>\u2022 faccio il <b>controllo prima dell\u2019IRP</b> e lo scarico in TXT;<br>\u2022 ti spiego le parole della Progettazione (SNCP, E2E, C-FOS, Colt, Nodo A1, RTN, RTR, SdF, NNI, IRP).<br>Le domande sui dati (collegamenti, centrali, Nodi A1, elenchi) e la progettazione da una frase le passo all\u2019<b>Assistente CRO</b>, che risponde con export, Database e mappa.<br>Quello che non capisco me lo segno fra le domande non capite.');
     var k = Object.keys(ARI_GLOSS).filter(function (w) { return q.indexOf(w.replace('-', '')) >= 0 || q.indexOf(w) >= 0 || (w === 'cfos' && /c fos/.test(q)); })[0];
     if (k && !/\b[a-z]{3}\d{3}\b/.test(q) && !/(nod|collegament|centrale|scheda|progett)/.test(q)) return rispondi(ARI_GLOSS[k]);
-    try { if (ariDB(t, q, rispondi)) return; } catch (e) { console.error('[Cr\u00f2 DB]', e); }   /* V11.26|108 */
+    if (/(non capit|domande non|non hai capito)/.test(q)) return ariNcMostra(rispondi);
+    if (ariDomandaDati(q) && window.croChat && croChat.chiedi) { rispondi('Questa \u00e8 una domanda sui dati: te la mostra l\u2019<b>Assistente CRO</b>, che ho aperto con la tua domanda. Io resto qui per guidarti nella Progettazione.'); croChat.chiedi(t); return; }   /* V11.26|110: i dati li mostra l'Assistente CRO */
     if (k) return rispondi(ARI_GLOSS[k]);
     ariNcAggiungi(t);
     rispondi('Questa non l\u2019ho capita, scusa: me la segno fra le <b>domande non capite</b>, cos\u00ec la impariamo. Prova a scriverla con un CLLI, un IdCollegamento o una regione (per esempio <i>stato CLO311</i>, <i>nodi A1 Lazio</i>, <i>collegamenti in attivazione Lombardia</i>), oppure passala all\u2019<b>Assistente CRO</b>, che pu\u00f2 prepararla per Claude.', [['chiedi:cosa sai fare', 'Cosa sai fare?'], ['chiedi:domande non capite', '\uD83D\uDCDD Domande non capite'], ['guida', '\uD83E\uDDF5 Guidami']]);
@@ -8218,17 +8247,17 @@ window.croCmp = (function () {
   /* ── domande non capite: solo su questo PC, per istruire Cr\u00f2 ── */
   var ARI_NC = 'croAriadneNonCapite';
   function ariNcLeggi() { try { return JSON.parse(localStorage.getItem(ARI_NC) || '[]'); } catch (e) { return []; } }
-  function ariNcAggiungi(t) { try { var l = ariNcLeggi(); l.push({ t: String(t).slice(0, 300), q: new Date().toISOString() }); localStorage.setItem(ARI_NC, JSON.stringify(l.slice(-200))); } catch (e) {} }
+  function ariNcAggiungi(t, chi) { try { var l = ariNcLeggi(); l.push({ t: String(t).slice(0, 300), q: new Date().toISOString(), chi: chi || 'Cr\u00f2' }); localStorage.setItem(ARI_NC, JSON.stringify(l.slice(-200))); } catch (e) {} }
   var ARI_LOG = ARI_NC;
   function ariExport(f) {   /* chip «exp:…» del pannello */
-    if (f === 'nc') return ariEsporta('Domande non capite da Cr\u00f2', ['Quando', 'Domanda'], ariNcLeggi().map(function (x) { return [new Date(x.q).toLocaleString('it-IT'), x.t]; }), 'txt');
+    if (f === 'nc') return ariEsporta('Domande non capite da Cro e Assistente CRO', ['Quando', 'Chi', 'Domanda'], ariNcLeggi().map(function (x) { return [new Date(x.q).toLocaleString('it-IT'), x.chi || 'Cr\u00f2', x.t]; }), 'txt');
     if (ARI_ULT) ariEsporta(ARI_ULT.tit, ARI_ULT.cols, ARI_ULT.rows, f === 'xlsx' || f === 'xls' ? 'xlsx' : 'txt');
   }
   function ariNcMostra(rispondi) {
     if (!rispondi) rispondi = function (h, chips) { ariPannello(); el('ariBody').innerHTML = '<div class="ari-msg">' + h + '</div>'; ariChips((chips || []).concat([['elenco', '\u2630 Cosa manca'], ['guida', '\uD83E\uDDF5 Guidami']])); };
     var l = ariNcLeggi();
     if (!l.length) return rispondi('Non ci sono domande non capite: per ora ho capito tutto. Quando qualcosa non mi \u00e8 chiaro me lo segno qui, cos\u00ec Giuseppe me lo pu\u00f2 insegnare.');
-    rispondi((l.length === 1 ? 'Ecco la <b>domanda</b> che non ho capito' : 'Ecco le <b>' + l.length + ' domande</b> che non ho capito') + ' (le tengo solo su questo PC). Esportale e allegale quando vuoi istruirmi:<br>' + l.slice(-15).reverse().map(function (x) { return '\u2022 ' + esc(x.t) + ' <small style="color:#64748b">' + new Date(x.q).toLocaleString('it-IT') + '</small>'; }).join('<br>'),
+    rispondi((l.length === 1 ? 'Ecco la <b>domanda</b> che non ho capito' : 'Ecco le <b>' + l.length + ' domande</b> che non ho capito') + ' (le tengo solo su questo PC). Esportale e allegale quando vuoi istruirmi:<br>' + l.slice(-15).reverse().map(function (x) { return '\u2022 ' + esc(x.t) + ' <small style="color:#64748b">' + esc(x.chi || 'Cr\u00f2') + ' \u00b7 ' + new Date(x.q).toLocaleString('it-IT') + '</small>'; }).join('<br>'),
       [['exp:nc', '\u2B07 Esporta in TXT'], ['ncdel', '\uD83D\uDDD1 Svuota l\u2019elenco']]);
   }
   /* ── esportazione degli elenchi ── */
@@ -8392,6 +8421,46 @@ window.croCmp = (function () {
     }
     return false;
   }
+  /* ═══ V11.26|110: Crò fa solo aiuto e guida; i dati li mostra l'Assistente CRO, con i bottoni nati qui ═══ */
+  function ariImposta(t) {   /* progettazione da una frase, usata dall'Assistente CRO */
+    var q = ariNorm(t), out = null;
+    ariDB(t, q, function (h) { out = h; });
+    return out;
+  }
+  function ariDomandaDati(q) { return /\b[a-z]{3}\d{3}\b/.test(q) || /\b[a-z]{4}it[a-z0-9]{2}\b/.test(q) || /(nod[oi] ?a1|data ?center|\bdc\b|collegament|subpath|scheda|stato di|che stato|centrali? |quanti|elenco|\bda .+ a )/.test(q); }
+  function ariAzioni(box, testo) {   /* barra di azioni sotto le risposte dell'Assistente CRO: aggiunge solo quello che manca */
+    if (!box || box.getAttribute('data-cro-az')) return; box.setAttribute('data-cro-az', '1');
+    var txt0 = (box.textContent || '').trim(); if (/^Non ho trovato niente/.test(txt0) || /^Cerco/.test(txt0)) return;
+    var d = ariDb(), b = [], q = ariNorm(testo), tab = box.querySelector('table'), hTit = ((box.querySelector('h6') || {}).textContent || testo).trim();
+    var giaBtn = [].slice.call(box.querySelectorAll('button, a')).map(function (x) { return x.textContent || ''; }).join(' | ');
+    var haDb = /Apri nel tab Database|Apri nel Database/.test(giaBtn), haExp = /Esporta/.test(giaBtn);
+    /* elementi della risposta: righe della tabella e domanda (non le frasi di esempio) */
+    var celle = [].slice.call(box.querySelectorAll('td, th, button, b')).map(function (c) { return c.textContent; }).join(' ');
+    var sorg = (tab ? celle : txt0 + ' ' + celle).toUpperCase() + ' ' + String(testo).toUpperCase(), idsRc = {};
+    (sorg.match(/\b[A-Z]{3}\d{3}\b/g) || []).forEach(function (k) { idsRc[k] = 1; });
+    var recs = d.rc.filter(function (x) { return idsRc[String(x.IdCollegamento).toUpperCase()]; }).map(function (x) { return { x: x, r: 'RC' }; })
+      .concat(d.ra.filter(function (x) { return idsRc[String(x.SubPath || '').toUpperCase().slice(0, 6)]; }).map(function (x) { return { x: x, r: 'RA' }; })).slice(0, 800);
+    var cll = {}; (sorg.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || []).forEach(function (k) { cll[k] = 1; }); carica();
+    var pts = Object.keys(cll).map(function (k) { var c = centrali[k]; return c ? { nome: c.nome, clli: c.clli, lat: c.lat, lon: c.lon } : null; }).filter(Boolean);
+    if (tab && !haExp) {
+      var trs = [].slice.call(tab.querySelectorAll('tr')), cols = trs.length ? [].slice.call(trs[0].querySelectorAll('th,td')).map(function (c) { return c.textContent.trim(); }) : [];
+      var rows = trs.slice(1).map(function (r) { return [].slice.call(r.querySelectorAll('td,th')).map(function (c) { return c.textContent.replace(/\s+/g, ' ').trim(); }); });
+      if (rows.length) { b.push(['\u2B07 Esporta TXT', function () { ariEsporta(hTit, cols, rows, 'txt'); }]); b.push(['\u2B07 Esporta Excel', function () { ariEsporta(hTit, cols, rows, 'xlsx'); }]); }
+    }
+    if (!haDb) {
+      var idQ = /\b([a-z]{3}\d{3})\b/.exec(q), clQ = /\b([A-Z]{4}IT[A-Z0-9]{2})\b/.exec(String(testo).toUpperCase()), dbc = null;
+      if (idQ) { var u = idQ[1].toUpperCase(); dbc = d.rc.some(function (x) { return String(x.IdCollegamento).toUpperCase() === u; }) ? { scope: 'RC', q: u } : d.ra.some(function (x) { return String(x.SubPath || '').toUpperCase().indexOf(u) === 0; }) ? { scope: 'RA', q: u } : null; }
+      else if (clQ) dbc = { scope: 'RC', q: clQ[1] };
+      if (dbc) b.push(['\uD83D\uDDC4\uFE0F Apri nel Database', function () { ARI_CTX = { db: dbc }; ariApriDb(); }]);
+    }
+    if (recs.length || pts.length) b.push(['\uD83D\uDDFA\uFE0F Mostra sulla mappa', function () { ARI_CTX = { rec: recs, pts: pts }; ARI_ULT = { tit: hTit }; ariMappa(); }]);
+    if (el('tab-compositore') && !el('tab-compositore').classList.contains('hidden')) b.push(['\uD83E\uDDF5 Guidami nella Progettazione (Cr\u00f2)', function () { ariApri(); ariGuida(0); }]);
+    if (!b.length) return;
+    var bar = document.createElement('div'); bar.className = 'cc-azioni';
+    b.forEach(function (x) { var k = document.createElement('button'); k.type = 'button'; k.textContent = x[0]; k.addEventListener('click', x[1]); bar.appendChild(k); });
+    box.appendChild(bar);
+  }
+
 
   /* ═══ V11.26|108: ARIADNE, domande sul DB, progettazione da una frase, domande non capite, pannello spostabile ═══ */
   var ARI_POS = null;   /* posizione scelta trascinando: vale fino al refresh, poi torna quella di default */
@@ -8413,17 +8482,17 @@ window.croCmp = (function () {
   /* ── domande non capite: solo su questo PC, per istruire Cr\u00f2 ── */
   var ARI_NC = 'croAriadneNonCapite';
   function ariNcLeggi() { try { return JSON.parse(localStorage.getItem(ARI_NC) || '[]'); } catch (e) { return []; } }
-  function ariNcAggiungi(t) { try { var l = ariNcLeggi(); l.push({ t: String(t).slice(0, 300), q: new Date().toISOString() }); localStorage.setItem(ARI_NC, JSON.stringify(l.slice(-200))); } catch (e) {} }
+  function ariNcAggiungi(t, chi) { try { var l = ariNcLeggi(); l.push({ t: String(t).slice(0, 300), q: new Date().toISOString(), chi: chi || 'Cr\u00f2' }); localStorage.setItem(ARI_NC, JSON.stringify(l.slice(-200))); } catch (e) {} }
   var ARI_LOG = ARI_NC;
   function ariExport(f) {   /* chip «exp:…» del pannello */
-    if (f === 'nc') return ariEsporta('Domande non capite da Cr\u00f2', ['Quando', 'Domanda'], ariNcLeggi().map(function (x) { return [new Date(x.q).toLocaleString('it-IT'), x.t]; }), 'txt');
+    if (f === 'nc') return ariEsporta('Domande non capite da Cro e Assistente CRO', ['Quando', 'Chi', 'Domanda'], ariNcLeggi().map(function (x) { return [new Date(x.q).toLocaleString('it-IT'), x.chi || 'Cr\u00f2', x.t]; }), 'txt');
     if (ARI_ULT) ariEsporta(ARI_ULT.tit, ARI_ULT.cols, ARI_ULT.rows, f === 'xlsx' || f === 'xls' ? 'xlsx' : 'txt');
   }
   function ariNcMostra(rispondi) {
     if (!rispondi) rispondi = function (h, chips) { ariPannello(); el('ariBody').innerHTML = '<div class="ari-msg">' + h + '</div>'; ariChips((chips || []).concat([['elenco', '\u2630 Cosa manca'], ['guida', '\uD83E\uDDF5 Guidami']])); };
     var l = ariNcLeggi();
     if (!l.length) return rispondi('Non ci sono domande non capite: per ora ho capito tutto. Quando qualcosa non mi \u00e8 chiaro me lo segno qui, cos\u00ec Giuseppe me lo pu\u00f2 insegnare.');
-    rispondi((l.length === 1 ? 'Ecco la <b>domanda</b> che non ho capito' : 'Ecco le <b>' + l.length + ' domande</b> che non ho capito') + ' (le tengo solo su questo PC). Esportale e allegale quando vuoi istruirmi:<br>' + l.slice(-15).reverse().map(function (x) { return '\u2022 ' + esc(x.t) + ' <small style="color:#64748b">' + new Date(x.q).toLocaleString('it-IT') + '</small>'; }).join('<br>'),
+    rispondi((l.length === 1 ? 'Ecco la <b>domanda</b> che non ho capito' : 'Ecco le <b>' + l.length + ' domande</b> che non ho capito') + ' (le tengo solo su questo PC). Esportale e allegale quando vuoi istruirmi:<br>' + l.slice(-15).reverse().map(function (x) { return '\u2022 ' + esc(x.t) + ' <small style="color:#64748b">' + esc(x.chi || 'Cr\u00f2') + ' \u00b7 ' + new Date(x.q).toLocaleString('it-IT') + '</small>'; }).join('<br>'),
       [['exp:nc', '\u2B07 Esporta in TXT'], ['ncdel', '\uD83D\uDDD1 Svuota l\u2019elenco']]);
   }
   /* ── esportazione degli elenchi ── */
@@ -8587,6 +8656,46 @@ window.croCmp = (function () {
     }
     return false;
   }
+  /* ═══ V11.26|110: Crò fa solo aiuto e guida; i dati li mostra l'Assistente CRO, con i bottoni nati qui ═══ */
+  function ariImposta(t) {   /* progettazione da una frase, usata dall'Assistente CRO */
+    var q = ariNorm(t), out = null;
+    ariDB(t, q, function (h) { out = h; });
+    return out;
+  }
+  function ariDomandaDati(q) { return /\b[a-z]{3}\d{3}\b/.test(q) || /\b[a-z]{4}it[a-z0-9]{2}\b/.test(q) || /(nod[oi] ?a1|data ?center|\bdc\b|collegament|subpath|scheda|stato di|che stato|centrali? |quanti|elenco|\bda .+ a )/.test(q); }
+  function ariAzioni(box, testo) {   /* barra di azioni sotto le risposte dell'Assistente CRO: aggiunge solo quello che manca */
+    if (!box || box.getAttribute('data-cro-az')) return; box.setAttribute('data-cro-az', '1');
+    var txt0 = (box.textContent || '').trim(); if (/^Non ho trovato niente/.test(txt0) || /^Cerco/.test(txt0)) return;
+    var d = ariDb(), b = [], q = ariNorm(testo), tab = box.querySelector('table'), hTit = ((box.querySelector('h6') || {}).textContent || testo).trim();
+    var giaBtn = [].slice.call(box.querySelectorAll('button, a')).map(function (x) { return x.textContent || ''; }).join(' | ');
+    var haDb = /Apri nel tab Database|Apri nel Database/.test(giaBtn), haExp = /Esporta/.test(giaBtn);
+    /* elementi della risposta: righe della tabella e domanda (non le frasi di esempio) */
+    var celle = [].slice.call(box.querySelectorAll('td, th, button, b')).map(function (c) { return c.textContent; }).join(' ');
+    var sorg = (tab ? celle : txt0 + ' ' + celle).toUpperCase() + ' ' + String(testo).toUpperCase(), idsRc = {};
+    (sorg.match(/\b[A-Z]{3}\d{3}\b/g) || []).forEach(function (k) { idsRc[k] = 1; });
+    var recs = d.rc.filter(function (x) { return idsRc[String(x.IdCollegamento).toUpperCase()]; }).map(function (x) { return { x: x, r: 'RC' }; })
+      .concat(d.ra.filter(function (x) { return idsRc[String(x.SubPath || '').toUpperCase().slice(0, 6)]; }).map(function (x) { return { x: x, r: 'RA' }; })).slice(0, 800);
+    var cll = {}; (sorg.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || []).forEach(function (k) { cll[k] = 1; }); carica();
+    var pts = Object.keys(cll).map(function (k) { var c = centrali[k]; return c ? { nome: c.nome, clli: c.clli, lat: c.lat, lon: c.lon } : null; }).filter(Boolean);
+    if (tab && !haExp) {
+      var trs = [].slice.call(tab.querySelectorAll('tr')), cols = trs.length ? [].slice.call(trs[0].querySelectorAll('th,td')).map(function (c) { return c.textContent.trim(); }) : [];
+      var rows = trs.slice(1).map(function (r) { return [].slice.call(r.querySelectorAll('td,th')).map(function (c) { return c.textContent.replace(/\s+/g, ' ').trim(); }); });
+      if (rows.length) { b.push(['\u2B07 Esporta TXT', function () { ariEsporta(hTit, cols, rows, 'txt'); }]); b.push(['\u2B07 Esporta Excel', function () { ariEsporta(hTit, cols, rows, 'xlsx'); }]); }
+    }
+    if (!haDb) {
+      var idQ = /\b([a-z]{3}\d{3})\b/.exec(q), clQ = /\b([A-Z]{4}IT[A-Z0-9]{2})\b/.exec(String(testo).toUpperCase()), dbc = null;
+      if (idQ) { var u = idQ[1].toUpperCase(); dbc = d.rc.some(function (x) { return String(x.IdCollegamento).toUpperCase() === u; }) ? { scope: 'RC', q: u } : d.ra.some(function (x) { return String(x.SubPath || '').toUpperCase().indexOf(u) === 0; }) ? { scope: 'RA', q: u } : null; }
+      else if (clQ) dbc = { scope: 'RC', q: clQ[1] };
+      if (dbc) b.push(['\uD83D\uDDC4\uFE0F Apri nel Database', function () { ARI_CTX = { db: dbc }; ariApriDb(); }]);
+    }
+    if (recs.length || pts.length) b.push(['\uD83D\uDDFA\uFE0F Mostra sulla mappa', function () { ARI_CTX = { rec: recs, pts: pts }; ARI_ULT = { tit: hTit }; ariMappa(); }]);
+    if (el('tab-compositore') && !el('tab-compositore').classList.contains('hidden')) b.push(['\uD83E\uDDF5 Guidami nella Progettazione (Cr\u00f2)', function () { ariApri(); ariGuida(0); }]);
+    if (!b.length) return;
+    var bar = document.createElement('div'); bar.className = 'cc-azioni';
+    b.forEach(function (x) { var k = document.createElement('button'); k.type = 'button'; k.textContent = x[0]; k.addEventListener('click', x[1]); bar.appendChild(k); });
+    box.appendChild(bar);
+  }
+
 
   /* ═══ V11.26|108: ARIADNE, domande sul DB, progettazione da una frase, domande non capite, pannello spostabile ═══ */
   var ARI_POS = null;   /* posizione scelta trascinando: vale fino al refresh, poi torna quella di default */
@@ -8608,17 +8717,17 @@ window.croCmp = (function () {
   /* ── domande non capite: solo su questo PC, per istruire Cr\u00f2 ── */
   var ARI_NC = 'croAriadneNonCapite';
   function ariNcLeggi() { try { return JSON.parse(localStorage.getItem(ARI_NC) || '[]'); } catch (e) { return []; } }
-  function ariNcAggiungi(t) { try { var l = ariNcLeggi(); l.push({ t: String(t).slice(0, 300), q: new Date().toISOString() }); localStorage.setItem(ARI_NC, JSON.stringify(l.slice(-200))); } catch (e) {} }
+  function ariNcAggiungi(t, chi) { try { var l = ariNcLeggi(); l.push({ t: String(t).slice(0, 300), q: new Date().toISOString(), chi: chi || 'Cr\u00f2' }); localStorage.setItem(ARI_NC, JSON.stringify(l.slice(-200))); } catch (e) {} }
   var ARI_LOG = ARI_NC;
   function ariExport(f) {   /* chip «exp:…» del pannello */
-    if (f === 'nc') return ariEsporta('Domande non capite da Cr\u00f2', ['Quando', 'Domanda'], ariNcLeggi().map(function (x) { return [new Date(x.q).toLocaleString('it-IT'), x.t]; }), 'txt');
+    if (f === 'nc') return ariEsporta('Domande non capite da Cro e Assistente CRO', ['Quando', 'Chi', 'Domanda'], ariNcLeggi().map(function (x) { return [new Date(x.q).toLocaleString('it-IT'), x.chi || 'Cr\u00f2', x.t]; }), 'txt');
     if (ARI_ULT) ariEsporta(ARI_ULT.tit, ARI_ULT.cols, ARI_ULT.rows, f === 'xlsx' || f === 'xls' ? 'xlsx' : 'txt');
   }
   function ariNcMostra(rispondi) {
     if (!rispondi) rispondi = function (h, chips) { ariPannello(); el('ariBody').innerHTML = '<div class="ari-msg">' + h + '</div>'; ariChips((chips || []).concat([['elenco', '\u2630 Cosa manca'], ['guida', '\uD83E\uDDF5 Guidami']])); };
     var l = ariNcLeggi();
     if (!l.length) return rispondi('Non ci sono domande non capite: per ora ho capito tutto. Quando qualcosa non mi \u00e8 chiaro me lo segno qui, cos\u00ec Giuseppe me lo pu\u00f2 insegnare.');
-    rispondi((l.length === 1 ? 'Ecco la <b>domanda</b> che non ho capito' : 'Ecco le <b>' + l.length + ' domande</b> che non ho capito') + ' (le tengo solo su questo PC). Esportale e allegale quando vuoi istruirmi:<br>' + l.slice(-15).reverse().map(function (x) { return '\u2022 ' + esc(x.t) + ' <small style="color:#64748b">' + new Date(x.q).toLocaleString('it-IT') + '</small>'; }).join('<br>'),
+    rispondi((l.length === 1 ? 'Ecco la <b>domanda</b> che non ho capito' : 'Ecco le <b>' + l.length + ' domande</b> che non ho capito') + ' (le tengo solo su questo PC). Esportale e allegale quando vuoi istruirmi:<br>' + l.slice(-15).reverse().map(function (x) { return '\u2022 ' + esc(x.t) + ' <small style="color:#64748b">' + esc(x.chi || 'Cr\u00f2') + ' \u00b7 ' + new Date(x.q).toLocaleString('it-IT') + '</small>'; }).join('<br>'),
       [['exp:nc', '\u2B07 Esporta in TXT'], ['ncdel', '\uD83D\uDDD1 Svuota l\u2019elenco']]);
   }
   /* ── esportazione degli elenchi ── */
@@ -8782,6 +8891,46 @@ window.croCmp = (function () {
     }
     return false;
   }
+  /* ═══ V11.26|110: Crò fa solo aiuto e guida; i dati li mostra l'Assistente CRO, con i bottoni nati qui ═══ */
+  function ariImposta(t) {   /* progettazione da una frase, usata dall'Assistente CRO */
+    var q = ariNorm(t), out = null;
+    ariDB(t, q, function (h) { out = h; });
+    return out;
+  }
+  function ariDomandaDati(q) { return /\b[a-z]{3}\d{3}\b/.test(q) || /\b[a-z]{4}it[a-z0-9]{2}\b/.test(q) || /(nod[oi] ?a1|data ?center|\bdc\b|collegament|subpath|scheda|stato di|che stato|centrali? |quanti|elenco|\bda .+ a )/.test(q); }
+  function ariAzioni(box, testo) {   /* barra di azioni sotto le risposte dell'Assistente CRO: aggiunge solo quello che manca */
+    if (!box || box.getAttribute('data-cro-az')) return; box.setAttribute('data-cro-az', '1');
+    var txt0 = (box.textContent || '').trim(); if (/^Non ho trovato niente/.test(txt0) || /^Cerco/.test(txt0)) return;
+    var d = ariDb(), b = [], q = ariNorm(testo), tab = box.querySelector('table'), hTit = ((box.querySelector('h6') || {}).textContent || testo).trim();
+    var giaBtn = [].slice.call(box.querySelectorAll('button, a')).map(function (x) { return x.textContent || ''; }).join(' | ');
+    var haDb = /Apri nel tab Database|Apri nel Database/.test(giaBtn), haExp = /Esporta/.test(giaBtn);
+    /* elementi della risposta: righe della tabella e domanda (non le frasi di esempio) */
+    var celle = [].slice.call(box.querySelectorAll('td, th, button, b')).map(function (c) { return c.textContent; }).join(' ');
+    var sorg = (tab ? celle : txt0 + ' ' + celle).toUpperCase() + ' ' + String(testo).toUpperCase(), idsRc = {};
+    (sorg.match(/\b[A-Z]{3}\d{3}\b/g) || []).forEach(function (k) { idsRc[k] = 1; });
+    var recs = d.rc.filter(function (x) { return idsRc[String(x.IdCollegamento).toUpperCase()]; }).map(function (x) { return { x: x, r: 'RC' }; })
+      .concat(d.ra.filter(function (x) { return idsRc[String(x.SubPath || '').toUpperCase().slice(0, 6)]; }).map(function (x) { return { x: x, r: 'RA' }; })).slice(0, 800);
+    var cll = {}; (sorg.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || []).forEach(function (k) { cll[k] = 1; }); carica();
+    var pts = Object.keys(cll).map(function (k) { var c = centrali[k]; return c ? { nome: c.nome, clli: c.clli, lat: c.lat, lon: c.lon } : null; }).filter(Boolean);
+    if (tab && !haExp) {
+      var trs = [].slice.call(tab.querySelectorAll('tr')), cols = trs.length ? [].slice.call(trs[0].querySelectorAll('th,td')).map(function (c) { return c.textContent.trim(); }) : [];
+      var rows = trs.slice(1).map(function (r) { return [].slice.call(r.querySelectorAll('td,th')).map(function (c) { return c.textContent.replace(/\s+/g, ' ').trim(); }); });
+      if (rows.length) { b.push(['\u2B07 Esporta TXT', function () { ariEsporta(hTit, cols, rows, 'txt'); }]); b.push(['\u2B07 Esporta Excel', function () { ariEsporta(hTit, cols, rows, 'xlsx'); }]); }
+    }
+    if (!haDb) {
+      var idQ = /\b([a-z]{3}\d{3})\b/.exec(q), clQ = /\b([A-Z]{4}IT[A-Z0-9]{2})\b/.exec(String(testo).toUpperCase()), dbc = null;
+      if (idQ) { var u = idQ[1].toUpperCase(); dbc = d.rc.some(function (x) { return String(x.IdCollegamento).toUpperCase() === u; }) ? { scope: 'RC', q: u } : d.ra.some(function (x) { return String(x.SubPath || '').toUpperCase().indexOf(u) === 0; }) ? { scope: 'RA', q: u } : null; }
+      else if (clQ) dbc = { scope: 'RC', q: clQ[1] };
+      if (dbc) b.push(['\uD83D\uDDC4\uFE0F Apri nel Database', function () { ARI_CTX = { db: dbc }; ariApriDb(); }]);
+    }
+    if (recs.length || pts.length) b.push(['\uD83D\uDDFA\uFE0F Mostra sulla mappa', function () { ARI_CTX = { rec: recs, pts: pts }; ARI_ULT = { tit: hTit }; ariMappa(); }]);
+    if (el('tab-compositore') && !el('tab-compositore').classList.contains('hidden')) b.push(['\uD83E\uDDF5 Guidami nella Progettazione (Cr\u00f2)', function () { ariApri(); ariGuida(0); }]);
+    if (!b.length) return;
+    var bar = document.createElement('div'); bar.className = 'cc-azioni';
+    b.forEach(function (x) { var k = document.createElement('button'); k.type = 'button'; k.textContent = x[0]; k.addEventListener('click', x[1]); bar.appendChild(k); });
+    box.appendChild(bar);
+  }
+
 
   function palHtml() {
     return PAL.map(function (p) {
@@ -9747,7 +9896,7 @@ window.croCmp = (function () {
     if (a === 'vai') { wzChiudi(); if (typeof switchTab === 'function') switchTab('compositore'); var ch = el('croChat'); if (ch) ch.classList.remove('on'); return; }
   }
 
-  return { ariadne: { apri: ariApri, guida: ariGuida, controlla: ariIrp, chiedi: ariChiedi, controlli: ariControlli }, sdfStato: sdfStato, aggiungiTipo: aggiungiTipo, dettaglio: dettaglioApri, protezione: protezione, esportaCompleto: wzEsporta, wizard: wizard, wizardDa: wizardDa, archivio: archivioApri, importaFile: importaFile, archivioSalva: archSalva, configurazione: cfgStudio, spostaMappa: spostaMappa, geocodifica: geocodifica, apparati: apparati, apparatiPopup: apparatiPopup, appLato: appLato, codaDaBlocchi: codaDaBlocchi, diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
+  return { ariadne: { apri: ariApri, guida: ariGuida, controlla: ariIrp, chiedi: ariChiedi, controlli: ariControlli, imposta: ariImposta, azioni: ariAzioni, nc: ariNcAggiungi }, sdfStato: sdfStato, aggiungiTipo: aggiungiTipo, dettaglio: dettaglioApri, protezione: protezione, esportaCompleto: wzEsporta, wizard: wizard, wizardDa: wizardDa, archivio: archivioApri, importaFile: importaFile, archivioSalva: archSalva, configurazione: cfgStudio, spostaMappa: spostaMappa, geocodifica: geocodifica, apparati: apparati, apparatiPopup: apparatiPopup, appLato: appLato, codaDaBlocchi: codaDaBlocchi, diversificato: diversificato, capacita: capacita, schema: schema, aggiungi: aggiungi, togli: togli, svuota: svuota, campo: campo, cerca: cerca, importa: importa, chiudiModale: chiudiModale, ridisegna: ridisegna, esportaTxt: esportaTxt, _catena: function () { return catena; } };
 })();
 
 /* [[CRO:MOD-72-CONTATORE-DELLE]] dentro [[CRO:JS-NUCLEO]]: Contatore delle modifiche della pagina */
@@ -28449,7 +28598,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 109 | Nov 2026</div>
+<div class="version-tag">V11.26 | 110 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -28711,7 +28860,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 109</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 110</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -28728,7 +28877,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 109</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 110</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -28749,7 +28898,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 109</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 110</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -28767,7 +28916,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 109</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 110</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -28784,7 +28933,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 109</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 110</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -28800,7 +28949,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 109</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 110</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -29264,7 +29413,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 109</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 110</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -29414,8 +29563,18 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🧵 Novità V11.26 | 109 | Nov 2026</span>
+                  <span class="cl-ver">🧵 Novità V11.26 | 110 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧵 Crò e Assistente CRO divisi</strong>: Crò è l’aiuto e la guida della Progettazione (cosa manca, Guidami, Portami lì, controllo prima dell’IRP, glossario); le domande sui dati le passa all’Assistente CRO, che si apre con la risposta</li><li><strong>💬 Assistente CRO</strong>: tutto il resto, più la guida: sotto le risposte compaiono i bottoni che mancano (Esporta TXT ed Excel, Apri nel Database, Mostra sulla mappa, Guidami nella Progettazione con Crò); ora capisce «nodi A1 Lazio», «scheda EUR», la progettazione da una frase e i luoghi che contengono il nome di una regione («ROZZANO IDC V. TOSCANA» non è la Toscana); una domanda con un luogo non si aggancia più alla centrale della domanda prima</li><li><strong>📝 Domande non capite</strong>: un solo elenco per Crò e Assistente CRO, con scritto chi non ha capito</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧵 Novità V11.26 | 109 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -37309,7 +37468,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         <div class="cmp-avvisi" id="cmpAvvisi"></div>
         <div class="cmp-riep" id="cmpRiep"></div>
         <div id="cmpNote" class="route-help-panel" style="margin-top:0;" hidden><ul>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧵 Crò (HelpMe!)</strong>: il bottone «HelpMe! Crò» in alto a destra conta le cose da sistemare (bollino) e apre Crò, l’assistente della Progettazione. «Guidami» mostra una voce alla volta: accende la card interessata, spiega in dettaglio cosa manca e come compilarlo, e con «Portami lì» apre il popup e accende il campo o il bottone su cui agire. «Controlla prima dell’IRP» divide le voci in da completare, da verificare e da sapere, e si scarica in TXT. Risponde anche sui dati del DB, con descrizione ed export TXT o Excel («che stato ha CLO311», «ACB020», «scheda EUR», «nodi A1 Lazio», «data center Lombardia», «collegamenti in attivazione in Lombardia») e imposta una progettazione da una frase («progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP»). Dalle risposte si va al dato con «🗄️ Apri nel Database» (tab Database già filtrato) e «🗺️ Mostra sulla mappa» (collegamenti e centrali disegnati). Le domande che non capisce restano su questo PC («domande non capite», esportabili). Il pannello si sposta trascinando la testata; al refresh torna sotto il bottone.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧵 Crò (HelpMe!)</strong>: <b>aiuto e guida</b> della Progettazione. Il bottone «HelpMe! Crò», sulla riga del titolo, conta le cose da sistemare (bollino) e apre Crò. «Guidami» mostra una voce alla volta: accende la card interessata, spiega in dettaglio cosa manca e come compilarlo, e con «Portami lì» apre il popup e accende il campo o il bottone su cui agire. «Controlla prima dell’IRP» divide le voci in da completare, da verificare e da sapere, e si scarica in TXT. Spiega le parole della Progettazione (SNCP, Colt, Nodo A1, SdF…). Le domande sui dati e la progettazione da una frase le passa all’<b>Assistente CRO</b>, che risponde a tutto il resto con export, «Apri nel Database» e «Mostra sulla mappa». Le domande non capite da tutti e due finiscono in un solo elenco su questo PC. Il pannello si sposta trascinando la testata; al refresh torna sotto il bottone.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🎯 A cosa serve</strong>: la Progettazione SdF costruisce la fattibilità completa dalla sede del cliente A alla sede del cliente Z: sedi, code, Centrali Colt, reti RTR, Nodi A1 e RTN. I percorsi si cercano nel tab Unificato, i costi vengono dagli stessi calcoli degli export, e alla fine escono il TXT, l’Excel con il foglio IRP e il Modulo KMZ. È una funzione sperimentale: i risultati vanno sempre controllati.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧩 Barra in alto</strong>: Schema («Stessa regione» 7 blocchi, «Interregionale» 11 blocchi con RTN, «Verso Nodo A1» 5 blocchi), Capacità (1G, 10G, 100G), Rete RTR (Solo Std o Std + Div), Protezione (No, SNCP, E2E) e Progettazione (Undo, Importa, Wizard, Svuota). Cambiando schema i dati restano. Il suggerimento di ogni bottone compare sopra la sua sezione.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📄 Fattibilità (SdF)</strong>: accanto ad «Aggiungi un blocco» ci sono due minicard: «1a Via · Std» e «2a Via · Div». Con la Div vuota (o uguale) le due vie stanno sulla stessa SdF, anche con il protetto; con due numeri diversi la 1a Via va sulla SdF Std e la 2a sulla SdF Div. Sono gli stessi campi della pagina Dati Servizio del wizard e vanno negli export e nelle note.</p></li>
@@ -46690,7 +46849,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   🧩 Progettazione SdF: fattibilità a blocchi dalla Sede Cliente A alla Sede Cliente Z (sperimentale)
                 </summary>
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
-                  <p><strong>Crò (HelpMe!):</strong> il bottone arancio «HelpMe! Crò», accanto a Note e regole, ha un bollino con il numero di cose da sistemare (✔ quando non manca niente). Apre il pannello di Crò: l’elenco delle voci in ordine di catena, con 🟠 da completare, 🟡 da verificare e ℹ️ da sapere. «Guidami» le mostra una alla volta: la card si accende in arancio e un fumetto spiega cosa manca e come compilarlo; «Portami lì» apre il popup e accende il campo (o il bottone) su cui agire, con il cursore già dentro; poi «Fatto, avanti» o «Salta». «Controlla prima dell’IRP» riassume tutto e si scarica in TXT. Nel campo di scrittura capisce «guidami», «cosa manca», «cosa sai fare», le parole del glossario (SNCP, E2E, C-FOS, Colt, Nodo A1, RTN, RTR, SdF, NNI, IRP) e le domande sui DB: stato di un collegamento RC («che stato ha CLO311») o di un Subpath RA («ACB020»), scheda di una centrale («scheda EUR» o il CLLI), Nodi A1 e Data Center di una regione, elenchi di collegamenti per stato e luogo («collegamenti in attivazione in Lombardia», «non attivi su ROZZANO IDC V. TOSCANA»). Ogni risposta ha una breve descrizione e, per gli elenchi, «Esporta TXT» ed «Esporta Excel». Con «🗄️ Apri nel Database» passa al tab Database (RC o RA) con la ricerca già impostata sull’IdCollegamento, sul Subpath, sul CLLI o sulla regione; con «🗺️ Mostra sulla mappa» apre una mappa con i collegamenti (rossi RC, blu RA, tratteggiati se non attivi) e le centrali della risposta. Con una frase come «progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP» imposta da sola schema (Interregionale se le regioni sono diverse), Colt, capacità, Std + Div e protezione, poi ti guida sul resto. Le domande che non capisce le annota solo su questo PC: «domande non capite» le mostra e le esporta in TXT, così si possono insegnare. Il bottone sta sulla riga del titolo, a destra; il pannello si apre sotto il bottone, si sposta trascinando la testata e al refresh torna nella posizione di partenza. Le altre domande vanno all’Assistente CRO. Funziona tutto nel file, senza internet.</p>
+                  <p><strong>Crò e Assistente CRO:</strong> i due assistenti hanno ruoli diversi e non si ripetono. <b>HelpMe! Crò</b>, il bottone arancio sulla riga del titolo, è l’<b>aiuto e la guida</b> della Progettazione: il bollino conta le cose da sistemare (✔ quando non manca niente); il pannello le elenca in ordine di catena (🟠 da completare, 🟡 da verificare, ℹ️ da sapere); «Guidami» le mostra una alla volta accendendo la card, con un fumetto che spiega cosa manca e come compilarlo; «Portami lì» apre il popup e accende il campo o il bottone su cui agire; «Controlla prima dell’IRP» fa il riepilogo e si scarica in TXT; spiega le parole del glossario. Il pannello si apre sotto il bottone, si sposta trascinando la testata e al refresh torna al suo posto. L’<b>Assistente CRO</b> fa tutto il resto: le domande sui dati (stato di un collegamento o di un Subpath, scheda di una centrale, Nodi A1 e Data Center di una regione, elenchi per stato e luogo, C-FOS, collegamenti fra centrali), la progettazione da una frase («progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP», poi passa a Crò per la guida) e il passaggio a Claude. Sotto le sue risposte compaiono i bottoni che mancano: «Esporta TXT» ed «Esporta Excel», «🗄️ Apri nel Database», «🗺️ Mostra sulla mappa» e, nella Progettazione, «🧵 Guidami nella Progettazione (Crò)». Se a Crò fai una domanda sui dati, la passa all’Assistente aperto con la risposta. Le domande che nessuno dei due capisce restano in un solo elenco su questo PC, con scritto chi non l’ha capita: «domande non capite» lo mostra e lo esporta. Funziona tutto nel file, senza internet.</p>
                   <p><strong>Dove si trova:</strong> nel menu principale, «Progettazione SdF 🚧» subito dopo Ricerca Percorso Unificato, e nell’Overview con il bottone «Progettazione SdF» (accanto a «Wizard SdF»). È sperimentale: i risultati vanno verificati. Il cassetto «📘 Note e regole» ha tutte le regole in 18 voci.</p>
                   <p><strong>Barra in alto:</strong> cinque sezioni con i bottoni tutti alti uguali: Schema (Stessa regione, 7 blocchi; Interregionale, 11 blocchi con due reti RTR, i Nodi A1 e la RTN; Verso Nodo A1, 5 blocchi), Capacità (1G, 10G, 100G), Rete RTR (Solo Std o Std + Div), Protezione (No, SNCP a caramella, E2E) e Progettazione (Undo, Importa, Wizard, Svuota). I bottoni scelti tengono il loro colore anche al passaggio del mouse; il suggerimento compare sopra la sezione senza coprire i bottoni.</p>
                   <p><strong>Aggiungi un blocco e Fattibilità (SdF):</strong> nella riga sotto la barra si aggiungono i blocchi uno alla volta (nel primo lato libero) e, a destra, si scrivono le fattibilità nelle due minicard «1a Via · Std» e «2a Via · Div». Div vuota o uguale: una sola SdF per le due vie. Due numeri diversi: 1a Via sulla SdF Std, 2a Via sulla SdF Div. Sotto il titolo una riga dice quale dei due casi vale.</p>
@@ -48883,7 +49042,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 109 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 110 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -48902,6 +49061,17 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🧵 V11.26 | 110 | Nov 2026 | Crò aiuta e guida, l’Assistente CRO fa il resto
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>💬 110</strong>: <code>ariDomandaDati()</code> inoltra a <code>croChat.chiedi()</code>; nell’Assistente <code>luogoCentrale()</code> prima delle regioni, <code>seguito()</code> ignorato se c’è un luogo, rami per Nodi A1 di regione, «scheda» e progettazione (<code>croCmp.ariadne.imposta</code>), registro con <code>croCmp.ariadne.nc</code>; <code>croCmp.ariadne.azioni()</code> dopo ogni risposta aggiunge solo i bottoni che mancano. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             🧵 V11.26 | 109 | Nov 2026 | Crò, Apri nel Database e Mostra sulla mappa
           </summary>
@@ -101145,6 +101315,9 @@ body.dark-mode .exb-grp, body.dark-mode .exb .exb-chip { background: #1e293b; bo
 body.dark-mode .expsm-ds-ctrl { background: #052e16; border-color: #166534; } body.dark-mode .expsm-ds-ctrl-et { color: #86efac; }
 .cmp-modale { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
 .cmp-modale[hidden] { display: none; }
+/* V11.26|110: barra di azioni sotto le risposte dell'Assistente CRO */
+.cc-azioni { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e2e8f0; }
+.cc-azioni button, .cc-btn { border: 1px solid #c7d2fe; background: #eef2ff; color: #3730a3; border-radius: 999px; padding: 3px 10px; font-size: .72rem; font-weight: 700; cursor: pointer; } .cc-azioni button:hover, .cc-btn:hover { background: #e0e7ff; }
 /* V11.26|107: Ariadne */
 .ari-btn { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; margin-right: 8px; border: 0; border-radius: 9px; background: linear-gradient(135deg, #ea580c, #be185d); color: #fff; font-size: .78rem; font-weight: 600; cursor: pointer; box-shadow: 0 3px 10px rgba(190,24,93,.25); transition: filter .15s; }
 .ari-btn:hover { filter: brightness(1.08); } .ari-btn b { font-weight: 800; }
@@ -103957,7 +104130,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 109';
+  var REVISIONE = 'V11.26 | 110';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
