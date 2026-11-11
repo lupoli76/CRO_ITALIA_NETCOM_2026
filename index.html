@@ -4,13 +4,19 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 110  (rev. pubblicata: V11.26 | 110 | Nov 2026)              ║
+║   Versione: 11.26 | 111  (rev. pubblicata: V11.26 | 111 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 111 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • CRO': la guida parte da protezione e vie e segue l'ordine di lavoro:         ║
+║     centrali agli estremi (lato A, lato Z), poi Std e Div, verifiche, coda, SdF; ║
+║     non propone la ricerca dei percorsi finche' manca una centrale               ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 110 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -8086,7 +8092,13 @@ window.croCmp = (function () {
       if (T.cl === 'coda' && !protSol()) { var cc = codaCosto(b); if (!cc || cc.tot == null)
         add({ g: 'manca', b: b.id, pop: '.cmp-app-b', t: nome + ': coda senza costo', d: 'La coda non ha ancora un costo. Con <b>Portami l\u00ec</b> apro la card e accendo il bottone <b>Apparati\u2026</b>: si apre il listino; con il <b>+</b> accanto a ogni riga scegli gli apparati per la <b>Sede Cliente</b> e per la <b>Centrale per il Cliente</b>, poi premi <b>Applica</b>.' + (viaDoppia() ? ' Con Std + Div trovi due schede, 1a Via e 2a Via; \u00ab2a Via uguale alla 1a\u00bb \u00e8 gi\u00e0 spuntata. <b>Applica e copia</b> mette gli stessi apparati anche nell\u2019altra zona.' : '') }); }
       if (T.cl === 'rete') {
-        if (!b.ep) { add({ g: 'manca', b: b.id, t: nome + ': mancano gli estremi', d: 'La rete va dalla centrale (o Nodo A1) che le sta prima a quella che le sta dopo: finch\u00e9 mancano, non si pu\u00f2 cercare il percorso. Sistema prima le card della Colt e del Nodo A1 vicine.' }); return; }
+        if (!b.ep || !b.ep.a || !b.ep.z) { var ix = catena.indexOf(b), prima = null, dopo = null, j;   /* V11.26|111 */
+          for (j = ix - 1; j >= 0; j--) { if (/centrale|nodo/.test(TIPI[catena[j].tipo].cl)) { prima = catena[j]; break; } }
+          for (j = ix + 1; j < catena.length; j++) { if (/centrale|nodo/.test(TIPI[catena[j].tipo].cl)) { dopo = catena[j]; break; } }
+          var manca = [prima, dopo].filter(function (y) { return y && !(y.r && y.r.c); }).map(function (y) { return nomeCorto(y); });
+          if (!prima || !dopo) add({ g: 'manca', b: b.id, t: nome + ': manca un blocco agli estremi', d: 'Per cercare i percorsi la rete deve avere una centrale (o Colt) prima e una centrale, Colt o Nodo A1 dopo. Aggiungi il blocco mancante dalla riga \u00abAggiungi un blocco\u00bb.' });
+          else if (!manca.length) add({ g: 'manca', b: b.id, t: nome + ': estremi da ricalcolare', d: 'Le centrali agli estremi ci sono ma la rete non le vede ancora: apri e chiudi la card della Colt o cambia e rimetti lo schema.' });
+          return; }
         if (!b.f.std) add({ g: 'manca', b: b.id, btn: '[onclick="croCmp.cerca(' + b.id + ')"]', t: nome + ': manca lo Std', d: 'Manca il percorso Std. Premi <b>\u2460 Cerca percorsi nell\u2019Unificato</b>: ti porto nel tab Unificato con Partenza e Arrivo gi\u00e0 scritti e lancio la ricerca. Quando i percorsi sono pronti, il riquadro in basso a destra ti riporta qui con lo Std scelto (la riga spuntata, o il primo). Se hai gi\u00e0 cercato, usa <b>\u2461 Importa Std</b> e scegli dall\u2019elenco.' });
         else if (dv && !b.f.div) add({ g: 'manca', b: b.id, btn: '[onclick*="importa(' + b.id + ',\'div\')"]', t: nome + ': manca il Div', d: 'C\u2019\u00e8 lo Std ma non il Div. Nell\u2019Unificato apri <b>Percorsi Div</b> dello Std scelto; poi torna qui e premi <b>\u2462 Importa Div</b>, oppure usa <b>\u2460 Cerca</b> che fa tutto in fila. Se hai indicato Colt o Nodo A1 della 2a Via, la ricerca li usa gi\u00e0 come Partenza 2 e Arrivo 2.' });
         var card = ariCard(b.id), txt = card ? card.textContent : '';
@@ -8098,6 +8110,23 @@ window.croCmp = (function () {
     });
     if (catena.some(function (b) { return TIPI[b.tipo].cl === 'rete'; }) && !String(WDS.sdfStd || '').trim())
       add({ g: 'manca', sel: '#cmpSdf input[data-sdf="sdfStd"]', t: 'SdF Std vuota', d: 'Manca il numero della fattibilit\u00e0. Scrivilo nella minicard <b>1a Via \u00b7 Std</b> della sezione <b>Fattibilit\u00e0 (SdF)</b>, accanto ad \u00abAggiungi un blocco\u00bb: va nel nome dei file e nell\u2019Excel. Se le due vie stanno sulla stessa fattibilit\u00e0 lascia vuota la Div; se sono due fattibilit\u00e0 diverse, scrivi anche la <b>2a Via \u00b7 Div</b>: le note della 2a Via rimanderanno alla SdF Std.' });
+    /* V11.26|111: ordine di lavoro, non di catena. Prima cio' che serve per cercare i percorsi (Colt o centrale lato A,
+       Colt, centrale o Nodo A1 lato Z), poi la rete (Std e, se scelto, Div), poi le verifiche, la coda e la SdF */
+    var prio = function (x) {
+      var b = x.b != null ? catena.filter(function (y) { return y.id === x.b; })[0] : null, cl = b ? TIPI[b.tipo].cl : '';
+      if (/Scegli uno schema/.test(x.t)) return 0;
+      var lz = b && slotEt(b.tipo) === 'Z' ? 0.5 : 0;   /* lato A prima del lato Z; in ogni lato sede, Colt, Nodo A1 */
+      if (cl === 'sede' && x.g === 'manca') { var cz = trova('centrale' + slotEt(b.tipo)); return cz && cz.r && cz.r.c ? 5 : 2 + lz; }
+      if (cl === 'centrale' && x.g === 'manca') return 2.1 + lz;
+      if (cl === 'nodo' && x.g === 'manca') return 2.2 + lz;
+      if (cl === 'rete' && x.g === 'manca') return 3;
+      if (x.g === 'verifica') return 4;
+      if (cl === 'coda') return 5;
+      if (/SdF/.test(x.t)) return 6;
+      return 7;
+    };
+    out.forEach(function (x, k) { x._o = k; x._p = prio(x); });
+    out.sort(function (a, b) { return a._p - b._p || a._o - b._o; });
     return out;
   }
   function ariConta() { return ariControlli().filter(function (x) { return x.g !== 'info'; }).length; }
@@ -8124,13 +8153,13 @@ window.croCmp = (function () {
     p.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('[data-ari]'); if (!a) return; var v = a.getAttribute('data-ari');
       if (v === 'adb') return ariApriDb(); if (v === 'amap') return ariMappa();   /* V11.26|109 */
       if (v.indexOf('exp:') === 0) return ariExport(v.slice(4)); if (v === 'nc') return ariNcMostra(); if (v === 'ncdel') { try { localStorage.removeItem(ARI_NC); } catch (z) {} return ariNcMostra(); }
-      if (v === 'guida') ariGuida(0); else if (v === 'irp') ariIrp(); else if (v === 'txt') ariTxt(); else if (v === 'elenco') ariElenco(); else if (v.indexOf('vai:') === 0) ariGuida(+v.slice(4)); else if (v.indexOf('chiedi:') === 0) ariChiedi(v.slice(7));
+      if (v === 'guida') ariGuida(0); else if (v === 'irp') ariIrp(); else if (v === 'txt') ariTxt(); else if (v === 'elenco') ariElenco(); else if (v.indexOf('vai:') === 0) ariGuida(+v.slice(4), true); else if (v.indexOf('chiedi:') === 0) ariChiedi(v.slice(7));
       else if (v.indexOf('exp:') === 0) ariEsporta(v.slice(4)); else if (v === 'logvia') { try { localStorage.removeItem(ARI_LOG); } catch (z) {} ariChiedi('domande non capite'); }
       else if (v.indexOf('usa:') === 0) { var pz = v.split(':'), bb = trova('centrale' + pz[1]); if (bb) { croCmp.campo(bb.id, 'manuale', etichetta(centrali[pz[2]])); ridisegna(); ariElenco('Fatto: <b>' + esc(centrali[pz[2]].nome) + '</b> è ora la Colt ' + pz[1] + '.'); } } });
     return p;
   }
   function ariChips(lista) { el('ariChips').innerHTML = lista.map(function (c) { return '<button type="button" data-ari="' + c[0] + '">' + c[1] + '</button>'; }).join(''); }
-  function ariIcona(g) { return g === 'manca' ? '\uD83D\uDFE0' : g === 'verifica' ? '\uD83D\uDFE1' : '\u2139\uFE0F'; }
+  function ariIcona(g) { return g === 'manca' ? '\uD83D\uDFE0' : g === 'verifica' ? '\uD83D\uDFE1' : g === 'imposta' ? '\u2699\uFE0F' : '\u2139\uFE0F'; }
   function ariElenco(intro) {
     var c = ariControlli(), nM = c.filter(function (x) { return x.g !== 'info'; }).length, ore = new Date().getHours();
     var saluto = ore < 13 ? 'Buongiorno!' : ore < 18 ? 'Buon pomeriggio!' : 'Buonasera!';
@@ -8143,10 +8172,15 @@ window.croCmp = (function () {
   function ariApri() { ariPannello(); ARI.aperta = true; ARI.guida = false; el('ariPan').classList.add('on'); ariTrascina(el('ariPan')); ariPosPannello(); ariElenco(); }
   function ariChiudi() { ARI.aperta = false; ARI.guida = false; var p = el('ariPan'); if (p) p.classList.remove('on'); ariTogli(); }
   function ariTogli() { document.querySelectorAll('.ari-hl, .ari-fld').forEach(function (e) { e.classList.remove('ari-hl', 'ari-fld'); }); var t = el('ariTip'); if (t) t.remove(); }
-  function ariBersaglio(x) { return x.b != null ? ariCard(x.b) : (x.sel ? document.querySelector(x.sel) : null); }
-  function ariGuida(i) {
+  function ariBersaglio(x) { return x.elx || (x.b != null ? ariCard(x.b) : (x.sel ? document.querySelector(x.sel) : null)); }
+  function ariGuida(i, diretto) {
     ariPannello(); ARI.aperta = true; el('ariPan').classList.add('on'); ariTrascina(el('ariPan')); ariPosPannello();
     ARI.passi = ariControlli(); ARI.guida = true; ARI.i = i;
+    if (!ARI.impOk && !diretto && catena.length) {   /* V11.26|111: tutto parte da protetto o no e da Solo Std o Std + Div */
+      var gp = [].slice.call(document.querySelectorAll('#tab-compositore .cmp-barra .cmp-grp')).filter(function (g) { return /PROTEZIONE/i.test(g.textContent); })[0];
+      var ps = protSol(), cap = (el('cmpCap') || {}).value || '1G';
+      ARI.passi.unshift({ g: 'imposta', imp: true, elx: gp, t: 'Prima di tutto: protezione e vie', d: 'Ora la progettazione \u00e8 <b>' + (divOn() ? 'Std + Div' : 'Solo Std') + '</b>, <b>' + cap + '</b>, protezione <b>' + (ps || 'No') + '</b>. Controlla che sia quello che ti serve, perch\u00e9 cambia tutto il resto: con <b>SNCP</b> o <b>E2E</b> la rete deve essere solo RC, ci sono sempre due vie, la coda e il trasporto vengono dal listino protetto e i costi stanno nella 1a Via; con <b>Std + Div</b> senza protezione la coda ha la 1a e la 2a Via e Colt e Nodo A1 della 2a Via possono essere diversi; con <b>Solo Std</b> c\u2019\u00e8 una via sola. Se va bene premi <b>Fatto, avanti</b>; altrimenti cambiale in alto (Rete RTR, Protezione, Capacit\u00e0) e poi vai avanti.' });
+    }
     if (!ARI.passi.length) { ARI.guida = false; ariTogli(); return ariElenco('Ho controllato tutto: <b>non manca niente</b>. Puoi fare l\u2019Export completo.'); }
     if (ARI.i >= ARI.passi.length) { ARI.guida = false; ariTogli(); return ariElenco('Abbiamo visto tutte le voci. Se ne hai saltata qualcuna la trovi qui sotto.'); }
     var x = ARI.passi[ARI.i]; ariTogli();
@@ -8155,10 +8189,10 @@ window.croCmp = (function () {
     ariChips([['elenco', '\u2630 Torna all\u2019elenco'], ['irp', '\u2705 Controlla prima dell\u2019IRP']]);
     var tip = document.createElement('div'); tip.id = 'ariTip'; tip.className = 'ari-tip ' + x.g;
     tip.innerHTML = '<div class="ari-tt">' + ariIcona(x.g) + ' Passo ' + (ARI.i + 1) + ' di ' + ARI.passi.length + ' \u00b7 ' + esc(x.t) + '</div><div class="ari-td">' + x.d + '</div><div class="ari-tb">'
-      + ((x.k || x.btn || x.pop || x.sel) ? '<button type="button" class="pri" data-t="vai">\uD83D\uDC49 Portami l\u00ec</button>' : '') + '<button type="button" data-t="ok">Fatto, avanti</button><button type="button" data-t="salta">Salta</button><button type="button" data-t="stop">Chiudi</button></div>';
+      + ((x.k || x.btn || x.pop || x.sel || x.elx) ? '<button type="button" class="pri" data-t="vai">\uD83D\uDC49 Portami l\u00ec</button>' : '') + '<button type="button" data-t="ok">Fatto, avanti</button><button type="button" data-t="salta">Salta</button><button type="button" data-t="stop">Chiudi</button></div>';
     document.body.appendChild(tip);
     tip.addEventListener('click', function (e) { var t = e.target.getAttribute && e.target.getAttribute('data-t'); if (!t) return;
-      if (t === 'vai') ariPortami(x); else if (t === 'ok' || t === 'salta') ariGuida(ARI.i + 1); else if (t === 'stop') ariChiudi(); });
+      if (t === 'vai') ariPortami(x); else if ((t === 'ok' || t === 'salta') && x.imp) { ARI.impOk = true; ariGuida(ARI.i, true); } else if (t === 'ok' || t === 'salta') ariGuida(ARI.i + 1, ARI.impOk); else if (t === 'stop') ariChiudi(); });
     setTimeout(function () { ariPosiziona(tip, tg); }, 380);
   }
   function ariPosiziona(tip, tg) {
@@ -8171,6 +8205,7 @@ window.croCmp = (function () {
   }
   function ariPortami(x) {
     var accendi = function (e) { if (!e) return false; e.classList.add('ari-fld'); e.scrollIntoView({ behavior: 'smooth', block: 'center' }); if (e.focus) try { e.focus({ preventScroll: true }); } catch (z) { e.focus(); } return true; };
+    if (x.elx && accendi(x.elx)) return;   /* V11.26|111 */
     if (x.sel && accendi(document.querySelector(x.sel))) return;
     if (x.btn) { var bt = document.querySelector('#tab-compositore ' + x.btn); if (accendi(bt)) return; }
     if (x.b != null && (x.k || x.pop)) {
@@ -28598,7 +28633,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 110 | Nov 2026</div>
+<div class="version-tag">V11.26 | 111 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -28860,7 +28895,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 110</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 111</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -28877,7 +28912,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 110</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 111</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -28898,7 +28933,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 110</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 111</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -28916,7 +28951,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 110</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 111</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -28933,7 +28968,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 110</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 111</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -28949,7 +28984,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 110</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 111</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -29413,7 +29448,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 110</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 111</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -29563,8 +29598,18 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🧵 Novità V11.26 | 110 | Nov 2026</span>
+                  <span class="cl-ver">🧵 Novità V11.26 | 111 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🧵 Guida di Crò nell’ordine giusto</strong>: il primo passo è sempre «Prima di tutto: protezione e vie» (con Solo Std o Std + Div, capacità e protezione attuali e cosa cambiano); poi le centrali che servono alla ricerca, lato A (sede se serve, Colt) e lato Z (sede se serve, Colt o centrale, Nodo A1); solo quando la rete ha entrambi gli estremi Crò propone «① Cerca percorsi» e il Div; poi verifiche, coda (per chiudere la pratica) e SdF. L’elenco del pannello segue lo stesso ordine</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🧵 Novità V11.26 | 110 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -37468,7 +37513,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         <div class="cmp-avvisi" id="cmpAvvisi"></div>
         <div class="cmp-riep" id="cmpRiep"></div>
         <div id="cmpNote" class="route-help-panel" style="margin-top:0;" hidden><ul>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧵 Crò (HelpMe!)</strong>: <b>aiuto e guida</b> della Progettazione. Il bottone «HelpMe! Crò», sulla riga del titolo, conta le cose da sistemare (bollino) e apre Crò. «Guidami» mostra una voce alla volta: accende la card interessata, spiega in dettaglio cosa manca e come compilarlo, e con «Portami lì» apre il popup e accende il campo o il bottone su cui agire. «Controlla prima dell’IRP» divide le voci in da completare, da verificare e da sapere, e si scarica in TXT. Spiega le parole della Progettazione (SNCP, Colt, Nodo A1, SdF…). Le domande sui dati e la progettazione da una frase le passa all’<b>Assistente CRO</b>, che risponde a tutto il resto con export, «Apri nel Database» e «Mostra sulla mappa». Le domande non capite da tutti e due finiscono in un solo elenco su questo PC. Il pannello si sposta trascinando la testata; al refresh torna sotto il bottone.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧵 Crò (HelpMe!)</strong>: <b>aiuto e guida</b> della Progettazione. Il bottone «HelpMe! Crò», sulla riga del titolo, conta le cose da sistemare (bollino) e apre Crò. «Guidami» parte da protezione e vie (Solo Std o Std + Div, SNCP o E2E), poi segue l’ordine di lavoro: prima le centrali che servono alla ricerca (lato A e lato Z, con la sede se serve a trovare la Colt, poi il Nodo A1), poi Std e Div, le verifiche, la coda e la SdF. Mostra una voce alla volta: accende la card interessata, spiega in dettaglio cosa manca e come compilarlo, e con «Portami lì» apre il popup e accende il campo o il bottone su cui agire. «Controlla prima dell’IRP» divide le voci in da completare, da verificare e da sapere, e si scarica in TXT. Spiega le parole della Progettazione (SNCP, Colt, Nodo A1, SdF…). Le domande sui dati e la progettazione da una frase le passa all’<b>Assistente CRO</b>, che risponde a tutto il resto con export, «Apri nel Database» e «Mostra sulla mappa». Le domande non capite da tutti e due finiscono in un solo elenco su questo PC. Il pannello si sposta trascinando la testata; al refresh torna sotto il bottone.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🎯 A cosa serve</strong>: la Progettazione SdF costruisce la fattibilità completa dalla sede del cliente A alla sede del cliente Z: sedi, code, Centrali Colt, reti RTR, Nodi A1 e RTN. I percorsi si cercano nel tab Unificato, i costi vengono dagli stessi calcoli degli export, e alla fine escono il TXT, l’Excel con il foglio IRP e il Modulo KMZ. È una funzione sperimentale: i risultati vanno sempre controllati.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧩 Barra in alto</strong>: Schema («Stessa regione» 7 blocchi, «Interregionale» 11 blocchi con RTN, «Verso Nodo A1» 5 blocchi), Capacità (1G, 10G, 100G), Rete RTR (Solo Std o Std + Div), Protezione (No, SNCP, E2E) e Progettazione (Undo, Importa, Wizard, Svuota). Cambiando schema i dati restano. Il suggerimento di ogni bottone compare sopra la sua sezione.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📄 Fattibilità (SdF)</strong>: accanto ad «Aggiungi un blocco» ci sono due minicard: «1a Via · Std» e «2a Via · Div». Con la Div vuota (o uguale) le due vie stanno sulla stessa SdF, anche con il protetto; con due numeri diversi la 1a Via va sulla SdF Std e la 2a sulla SdF Div. Sono gli stessi campi della pagina Dati Servizio del wizard e vanno negli export e nelle note.</p></li>
@@ -46849,7 +46894,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   🧩 Progettazione SdF: fattibilità a blocchi dalla Sede Cliente A alla Sede Cliente Z (sperimentale)
                 </summary>
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
-                  <p><strong>Crò e Assistente CRO:</strong> i due assistenti hanno ruoli diversi e non si ripetono. <b>HelpMe! Crò</b>, il bottone arancio sulla riga del titolo, è l’<b>aiuto e la guida</b> della Progettazione: il bollino conta le cose da sistemare (✔ quando non manca niente); il pannello le elenca in ordine di catena (🟠 da completare, 🟡 da verificare, ℹ️ da sapere); «Guidami» le mostra una alla volta accendendo la card, con un fumetto che spiega cosa manca e come compilarlo; «Portami lì» apre il popup e accende il campo o il bottone su cui agire; «Controlla prima dell’IRP» fa il riepilogo e si scarica in TXT; spiega le parole del glossario. Il pannello si apre sotto il bottone, si sposta trascinando la testata e al refresh torna al suo posto. L’<b>Assistente CRO</b> fa tutto il resto: le domande sui dati (stato di un collegamento o di un Subpath, scheda di una centrale, Nodi A1 e Data Center di una regione, elenchi per stato e luogo, C-FOS, collegamenti fra centrali), la progettazione da una frase («progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP», poi passa a Crò per la guida) e il passaggio a Claude. Sotto le sue risposte compaiono i bottoni che mancano: «Esporta TXT» ed «Esporta Excel», «🗄️ Apri nel Database», «🗺️ Mostra sulla mappa» e, nella Progettazione, «🧵 Guidami nella Progettazione (Crò)». Se a Crò fai una domanda sui dati, la passa all’Assistente aperto con la risposta. Le domande che nessuno dei due capisce restano in un solo elenco su questo PC, con scritto chi non l’ha capita: «domande non capite» lo mostra e lo esporta. Funziona tutto nel file, senza internet.</p>
+                  <p><strong>Crò e Assistente CRO:</strong> i due assistenti hanno ruoli diversi e non si ripetono. <b>HelpMe! Crò</b>, il bottone arancio sulla riga del titolo, è l’<b>aiuto e la guida</b> della Progettazione: il bollino conta le cose da sistemare (✔ quando non manca niente); il pannello le elenca in ordine di catena (🟠 da completare, 🟡 da verificare, ℹ️ da sapere); «Guidami» parte sempre da protezione e vie, che cambiano tutto il resto, poi segue l’ordine di lavoro: prima le centrali che servono alla ricerca dei percorsi (Colt o centrale lato A; Colt, centrale o Nodo A1 lato Z), poi Std e, se scelto, Div, poi le verifiche, la coda (che serve per chiudere la pratica) e la SdF; la ricerca dei percorsi non viene proposta finché mancano le centrali agli estremi. Le voci si mostrano una alla volta accendendo la card, con un fumetto che spiega cosa manca e come compilarlo; «Portami lì» apre il popup e accende il campo o il bottone su cui agire; «Controlla prima dell’IRP» fa il riepilogo e si scarica in TXT; spiega le parole del glossario. Il pannello si apre sotto il bottone, si sposta trascinando la testata e al refresh torna al suo posto. L’<b>Assistente CRO</b> fa tutto il resto: le domande sui dati (stato di un collegamento o di un Subpath, scheda di una centrale, Nodi A1 e Data Center di una regione, elenchi per stato e luogo, C-FOS, collegamenti fra centrali), la progettazione da una frase («progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP», poi passa a Crò per la guida) e il passaggio a Claude. Sotto le sue risposte compaiono i bottoni che mancano: «Esporta TXT» ed «Esporta Excel», «🗄️ Apri nel Database», «🗺️ Mostra sulla mappa» e, nella Progettazione, «🧵 Guidami nella Progettazione (Crò)». Se a Crò fai una domanda sui dati, la passa all’Assistente aperto con la risposta. Le domande che nessuno dei due capisce restano in un solo elenco su questo PC, con scritto chi non l’ha capita: «domande non capite» lo mostra e lo esporta. Funziona tutto nel file, senza internet.</p>
                   <p><strong>Dove si trova:</strong> nel menu principale, «Progettazione SdF 🚧» subito dopo Ricerca Percorso Unificato, e nell’Overview con il bottone «Progettazione SdF» (accanto a «Wizard SdF»). È sperimentale: i risultati vanno verificati. Il cassetto «📘 Note e regole» ha tutte le regole in 18 voci.</p>
                   <p><strong>Barra in alto:</strong> cinque sezioni con i bottoni tutti alti uguali: Schema (Stessa regione, 7 blocchi; Interregionale, 11 blocchi con due reti RTR, i Nodi A1 e la RTN; Verso Nodo A1, 5 blocchi), Capacità (1G, 10G, 100G), Rete RTR (Solo Std o Std + Div), Protezione (No, SNCP a caramella, E2E) e Progettazione (Undo, Importa, Wizard, Svuota). I bottoni scelti tengono il loro colore anche al passaggio del mouse; il suggerimento compare sopra la sezione senza coprire i bottoni.</p>
                   <p><strong>Aggiungi un blocco e Fattibilità (SdF):</strong> nella riga sotto la barra si aggiungono i blocchi uno alla volta (nel primo lato libero) e, a destra, si scrivono le fattibilità nelle due minicard «1a Via · Std» e «2a Via · Div». Div vuota o uguale: una sola SdF per le due vie. Due numeri diversi: 1a Via sulla SdF Std, 2a Via sulla SdF Div. Sotto il titolo una riga dice quale dei due casi vale.</p>
@@ -49042,7 +49087,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 110 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 111 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -49061,6 +49106,17 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🧵 V11.26 | 111 | Nov 2026 | Guida di Crò nell’ordine di lavoro
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🧵 111</strong>: <code>ariControlli()</code> ordina per priorità di lavoro (schema, estremi per lato, rete, verifiche, coda, SdF, informazioni); la rete senza entrambi gli estremi non genera «manca lo Std»; passo iniziale «imposta» in <code>ariGuida()</code> con <code>ARI.impOk</code>. Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             🧵 V11.26 | 110 | Nov 2026 | Crò aiuta e guida, l’Assistente CRO fa il resto
           </summary>
@@ -101361,6 +101417,8 @@ body.cro-infolive-on .ari-mapw { bottom: 30px; }
 .ari-maph { display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: linear-gradient(135deg, #ea580c, #be185d); color: #fff; } .ari-maph small { flex: 1; opacity: .9; }
 .ari-mapc { flex: 1; }
 .ari-mapl { display: flex; gap: 16px; padding: 6px 12px; font-size: .72rem; color: #334155; border-top: 1px solid #e2e8f0; } .ari-mapl i { display: inline-block; width: 18px; height: 4px; vertical-align: middle; margin-right: 5px; } .ari-mapl i.tr { border-top: 4px dashed #64748b; height: 0; } .ari-mapl i.pt { width: 10px; height: 10px; border-radius: 50%; background: #0f172a; }
+/* V11.26|111: passo iniziale della guida (protezione e vie) */
+.ari-tip.imposta { border-top: 4px solid #6366f1; }
 
 /* V11.26|104: SdF con due minicard (1a Via, 2a Via) allineate ai bottoni dei blocchi */
 #tab-compositore #cmpSdf { display: flex !important; align-items: center !important; gap: 8px !important; padding: 0 12px !important; width: 600px !important; flex-basis: 600px !important; }
@@ -104130,7 +104188,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 110';
+  var REVISIONE = 'V11.26 | 111';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
