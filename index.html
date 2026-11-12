@@ -91952,6 +91952,8 @@ window._buildUnifiedCostBlock = function(opts) {
   function vuoto(q) { return !q || (!Object.keys(q.A || {}).length && !Object.keys(q.B || {}).length); }
   function viaPiena(v) { return !vuoto(v.A) || (!v.uguale && !vuoto(v.Z)); }
   function conDiv() { return window._expsmModo === 'unified_std_div'; }
+  function protOn() { var p = document.getElementById('unifiedCostProtetto'); return !!(p && p.checked); }   /* V11.26|117 */
+  function protNome() { var x = document.getElementById('unifiedProtSol'), v = x ? x.value : 'auto'; return v === 'E2E' ? 'E2E' : v === 'Caramella' ? 'SNCP (caramella)' : 'automatica, SNCP o E2E secondo la regola'; }
   function configurata() { return viaPiena(S.v1) || (conDiv() && !S.v2copia && viaPiena(S.v2)); }
   /* capi della via: per la 2a Via valgono le centrali Div se compilate */
   function capi(n) {
@@ -92049,6 +92051,13 @@ window._buildUnifiedCostBlock = function(opts) {
   function disegna() {
     var b = document.getElementById('unifiedCodaBody'); if (!b) return;
     var k = document.getElementById('unifiedCodaK'), dv = conDiv();
+    var cardP = document.getElementById('unifiedCodaCard');
+    if (cardP) cardP.classList.toggle('cd-prot', protOn());
+    if (protOn()) {   /* V11.26|117: coda protetta calcolata dalle regole di protezione */
+      if (k) k.textContent = 'automatica con il Protetto';
+      b.innerHTML = '<div class="cd-auto">\uD83D\uDEE1\uFE0F <b>Coda protetta automatica.</b> Con il Protetto acceso (' + esc(protNome()) + ') la coda del lato A e del lato Z si calcola da sola con le regole di protezione e il listino delle Soluzioni Protette: apparati di Sede Cliente e Centrale per il Cliente, splitter compresi, divisi secondo la soluzione. Non serve configurarla: la trovi nei fogli Note, Protezione e IRP dell\u2019Excel (Con questo Automatismo non è prevista Coda Cliente verso un Nodo A1). Spegnendo il Protetto torna la configurazione ad hoc della Coda Cliente, basta disabilitare e riabilitare la Coda con il relativo Togle per andare in selezione apparati.</div>';
+      return;
+    }
     var bv2 = document.getElementById('unifiedCodaV2'); if (bv2) bv2.hidden = !dv;
     var sel = document.getElementById('unifiedCodaV2Sel'); if (sel) sel.value = S.v2copia ? 'copia' : 'parte';
     var m2 = document.querySelector('#unifiedCodaCard button[data-cd="mod2"]'); if (m2) m2.hidden = !dv || S.v2copia;
@@ -92079,7 +92088,8 @@ window._buildUnifiedCostBlock = function(opts) {
     chip.className = 'exb-chip exb-chip-coda expsm-cost-toggle';
     chip.title = 'Coda cliente: apparati della sede cliente e della centrale per il cliente, lato A e lato Z (listino Apparati & Cestelli)';
     chip.innerHTML = '<input type="checkbox" id="unifiedCodaChk">' + ICO + ' Coda';
-    chip.querySelector('input').addEventListener('change', function (e) { if (e.target.checked && !configurata()) apri(1); disegna(); });
+    chip.querySelector('input').addEventListener('change', function (e) { if (e.target.checked && !configurata() && !protOn()) apri(1); disegna(); });   /* V11.26|117: con Protetto nessun popup */
+    document.addEventListener('change', function (e) { var id = e.target && e.target.id; if (id === 'unifiedCostProtetto' || id === 'unifiedProtSol' || id === 'unifiedCostEnabled') disegna(); });
     var card = document.createElement('div');
     card.className = 'exb-panel exb-p-coda'; card.id = 'unifiedCodaCard';
     card.innerHTML = '<div class="exb-ph"><b>' + ICO + 'Coda Cliente</b><span class="exb-k" id="unifiedCodaK">listino Apparati &amp; Cestelli</span><span class="exb-sp"></span>'
@@ -101698,6 +101708,9 @@ body.dark-mode .exb-grp, body.dark-mode .exb .exb-chip { background: #1e293b; bo
 body.dark-mode .expsm-ds-ctrl { background: #052e16; border-color: #166534; } body.dark-mode .expsm-ds-ctrl-et { color: #86efac; }
 .cmp-modale { position: fixed; inset: 0; background: rgba(15,23,42,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
 .cmp-modale[hidden] { display: none; }
+/* V11.26|117: coda automatica con il Protetto nella barra dell'Unificato */
+.cd-auto { padding: 10px 12px; border-radius: 8px; background: #eef2ff; border: 1px solid #c7d2fe; color: #1e293b; font-size: .8rem; line-height: 1.5; }
+#unifiedCodaCard.cd-prot [data-cd], #unifiedCodaCard.cd-prot #unifiedCodaV2 { display: none !important; }
 /* V11.26|110: barra di azioni sotto le risposte dell'Assistente CRO */
 .cc-azioni { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e2e8f0; }
 .cc-azioni button, .cc-btn { border: 1px solid #c7d2fe; background: #eef2ff; color: #3730a3; border-radius: 999px; padding: 3px 10px; font-size: .72rem; font-weight: 700; cursor: pointer; } .cc-azioni button:hover, .cc-btn:hover { background: #e0e7ff; }
