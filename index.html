@@ -4,13 +4,19 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 150  (rev. pubblicata: V11.26 | 150 | Nov 2026)              ║
+║   Versione: 11.26 | 151  (rev. pubblicata: V11.26 | 151 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 151 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE PERCORSO: tabelle degli IdCollegamento allineate fra le        ║
+║     righe (colonne fisse, IdCollegamento largo quanto l'ID piu' lungo); C-FOS    ║
+║     in riquadri affiancati, 2-4 per riga; catena e OTS (viola) sotto             ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 150 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -13062,6 +13068,31 @@ window.croVerifCerca = function (forza, dove) {
     if (nAvoid > 0) h += '<div class="cro-vnota">🚫 <b>Esclusi</b>: centrali e collegamenti esclusi non entrano mai nel routing, in qualunque ordine li scrivi.</div>';
     return h;
   };
+  /* ═══ V11.26|151: dettaglio dei collegamenti allineato fra le righe (colonne fisse) e C-FOS / OTS in griglia, 2-4 per riga ═══ */
+  function dettHtml(e, da) {
+    if (e.source === 'XFER') return '';
+    var rr = fila(e, clli(da));
+    return '<table class="pi-dt pi-dt2"><colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"></colgroup>'
+      + '<tr><th>IdCollegamento · stato</th><th>Da / A (tipo sede)</th><th class="n">km</th><th>C-FOS <span class="pi-thots">· catena · OTS</span></th></tr>'
+      + rr.map(function (x) {
+        var r = x.r, cf = cfosDi(r), cat = catenaCfos(r, x.a), ots = r.OTS && r.OTS !== '-' ? String(r.OTS).split(' + ') : [];
+        return '<tr><td class="pi-idc pi-idf"><span class="pi-ida ' + (x.rete === 'RA' ? colRec(r) : 'rc' + (attivo(r.Stato_IdCollegamento) ? '' : ' ko')) + '">' + esc(r.IdCollegamento || '') + '</span><span class="pi-st ' + livSt(r.Stato_IdCollegamento) + '">' + esc(r.Stato_IdCollegamento || 'stato non indicato') + '</span></td>'
+          + '<td><div class="pi-cp"><span class="pi-cl">da</span>' + nmHtml(x.a || '', x.rete === 'RA' ? 'T' + tipoDi(r, x.a) : '') + '</div><div class="pi-cp"><span class="pi-cl">a</span>' + nmHtml(x.z || '', x.rete === 'RA' ? 'T' + tipoDi(r, x.z) : '') + '</div></td>'
+          + '<td class="n">' + (r.Distanza_km != null && r.Distanza_km !== '' ? f2(parseFloat(String(r.Distanza_km).replace(',', '.'))) : '—') + '</td>'
+          + '<td class="pi-cf3">' + (cf.length ? '<div class="pi-cfg">' + cf.map(function (c) { return '<span class="pi-cfi">' + cfx(c) + '</span>'; }).join('') + '</div>' : '<span class="pi-k">nessun dato C-FOS</span>')
+          + (cat.length > 2 ? '<div class="pi-cat3"><b>catena</b> ' + cat.map(esc).join(' → ') + '</div>' : '')
+          + (ots.length ? '<div class="pi-cfg ots">' + ots.map(function (c) { return '<span class="pi-cfi"><i>OTS</i>' + cfx(c) + '</span>'; }).join('') + '</div>' : '')
+          + '</td></tr>';
+      }).join('') + '</table>';
+  }
+  /* la colonna IdCollegamento prende la larghezza dell'ID più lungo della pagina (o della mini scheda), così tutte le righe restano allineate */
+  function misuraId(box) {
+    if (!box) return; var m = 0;
+    box.querySelectorAll('.pi-dt2 .pi-ida').forEach(function (x) { m = Math.max(m, x.scrollWidth); });
+    if (m) box.style.setProperty('--pi-c1', Math.max(120, Math.min(340, m + 18)) + 'px');
+  }
+  var _dis151 = disegna; disegna = function () { _dis151(); misuraId($('piDati')); misuraId($('piScheda')); };
+  var _sch151 = scheda; scheda = function () { _sch151(); misuraId($('piScheda')); };
   window.croInstradamento = { svuota: function () { svuota(); }, undo: function () { undoApri(); }, monta: monta, inizia: inizia, aggiungi: aggiungi, togli: togli, completa: completa, stato: function () { return S; } };
   var vecchio = window.switchTab;
   document.addEventListener('click', function (e) { var b = e.target.closest && e.target.closest('[onclick*="switchTab(\'instradamento\')"]'); if (b) setTimeout(function () { monta(); dcBtn(); if (S.map) S.map.invalidateSize(); }, 80); }, true);
@@ -30732,7 +30763,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 150 | Nov 2026</div>
+<div class="version-tag">V11.26 | 151 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -31033,7 +31064,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 150</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 151</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -31050,7 +31081,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 150</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 151</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -31071,7 +31102,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 150</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 151</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -31089,7 +31120,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 150</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 151</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -31106,7 +31137,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 150</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 151</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -31122,7 +31153,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 150</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 151</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -31586,7 +31617,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 150</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 151</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -31736,8 +31767,18 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🌐 Novità V11.26 | 150 | Nov 2026</span>
+                  <span class="cl-ver">📐 Novità V11.26 | 151 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📐 Dettaglio allineato e C-FOS affiancate</strong>: nella Progettazione Percorso le tabelle degli IdCollegamento (nel routing, nelle strade da qui e nella mini scheda) hanno le colonne alla stessa larghezza, così IdCollegamento, centrali, km e C-FOS stanno uno sotto l’altro di riga in riga. La colonna IdCollegamento si allarga sull’ID più lungo che hai davanti. Le C-FOS sono riquadri grigi affiancati, quanti ce ne stanno (2 o 3 di solito, 4 a schermo largo), invece di una per riga; sotto ci sono la catena dei CLLI e gli OTS in riquadri viola. Nessuna informazione è stata tolta</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🌐 Novità V11.26 | 150 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -40020,7 +40061,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏁 Partenza e destinazione</strong>: l’intestazione è come nei tab di ricerca: a sinistra il riquadro verde con «Centrale di Partenza» e «Centrale di Arrivo» (icone dei palazzi), a destra il riepilogo azzurro del percorso (fatto, collegamenti, da verificare, mancano, dove sei e l’arrivo), sotto i bottoni «▶ Inizia il percorso», «↩️ Undo (Ultime 20)», «🏢 DC» (rosa quando i Data Center sono esclusi), «↺ Ricomincia», «🧼 Reset Tab» e lo Spazio; scorrendo la pagina l’intestazione resta ferma in alto. la tendina è quella dell'Unificato: sotto ogni centrale Area, Zona e Regione, Nodo A1 in blu e Data Center in rosa; a destra le reti con tutti i tipi sede RA che la centrale ha nel DB (es. RA T1/T3) e RC. La stessa riga resta dentro la casella. «DC» ammette o esclude i Data Center come il filtro [DC] dell'Unificato. «↺ Ricomincia» riparte tenendo partenza e destinazione, «🧼 Reset Tab» pulisce tutto: campi, percorso, suggerimenti e mappa (l’Undo resta).</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🛣️ Strade da qui</strong>: tutti i collegamenti RA e RC che partono dalla centrale in cui sei, qualunque sia il loro stato (lo vedi su ogni IdCollegamento; i Filtri Stati dell’Unificato qui non contano), ordinati per totale stimato: fatto + tratta + il più corto possibile da lì alla destinazione, senza ripassare dalla centrale in cui sei né da quelle dove il percorso si è già fermato (le T3 attraversate dentro un arco RA non si bloccano). Etichette: consigliata, 2ª, 3ª, si allontana, senza uscita, scelta prima. Ogni strada è un blocco solo (intestazione e IdCollegamento): col mouse si colora tutto e compare «＋ clic per aggiungere», un clic in un punto qualsiasi la aggiunge.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">💡 Suggerimenti</strong>: i percorsi completi da qui, migliori per km senza considerare lo stato dei collegamenti, in tre gruppi: solo RC (con priorità), solo RA, RA + RC; un quarto gruppo «Solo collegamenti attivi» dà i migliori 3 usando solo collegamenti con stato attivo (lo stato va comunque confermato su NNI). «🗺️ Sulla mappa» ne disegna uno, «🗺️ Tutti sulla mappa» li mostra tutti insieme al percorso che stai costruendo, ognuno col suo colore e il suo numero; col mouse sul suggerimento il suo percorso lampeggia. «Usa questa» lo aggiunge tutto. Accendere o spegnere un suggerimento, espanderlo o comprimerlo non sposta la mappa: resta dove l’hai lasciata. Sulla mappa, sotto «A tutto schermo» (a tutto schermo in alto a sinistra), di base la mappa è su «🔒 Mappa ferma»: non si sposta mai da sola, né aggiungendo o togliendo tratte né passando col mouse sui collegamenti; un clic la mette su «📍 Segue il percorso», e allora a ogni tratta aggiunta o tolta inquadra il collegamento. I suggerimenti non la spostano in nessuno dei due casi: per andarci c’è «🎯 Inquadra». La scelta resta salvata. «🎯 Inquadra percorso» la porta sul percorso quando vuoi. Per portarla su un suggerimento usa «🎯 Inquadra» sulla sua riga; «🎯 Inquadra tutto» inquadra il tuo percorso con tutti i suggerimenti accesi. Quando arrivi i suggerimenti restano, ricalcolati dalla partenza all’arrivo: quelli già sulla mappa ci restano e ognuno dice quanti km ha in più o in meno del tuo percorso (verde se è più corto, blu se è uguale, arancio se è più lungo); «Usa questa» sparisce perché il percorso è già completo. Ogni suggerimento è compresso su una riga (km, collegamenti, da verificare, totale e la catena degli ID): ▸ apre le tratte, «Espandi tutti» / «Comprimi tutti» li apre o chiude insieme; «▴ Nascondi» chiude il riquadro, che resta visibile con il suo titolo. Ci sono anche nella mini scheda a tutto schermo, in «💡 Suggerimenti da qui a …» (chiuso di default).</p></li>
-          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧭 Routing dei subpath</strong>: il collegamento fatto. Per ogni tratta un blocco: rete, centrali (da, a e, una per riga nell'ordine dei progressivi, le T3 di passaggio), km, stato riassunto e «↶ torna qui» per tornare a quella centrale e scegliere un'altra strada; sotto, a tutta larghezza, la tabella dei suoi IdCollegamento (stato sulla seconda riga, centrali col tipo sede, km, C-FOS, catena dei CLLI e OTS). Strade da qui e mini scheda usano la stessa struttura.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🧭 Routing dei subpath</strong>: il collegamento fatto. Per ogni tratta un blocco: rete, centrali (da, a e, una per riga nell'ordine dei progressivi, le T3 di passaggio), km, stato riassunto e «↶ torna qui» per tornare a quella centrale e scegliere un'altra strada; sotto, a tutta larghezza, la tabella dei suoi IdCollegamento (stato sulla seconda riga, centrali col tipo sede, km, C-FOS, catena dei CLLI e OTS). Strade da qui e mini scheda usano la stessa struttura. Le colonne hanno la stessa larghezza in tutte le tabelle, così IdCollegamento, centrali, km e C-FOS stanno uno sotto l’altro; la colonna IdCollegamento si allarga sull’ID più lungo che vedi. Le C-FOS sono riquadri grigi affiancati, quanti ce ne stanno (2 o 3 di solito, 4 a schermo largo); sotto, la catena dei CLLI e gli OTS in riquadri viola.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏷️ IdCollegamento RA</strong>: l'univoco Arco | Ramo | SubPath | Prog, lo stesso dei tab RA e Unificato. Un passo sulla mappa può mettere insieme più IdCollegamento: nell'intestazione i progressivi di seguito dello stesso ramo si raccolgono (es. TO_arco_1017 | TO_118 | ATO001 | 7–8), nella tabella sotto c'è ognuno.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🎨 Colori e peso degli ID RA</strong>: verde T1↔T2 o T2↔T2 (conta 1), blu TIM con una sede T3 (conta 0,5), grigio T3↔T3 (conta 0). «Collegamenti» è la parte intera della somma dei pesi RA più gli RC, come nei tab RA e Unificato.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏢 Tipo sede</strong>: vale per il collegamento, non per la centrale: la stessa centrale può essere T1 su un arco e T3 su un altro. Gli archi RA si percorrono per progressivi, come nei tab RA e Unificato: si entra e si esce solo nelle sedi T1 e T2 e si attraversano tutte le T3 in mezzo (in «passa»), anche se già usate altrove nel percorso.</p></li>
@@ -49536,7 +49577,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><strong>Partenza e destinazione:</strong> tendina dell’Unificato (Area, Zona, Regione, Nodo A1, Data Center) con le reti della centrale e tutti i suoi tipi sede RA (es. RA T1/T3). «DC» ammette o esclude i Data Center. «▶ Inizia» parte, «↺ Ricomincia» riparte tenendo partenza e destinazione, «🧼 Reset Tab» pulisce tutto (campi, percorso, suggerimenti e mappa; l’Undo resta). Le intestazioni dicono sempre da dove a dove: «Suggerimenti da EUR a BELLE ARTI», «Strade da EUR verso BELLE ARTI».</p>
                   <p><strong>Strade da qui:</strong> tutti i collegamenti RA e RC che partono dalla centrale in cui sei, qualunque sia il loro stato (lo vedi su ogni IdCollegamento; i Filtri Stati dell’Unificato qui non contano), ordinati per totale stimato: fatto + tratta + il più corto possibile da lì alla destinazione, senza ripassare dalla centrale in cui sei né da quelle dove il percorso si è già fermato (le T3 attraversate dentro un arco RA non si bloccano). Etichette: consigliata, 2ª, 3ª, si allontana, senza uscita, scelta prima. Ogni strada è un blocco solo (intestazione e IdCollegamento): col mouse si colora tutto e compare «＋ clic per aggiungere», un clic in un punto qualsiasi la aggiunge.</p>
                   <p><strong>Suggerimenti:</strong> i percorsi completi da qui, migliori per km senza considerare lo stato dei collegamenti, in tre gruppi: solo RC (con priorità), solo RA, RA + RC; un quarto gruppo «Solo collegamenti attivi» dà i migliori 3 usando solo collegamenti con stato attivo (lo stato va comunque confermato su NNI). «🗺️ Sulla mappa» ne disegna uno, «🗺️ Tutti sulla mappa» li mostra tutti insieme al percorso che stai costruendo, ognuno col suo colore e il suo numero; col mouse sul suggerimento il suo percorso lampeggia. «Usa questa» lo aggiunge tutto. Accendere o spegnere un suggerimento, espanderlo o comprimerlo non sposta la mappa: resta dove l’hai lasciata. Sulla mappa, sotto «A tutto schermo» (a tutto schermo in alto a sinistra), di base la mappa è su «🔒 Mappa ferma»: non si sposta mai da sola, né aggiungendo o togliendo tratte né passando col mouse sui collegamenti; un clic la mette su «📍 Segue il percorso», e allora a ogni tratta aggiunta o tolta inquadra il collegamento. I suggerimenti non la spostano in nessuno dei due casi: per andarci c’è «🎯 Inquadra». La scelta resta salvata. «🎯 Inquadra percorso» la porta sul percorso quando vuoi. Per portarla su un suggerimento usa «🎯 Inquadra» sulla sua riga; «🎯 Inquadra tutto» inquadra il tuo percorso con tutti i suggerimenti accesi. Quando arrivi i suggerimenti restano, ricalcolati dalla partenza all’arrivo: quelli già sulla mappa ci restano e ognuno dice quanti km ha in più o in meno del tuo percorso (verde se è più corto, blu se è uguale, arancio se è più lungo); «Usa questa» sparisce perché il percorso è già completo. Ogni suggerimento è compresso su una riga (km, collegamenti, da verificare, totale e la catena degli ID): ▸ apre le tratte, «Espandi tutti» / «Comprimi tutti» li apre o chiude insieme; «▴ Nascondi» chiude il riquadro, che resta visibile con il suo titolo. Ci sono anche nella mini scheda a tutto schermo, in «💡 Suggerimenti da qui a …» (chiuso di default).</p>
-                  <p><strong>Routing dei subpath:</strong> il collegamento fatto. Per ogni tratta un blocco: rete, centrali (da, a e, una per riga nell’ordine dei progressivi, le T3 di passaggio), km, stato riassunto e «↶ torna qui» per tornare a quella centrale e scegliere un’altra strada; sotto, a tutta larghezza, la tabella dei suoi IdCollegamento (stato sulla seconda riga, centrali col tipo sede, km, C-FOS, catena dei CLLI e OTS). Strade da qui e mini scheda usano la stessa struttura.</p>
+                  <p><strong>Routing dei subpath:</strong> il collegamento fatto. Per ogni tratta un blocco: rete, centrali (da, a e, una per riga nell’ordine dei progressivi, le T3 di passaggio), km, stato riassunto e «↶ torna qui» per tornare a quella centrale e scegliere un’altra strada; sotto, a tutta larghezza, la tabella dei suoi IdCollegamento (stato sulla seconda riga, centrali col tipo sede, km, C-FOS, catena dei CLLI e OTS). Strade da qui e mini scheda usano la stessa struttura. Le colonne hanno la stessa larghezza in tutte le tabelle, così IdCollegamento, centrali, km e C-FOS stanno uno sotto l’altro; la colonna IdCollegamento si allarga sull’ID più lungo che vedi. Le C-FOS sono riquadri grigi affiancati, quanti ce ne stanno (2 o 3 di solito, 4 a schermo largo); sotto, la catena dei CLLI e gli OTS in riquadri viola.</p>
                   <p><strong>IdCollegamento RA:</strong> l’univoco Arco | Ramo | SubPath | Prog dei tab RA e Unificato. Colori e peso: verde T1↔T2 / T2↔T2 (1), blu TIM con una sede T3 (0,5), grigio T3↔T3 (0). «Collegamenti» è la parte intera della somma dei pesi RA più gli RC.</p>
                   <p><strong>Tipo sede:</strong> vale per il collegamento, non per la centrale: la stessa centrale può essere T1 su un arco e T3 su un altro. Gli archi RA si percorrono per progressivi, come nei tab RA e Unificato: si entra e si esce solo nelle sedi T1 e T2 e si attraversano tutte le T3 in mezzo (in «passa»), anche se già usate altrove nel percorso.</p>
                   <p><strong>Passaggio di rete:</strong> solo nelle sedi T1. «RA > RC» quando si entra nella rete RC, «RC > RA» quando si torna in RA; la centrale RA mostra il suo T1 e il passaggio non ha km. Non si sceglie da solo: sotto la riga del passaggio c’è l’elenco delle strade dell’altra rete che partono da lì (con IdCollegamento, stato, centrali, km, totale e C-FOS) e, cliccandone una, il tool aggiunge il passaggio e la strada insieme. Il totale sulla riga del passaggio è quello della sua strada migliore.</p>
@@ -51724,7 +51765,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 150 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 151 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -51743,6 +51784,17 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📐 V11.26 | 151 | Nov 2026 | Percorso: dettaglio allineato, C-FOS affiancate
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📐 151</strong>: nuovo <code>dettHtml()</code> con <code>table.pi-dt2</code> (<code>table-layout: fixed</code>, <code>colgroup</code> c1 <code>var(--pi-c1)</code>, c2 250 px, 225 nella mini scheda, c3 58 px); <code>misuraId()</code> dopo <code>disegna()</code> e <code>scheda()</code> imposta <code>--pi-c1</code> sulla larghezza del <code>.pi-ida</code> più lungo (120–340 px); C-FOS in <code>.pi-cfg</code> (<code>grid</code>, <code>minmax(205px, 1fr)</code>) con <code>.pi-cfi</code>, OTS in <code>.pi-cfg.ots</code>, catena in <code>.pi-cat3</code>. Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             🌐 V11.26 | 150 | Nov 2026 | Unificato: vincoli uguali con e senza RTN
           </summary>
@@ -104650,6 +104702,13 @@ body.cro-infolive-on .pi-undo { bottom: 30px; }
 #piScheda .pi-sch-h { position: sticky; top: 0; z-index: 8; border-radius: 12px 12px 0 0; } #piScheda.pi-sch-min .pi-sch-h { border-radius: 12px; } #piScheda .pi-t th { top: var(--pi-schh, 40px); z-index: 4; box-shadow: 0 1px 0 #e2e8f0; } #piScheda .pi-t table th, #piScheda .pi-ct th { position: static; box-shadow: none; } .pi-sga .pi-sgfit { white-space: nowrap; } .pi-sgcat { overflow-wrap: anywhere; }   /* V11.26|146: testata della mini scheda ferma, intestazione delle colonne intera sotto di lei */
 .pi-mctl { position: absolute; top: 46px; right: 10px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; } #piMappa.pi-full .pi-mctl { top: 10px; right: auto; left: 54px; flex-direction: row; } .pi-mctl button { border: 1px solid #cbd5e1; background: #fff; border-radius: 8px; padding: 6px 10px; font-size: .74rem; font-weight: 700; color: #334155; cursor: pointer; box-shadow: 0 2px 6px rgba(15,23,42,.15); white-space: nowrap; } .pi-mctl button:hover { background: #eff6ff; } .pi-mctl button.on { background: #1f3864; border-color: #1f3864; color: #fff; }   /* V11.26|147 */
 .cro-vnota { margin-top: 6px; padding: 5px 8px; border-radius: 6px; background: #eff6ff; color: #1e3a8a; font-size: .7rem; line-height: 1.35; } .cro-vnota.warn { background: #fff7ed; color: #9a3412; }   /* V11.26|149 */
+.pi-dt.pi-dt2 { table-layout: fixed; } .pi-dt2 col.c1 { width: var(--pi-c1, 150px); } .pi-dt2 col.c2 { width: 250px; } .pi-dt2 col.c3 { width: 58px; } .pi-sch .pi-dt2 col.c2 { width: 225px; }   /* V11.26|151: colonne uguali per tutte le righe */
+.pi-dt2 .pi-ida { white-space: nowrap; } .pi-dt2 td { overflow: hidden; } .pi-dt2 td.pi-idf { overflow: visible; } .pi-thots { color: #a78bfa; }
+.pi-cfg { display: grid; grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)); gap: 3px 6px; margin: 1px 0 2px; }
+.pi-cfi { display: block; font-family: Consolas, 'Courier New', monospace; font-size: .62rem; line-height: 1.5; color: #334155; background: #fff; border: 1px solid #e2e8f0; border-left: 3px solid #94a3b8; border-radius: 4px; padding: 1px 6px; white-space: normal; overflow-wrap: normal; }
+.pi-cfg.ots .pi-cfi { color: #6d28d9; background: #faf5ff; border-color: #e9d5ff; border-left-color: #8b5cf6; } .pi-cfi i { font-style: normal; font-family: Inter, sans-serif; font-size: .52rem; font-weight: 800; color: #a78bfa; margin-right: 5px; }
+.pi-cat3 { font-size: .6rem; color: #64748b; line-height: 1.45; margin: 2px 0 3px; padding-left: 2px; } .pi-cat3 b { font-size: .52rem; text-transform: uppercase; letter-spacing: .03em; color: #94a3b8; margin-right: 4px; }
+body.dark-mode .pi-cfi { background: #1e293b; border-color: #334155; color: #cbd5e1; } body.dark-mode .pi-cfg.ots .pi-cfi { background: #2e1065; border-color: #4c1d95; color: #ddd6fe; }   /* V11.26|151 */
 .pi-sgbox { margin: 12px 0; border: 1px solid #e9d5ff; border-left: 4px solid #7c3aed; border-radius: 10px; background: #fdfbff; } .pi-sgbox-h { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: #f5f3ff; border-radius: 0 9px 0 0; font-size: .7rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #5b21b6; } .pi-sgbox.chiuso .pi-sgbox-h { border-radius: 0 9px 9px 0; }
 .pi-sgbox-h small { font-weight: 600; text-transform: none; letter-spacing: 0; color: #7c3aed; background: #ede9fe; border-radius: 999px; padding: 1px 8px; } .pi-sgbox-h button { margin-left: auto; border: 1px solid #c4b5fd; background: #fff; color: #6d28d9; border-radius: 999px; padding: 3px 12px; font-size: .68rem; font-weight: 800; cursor: pointer; text-transform: none; letter-spacing: 0; }
 .pi-sgbox > .pi-sgbar, .pi-sgbox > .pi-sg { margin-left: 10px; margin-right: 10px; } .pi-sgbox > .pi-sg { padding-bottom: 8px; }
@@ -107516,7 +107575,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 150';
+  var REVISIONE = 'V11.26 | 151';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
