@@ -4,13 +4,44 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 163  (rev. pubblicata: V11.26 | 163 | Nov 2026)              ║
+║   Versione: 11.26 | 168  (rev. pubblicata: V11.26 | 168 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 168 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE CRO e CRO': riconoscono anche i CLLI dei data center con tre      ║
+║     cifre in piu' (TINOIT0A061) e aprono la scheda completa; «data center        ║
+║     <regione>» mostra anche collegamenti e centrali collegate                    ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 167 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • UNIFICATO, RC e RA: cambiando pagina la tabella riparte con intestazione,    ║
+║     barra delle pagine e primo percorso sotto testata e menu                     ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 166 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • UNIFICATO, RC e RA: risultati a pagine di 200 con la barra ◀ Precedenti      ║
+║     / tendina / Successivi ▶ sopra e sotto la tabella (al posto di Mostra        ║
+║     altri / Mostra tutti, che accodavano righe fino a bloccare il tool);         ║
+║     anche la lista della Mappa Percorsi va a pagine                              ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 165 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • UNIFICATO e RC: il dettaglio di ogni percorso (➕ Espandi) si costruisce      ║
+║     solo quando lo apri, non piu' nascosto in anticipo per ogni riga             ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 164 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • UNIFICATO, RC e RA: la tabella dei risultati disegna i primi 200 percorsi    ║
+║     (▼ Mostra altri 200 / Mostra tutti); gli altri restano calcolati per         ║
+║     export, Analisi Percorsi e Confronta. Anche la lista della Mappa Percorsi    ║
+║     e la mappa partono da 200, e a ogni ricerca la mappa toglie i percorsi       ║
+║     vecchi: con 3000 risultati il tool resta veloce come con 300                 ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 163 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -6348,8 +6379,13 @@ window.croChat = (function () {
     rc().concat(ra()).forEach(function (r) { [['CLLI_A', 'GAT_A'], ['CLLI_Z', 'GAT_Z']].forEach(function (k) { if (D[r[k[0]]] && !info[r[k[0]]]) info[r[k[0]]] = r; }); });
     var L = Object.keys(D).filter(function (c) { return !Lg || (info[c] && Lg.f(info[c])); });
     if (!L.length) return '<h6>\uD83C\uDFE2 Data center' + (Lg ? ' \u00b7 ' + esc(Lg.nome) : '') + '</h6><div class="cc-k">Nessun data center trovato.</div>';
-    return '<h6>\uD83C\uDFE2 Data center' + (Lg ? ' \u00b7 ' + esc(Lg.nome) : '') + ' (' + L.length + ')</h6><table><tr><th>CLLI</th><th>Data center</th><th>Regione</th></tr>'
-      + L.map(function (c) { var r = info[c]; return '<tr><td><button type="button" data-q="' + esc(c) + '" style="border:0;background:none;color:#0066CC;cursor:pointer;padding:0;font-weight:700">' + esc(c) + '</button></td><td>' + esc(D[c]) + '</td><td>' + esc(r ? r.Regione : '\u2014') + '</td></tr>'; }).join('') + '</table>';
+    /* V11.26|168: per ogni data center anche i collegamenti e le centrali a cui è collegato */
+    var col = {}; L.forEach(function (c) { col[c] = { rc: 0, ra: 0, v: {} }; });
+    rc().forEach(function (r) { [['CLLI_A', 'CLLI_Z', 'GAT_Z'], ['CLLI_Z', 'CLLI_A', 'GAT_A']].forEach(function (k) { var o = col[r[k[0]]]; if (o) { o.rc++; o.v[r[k[2]] + ' (' + r[k[1]] + ')'] = 1; } }); });
+    ra().forEach(function (r) { [['CLLI_A', 'CLLI_Z', 'GAT_Z'], ['CLLI_Z', 'CLLI_A', 'GAT_A']].forEach(function (k) { var o = col[r[k[0]]]; if (o) { o.ra++; o.v[r[k[2]] + ' (' + r[k[1]] + ')'] = 1; } }); });
+    return '<h6>\uD83C\uDFE2 Data center' + (Lg ? ' \u00b7 ' + esc(Lg.nome) : '') + ' (' + L.length + ')</h6><div class="cc-k">Clic su un CLLI per la scheda completa: centrale, collegamenti, cavi.</div><table><tr><th>CLLI</th><th>Data center</th><th>Regione</th><th>Collegamenti</th><th>Collegato a</th></tr>'
+      + L.map(function (c) { var r = info[c], o = col[c]; return '<tr><td><button type="button" data-q="' + esc(c) + '" style="border:0;background:none;color:#0066CC;cursor:pointer;padding:0;font-weight:700">' + esc(c) + '</button></td><td>' + esc(D[c]) + '</td><td>' + esc(r ? r.Regione : '\u2014') + '</td>'
+        + '<td style="white-space:nowrap">' + ([o.rc ? o.rc + ' RC' : '', o.ra ? o.ra + ' RA' : ''].filter(Boolean).join(' \u00b7 ') || '\u2014') + '</td><td style="font-size:.9em">' + (Object.keys(o.v).map(esc).join(', ') || '\u2014') + '</td></tr>'; }).join('') + '</table>';
   }
   function cavi(id) {
     var r = rc().filter(function (x) { return norm(x.IdCollegamento) === id; }).concat(ra().filter(function (x) { return norm(x.SubPath) === id; }));
@@ -6546,7 +6582,7 @@ window.croChat = (function () {
   function seguito(q) {
     if (!ctx.clli) return '';
     if (luogo(q)) return '';   /* V11.26|110: c'e' gia' un luogo nella domanda, niente riferimento alla domanda di prima */
-    if (/\b(NODI? A1|A1 PIU VICIN|NODO PIU VICINO)\b/.test(q) && !/\b[A-Z]{4}IT[A-Z0-9]{2}\b/.test(q)) return '<div class="cc-k">Riferito a ' + esc(ctx.nome) + ' (' + esc(ctx.clli) + '), dalla domanda di prima.</div>' + rispostaA1(ctx.clli);
+    if (/\b(NODI? A1|A1 PIU VICIN|NODO PIU VICINO)\b/.test(q) && !/\b[A-Z]{4}IT[A-Z0-9]{2}(?:\d{3})?\b/.test(q)) return '<div class="cc-k">Riferito a ' + esc(ctx.nome) + ' (' + esc(ctx.clli) + '), dalla domanda di prima.</div>' + rispostaA1(ctx.clli);
     if (/^(E |ED |MA |ANCHE )?(I |GLI |LE |IL |LA |LO )?(COLLEGAMENTI|SUBPATH|STATI?|CAVI|C-FOS|CFOS|DOVE|COORDINATE|MAPPA|ZONA|REGIONE|RETE|RETI|DETTAGLI|QUESTA CENTRALE|LA STESSA|STESSA CENTRALE)\b/.test(q) && q.split(' ').length <= 6)
       return '<div class="cc-k">Riferito a ' + esc(ctx.nome) + ' (' + esc(ctx.clli) + '), dalla domanda di prima.</div>' + rispostaCLLI(ctx.clli);
     return '';
@@ -6751,7 +6787,7 @@ window.croChat = (function () {
     var hs = seguito(q); if (hs) return hs + web(testo);
     if (/^(LIMITI|AIUTO|HELP|\?)$/.test(q)) return LIMITI + '<div class="cc-k">Scrivi un CLLI, un subpath, una C-FOS, una centrale, una sigla o un argomento.</div>';
     var parole = q.split(/[^A-Z0-9\/_\-]+/).filter(Boolean);
-    var cllis = q.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || [];
+    var cllis = q.match(/\b[A-Z]{4}IT[A-Z0-9]{2}(?:\d{3})?\b/g) || [];   /* V11.26|168: anche i CLLI dei data center (TINOIT0A061) */
     var cfos = q.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\/[A-Z]{4}IT[A-Z0-9]{2}\/C-FOS\/\d+\b/g) || [];
     /* V10.26|104: comandi per la striscia delle info live */
     if (window.croInfoLive && /\b(INFO|NOTIZIE|NEWS)\s*LIVE\b|\b(ABILITA|ATTIVA|MOSTRA|RIATTIVA|APRI)\b.*\b(INFO|NOTIZIE|NEWS|METEO)\b/.test(q) && !/\b(NASCONDI|DISATTIVA|CHIUDI|TOGLI)\b/.test(q)) {
@@ -8986,7 +9022,7 @@ window.croCmp = (function () {
     (sorg.match(/\b[A-Z]{3}\d{3}\b/g) || []).forEach(function (k) { idsRc[k] = 1; });
     var recs = d.rc.filter(function (x) { return idsRc[String(x.IdCollegamento).toUpperCase()]; }).map(function (x) { return { x: x, r: 'RC' }; })
       .concat(d.ra.filter(function (x) { return idsRc[String(x.SubPath || '').toUpperCase().slice(0, 6)]; }).map(function (x) { return { x: x, r: 'RA' }; })).slice(0, 800);
-    var cll = {}; (sorg.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || []).forEach(function (k) { cll[k] = 1; }); carica();
+    var cll = {}; (sorg.match(/\b[A-Z]{4}IT[A-Z0-9]{2}(?:\d{3})?\b/g) || []).forEach(function (k) { cll[k] = 1; }); carica();
     var pts = Object.keys(cll).map(function (k) { var c = centrali[k]; return c ? { nome: c.nome, clli: c.clli, lat: c.lat, lon: c.lon } : null; }).filter(Boolean);
     if (tab && !haExp) {
       var trs = [].slice.call(tab.querySelectorAll('tr')), cols = trs.length ? [].slice.call(trs[0].querySelectorAll('th,td')).map(function (c) { return c.textContent.trim(); }) : [];
@@ -8994,7 +9030,7 @@ window.croCmp = (function () {
       if (rows.length) { b.push(['\u2B07 Esporta TXT', function () { ariEsporta(hTit, cols, rows, 'txt'); }]); b.push(['\u2B07 Esporta Excel', function () { ariEsporta(hTit, cols, rows, 'xlsx'); }]); }
     }
     if (!haDb) {
-      var idQ = /\b([a-z]{3}\d{3})\b/.exec(q), clQ = /\b([A-Z]{4}IT[A-Z0-9]{2})\b/.exec(String(testo).toUpperCase()), dbc = null;
+      var idQ = /\b([a-z]{3}\d{3})\b/.exec(q), clQ = /\b([A-Z]{4}IT[A-Z0-9]{2}(?:\d{3})?)\b/.exec(String(testo).toUpperCase()), dbc = null;
       var _tid = (/Verifica percorso/.test(hTit) && window._croVerifPerc) ? window._croVerifPerc.ids.slice() : (String(testo).toUpperCase().match(/\b[A-Z]{3}\d{3}\b/g) || []).filter(function (x, k, a) { return a.indexOf(x) === k; });   /* V11.26|120 */
       if (_tid.length > 1) dbc = { scope: d.rc.some(function (x) { return _tid.indexOf(String(x.IdCollegamento).toUpperCase()) >= 0; }) ? 'RC' : 'RA', ids: _tid, q: '' };
       else if (idQ) { var u = idQ[1].toUpperCase(); dbc = d.rc.some(function (x) { return String(x.IdCollegamento).toUpperCase() === u; }) ? { scope: 'RC', q: u } : d.ra.some(function (x) { return String(x.SubPath || '').toUpperCase().indexOf(u) === 0; }) ? { scope: 'RA', q: u } : null; }
@@ -9260,7 +9296,7 @@ window.croCmp = (function () {
     (sorg.match(/\b[A-Z]{3}\d{3}\b/g) || []).forEach(function (k) { idsRc[k] = 1; });
     var recs = d.rc.filter(function (x) { return idsRc[String(x.IdCollegamento).toUpperCase()]; }).map(function (x) { return { x: x, r: 'RC' }; })
       .concat(d.ra.filter(function (x) { return idsRc[String(x.SubPath || '').toUpperCase().slice(0, 6)]; }).map(function (x) { return { x: x, r: 'RA' }; })).slice(0, 800);
-    var cll = {}; (sorg.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || []).forEach(function (k) { cll[k] = 1; }); carica();
+    var cll = {}; (sorg.match(/\b[A-Z]{4}IT[A-Z0-9]{2}(?:\d{3})?\b/g) || []).forEach(function (k) { cll[k] = 1; }); carica();
     var pts = Object.keys(cll).map(function (k) { var c = centrali[k]; return c ? { nome: c.nome, clli: c.clli, lat: c.lat, lon: c.lon } : null; }).filter(Boolean);
     if (tab && !haExp) {
       var trs = [].slice.call(tab.querySelectorAll('tr')), cols = trs.length ? [].slice.call(trs[0].querySelectorAll('th,td')).map(function (c) { return c.textContent.trim(); }) : [];
@@ -9268,7 +9304,7 @@ window.croCmp = (function () {
       if (rows.length) { b.push(['\u2B07 Esporta TXT', function () { ariEsporta(hTit, cols, rows, 'txt'); }]); b.push(['\u2B07 Esporta Excel', function () { ariEsporta(hTit, cols, rows, 'xlsx'); }]); }
     }
     if (!haDb) {
-      var idQ = /\b([a-z]{3}\d{3})\b/.exec(q), clQ = /\b([A-Z]{4}IT[A-Z0-9]{2})\b/.exec(String(testo).toUpperCase()), dbc = null;
+      var idQ = /\b([a-z]{3}\d{3})\b/.exec(q), clQ = /\b([A-Z]{4}IT[A-Z0-9]{2}(?:\d{3})?)\b/.exec(String(testo).toUpperCase()), dbc = null;
       var _tid = (/Verifica percorso/.test(hTit) && window._croVerifPerc) ? window._croVerifPerc.ids.slice() : (String(testo).toUpperCase().match(/\b[A-Z]{3}\d{3}\b/g) || []).filter(function (x, k, a) { return a.indexOf(x) === k; });   /* V11.26|120 */
       if (_tid.length > 1) dbc = { scope: d.rc.some(function (x) { return _tid.indexOf(String(x.IdCollegamento).toUpperCase()) >= 0; }) ? 'RC' : 'RA', ids: _tid, q: '' };
       else if (idQ) { var u = idQ[1].toUpperCase(); dbc = d.rc.some(function (x) { return String(x.IdCollegamento).toUpperCase() === u; }) ? { scope: 'RC', q: u } : d.ra.some(function (x) { return String(x.SubPath || '').toUpperCase().indexOf(u) === 0; }) ? { scope: 'RA', q: u } : null; }
@@ -9534,7 +9570,7 @@ window.croCmp = (function () {
     (sorg.match(/\b[A-Z]{3}\d{3}\b/g) || []).forEach(function (k) { idsRc[k] = 1; });
     var recs = d.rc.filter(function (x) { return idsRc[String(x.IdCollegamento).toUpperCase()]; }).map(function (x) { return { x: x, r: 'RC' }; })
       .concat(d.ra.filter(function (x) { return idsRc[String(x.SubPath || '').toUpperCase().slice(0, 6)]; }).map(function (x) { return { x: x, r: 'RA' }; })).slice(0, 800);
-    var cll = {}; (sorg.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || []).forEach(function (k) { cll[k] = 1; }); carica();
+    var cll = {}; (sorg.match(/\b[A-Z]{4}IT[A-Z0-9]{2}(?:\d{3})?\b/g) || []).forEach(function (k) { cll[k] = 1; }); carica();
     var pts = Object.keys(cll).map(function (k) { var c = centrali[k]; return c ? { nome: c.nome, clli: c.clli, lat: c.lat, lon: c.lon } : null; }).filter(Boolean);
     if (tab && !haExp) {
       var trs = [].slice.call(tab.querySelectorAll('tr')), cols = trs.length ? [].slice.call(trs[0].querySelectorAll('th,td')).map(function (c) { return c.textContent.trim(); }) : [];
@@ -9542,7 +9578,7 @@ window.croCmp = (function () {
       if (rows.length) { b.push(['\u2B07 Esporta TXT', function () { ariEsporta(hTit, cols, rows, 'txt'); }]); b.push(['\u2B07 Esporta Excel', function () { ariEsporta(hTit, cols, rows, 'xlsx'); }]); }
     }
     if (!haDb) {
-      var idQ = /\b([a-z]{3}\d{3})\b/.exec(q), clQ = /\b([A-Z]{4}IT[A-Z0-9]{2})\b/.exec(String(testo).toUpperCase()), dbc = null;
+      var idQ = /\b([a-z]{3}\d{3})\b/.exec(q), clQ = /\b([A-Z]{4}IT[A-Z0-9]{2}(?:\d{3})?)\b/.exec(String(testo).toUpperCase()), dbc = null;
       var _tid = (/Verifica percorso/.test(hTit) && window._croVerifPerc) ? window._croVerifPerc.ids.slice() : (String(testo).toUpperCase().match(/\b[A-Z]{3}\d{3}\b/g) || []).filter(function (x, k, a) { return a.indexOf(x) === k; });   /* V11.26|120 */
       if (_tid.length > 1) dbc = { scope: d.rc.some(function (x) { return _tid.indexOf(String(x.IdCollegamento).toUpperCase()) >= 0; }) ? 'RC' : 'RA', ids: _tid, q: '' };
       else if (idQ) { var u = idQ[1].toUpperCase(); dbc = d.rc.some(function (x) { return String(x.IdCollegamento).toUpperCase() === u; }) ? { scope: 'RC', q: u } : d.ra.some(function (x) { return String(x.SubPath || '').toUpperCase().indexOf(u) === 0; }) ? { scope: 'RA', q: u } : null; }
@@ -16522,6 +16558,84 @@ window.updateRoutesListUnified = function (routes) {
     setTimeout(window.fitRoutesMapBoundsUnified, 200);
   }
 };
+
+/* V11.26|164: la lista della Mappa Percorsi Unificato e la mappa mostrano i primi 200 percorsi (gli altri a richiesta);
+   prima di ogni nuova lista si tolgono dalla mappa tutti i percorsi della ricerca precedente */
+(function () {
+  var _orig = window.updateRoutesListUnified, PASSO = 200;
+  window.updateRoutesListUnified = function (routes, fino) {
+    try {
+      if (window.routesMapInstanceUnified && typeof window.drawRouteUnified === 'function') {
+        Object.keys(window.routesPolylinesMapUnified || {}).concat(Object.keys(window.routesMarkersMapUnified || {}))
+          .forEach(function (k) { try { window.drawRouteUnified(+k, false); } catch (e) {} });
+      }
+    } catch (e) {}
+    window._uMapTutti = routes || [];
+    var tot = (routes || []).length, npag = Math.ceil(tot / PASSO), pag = Math.max(0, Math.min(npag - 1, fino | 0)), da = pag * PASSO, a = Math.min(tot, da + PASSO);
+    _orig(tot > PASSO ? routes.slice(da, a) : routes);
+    if (tot <= PASSO) return;
+    var c = document.getElementById('routesListMapContainerUnified'), ce = document.getElementById('routesFoundCountUnified');
+    if (ce) ce.textContent = '(' + (da + 1) + '–' + a + ' di ' + tot + ')';
+    window._croPag.uMappa = function (p) { window.updateRoutesListUnified(window._uMapTutti, p); };
+    if (c) c.insertAdjacentHTML('afterbegin', window.croPagBarra('uMappa', pag, npag, da, a, tot, 'la ricerca e gli export', 'mini'));
+  };
+})();
+
+/* V11.26|164-166: tabelle a pagine di 200 (Unificato, RC, RA). Si vede una pagina alla volta: gli elementi nella pagina
+   restano sempre quelli di 200 percorsi, anche arrivando al 3000°. */
+window._croPag = window._croPag || {};
+window.croPagBarra = function (chiave, pag, npag, da, a, tot, cosa, cls) {
+  var opz = ''; for (var p = 0; p < npag; p++) opz += '<option value="' + p + '"' + (p === pag ? ' selected' : '') + '>' + (p * 200 + 1) + '–' + Math.min(tot, (p + 1) * 200) + '</option>';
+  return '<div class="cro-pag' + (cls ? ' ' + cls : '') + '"><span class="cro-pag-i"><span>Percorsi <b>' + (da + 1) + '–' + a + '</b> di <b>' + tot + '</b></span>'
+    + '<small>tutti calcolati: ' + (cosa || 'export e mappa') + ' li usano tutti</small></span>'
+    + '<span class="cro-pag-n"><button type="button" class="cro-pag-b"' + (pag ? '' : ' disabled') + ' onclick="window._croPag[\'' + chiave + '\'](' + (pag - 1) + ',1)">◀ Precedenti</button>'
+    + '<select class="cro-pag-s" title="Vai alla pagina" onchange="window._croPag[\'' + chiave + '\'](+this.value,1)">' + opz + '</select>'
+    + '<button type="button" class="cro-pag-b"' + (pag < npag - 1 ? '' : ' disabled') + ' onclick="window._croPag[\'' + chiave + '\'](' + (pag + 1) + ',1)">Successivi ▶</button></span></div>';
+};
+/* V11.26|167: dopo il cambio pagina la tabella riparte con intestazione, barra delle pagine e primo percorso
+   sotto la testata e il menu fissi (143 px), invece di finire nascosta sotto di loro */
+window.croPagScorri = function (b) {
+  var t = b && b.closest('table'); if (!t) return;
+  var cont = t.closest('.pi-dati, .routes-list-panel');
+  try {
+    var y = t.getBoundingClientRect().top + window.pageYOffset - 143 - 10;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  } catch (e) { t.scrollIntoView(); }
+};
+window.croPagina = function (o) {
+  /* o: { chiave, prefisso, body (id del tbody), tot, riga(i) -> html, colspan, cosa, prima() } */
+  var PASSO = 200, npag = Math.max(1, Math.ceil(o.tot / PASSO));
+  function barra(pag, dove) { return '<tr class="cro-pag-row ' + dove + '"><td colspan="' + (o.colspan || 6) + '">' + window.croPagBarra(o.chiave, pag, npag, pag * PASSO, Math.min(o.tot, (pag + 1) * PASSO), o.tot, o.cosa) + '</td></tr>'; }
+  function pagina(pag) {
+    var da = pag * PASSO, a = Math.min(o.tot, da + PASSO), h = '';
+    for (var i = da; i < a; i++) h += o.riga(i);
+    return npag > 1 ? barra(pag, 'su') + h + barra(pag, 'giu') : h;
+  }
+  var f = window._croPag[o.chiave] = function (pag, scorri) {
+    pag = Math.max(0, Math.min(npag - 1, pag | 0)); var b = document.getElementById(o.body); if (!b) return;
+    try { if (o.prima) o.prima(); } catch (e) {}
+    f.pag = pag; b.innerHTML = pagina(pag);
+    if (scorri) window.croPagScorri(b);
+  };
+  f.prefisso = o.prefisso; f.pag = 0;
+  f.vai = function (i) { if (i >= 0 && i < o.tot && Math.floor(i / PASSO) !== f.pag) f(Math.floor(i / PASSO)); };
+  return pagina(0);
+};
+/* lista della Mappa Percorsi RC / RA: primi 200 e via via gli altri; prima di una nuova lista si tolgono i percorsi vecchi */
+(function () {
+  var _orig = window.updateRoutesList, PASSO = 200;
+  window.updateRoutesList = function (routes, fino) {
+    try { if (typeof window.drawRoute === 'function') Object.keys(window.routesPolylinesMap || {}).concat(Object.keys(window.routesMarkersMap || {})).forEach(function (k) { try { window.drawRoute(+k, false); } catch (e) {} }); } catch (e) {}
+    window._rcMapTutti = routes || [];
+    var tot = (routes || []).length, npag = Math.ceil(tot / PASSO), pag = Math.max(0, Math.min(npag - 1, fino | 0)), da = pag * PASSO, a = Math.min(tot, da + PASSO);
+    _orig(tot > PASSO ? routes.slice(da, a) : routes);
+    if (tot <= PASSO) return;
+    var c = document.getElementById('routesListMapContainer'), ce = document.getElementById('routesFoundCount');
+    if (ce) ce.textContent = '(' + (da + 1) + '–' + a + ' di ' + tot + ')';
+    window._croPag.rcMappa = function (p) { window.updateRoutesList(window._rcMapTutti, p); };
+    if (c) c.insertAdjacentHTML('afterbegin', window.croPagBarra('rcMappa', pag, npag, da, a, tot, 'la ricerca e gli export', 'mini'));
+  };
+})();
 
 window.drawRouteUnified = function(routeIdx, show) {
   if (!window.routesMapInstanceUnified) return;
@@ -31065,7 +31179,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 163 | Nov 2026</div>
+<div class="version-tag">V11.26 | 168 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -31366,7 +31480,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 163</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 168</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -31383,7 +31497,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 163</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 168</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -31404,7 +31518,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 163</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 168</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -31422,7 +31536,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 163</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 168</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -31439,7 +31553,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 163</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 168</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due. Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -31455,7 +31569,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 163</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 168</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -31919,7 +32033,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 163</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 168</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -32069,8 +32183,58 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">➖ Novità V11.26 | 163 | Nov 2026</span>
+                  <span class="cl-ver">🏢 Novità V11.26 | 168 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🏢 Data center nell’Assistente</strong>: l’Assistente CRO e Crò non riconoscevano i CLLI dei data center che hanno tre cifre in più (TINOIT0A061, RIVOIT0A706, ROMAIT0J744): scritti o cliccati dall’elenco «data center Piemonte», rispondevano «Non ho trovato niente nel tool». Ora aprono la scheda completa come per ogni centrale: nome, zona, data center, rete, i collegamenti che partono o arrivano lì (per MONCALIERI NOOVLE CPV200, CPV203, CPV206) e i cavi. L’elenco «data center &lt;regione&gt;» ha in più le colonne Collegamenti (quanti RC e RA) e Collegato a (le centrali dall’altra parte), e dice che un clic sul CLLI apre la scheda</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📄 Novità V11.26 | 167 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📄 Cambio pagina al punto giusto</strong>: nei tab Unificato, RC e RA, dopo «Successivi ▶», «◀ Precedenti» o la tendina, la pagina scorre in modo che sotto la testata e il menu si vedano l’intestazione della tabella, la barra delle pagine e il primo percorso (per esempio il 201). Prima la tabella finiva sotto la testata: si partiva dal 202 e per cambiare di nuovo pagina bisognava risalire</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📄 Novità V11.26 | 166 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📄 Risultati a pagine</strong>: nei tab Unificato, RC e RA la tabella mostra una pagina di 200 percorsi alla volta. Sopra e sotto c’è la barra «◀ Precedenti · 1–200 ▾ · Successivi ▶»: la tendina salta a qualsiasi pagina, e un clic su una card dei migliori apre la pagina giusta. Al posto di «Mostra altri» e «Mostra tutti»: quei bottoni accodavano righe, e arrivati a 3000 la pagina tornava pesante come prima, fino a bloccarsi. Con le pagine gli elementi restano quelli di 200 percorsi anche al 3000° (cambiare pagina richiede circa 0,2 secondi). Tutti i percorsi restano calcolati per export, mappa, Analisi Percorsi e Confronta. Anche la lista della Mappa Percorsi ha la sua barra. Spuntare righe o aprire i Div vale per la pagina che vedi</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">⚡ Novità V11.26 | 165 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>⚡ Espandi solo quando serve</strong>: nei tab Unificato e RC il dettaglio di un percorso («➕ Espandi») si costruisce nel momento in cui lo apri; prima era già pronto, nascosto, sotto ognuna delle righe. Il contenuto è identico. Con 300 risultati la pagina dell’Unificato passa da 84.000 a 66.000 elementi, quella del tab RC da 109.000 a 85.000. Nel tab RA non serve: i risultati sono al massimo 5 o 6</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">⚡ Novità V11.26 | 164 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>⚡ Tool veloce anche con 3000 risultati</strong>: nei tab Unificato, RC e RA la tabella disegna i primi 200 percorsi; gli altri sono calcolati comunque e restano in export (TXT, Excel, KMZ, Maps), Analisi Percorsi, Confronta e nelle card dei migliori (un clic su una card con un percorso oltre il 200° lo disegna e ci porta). In fondo alla tabella «▼ Mostra altri 200» ne aggiunge altri e «Mostra tutti» li disegna tutti, con un avviso. Lo stesso per la lista della Mappa Percorsi e per i percorsi sulla mappa; a ogni nuova ricerca la mappa toglie tutti quelli della ricerca prima. Misurato su ACILIA ITALCABLE → BELLE ARTI: con 3000 risultati la pagina passava da 40.000 a 876.000 elementi e scrivere in un campo richiedeva 5,3 secondi; ora resta sotto 85.000 elementi (come con 300) e scrivere è immediato, senza refresh. Nel tab RC 3000 risultati facevano 408.000 elementi, ora 64.000</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">➖ Novità V11.26 | 163 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -36091,6 +36255,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
       se valorizzati; in caso contrario usa i nodi dello Std. Serve per ottenere alternative e migliorare la
       <strong>ridondanza</strong> del routing.</p>
     </li>
+                  <li><strong style="color: #004C99;">⚡ Tabella leggera</strong>: la tabella dei risultati mostra 200 percorsi per pagina; tutti gli altri sono calcolati comunque e restano in export (TXT, Excel, KMZ, Maps), Analisi Percorsi, Confronta e nelle card dei migliori. Sopra e sotto la tabella la barra «◀ Precedenti · 1–200 ▾ · Successivi ▶» cambia pagina (la tendina salta a una pagina qualsiasi); un clic su una card dei migliori apre la pagina giusta. La pagina mostra sempre al massimo 200 percorsi, quindi anche arrivando al 3000° il tool resta veloce; spuntare righe o aprire i Div vale per la pagina che vedi. Lo stesso vale per la lista della Mappa Percorsi e per i percorsi disegnati sulla mappa. Il dettaglio di una riga («➕ Espandi») si costruisce solo quando lo apri. Prima, con 3000 risultati, la pagina arrivava a quasi 900.000 elementi e ogni clic o tasto aspettava diversi secondi fino al refresh; ora resta veloce come con 300. A ogni nuova ricerca la mappa toglie tutti i percorsi della ricerca prima.</li>
                   <li><strong style="color: #004C99;">🔀 Ordine dei vincoli</strong>: fino a 5 obbligatori (centrali e collegamenti insieme) l’ordine in cui li scrivi non conta: provo tutti gli ordini e, per i collegamenti, tutti e due i versi, e tengo i percorsi più corti. Dal 6° in poi seguo l’ordine scritto (centrali e collegamenti ognuno nel suo ordine): mettili nell’ordine del routing, altrimenti i risultati non sono garantiti. Le esclusioni valgono sempre, in qualunque ordine: le centrali e i collegamenti esclusi si tolgono dalla rete prima di cercare, quindi non entrano mai nel routing. Lo stesso promemoria compare nel riquadro «Vincoli routing». Con tante combinazioni la ricerca può fermarsi prima di provarle tutte: in quel caso un avviso lo dice, e i percorsi mostrati restano veri e in ordine di km.</li>
                   <li><strong style="color: #004C99;">🔢 Quanti Div</strong>: per ogni Std escono tanti Div quanto <em>N° Risultati</em>, al massimo 100 (30 se il campo è vuoto). Con il default 150 sono 100. Per risposte più rapide abbassa <em>N° Risultati</em>: il numero vale sia per gli Std sia per i Div. Più alto è <em>N° Risultati</em>, più candidati il tool esamina (il triplo, fino a 3.000) e più Div completi può trovare, anche se ne mostra al massimo 100. Uso consigliato: 150 di base; se escono solo Div parziali, 300 e ricalcola i Div (tempi circa doppi). Nel tab RC fino a 150 i candidati restano 300.</li>
                   <li><p style="margin-top: 0.25rem;">
@@ -38424,6 +38589,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
     Se non trova percorsi al primo tentativo, attiva automaticamente un <strong>fallback</strong>: aggiunge i nodi intermedi dello Std
     agli evitare e riesegue la ricerca con candidati pari al triplo dei Div richiesti, consentendo percorsi RC↔RA↔RC su assi geografici complessi.</p>
   </li>
+                  <li><strong style="color: #004C99;">⚡ Tabella leggera</strong>: la tabella dei risultati mostra 200 percorsi per pagina; tutti gli altri sono calcolati comunque e restano in export (TXT, Excel, KMZ, Maps), Analisi Percorsi, Confronta e nelle card dei migliori. Sopra e sotto la tabella la barra «◀ Precedenti · 1–200 ▾ · Successivi ▶» cambia pagina (la tendina salta a una pagina qualsiasi); un clic su una card dei migliori apre la pagina giusta. La pagina mostra sempre al massimo 200 percorsi, quindi anche arrivando al 3000° il tool resta veloce; spuntare righe o aprire i Div vale per la pagina che vedi. Lo stesso vale per la lista della Mappa Percorsi e per i percorsi disegnati sulla mappa. Il dettaglio di una riga («➕ Espandi») si costruisce solo quando lo apri. Prima, con 3000 risultati, la pagina arrivava a quasi 900.000 elementi e ogni clic o tasto aspettava diversi secondi fino al refresh; ora resta veloce come con 300. A ogni nuova ricerca la mappa toglie tutti i percorsi della ricerca prima.</li>
                   <li><strong style="color: #004C99;">🔀 Ordine dei vincoli</strong>: fino a 5 obbligatori (centrali e collegamenti insieme) l’ordine in cui li scrivi non conta: provo tutti gli ordini e, per i collegamenti, tutti e due i versi, e tengo i percorsi più corti. Dal 6° in poi seguo l’ordine scritto (centrali e collegamenti ognuno nel suo ordine): mettili nell’ordine del routing, altrimenti i risultati non sono garantiti. Con RTN acceso valgono le stesse regole: ogni obbligatorio deve stare nell’area della partenza (prima del Nodo A1) o in quella dell’arrivo (dopo il Nodo A1), perché la dorsale RTN non passa da centrali o collegamenti da imporre; se l’area di un vincolo non è nessuna delle due provo tutte e due le zone. Anche con RTN le centrali obbligatorie non spengono più RTN e gli esclusi si tolgono dalla rete prima di cercare. Le esclusioni valgono sempre, in qualunque ordine: le centrali e i collegamenti esclusi si tolgono dalla rete prima di cercare, quindi non entrano mai nel routing. Lo stesso promemoria compare nel riquadro «Vincoli routing». Con tante combinazioni la ricerca può fermarsi prima di provarle tutte: in quel caso un avviso lo dice, e i percorsi mostrati restano veri e in ordine di km.</li>
                   <li><strong style="color: #004C99;">🔢 Quanti Div</strong>: per ogni Std escono tanti Div quanto <em>N° Risultati</em>, al massimo 100 (30 se il campo è vuoto). Con il default 150 sono 100. Per risposte più rapide abbassa <em>N° Risultati</em>: il numero vale sia per gli Std sia per i Div. Più alto è <em>N° Risultati</em>, più candidati il tool esamina (il triplo, fino a 3.000) e più Div completi può trovare, anche se ne mostra al massimo 100. Uso consigliato: 150 di base; se escono solo Div parziali, 300 e ricalcola i Div (tempi circa doppi). Nel tab RC fino a 150 i candidati restano 300.</li>
                   <li><p style="margin-top: 0.25rem;">
@@ -52187,7 +52353,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 163 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 168 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -52206,6 +52372,61 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🏢 V11.26 | 168 | Nov 2026 | Assistente: CLLI dei data center
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🏢 168</strong>: le espressioni dei CLLI nell’Assistente (<code>cllis</code>, il controllo dei Nodi A1) e nelle tre varianti di Crò (<code>sorg.match</code>, <code>clQ</code>) accettano <code>[A-Z]{4}IT[A-Z0-9]{2}(?:\d{3})?</code>; <code>rispostaCLLI()</code> già conosceva i data center tramite <code>dc()</code>. <code>rispostaDC()</code> conta i collegamenti RC e RA e le centrali collegate. Segnalazione di Giuseppe (domande non capite del 16/11)</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📄 V11.26 | 167 | Nov 2026 | Cambio pagina al punto giusto
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📄 167</strong>: <code>window.croPagScorri()</code> sostituisce <code>scrollIntoView()</code>: porta l’inizio della tabella a 143 px (testata + menu fissi) + 10 dal bordo, con <code>window.scrollTo</code>. Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📄 V11.26 | 166 | Nov 2026 | Risultati a pagine
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>📄 166</strong>: <code>window.croPagina()</code> ora disegna una pagina alla volta (<code>window._croPag[chiave](pagina)</code>, <code>.vai(i)</code> apre la pagina del percorso <code>i</code>, <code>prima()</code> chiude i Div aperti); barra comune <code>window.croPagBarra()</code> (<code>.cro-pag</code>, anche in versione <code>.mini</code> per le liste della mappa). Usata dall’Unificato (<code>uBase</code>), da RC (<code>rcBase</code>), RA (<code>raBase</code>) e dalle liste <code>uMappa</code> / <code>rcMappa</code>. Tolti «Mostra altri» e «Mostra tutti». Il decoratore della colonna Azioni salta <code>.cro-pag</code>. Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            ⚡ V11.26 | 165 | Nov 2026 | Espandi solo quando serve
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>⚡ 165</strong>: la riga <code>uRouteRowDetail_i</code> (Unificato) e <code>routeBaseRowDetail_i</code> (RC, prima solo dal 51° percorso) nascono con <code>td[data-cro-lazy]</code> vuoto; <code>toggleRouteExpandUNIFIED()</code> e <code>toggleRouteExpand()</code> lo riempiono al primo clic con <code>renderRouteDetailUNIFIED()</code> / <code>renderRouteDetail()</code>. Proposta accettata da Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            ⚡ V11.26 | 164 | Nov 2026 | Tool veloce anche con 3000 risultati
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>⚡ 164</strong>: <code>renderBaseTableUNIFIED()</code> costruisce le righe con <code>_uRowFn</code> e ne scrive 200, più la riga <code>#uRouteMoreRow</code>; <code>window._uMostraAltri(fino)</code> aggiunge le righe mancanti con <code>insertAdjacentHTML</code>. Per RC (<code>renderBaseTable</code>) e RA (<code>renderBaseTableRA</code>) lo stesso con <code>window.croPagina()</code> (registro <code>window._croPag</code>, chiavi <code>rcBase</code> e <code>raBase</code>). <code>croVaiAlPercorso()</code> disegna la riga se manca. <code>updateRoutesListUnified()</code> e <code>updateRoutesList()</code> ricevono al massimo 200 percorsi (più a richiesta), tengono il totale in <code>_uMapTutti</code> / <code>_rcMapTutti</code> e prima tolgono dalla mappa tutte le polilinee e i marker. I dati (<code>_baseRoutesUNIFIED</code>, <code>baseRoutes</code>, <code>baseRoutesRA</code>) restano interi. Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             ➖ V11.26 | 163 | Nov 2026 | Percorso: riepilogo su una riga
           </summary>
@@ -63235,7 +63456,7 @@ function renderBaseTable() {
     [...baseRoutes.map((r,i) => ({i, s: _sc4(r.edges, _gKm(r), _mKm)}))].sort((a,b)=>a.s-b.s).slice(0,3)
       .forEach(({i}, rank) => { _rnk[i] = rank; });
 
-    const rowsHtml = baseRoutes.map((route, idx) => {
+    const _rcRowFn = (route, idx) => {   /* V11.26|164: righe a pagine di 200 */
       const idx1 = idx + 1;
       const distStr = route.distanceKm.toFixed(2).replace('.', ',');
       /* nella cella resta il solo numero del percorso: la posizione in
@@ -63273,10 +63494,11 @@ function renderBaseTable() {
           '<td>' + azioniHtml + '</td>' +
         '</tr>' +
         '<tr id="routeBaseRowDetail_' + idx + '" class="route-detail-row" style="display:none;">' +
-          (idx < 50 ? '<td colspan="6">' + renderRouteDetail(route) + '</td>' : '<td colspan="6" data-cro-lazy="' + idx + '"></td>') +   /* V11.26|118 */
+          '<td colspan="6" data-cro-lazy="' + idx + '"></td>' +   /* V11.26|118, 165: il dettaglio si costruisce solo con ➕ Espandi */
         '</tr>'
       );
-    }).join('');
+    };
+    const rowsHtml = window.croPagina({ chiave: 'rcBase', prefisso: 'routeBaseRow_', body: 'routeBaseBody', tot: baseRoutes.length, riga: function (i) { return _rcRowFn(baseRoutes[i], i); }, cosa: 'export, mappa, Analisi Percorsi e Confronta', prima: function () { try { clearInlineAltRoutes(); } catch (e) {} } });
 
     tbody.innerHTML = rowsHtml;
     _renderTop4RC();
@@ -69409,7 +69631,7 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
     
     info.textContent = baseRoutesRA.length + ' percorsi Std trovati.';
     
-    const rowsHtml = baseRoutesRA.map((route, idx) => {
+    const _raRowFn = (route, idx) => {   /* V11.26|164: righe a pagine di 200 */
       const idx1 = idx + 1;
       const distStr = route.distanceKm.toFixed(2).replace('.', ',');
       const nodesStr = formatNodesPathRA(route.nodes);
@@ -69454,7 +69676,8 @@ const onlyActiveBtn = document.getElementById('routeOnlyActiveBtnRA');
           '<td colspan="6">' + renderRouteDetailRA(route) + '</td>' +
         '</tr>'
       );
-    }).join('');
+    };
+    const rowsHtml = window.croPagina({ chiave: 'raBase', prefisso: 'routeBaseRowRA_', body: 'routeBaseBodyRA', tot: baseRoutesRA.length, riga: function (i) { return _raRowFn(baseRoutesRA[i], i); }, cosa: 'export e mappa' });
     
     tbody.innerHTML = rowsHtml;
   }
@@ -86077,7 +86300,10 @@ div[style*="background:#f3f4f6"] label:hover span {
                       _rtnRankB, _rtnQuantiB);
     }
 
-        const rowsHtml = _baseRoutesUNIFIED.map((route, idx) => {
+        /* V11.26|164: la tabella disegna i primi 200 percorsi; gli altri restano calcolati (export, mappa, analisi)
+       e si disegnano a richiesta con «Mostra altri». Con 3000 righe disegnate la pagina arrivava a quasi 900.000
+       elementi e ogni clic diventava lento fino al refresh. */
+    const _uRowFn = (route, idx) => {
       const idx1 = idx + 1;
       const edges = route.edges || [];
       const nodes = route.nodes || [];
@@ -86167,11 +86393,14 @@ div[style*="background:#f3f4f6"] label:hover span {
           '<td>' + azioniHtml + '</td>' +
         '</tr>' +
         '<tr id="uRouteRowDetail_' + idx + '" class="route-detail-row" style="display:none;">' +
-          '<td colspan="6">' + renderRouteDetailUNIFIED(route) + '</td>' +
+          '<td colspan="6" data-cro-lazy="' + idx + '"></td>' +   /* V11.26|165: il dettaglio si costruisce solo con ➕ Espandi */
         '</tr>'
       );
-    }).join('');
-    
+    };
+    const rowsHtml = window.croPagina({ chiave: 'uBase', prefisso: 'uRouteBaseRow_', body: 'uRouteBody', tot: _baseRoutesUNIFIED.length,
+      riga: function (i) { return _uRowFn(_baseRoutesUNIFIED[i], i); }, cosa: 'export, mappa, Analisi Percorsi e Confronta',
+      prima: function () { try { clearInlineAltRoutesUNIFIED(); } catch (e) {} } });
+    window._uMostraAltri = function (fino) { if (window._croPag.uBase) window._croPag.uBase.vai((fino || 1) - 1); };
     body.innerHTML = rowsHtml;
     
     // Salva per copia/mappa
@@ -89119,6 +89348,8 @@ div[style*="background:#f3f4f6"] label:hover span {
     var row = document.getElementById('uRouteRowDetail_' + idx);
     var btn = document.getElementById('uRouteExpandBtn_' + idx);
     if (!row) return;
+    var lz = row.querySelector('td[data-cro-lazy]');   /* V11.26|165 */
+    if (lz && _baseRoutesUNIFIED[idx]) { lz.innerHTML = renderRouteDetailUNIFIED(_baseRoutesUNIFIED[idx]); lz.removeAttribute('data-cro-lazy'); }
     var apri = (row.style.display === 'none' || row.style.display === '');
     row.style.display = apri ? 'table-row' : 'none';
     if (btn) {
@@ -105331,6 +105562,17 @@ body.dark-mode .pi-rtbox { background: #0f172a; border-color: #334155; } body.da
 #piScheda .pi-sch-q { display: none; }
 /* V11.26|163: riepilogo su una riga sola, «Fatto: 1,76 km» */
 .pi-rsum > span { flex-direction: row !important; align-items: baseline; gap: 5px; padding: 3px 12px; } .pi-rsum small::after { content: ':'; } .pi-rsum small { font-size: .56rem; }
+.cro-more-row > td { background: #f8fafc; } .cro-more { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: .78rem; color: #475569; padding: 6px 4px; } .cro-more span { flex: 1 1 360px; }   /* V11.26|164 */
+body.dark-mode .cro-more-row > td { background: #0f172a; }
+.cro-pag-row > td { background: #f1f5f9 !important; padding: 6px 10px !important; text-align: left !important; } .cro-pag-row.su > td { border-bottom: 1px solid #cbd5e1; } .cro-pag-row.giu > td { border-top: 1px solid #cbd5e1; }   /* V11.26|166: barra delle pagine */
+.cro-pag { display: flex !important; flex-direction: row !important; align-items: center !important; justify-content: space-between !important; gap: 12px; flex-wrap: wrap; width: 100%; }
+.cro-pag-i { font-size: .8rem; color: #334155; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; } .cro-pag-i b { color: #1f3864; } .cro-pag-i small { font-size: .7rem; color: #64748b; }
+.cro-pag-n { display: inline-flex; align-items: center; gap: 6px; }
+.cro-pag-b { border: 1px solid #c7d2fe; background: #fff; color: #1e3a8a; border-radius: 8px; padding: 4px 12px; font-size: .74rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.cro-pag-b:hover:not([disabled]) { background: #eef2ff; } .cro-pag-b[disabled] { opacity: .4; cursor: default; }
+.cro-pag-s { border: 1px solid #c7d2fe; border-radius: 8px; padding: 4px 6px; font-size: .74rem; font-weight: 700; color: #1e3a8a; background: #fff; }
+.cro-pag.mini { margin: 4px 0 8px; padding: 6px 8px; background: #f1f5f9; border-radius: 8px; } .cro-pag.mini .cro-pag-i { font-size: .7rem; } .cro-pag.mini .cro-pag-i small { display: none; } .cro-pag.mini .cro-pag-b, .cro-pag.mini .cro-pag-s { font-size: .66rem; padding: 2px 6px; }
+body.dark-mode .cro-pag-row > td, body.dark-mode .cro-pag.mini { background: #0f172a !important; } body.dark-mode .cro-pag-i { color: #cbd5e1; } body.dark-mode .cro-pag-i b { color: #93c5fd; } body.dark-mode .cro-pag-b, body.dark-mode .cro-pag-s { background: #1e293b; color: #bfdbfe; border-color: #334155; }
 .pi-sgbox { margin: 12px 0; border: 1px solid #e9d5ff; border-left: 4px solid #7c3aed; border-radius: 10px; background: #fdfbff; } .pi-sgbox-h { display: flex; align-items: center; gap: 8px; padding: 7px 10px; background: #f5f3ff; border-radius: 0 9px 0 0; font-size: .7rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #5b21b6; } .pi-sgbox.chiuso .pi-sgbox-h { border-radius: 0 9px 9px 0; }
 .pi-sgbox-h small { font-weight: 600; text-transform: none; letter-spacing: 0; color: #7c3aed; background: #ede9fe; border-radius: 999px; padding: 1px 8px; } .pi-sgbox-h button { margin-left: auto; border: 1px solid #c4b5fd; background: #fff; color: #6d28d9; border-radius: 999px; padding: 3px 12px; font-size: .68rem; font-weight: 800; cursor: pointer; text-transform: none; letter-spacing: 0; }
 .pi-sgbox > .pi-sgbar, .pi-sgbox > .pi-sg { margin-left: 10px; margin-right: 10px; } .pi-sgbox > .pi-sg { padding-bottom: 8px; }
@@ -107269,6 +107511,7 @@ html.cro-zoom-aperto, html.cro-zoom-aperto.intro-complete, html.cro-zoom-aperto 
       if (!d || d.tagName !== 'DIV') continue;
       if (d.classList.contains('route-actions')) continue;
       if (d.classList.contains('route-detail')) continue;
+      if (d.classList.contains('cro-pag')) continue;   /* V11.26|166: barra delle pagine */
       if (d.querySelector('table')) continue;      /* riga di dettaglio */
       if (!d.querySelector(':scope > button')) continue;
       d.classList.add('route-actions');
@@ -108197,7 +108440,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 163';
+  var REVISIONE = 'V11.26 | 168';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
@@ -110363,6 +110606,10 @@ body.dark-mode tr.cro-top > td { background: rgba(255,255,255,0.05) !important; 
   /* Dalla card al percorso: porta la riga sotto gli occhi e fa lampeggiare il
      solo nastro. La riga intera sarebbe troppo. */
   window.croVaiAlPercorso = function (idNastro, idRiga) {
+    var mm = /^uRouteBaseRow_(\d+)$/.exec(idRiga || '');   /* V11.26|164: riga non ancora disegnata */
+    if (mm && !document.getElementById(idRiga) && typeof window._uMostraAltri === 'function') window._uMostraAltri(+mm[1] + 1);
+    if (!document.getElementById(idRiga) && window._croPag) Object.keys(window._croPag).forEach(function (k) {
+      var f = window._croPag[k], m2 = f.prefisso && f.vai && idRiga.indexOf(f.prefisso) === 0 ? /(\d+)$/.exec(idRiga) : null; if (m2) f.vai(+m2[1]); });
     var nastro = document.getElementById(idNastro);
     var riga = document.getElementById(idRiga);
     var bersaglio = nastro || riga;
