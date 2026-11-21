@@ -4,13 +4,42 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 182  (rev. pubblicata: V11.26 | 182 | Nov 2026)              ║
+║   Versione: 11.26 | 187  (rev. pubblicata: V11.26 | 187 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 187 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE: sulla maniglia in basso a sinistra il puntatore diventa la       ║
+║     freccia diagonale (in basso a sinistra / in alto a destra)                   ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 186 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE: la maniglia in basso a sinistra ha le righe nel verso giusto,    ║
+║     speculare a quella di destra                                                 ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 185 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • OROLOGIO in alto a destra: cifre a larghezza fissa, il riquadro non          ║
+║     cambia piu' misura ogni secondo                                              ║
+║   • ASSISTENTE: la finestra si ridimensiona anche dall'angolo in basso a         ║
+║     sinistra                                                                     ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 184 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE: fumetto all'avvio per 10 secondi; una sola finestra che si       ║
+║     allarga e si alza dall'angolo, con posizione e dimensioni ricordate; tolti   ║
+║     Laterale e Agganciato; titolo su una riga                                    ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 183 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE: "Colt X oppure Y? Nodo A1 A oppure B?" (anche con le             ║
+║     coordinate della sede): distanze, km di rete per ogni coppia, subpath da     ║
+║     verificare e consiglio secondo le regole della Progettazione SdF             ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 182 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -5929,6 +5958,10 @@ window.croChat = (function () {
     + '@media (prefers-reduced-motion: reduce){#croChatBtn.in-nav *{animation:none!important}}'
     + '#croChat{position:fixed;left:18px;bottom:70px;z-index:99991;width:min(840px,calc(100vw - 36px));height:min(72vh,760px);display:none;flex-direction:column;background:#fff;border:1px solid #cbd5e1;border-radius:14px;box-shadow:0 12px 40px rgba(15,23,42,.35);overflow:hidden;font-size:.84rem;color:#1f2937}'
     + '#croChat.on{display:flex}'
+    + '.datetime-display .datetime-info,.datetime-display .datetime-info *{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}.datetime-display .datetime-info{min-width:5.6em}'   /* V11.26|185: l\u2019orologio non cambia larghezza ogni secondo */
+    + '#croChat .cc-sx{position:absolute;left:0;bottom:0;width:18px;height:18px;cursor:nesw-resize!important;z-index:6;touch-action:none}#croChat .cc-sx:before{content:"";position:absolute;left:2px;bottom:2px;width:12px;height:12px;background:linear-gradient(225deg,transparent 0 42%,#94a3b8 42% 52%,transparent 52% 68%,#94a3b8 68% 78%,transparent 78%)}#croChat .cc-sx:hover:before{background:linear-gradient(225deg,transparent 0 42%,#0066CC 42% 52%,transparent 52% 68%,#0066CC 68% 78%,transparent 78%)}#croChat.ridotta .cc-sx{display:none}'
+    + '#croChat{resize:both;min-width:460px;min-height:300px;max-width:calc(100vw - 16px);max-height:calc(100vh - 16px)}#croChat.ridotta{resize:none}#croChat .cc-larg{display:none!important}'
+    + '#croChat .cc-h>b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}#croChat .cc-h>b small{white-space:nowrap}#croChat.stretta .cc-h>b small{display:none}'   /* V11.26|184 */
     + '#croChat .cc-cro .ari-msg{margin:4px 0}#croChat .cc-cro .ari-ck{display:flex;gap:8px;align-items:center;width:100%;text-align:left;border:1px solid #e2e8f0;background:#fff;border-radius:8px;padding:6px 9px;margin:4px 0;cursor:pointer;font:inherit}#croChat .cc-cro .ari-ck:hover{border-color:#0066CC}#croChat .cc-cro .ari-ck.manca{border-left:4px solid #f97316}#croChat .cc-cro .ari-ck.verifica{border-left:4px solid #eab308}#croChat .cc-cro .ari-ck.info{border-left:4px solid #94a3b8}'
     + '#croChat .cc-cro-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}#croChat .cc-cro-chips button{border:1px solid #c7d2fe;background:#eef2ff;color:#4338ca;border-radius:999px;padding:2px 10px;font-size:.74rem;font-weight:600;cursor:pointer}'
     + 'body.dark-mode #croChat .cc-cro .ari-ck{background:#0f172a;border-color:#334155;color:#e2e8f0}'
@@ -6013,7 +6046,7 @@ window.croChat = (function () {
     var w = document.createElement('div'); w.id = 'croChat'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-label', 'Assistente CRO');
     w.innerHTML = '<div class="cc-h" title="Trascina per spostare la finestra \u00b7 doppio clic per rimetterla al suo posto"><b>\uD83E\uDD16 Cr\u00f2 \u00b7 Assistente CRO <small>\u00b7 cerca nei dati e nei testi del tool</small></b>'
       + '<button type="button" data-a="txt" title="Esporta la conversazione in TXT">\u2b07 TXT</button><button type="button" data-a="doc" title="Esporta la conversazione in Word">\u2b07 Word</button>'
-      + '<button type="button" data-a="fasc" id="croChatFasc" title="Fascicolo della pratica: le risposte fissate con \uD83D\uDCCC">\uD83D\uDCCC 0</button><button type="button" data-a="limiti" title=""Cosa l\u2019assistente non sa fare">Limiti</button><button type="button" data-a="pulisci" title="Svuota la conversazione">Pulisci</button><button type="button" data-a="nc" id="croChatNc" title="Domande non capite da Cr\u00f2 e dall\u2019Assistente: aprile, esportale o svuotale">\uD83D\uDCDD 0</button><span class="cc-modi" title="Come sta il pannello"><button type="button" data-a="modo" data-m="fin" title="Finestra: si trascina, copre una parte del tab">\u25A2</button><button type="button" data-a="modo" data-m="lat" title="Laterale: a destra a tutta altezza, sopra il tab (il tab non cambia)">\u25AE</button><button type="button" data-a="modo" data-m="dock" title="Agganciato: il tab si stringe e il pannello sta accanto (da 1800 px in su)">\u25E7</button></span><button type="button" data-a="riduci" id="croChatRiduci" title="Riduci">\u2013</button><button type="button" data-a="chiudi" title="Chiudi (Esc): la conversazione resta">\u2715</button></div>'
+      + '<button type="button" data-a="fasc" id="croChatFasc" title="Fascicolo della pratica: le risposte fissate con \uD83D\uDCCC">\uD83D\uDCCC 0</button><button type="button" data-a="limiti" title=""Cosa l\u2019assistente non sa fare">Limiti</button><button type="button" data-a="pulisci" title="Svuota la conversazione">Pulisci</button><button type="button" data-a="nc" id="croChatNc" title="Domande non capite da Cr\u00f2 e dall\u2019Assistente: aprile, esportale o svuotale">\uD83D\uDCDD 0</button><button type="button" data-a="riduci" id="croChatRiduci" title="Riduci">\u2013</button><button type="button" data-a="chiudi" title="Chiudi (Esc): la conversazione resta">\u2715</button></div>'
       + '<div class="cc-ctx" id="croChatCtx"></div>'   /* V11.26|176 */
       + '<div class="cc-m" id="croChatMsg"></div>'
       + '<div class="cc-sug" id="croChatSug" hidden></div>'
@@ -6032,6 +6065,19 @@ window.croChat = (function () {
       mg.addEventListener('pointerup', fine); mg.addEventListener('pointercancel', fine);
       mg.addEventListener('dblclick', function () { document.documentElement.style.removeProperty('--cc-larg'); try { localStorage.removeItem('croChatLarg'); } catch (x) {} });
       window.addEventListener('resize', function () { var v = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cc-larg'), 10); if (v) metti(v); });
+    })();
+    /* V11.26|185: si allarga anche dall\u2019angolo in basso a sinistra (il bordo destro resta fermo) */
+    (function () {
+      var g = document.createElement('div'); g.className = 'cc-sx'; g.title = 'Trascina per allargare o alzare la finestra'; w.appendChild(g);
+      var st = null;
+      g.addEventListener('pointerdown', function (e) { if (e.button !== 0) return; var r = w.getBoundingClientRect(); st = { x: e.clientX, y: e.clientY, l: r.left, t: r.top, w: r.width, h: r.height }; try { g.setPointerCapture(e.pointerId); } catch (x) {} w.classList.add('sposta'); e.preventDefault(); e.stopPropagation(); });
+      g.addEventListener('pointermove', function (e) {
+        if (!st) return; var cs = getComputedStyle(w), minW = parseFloat(cs.minWidth) || 460, minH = parseFloat(cs.minHeight) || 300;
+        var nw = Math.max(minW, Math.min(st.w + (st.x - e.clientX), st.l + st.w - 8)), nh = Math.max(minH, Math.min(st.h + (e.clientY - st.y), window.innerHeight - st.t - 8));
+        w.style.width = nw + 'px'; w.style.height = nh + 'px'; w.style.left = (st.l + st.w - nw) + 'px'; w.style.top = st.t + 'px'; w.style.right = 'auto'; w.style.bottom = 'auto';
+      });
+      var fine = function () { if (!st) return; st = null; w.classList.remove('sposta'); var r = w.getBoundingClientRect(); try { scrivi(CHIAVE_POS, JSON.stringify({ x: Math.round(r.left), y: Math.round(r.top) })); localStorage.setItem('croChatDim', JSON.stringify({ w: Math.round(r.width), h: Math.round(r.height) })); } catch (x) {} };
+      g.addEventListener('pointerup', fine); g.addEventListener('pointercancel', fine);
     })();
     var tip = document.createElement('div'); tip.id = 'croChatTip'; tip.setAttribute('role', 'tooltip');
     tip.innerHTML = '<b>Assistente CRO</b><br>Cerca CLLI, subpath, C-FOS, centrali, sigle e testi del tool.<br><span>Non \u00e8 un\u2019AI e non calcola percorsi n\u00e9 costi.</span>';
@@ -6184,6 +6230,20 @@ window.croChat = (function () {
   }
   /* ════ V11.26|177 · tre modi del pannello: finestra (com'era), laterale sopra il tab, agganciato che stringe il tab ════ */
   var MODO = 'fin';
+  /* V11.26|184: la finestra si allarga e si alza dall'angolo in basso a destra; dimensioni e posizione restano */
+  function dimensioni() {
+    var w = el('croChat'); if (!w) return;
+    try { var d = JSON.parse(localStorage.getItem('croChatDim') || 'null'); if (d && d.w && d.h) { w.style.width = Math.min(d.w, window.innerWidth - 16) + 'px'; w.style.height = Math.min(d.h, window.innerHeight - 16) + 'px'; } } catch (e) {}
+    if (!w._dimOss && window.ResizeObserver) {
+      w._dimOss = new ResizeObserver(function () {
+        w.classList.toggle('stretta', w.getBoundingClientRect().width < 760);   /* sottotitolo nascosto quando non ci sta */
+        if (!w.classList.contains('on') || w.classList.contains('ridotta')) return;
+        clearTimeout(w._dimT); w._dimT = setTimeout(function () { var r = w.getBoundingClientRect(); if (r.width > 100 && r.height > 100) { try { localStorage.setItem('croChatDim', JSON.stringify({ w: Math.round(r.width), h: Math.round(r.height) })); } catch (e) {} } }, 250);
+      });
+      w._dimOss.observe(w);
+    }
+  }
+  try { localStorage.removeItem('croChatModo'); localStorage.removeItem('croChatLarg'); } catch (e) {}
   function modo(m, utente) {
     var w = el('croChat'); if (!w) return;
     if (m === 'dock' && window.innerWidth < 1800) { if (utente && typeof showToast === 'function') showToast('Agganciato serve uno schermo da 1800 px: uso Laterale', 'info'); m = 'lat'; }
@@ -6196,7 +6256,7 @@ window.croChat = (function () {
     if (m === 'fin') applicaPos();
   }
   window.addEventListener('resize', function () { var s0 = leggi('croChatModo'); if (aperta && s0) modo(s0, false); });
-  function apri(si) { aperta = si; if (si) { var kb = document.getElementById('croKBub'); if (kb) kb.remove(); document.body.classList.remove('cro-kbub'); } setTimeout(function () { modo(leggi('croChatModo') || 'fin', false); }, 0); el('croChat').classList.toggle('on', si); el('croChatBtn').classList.toggle('on', si); if (si) { applicaPos(); if (!el('croChat').classList.contains('ridotta')) setTimeout(function () { el('croChatIn').focus(); }, 50); } }
+  function apri(si) { aperta = si; if (si) { var kb = document.getElementById('croKBub'); if (kb) kb.remove(); document.body.classList.remove('cro-kbub'); } setTimeout(function () { dimensioni(); modo('fin', false); }, 0);   /* V11.26|184: una sola modalità, la finestra */ el('croChat').classList.toggle('on', si); el('croChatBtn').classList.toggle('on', si); if (si) { applicaPos(); if (!el('croChat').classList.contains('ridotta')) setTimeout(function () { el('croChatIn').focus(); }, 50); } }
   function msg(cls, html) { var d = document.createElement('div'); d.className = cls; d.innerHTML = html; el('croChatMsg').appendChild(d); el('croChatMsg').scrollTop = el('croChatMsg').scrollHeight; return d; }
   var LIMITI = '<div class="cc-lim"><b>\u26a0\ufe0f Cosa non sa fare (per ora)</b><ul>'
     + '<li><b>Non \u00e8 un\u2019intelligenza artificiale</b>: non capisce le frasi, riconosce le parole che il tool conosce (CLLI, subpath, archi e rami, C-FOS, nomi di centrale, sigle, argomenti dei testi) e alcune domande guidate: stato e regione (\u00abnon attivi Lombardia\u00bb), data center di una regione, collegamenti diretti tra due CLLI, C-FOS in comune tra due subpath, novit\u00e0 dei DB, Nodi A1 vicini a una centrale e \u00abImposta una pratica\u00bb. Ricorda la centrale di cui stai parlando: dopo una centrale puoi chiedere \u00abe i Nodi A1 vicini?\u00bb o \u00abi collegamenti?\u00bb.</li>'
@@ -6764,6 +6824,60 @@ window.croChat = (function () {
     return '<svg class="cc-minimappa" viewBox="0 0 ' + W + ' ' + H + '" width="100%" style="max-height:170px" role="img" aria-label="Mini mappa del cammino">' + lin + nodi + lab(pts[0], 'start') + lab(pts[pts.length - 1], 'end')
       + '<g font-size="9.5" fill="#475569"><line x1="' + (W - 118) + '" y1="10" x2="' + (W - 100) + '" y2="10" stroke="#2563eb" stroke-width="3"/><text x="' + (W - 96) + '" y="13">RA</text><line x1="' + (W - 72) + '" y1="10" x2="' + (W - 54) + '" y2="10" stroke="#dc2626" stroke-width="3"/><text x="' + (W - 50) + '" y="13">RC</text><circle cx="' + (W - 22) + '" cy="10" r="4" fill="#fff" stroke="#7c3aed" stroke-width="2.5"/><text x="' + (W - 14) + '" y="13">T1</text></g></svg>';
   }
+  /* ════ V11.26|183 · SCELTA FRA CENTRALI COLT E NODI A1 ════
+     Dati: coordinate della sede (se scritte), centrali Colt e Nodi A1 citati per CLLI.
+     Regole del tool (Progettazione SdF): la centrale Colt proposta è la più vicina alla sede; il Nodo A1 proposto è quello
+     raggiungibile con meno km di rete dalla Colt (grafo dei DB RA e RC, passaggio RA ↔ RC nelle T1, CRM202 escluso). */
+  function rispostaScelta(testo, q) {
+    var A = window.croNodiA1; if (!A || !A.percorso) return '';
+    var C = A.indice(), A1 = {}; (window.CENTRALI_POP_NODO_A1 || []).forEach(function (a) { A1[a.clli] = a; });
+    var cl = []; (q.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || []).forEach(function (c) { if (C[c] && cl.indexOf(c) < 0) cl.push(c); });
+    var nodi = cl.filter(function (c) { return A1[c]; }), colt = cl.filter(function (c) { return !A1[c]; });
+    if (/NOD[OI] ?A1/.test(q) && nodi.length < 2 && cl.length >= 2) { /* se l'utente chiama Nodo A1 anche una centrale non A1 la trattiamo come Nodo da valutare */ }
+    if (!colt.length && nodi.length < 2) return '';
+    var nums = (String(testo).match(/-?\d{1,2}[.,]\d{3,}/g) || []).map(function (x) { return parseFloat(x.replace(',', '.')); });
+    var lat = null, lon = null; nums.forEach(function (v) { if (lat == null && v >= 35 && v <= 48) lat = v; else if (lon == null && v >= 6 && v <= 19) lon = v; });
+    var hav = function (a1, o1, a2, o2) { var R0 = 6371, r = Math.PI / 180, dA = (a2 - a1) * r, dO = (o2 - o1) * r, x = Math.sin(dA / 2) * Math.sin(dA / 2) + Math.cos(a1 * r) * Math.cos(a2 * r) * Math.sin(dO / 2) * Math.sin(dO / 2); return 2 * R0 * Math.atan2(Math.sqrt(x), Math.sqrt(1 - x)); };
+    var nn = function (c) { return esc(A.nome(C[c]) + ' (' + c + ')'); }, tipo = function (c) { var e = C[c], t = Object.keys(e.tipiRA || {}).sort(); return [e.rc ? 'RC' : '', t.length ? 'RA T' + t.join('/T') : ''].filter(Boolean).join(' + '); };
+    var t3 = function (c) { var e = C[c]; return !e.rc && Object.keys(e.tipiRA || {}).length && !e.tipiRA[1] && !e.tipiRA[2]; };
+    var ana = function (p) { if (!p) return null; ana._ult = null; var non = 0, ra = 0, rcN = 0, xf = 0, via = []; p.tratte.forEach(function (t, i) { if (t.db === 'T1') { xf++; return; } var idt = t.db === 'RC' ? t.r.IdCollegamento : (t.r.SubPath || t.r.IdCollegamento); if (idt !== ana._ult) { if (t.db === 'RA') ra++; else rcN++; } ana._ult = idt; var st = String((t.r || {}).Stato_IdCollegamento || '').toUpperCase(); if (st && st !== 'ATTIVO') non++; if (i < p.tratte.length - 1) via.push(t.a); }); return { km: p.km, ra: ra, rc: rcN, xf: xf, non: non, via: via, ids: p.tratte.filter(function (t) { return t.db !== 'T1'; }).map(function (t) { return t.db === 'RC' ? t.r.IdCollegamento : (t.r.SubPath || t.r.IdCollegamento); }) }; };
+    var uniq = function (L) { return L.filter(function (x, i) { return L.indexOf(x) === i; }); };
+    var h = '<h6>\u2696 Quale centrale Colt' + (nodi.length ? ' e quale Nodo A1' : '') + '</h6>';
+    /* 1) centrali Colt rispetto alla sede */
+    var cs = colt.map(function (c) { var e = C[c]; return { c: c, aria: lat != null && lon != null && e.lat != null ? hav(lat, lon, +e.lat, +e.lon) : null }; });
+    if (lat != null && lon != null) cs.sort(function (x, y) { return x.aria - y.aria; });
+    if (colt.length) {
+      h += '<div class="cc-sub">1. Centrale Colt' + (lat != null ? ' rispetto alla sede ' + esc(lat + ', ' + lon) + mappa(lat, lon) : '') + '</div><div class="cc-lunga"><table><tr><th>Centrale</th><th>Reti</th><th>Area \u2013 Zona \u2013 Regione</th>' + (lat != null ? '<th>Sede \u2192 centrale (aria)</th>' : '') + '</tr>'
+        + cs.map(function (x, i) { return '<tr><td><b>' + nn(x.c) + '</b>' + (i === 0 && lat != null ? ' <span class="cc-k">\u2190 pi\u00f9 vicina</span>' : '') + (t3(x.c) ? '<div class="cc-k">\u26A0 solo T3: non pu\u00f2 essere estremo</div>' : '') + '</td><td>' + esc(tipo(x.c)) + '</td><td>' + esc(A.geo(C[x.c]).txt) + '</td>' + (lat != null ? '<td>' + (x.aria != null ? kmT(x.aria) : '\u2014') + '</td>' : '') + '</tr>'; }).join('') + '</table></div>';
+    }
+    /* 2) Nodi A1: candidati scritti, altrimenti i due più vicini */
+    var cand = nodi.length ? nodi : [];
+    if (!cand.length && colt.length) cand = (A.dati(colt[0], 4).vicini || []).filter(function (x) { return x.rete != null; }).slice(0, 2).map(function (x) { return x.clli; });
+    var M = {}; cs.forEach(function (x) { cand.forEach(function (n) { M[x.c + '>' + n] = ana(A.percorso(x.c, n, 'UNI')); }); });
+    if (cand.length && colt.length) {
+      h += '<div class="cc-sub">2. Nodo A1: km di rete dalla centrale Colt</div><div class="cc-lunga"><table><tr><th>Colt \u2192 Nodo A1</th><th>Km rete</th><th>Subpath</th><th>Tratte da verificare</th><th>Passa da</th>' + (lat != null ? '<th>Totale con la sede</th>' : '') + '</tr>';
+      cs.forEach(function (x) { cand.forEach(function (n) { var m = M[x.c + '>' + n]; h += '<tr><td>' + nn(x.c) + ' \u2192 <b>' + nn(n) + '</b></td>' + (m ? '<td><b>' + kmT(m.km) + '</b></td><td>' + (m.ra + m.rc) + '<div class="cc-k">subpath: RA ' + m.ra + ' \u00b7 RC ' + m.rc + (m.xf ? ' \u00b7 cambio in T1' : '') + '</div></td><td>' + (m.non ? '\u26A0 ' + m.non : '0') + '</td><td class="cc-k">' + esc(uniq(m.via).map(function (v) { return v; }).join(', ') || '\u2014') + '</td>' + (lat != null && x.aria != null ? '<td>' + kmT(x.aria + m.km) + '</td>' : '') : '<td colspan="' + (lat != null ? 5 : 4) + '">nessun cammino RA / RC: serve la RTN</td>') + '</tr>'; }); });
+      h += '</table></div>';
+    }
+    /* 3) cosa consiglio, con le regole del tool */
+    var best = null; if (cs.length) { var c0 = cs[0].c; cand.forEach(function (n) { var m = M[c0 + '>' + n]; if (m && (!best || m.km < best.m.km)) best = { n: n, m: m }; }); }
+    var righe = [];
+    if (cs.length > 1 && lat != null) {
+      var a = cs[0], b = cs[1], dAria = b.aria - a.aria;
+      righe.push('<b>Centrale Colt: ' + nn(a.c) + '</b>. \u00c8 la pi\u00f9 vicina alla sede (' + kmT(a.aria) + ' in linea d\u2019aria contro ' + kmT(b.aria) + ' di ' + nn(b.c) + ', ' + kmT(dAria) + ' in meno di coda), ed \u00e8 la regola con cui la Progettazione SdF propone la Colt.');
+      if (best) { var mb = M[b.c + '>' + best.n]; if (mb && best.m.km > mb.km) { var passa = best.m.via.indexOf(b.c) >= 0; righe.push('Il costo della scelta \u00e8 sul trasporto: da ' + nn(a.c) + ' al Nodo A1 ci sono ' + kmT(best.m.km) + ' di rete contro ' + kmT(mb.km) + ' da ' + nn(b.c) + (passa ? ', perch\u00e9 il cammino da ' + nn(a.c) + ' passa proprio da ' + nn(b.c) : '') + '. In totale (coda in aria + rete) ' + kmT(a.aria + best.m.km) + ' contro ' + kmT(b.aria + mb.km) + '. Se la coda nuova pesa pi\u00f9 dei km di rete esistente (tempi di realizzazione, permessi, scavi) resta ' + nn(a.c) + '; se la coda verso ' + nn(b.c) + ' \u00e8 gi\u00e0 disponibile o i ' + kmT(best.m.km - mb.km) + ' in pi\u00f9 di trasporto hanno tratte da verificare, conviene ' + nn(b.c) + '.'); } }
+    }
+    if (best) {
+      var alt = cand.filter(function (n) { return n !== best.n; }).map(function (n) { return { n: n, m: M[cs[0].c + '>' + n] }; }).filter(function (x) { return x.m; });
+      righe.push('<b>Nodo A1: ' + nn(best.n) + '</b> (' + (A1[best.n] && A1[best.n].noPE ? 'A1_DIV senza PE' : 'A1 Standard') + '). Dalla Colt sono ' + kmT(best.m.km) + ' di rete su ' + (best.m.ra + best.m.rc) + ' subpath (' + esc(uniq(best.m.ids).join(', ')) + ')' + (best.m.non ? ', con ' + best.m.non + (best.m.non === 1 ? ' tratta' : ' tratte') + ' da verificare su NNI' : '') + (alt.length ? '; ' + alt.map(function (x) { return nn(x.n) + ' richiede ' + kmT(x.m.km) + ' (' + kmT(x.m.km - best.m.km) + ' in pi\u00f9' + (x.m.via.indexOf(best.n) >= 0 ? ', passando da ' + nn(best.n) : '') + ')'; }).join('; ') : '') + '. Il tool propone il Nodo A1 con meno km dalla Colt.');
+      if (alt.length) righe.push('Per un Div su Nodo diverso, ' + nn(alt[0].n) + ' come Arrivo Div' + (alt[0].m.via.indexOf(best.n) >= 0 ? ' non \u00e8 diversificato: il suo cammino passa da ' + nn(best.n) + '. Va verificato con \u00abCalcola\u00bb e la ricerca dei Div' : ': va verificato con la ricerca dei Div') + '.');
+    }
+    if (righe.length) h += '<div class="cc-card" style="margin-top:6px"><div class="cc-sub" style="margin-top:0">3. Cosa ti consiglio</div>' + righe.map(function (r) { return '<p style="margin:4px 0">' + r + '</p>'; }).join('') + '</div>';
+    h += '<div class="cc-k">Distanze in linea d\u2019aria dalle coordinate del DB; la coda reale (strada o pedonale) la stima la Progettazione SdF con OSRM. Km di rete: cammino minimo sul grafo dei DB RA e RC, tutti gli stati, CRM202 escluso; il percorso definitivo lo d\u00e0 \u00abCalcola\u00bb. Nessun costo: i prezzi della coda dipendono dagli apparati del listino.</div>';
+    if (best && cs.length) h += '<div class="cc-chips cc-azioni">' + bCampo(cs[0].c, 'p1', '\uD83D\uDCCD ' + esc(cs[0].c) + ' in Partenza') + bCampo(best.n, 'a1', '\uD83C\uDFC1 ' + esc(best.n) + ' Arrivo Std') + (cand.length > 1 ? bCampo(cand.filter(function (n) { return n !== best.n; })[0], 'a2', '\uD83C\uDFC1 ' + esc(cand.filter(function (n) { return n !== best.n; })[0]) + ' Arrivo Div') : '') + '<button type="button" class="cc-pri" onclick="window.croAssCalcola(\'' + esc(cs[0].c) + '\',\'' + esc(best.n) + '\')">\uD83D\uDD00 Calcola nell\u2019Unificato</button>' + (cs[1] ? '<button type="button" data-q="calcola ' + esc(cs[1].c) + ' > ' + esc(best.n) + '">Calcola da ' + esc(cs[1].c) + '</button>' : '') + '</div>';
+    return h;
+  }
+
   /* ════ V11.26|180 · CRÒ DENTRO L'ASSISTENTE: le risposte di Crò (elenco, controllo IRP, glossario) entrano nella stessa conversazione ════ */
   function croCattura(fn, titolo) {
     var A = window.croCmp && croCmp.ariadne; if (!A) return '';
@@ -7180,6 +7294,8 @@ window.croChat = (function () {
 
   function rispondi(testo) {
     var q = norm(testo).trim(), h = '';
+    /* V11.26|183: «dalla posizione lat/lon, centrale Colt X oppure Y? Nodo A1 A oppure B?»: confronto con dati e regole del tool */
+    if ((q.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || []).length >= 2 && /OPPURE|QUALE|CONSIGL|MEGLIO|SCELG|CONVIENE|\bO\b|CONFRONT|TRA |FRA /.test(q)) { var hs = rispostaScelta(testo, q); if (hs) return hs; }
     /* V11.26|118: «verifica percorso CRM200 > CRM203 > …»: il percorso e' in fila? quanti km, che stati, che DC attraversa,
        e perche' la ricerca RC non lo mostra (posizione rispetto ai percorsi gia' trovati) */
     var idsV = q.match(/\b[A-Z]{3}\d{3}\b/g) || [];
@@ -31890,7 +32006,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 182 | Nov 2026</div>
+<div class="version-tag">V11.26 | 187 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -32191,7 +32307,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 182</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 187</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -32208,7 +32324,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 182</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 187</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
                     <div class="feature-specs">
@@ -32229,7 +32345,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 182</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 187</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -32247,7 +32363,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 182</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 187</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -32281,7 +32397,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 182</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 187</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Prima i Nodi A1 della stessa regione, poi le alternative delle altre regioni, ognuno per distanza, con Area, Zona e Regione dal DB; «via RTN» se si raggiungono solo con la dorsale. Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due, con i bottoni Arrivo Std e Arrivo Div (su due Nodi diversi), la centrale cercata va in <strong>Partenza</strong> e il popup resta aperto fino a «Fatto». Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -32297,7 +32413,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 182</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 187</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -32761,7 +32877,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 182</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 187</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -32911,8 +33027,58 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">💬 Novità V11.26 | 182 | Nov 2026</span>
+                  <span class="cl-ver">↙️ Novità V11.26 | 187 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>↙️ Puntatore sulla maniglia sinistra</strong>: passando sull’angolo in basso a sinistra della finestra dell’Assistente il puntatore diventa la doppia freccia diagonale ↙↗, speculare a quella dell’angolo destro ↖↘. Prima restava la freccia normale perché una regola del pannello copriva quella della maniglia</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">↘️ Novità V11.26 | 186 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>↘️ Maniglia sinistra nel verso giusto</strong>: le due righette dell’angolo in basso a sinistra della finestra dell’Assistente ora sono inclinate al contrario di quelle dell’angolo destro, come uno specchio, e indicano la direzione in cui si trascina</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🕒 Novità V11.26 | 185 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🕒 Orologio fermo e finestra da due angoli</strong>: il riquadro con data e ora in alto a destra non cambia più larghezza a ogni secondo: le cifre hanno tutte la stessa larghezza (tabular-nums) e il riquadro ha una misura minima. La finestra dell’Assistente si allarga e si alza anche dall’angolo in basso a sinistra, oltre che da quello a destra: il bordo destro resta fermo; posizione e dimensioni restano memorizzate</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🪟 Novità V11.26 | 184 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🪟 Assistente in una finestra ridimensionabile</strong>: il pannello ha una sola modalità, la finestra. Si sposta trascinando l’intestazione e si allarga o si alza dall’angolo in basso a destra (minimo 460 × 300 px); posizione e dimensioni restano alle aperture successive. Tolti i bottoni Laterale e Agganciato. Il titolo «Crò · Assistente CRO · cerca nei dati e nei testi del tool» sta su una riga; se la finestra è stretta il sottotitolo si nasconde. Il fumetto all’apertura del tool resta 10 secondi e poi si chiude da solo; passando sul robottino si rivede come prima</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">⚖ Novità V11.26 | 183 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>⚖ L’Assistente confronta centrali Colt e Nodi A1</strong>: alla domanda «dalla posizione 46.298391, 11.083017 mi consigli TAIO (CLESITAE) oppure MEZZOLOMBARDO (MEZZITAG)? e quale Nodo A1, TRENTO NORD (TRENITAS) oppure BOLZANO BG (BOLZITAR)?» prima rispondeva «Nessuna centrale nei DB con questo filtro». Ora risponde con le distanze dalla sede (TAIO 2,6 km, MEZZOLOMBARDO 10,0 km in linea d’aria), i km di rete di ogni coppia (TAIO → TRENTO NORD 41,5 km su ANE026/1 e ANE025, passando da MEZZOLOMBARDO; MEZZOLOMBARDO → TRENTO NORD 20,7 km su ANE025; BOLZANO BG 73,1 km in più, passando da TRENTO NORD), le tratte da verificare e il consiglio con le regole della Progettazione SdF: Colt più vicina alla sede, Nodo A1 con meno km dalla Colt, e il compromesso fra coda più corta e trasporto più lungo. Bottoni per Partenza, Arrivo Std, Arrivo Div e Calcola</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">💬 Novità V11.26 | 182 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -51090,6 +51256,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><strong>Sigla o termine</strong> (per esempio OSNCP, restoration): la voce della legenda del tab Analisi per Soluzioni Protette.</p>
                   <p><strong>Argomento</strong> (per esempio regola coda cliente): i punti dei tab e delle Note e regole che ne parlano, con le parole evidenziate e «Vai al punto», che apre il tab, espande tutto quello che nasconde il testo (sezioni compresse, voci a tendina, schede della home filtrate o accorciate, pannelli dei disegni, cassetti Note e regole) e lo evidenzia.</p>
                   <p><strong>Domande guidate:</strong> stato e luogo (<em>non attivi Lombardia</em>, <em>da verificare zona LO</em>, <em>situazione Piemonte</em> per il riepilogo per stato; aggiungi RA o RC per una sola rete), <em>data center</em> di una regione, due CLLI nella stessa domanda (collegamenti diretti tra le due centrali), due subpath con «C-FOS in comune» (cavi condivisi), <em>novità</em> (cosa è cambiato nell’ultimo aggiornamento dei DB).</p>
+                  <p><strong>Scelta fra centrali Colt e Nodi A1 (183):</strong> una domanda con due o più CLLI e parole come «oppure», «quale», «consigli», «meglio» confronta le centrali citate. Esempio: <em>dalla posizione 46.298391, 11.083017 mi consigli TAIO (CLESITAE) oppure MEZZOLOMBARDO (MEZZITAG)? e quale Nodo A1, TRENTO NORD (TRENITAS) oppure BOLZANO BG (BOLZITAR)?</em> La risposta ha tre parti: le centrali Colt con reti, area – zona – regione e distanza in linea d’aria dalla sede (se scrivi le coordinate); ogni coppia Colt → Nodo A1 con km di rete, subpath, tratte da verificare, centrali attraversate e totale con la sede; il consiglio secondo le regole della Progettazione SdF (Colt più vicina alla sede, Nodo A1 con meno km dalla Colt), con il compromesso spiegato quando il cammino da una Colt passa dall’altra. Se scrivi solo le centrali Colt, i Nodi A1 sono i due più vicini raggiungibili senza RTN. Bottoni: Partenza, Arrivo Std, Arrivo Div, Calcola nell’Unificato. Nessun costo: i prezzi della coda dipendono dagli apparati del listino.</p>
                   <p><strong>Crò e Assistente insieme, vincoli dalle risposte (180):</strong> il pannello è uno solo, «🤖 Crò · Assistente CRO». «HelpMe! Crò» nella Progettazione SdF apre questo pannello con l’elenco di Crò (cose da sistemare prima dell’IRP); i bottoni di Crò dentro la risposta funzionano qui: «Guidami» e le voci dell’elenco aprono la guida passo per passo sulla pagina, «Controlla prima dell’IRP», «Cos’è SNCP?» e gli altri rispondono nella stessa conversazione. Si può anche scrivere <em>guidami nella progettazione</em> o <em>controlla la progettazione</em>. Le domande scritte nella casella del pannello della guida di Crò finiscono nella stessa conversazione dell’Assistente. La scheda di un collegamento (per esempio APV011) ha in alto rete, km, progressivi e tratte da verificare, il collegamento come linea (⋯ dove un ramo riparte da un’altra centrale) e i bottoni «✅ Collegamento obbligatorio» e «⛔ Collegamento da evitare»; la scheda di una centrale ha «✅ Centrale obbligatoria» e «⛔ Centrale da evitare». Scrivono nei campi del tab aperto (RC o Unificato; dal tab RA, che non ha vincoli, nell’Unificato), con il lampeggio verde.</p>
                   <p><strong>Suggerimenti, comandi, aiuto sui campi e controllo DB (179):</strong> mentre scrivi, dalla terza lettera, sopra la casella compaiono centrali (con reti, tipo, Nodo A1 e area – zona – regione) e subpath (con rete, km e stato): ↑ ↓ per scegliere, Tab o Invio per inserire, Esc per chiudere. Con la casella vuota ↑ ↓ richiamano le ultime 60 domande. I comandi brevi iniziano con /: <em>/a1 NOVAITAJ</em> (Nodi A1 vicini), <em>/rtn NOVAITAJ</em> (Nodo A1 senza RTN), <em>/zona PV</em> o <em>/zona RA T1 PV</em> (centrali di una zona, regione o area), <em>/percorso EUR > BELLE ARTI</em> (calcola), <em>/perche 1</em>, <em>/confronta 1 e 3</em>, <em>/div 1</em>, <em>/scheda NOVAITAJ</em>, <em>/anomalie RC</em>, <em>/fascicolo</em>. Accanto alle etichette dei campi dei tab RA, RC e Unificato il <b>?</b> apre nell’Assistente cosa accetta il campo, le sue regole, il valore attuale e i bottoni Note e regole, Guida, Scheda, Trova Nodi A1. <em>anomalie DB</em> (o <em>/anomalie RA</em>) controlla i DB caricati: km 0 o vuoti, estremi uguali, centrali senza coordinate, IdCollegamento RC ripetuti, centrali con regioni diverse fra le righe; le righe trovate si aprono nel tab Database o si esportano.</p>
                   <p><strong>Calcolo, risultati e fascicolo (178):</strong> <em>calcola EUR > BELLE ARTI</em> (anche <em>calcola da NOVAITAJ a ALESITAJ con RTN</em>) riempie Partenza e Arrivo dell’Unificato e calcola subito, senza controlli. Il bottone «⚡ Calcola Percorsi UNIFICATI» invece prima controlla: se Partenza o Arrivo sono RA solo T3, o se con RTN spenta fra le due centrali non c’è un cammino RA / RC, avvisa e propone «Accendi RTN e calcola», «Nodo A1 senza RTN», «Calcola comunque» o «Annulla». Sui risultati: il bottone 🤖 su ogni riga, oppure <em>perché il percorso 1</em> (km, tratte RA/RC, cambi in T1, tratte da verificare, data center, perché è in quella posizione e cosa cambia rispetto al vicino), <em>confronta 1 e 3</em> (tabella affiancata, tratte e centrali in comune, differenza in km), <em>Div più diversificata del 1</em> (fra i percorsi Std trovati, il meno sovrapposto). Sotto ogni risposta <em>📌 Fissa</em> la mette nel fascicolo della pratica (📌 nell’intestazione): resta dopo Pulisci e alla riapertura del tool e si esporta in Word tutto insieme.</p>
@@ -51109,7 +51276,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
                   <p><strong>Ctrl+K</strong> (Cmd+K sul Mac) apre da qualsiasi tab una casella che cerca insieme centrali (nome o CLLI, con reti, Nodo A1 e area – zona – regione), collegamenti (IdCollegamento RC e subpath RA, con km e stato), sezioni della Guida e tab. Dentro il CRO la combinazione non apre più la ricerca del browser. Con ↑ ↓ scegli, Invio apre (la scheda della centrale o del collegamento nell’Assistente, la sezione della Guida, il tab), Tab passa alle azioni della centrale: Partenza, Arrivo Std, Arrivo Div, Nodi A1 vicini, Nodo A1 senza RTN, Scheda. L’elenco si costruisce la prima volta che premi Ctrl+K, quindi l’avvio del tool non rallenta.</p>
                   <p><strong>Fumetto:</strong> è il suggerimento dell’Assistente. Passando sul robottino compare sempre, con cosa fa l’Assistente, cosa non fa e Ctrl+K; si chiude togliendo il mouse, con «Ho capito» o aprendo il pannello. All’apertura del tool compare da solo e resta finché non premi «Ho capito» o apri l’Assistente. Quello all’avvio lo spegni con «Non mostrare all’avvio» nel fumetto, con «💬 fumetto» sotto la casella dell’Assistente o qui: <button type="button" id="croKFGuida" onclick="window.croKFumetto && croKFumetto.scambia()" style="border:1px solid #c7d2fe;background:#eef2ff;color:#4338ca;border-radius:6px;padding:1px 9px;font-weight:600;cursor:pointer">Fumetto acceso: tocca per spegnerlo</button></p>
-                  <p><strong>Pannello dell’Assistente:</strong> nell’intestazione tre bottoni scelgono come sta. ▢ <em>Finestra</em>: com’era, si trascina e copre una parte del tab. ▮ <em>Laterale</em>: a destra a tutta altezza, sopra il tab, che non cambia larghezza; quando l’Assistente scrive un campo il tab scorre per mostrarlo e il campo lampeggia. ◧ <em>Agganciato</em>: il tab si stringe e il pannello sta accanto; serve uno schermo da 1800 px, sotto passa da solo a Laterale. Nei modi Laterale e Agganciato la larghezza si cambia trascinando la maniglia sul bordo sinistro del pannello (da 360 px al 60% dello schermo; doppio clic torna a 470 px); in Agganciato il tab si stringe di conseguenza. Scelta e larghezza restano per le aperture successive.</p>
+                  <p><strong>Pannello dell’Assistente:</strong> è una finestra sola: si sposta trascinando l’intestazione e si allarga o si alza dall’angolo in basso a destra o da quello in basso a sinistra; posizione e dimensioni restano per le aperture successive. (Fino alla 183 c’erano anche i modi Laterale e Agganciato, tolti nella 184.) Vecchia descrizione: ▢ <em>Finestra</em>: com’era, si trascina e copre una parte del tab. ▮ <em>Laterale</em>: a destra a tutta altezza, sopra il tab, che non cambia larghezza; quando l’Assistente scrive un campo il tab scorre per mostrarlo e il campo lampeggia. ◧ <em>Agganciato</em>: il tab si stringe e il pannello sta accanto; serve uno schermo da 1800 px, sotto passa da solo a Laterale. Nei modi Laterale e Agganciato la larghezza si cambia trascinando la maniglia sul bordo sinistro del pannello (da 360 px al 60% dello schermo; doppio clic torna a 470 px); in Agganciato il tab si stringe di conseguenza. Scelta e larghezza restano per le aperture successive.</p>
                 </div>
               </details>
 
@@ -53261,7 +53428,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 182 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 187 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -53280,6 +53447,61 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            ↙️ V11.26 | 187 | Nov 2026 | Puntatore maniglia
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>↙️ 187</strong>: <code>#croChat .cc-sx{cursor:nesw-resize!important}</code>: il cursore calcolato era <code>default</code>. Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            ↘️ V11.26 | 186 | Nov 2026 | Maniglia sinistra
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>↘️ 185b → 186</strong>: <code>.cc-sx:before</code> con <code>linear-gradient(225deg, …)</code> senza <code>scaleX(-1)</code>, 12 × 12 px. Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🕒 V11.26 | 185 | Nov 2026 | Orologio e finestra
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🕒 185</strong>: <code>.datetime-display .datetime-info</code> con <code>font-variant-numeric: tabular-nums</code> e <code>min-width: 5.6em</code>. Assistente: maniglia <code>.cc-sx</code> in basso a sinistra con pointer capture (cambia <code>width</code>, <code>height</code> e <code>left</code>, rispetta <code>min-width</code>/<code>min-height</code>), salva <code>croChatPos</code> e <code>croChatDim</code>. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🪟 V11.26 | 184 | Nov 2026 | Assistente: finestra unica
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>🪟 184</strong>: Assistente: tolto <code>.cc-modi</code>; <code>apri()</code> chiama <code>dimensioni()</code> (dimensioni da <code>localStorage.croChatDim</code>, salvate con un <code>ResizeObserver</code>, classe <code>stretta</code> sotto 760 px) e poi <code>modo('fin')</code>; <code>#croChat{resize:both}</code> con minimi e massimi; cancellati <code>croChatModo</code> e <code>croChatLarg</code>. Fumetto: <code>KB.avvio</code> lo chiude dopo 10 s se non c’è il mouse sopra. Richiesta di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            ⚖ V11.26 | 183 | Nov 2026 | Assistente: Colt e Nodi A1
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li><strong>⚖ 183</strong>: Assistente: <code>rispostaScelta()</code> in testa a <code>rispondi()</code> (almeno 2 CLLI e OPPURE / QUALE / CONSIGL / MEGLIO / SCELG / CONVIENE / O / CONFRONT / TRA / FRA); separa Nodi A1 (<code>CENTRALI_POP_NODO_A1</code>) e Colt; coordinate dal testo (lat 35–48, lon 6–19); haversine sede → Colt; <code>croNodiA1.percorso(colt, A1, 'UNI')</code> per ogni coppia, subpath contati una volta per id consecutivo. Prima la domanda finiva nel gestore «Nodi A1 di una regione». Segnalazione di Giuseppe</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             💬 V11.26 | 182 | Nov 2026 | Fumetto come suggerimento
           </summary>
@@ -75375,7 +75597,7 @@ window.exportRoutesTxtBaseUNIFIED = function(filter) {
       f.addEventListener('click', function (e) { var k = e.target.getAttribute && e.target.getAttribute('data-k'); if (!k) return; if (k === 'no') imposta(false); if (k === 'apri') { var bt = document.getElementById('croChatBtn'); if (bt) bt.click(); } nascondiFumetto(); });
       f.addEventListener('mouseenter', function () { clearTimeout(KB.tempo); });
       f.addEventListener('mouseleave', function () { if (f.getAttribute('data-mouse') && !f.getAttribute('data-avvio')) KB.tempo = setTimeout(nascondiFumetto, 350); });
-      if (!daMouse) f.setAttribute('data-avvio', '1');
+      if (!daMouse) { f.setAttribute('data-avvio', '1'); KB.avvio = setTimeout(function () { var g = document.getElementById('croKBub'); if (g && g.getAttribute('data-avvio') && !g.matches(':hover')) nascondiFumetto(); }, 10000); }   /* V11.26|184: all'avvio resta 10 s */
     }
     window.addEventListener('resize', function () { posiziona(document.getElementById('croKBub')); });
     /* il robottino: il fumetto prende il posto del vecchio suggerimento scuro */
@@ -109815,7 +110037,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 182';
+  var REVISIONE = 'V11.26 | 187';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
