@@ -4,13 +4,45 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 187  (rev. pubblicata: V11.26 | 187 | Nov 2026)              ║
+║   Versione: 11.26 | 189  (rev. pubblicata: V11.26 | 189 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 189 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE CRO, GUIDA RAPIDA: il bottone Limiti diventa «📘 Guida»; tre       ║
+║     schede: Cosa so fare (tabella per argomento con esempi cliccabili e filtro), ║
+║     Comandi veloci (14 comandi, equivale a, /perche e /regola), Cosa non so      ║
+║     fare (i Limiti come «non so, usa invece», date dei DB dalla pagina)          ║
+║   • Benvenuto corto: tre bottoni della Guida e 6 esempi «Più usati»; gli         ║
+║     altri 21 esempi sono nella scheda Cosa so fare con gli stessi bottoni        ║
+║   • aiuto / limiti / comandi aprono la scheda giusta; «aiuto X» con un CLLI,     ║
+║     subpath, centrale, città, zona o regione propone le domande su X             ║
+║   • «?» da solo: approfondisce la risposta di prima; all'inizio chiede cosa      ║
+║     serve; /regola e ? indicano la prima regola vera, non i testi aggiunti       ║
+║   • Comandi /: accenti, apostrofi, maiuscole, spazi, numeri attaccati, \,        ║
+║     nomi accorciati; comando sconosciuto: Comandi veloci con quelli simili       ║
+║   • Prova: 84 domande, 81 identiche alla 188 (cambiano limiti, aiuto, ?)         ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 188 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE CRO: strato nuovo sopra la catena di sempre (rispondi diventa     ║
+║     rispondiBase, invariata); lavora solo quando la catena non trova niente      ║
+║     o trova solo testi del tool, più i seguiti dell'Unificato                    ║
+║   • «Forse cercavi»: CLLI, subpath e nomi con errori, tutti i candidati          ║
+║     vicini (lettere invertite prima, O/0 e I/1), con Partenza e Arrivo           ║
+║   • Parole di cortesia ignorate; sinonimi (nodo, sede, dismesso, fibra, DC);     ║
+║     città = inizio del nome di più centrali, tabella che scorre                  ║
+║   • Non capito: dice cosa ha riconosciuto e propone domande che funzionano       ║
+║   • Seguiti dell'Unificato: «e senza RTN?», «e al contrario?», «quanti km»       ║
+║     diventano comandi esistenti (calcola, percorso 1), calcolo invariato         ║
+║   • /regola: regole provate e chi ha risposto; domande non capite con            ║
+║     Riprova tutte, Esporta per Claude, Togli quelle che ora rispondono           ║
+║   • Prova: 84 domande, 77 risposte identiche alla 187, 0 cambiate                ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 187 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -6046,7 +6078,7 @@ window.croChat = (function () {
     var w = document.createElement('div'); w.id = 'croChat'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-label', 'Assistente CRO');
     w.innerHTML = '<div class="cc-h" title="Trascina per spostare la finestra \u00b7 doppio clic per rimetterla al suo posto"><b>\uD83E\uDD16 Cr\u00f2 \u00b7 Assistente CRO <small>\u00b7 cerca nei dati e nei testi del tool</small></b>'
       + '<button type="button" data-a="txt" title="Esporta la conversazione in TXT">\u2b07 TXT</button><button type="button" data-a="doc" title="Esporta la conversazione in Word">\u2b07 Word</button>'
-      + '<button type="button" data-a="fasc" id="croChatFasc" title="Fascicolo della pratica: le risposte fissate con \uD83D\uDCCC">\uD83D\uDCCC 0</button><button type="button" data-a="limiti" title=""Cosa l\u2019assistente non sa fare">Limiti</button><button type="button" data-a="pulisci" title="Svuota la conversazione">Pulisci</button><button type="button" data-a="nc" id="croChatNc" title="Domande non capite da Cr\u00f2 e dall\u2019Assistente: aprile, esportale o svuotale">\uD83D\uDCDD 0</button><button type="button" data-a="riduci" id="croChatRiduci" title="Riduci">\u2013</button><button type="button" data-a="chiudi" title="Chiudi (Esc): la conversazione resta">\u2715</button></div>'
+      + '<button type="button" data-a="fasc" id="croChatFasc" title="Fascicolo della pratica: le risposte fissate con \uD83D\uDCCC">\uD83D\uDCCC 0</button><button type="button" data-a="guida" title="Guida rapida: cosa so fare, comandi veloci, cosa non so fare (V11.26|189: prima era Limiti)">\uD83D\uDCD8 Guida</button><button type="button" data-a="pulisci" title="Svuota la conversazione">Pulisci</button><button type="button" data-a="nc" id="croChatNc" title="Domande non capite da Cr\u00f2 e dall\u2019Assistente: aprile, esportale o svuotale">\uD83D\uDCDD 0</button><button type="button" data-a="riduci" id="croChatRiduci" title="Riduci">\u2013</button><button type="button" data-a="chiudi" title="Chiudi (Esc): la conversazione resta">\u2715</button></div>'
       + '<div class="cc-ctx" id="croChatCtx"></div>'   /* V11.26|176 */
       + '<div class="cc-m" id="croChatMsg"></div>'
       + '<div class="cc-sug" id="croChatSug" hidden></div>'
@@ -6143,6 +6175,7 @@ window.croChat = (function () {
       else if (a === 'fasc') mostraFascicolo();
       else if (a === 'pulisci') { el('croChatMsg').innerHTML = ''; conv = []; benvenuto(); }
       else if (a === 'limiti') msg('cc-b', LIMITI);
+      else if (a === 'guida') window.croAssGuida.apri(0);   /* V11.26|189 */
       else if (a === 'nc') { el('croChatIn').value = 'domande non capite'; invia(); }   /* V11.26|114 */
       else if (a === 'txt') esportaTxt();
       else if (a === 'doc') esportaWord();
@@ -6261,24 +6294,23 @@ window.croChat = (function () {
   var LIMITI = '<div class="cc-lim"><b>\u26a0\ufe0f Cosa non sa fare (per ora)</b><ul>'
     + '<li><b>Non \u00e8 un\u2019intelligenza artificiale</b>: non capisce le frasi, riconosce le parole che il tool conosce (CLLI, subpath, archi e rami, C-FOS, nomi di centrale, sigle, argomenti dei testi) e alcune domande guidate: stato e regione (\u00abnon attivi Lombardia\u00bb), data center di una regione, collegamenti diretti tra due CLLI, C-FOS in comune tra due subpath, novit\u00e0 dei DB, Nodi A1 vicini a una centrale e \u00abImposta una pratica\u00bb. Ricorda la centrale di cui stai parlando: dopo una centrale puoi chiedere \u00abe i Nodi A1 vicini?\u00bb o \u00abi collegamenti?\u00bb.</li>'
     + '<li><b>\uD83E\uDD16 Chiedi a Claude</b> (sotto ogni risposta) prepara una domanda con i dati del tool, la copia negli appunti e apre claude.ai: l\u00ec la incolli e decidi tu se inviarla. Il tool non manda niente da solo; il testo che incolli esce dalla rete aziendale, quindi usalo solo se la policy lo consente.</li>'
+    + '<li><b>Domande scritte male</b> (V11.26|188): se un CLLI, un subpath o un nome ha un errore propone \u00abForse cercavi\u00bb; non tiene conto delle parole di cortesia; se non capisce dice cosa ha riconosciuto. \u00ab/regola\u00bb dice quale parte ha dato l\u2019ultima risposta.</li>'
     + '<li><b>Non calcola percorsi n\u00e9 costi</b>: per quelli usa i tab di ricerca RA, RC e Unificato e Analisi Costi.</li>'
     + '<li><b>Non conosce</b> il database dei costi, i percorsi gi\u00e0 cercati, la cronologia e i file che importi.</li>'
     + '<li><b>I dati sono quelli dei DB caricati nel tool</b> (le date sono nella home): stati, C-FOS e distanze vanno sempre verificati su NNI.</li>'
     + '<li><b>I link internet</b> aprono ricerche esterne: le informazioni trovate l\u00ec non sono verificate.</li>'
     + '</ul></div>';
   function benvenuto() {
-    /* V11.26|020: benvenuto compatto, tutto visibile senza scorrere: i limiti stanno in una voce che si apre */
-    msg('cc-b cc-benv', '<h6>Ciao, sono l\u2019assistente del CRO.</h6>Cerco nei <b>dati del tool</b> (DB RC, DB RA, data center), nella <b>legenda</b> delle Soluzioni Protette e nei <b>testi di tutti i tab</b>. Sotto ogni risposta trovi i link per cercare su internet e \u00ab\uD83E\uDD16 Chiedi a Claude\u00bb. Gli esempi con \u270F\uFE0F vanno nella casella: cambia la parte evidenziata con la tua centrale, CLLI o regione e premi Invio.'
-      + '<details class="cc-lim-d"><summary>\u26a0\ufe0f Cosa non sa fare (per ora)</summary>' + LIMITI + '</details>'
-      + '<div class="cc-et">Rete e dati</div>'
-      + '<div class="cc-chips"><button type="button" data-c="un CLLI" data-t="{MILAITCG}">un CLLI: MILAITCG</button><button type="button" data-c="il nome di una centrale" data-t="{Torino Lancia}">una Centrale: Torino Lancia</button><button type="button" data-c="un subpath RC" data-t="{CLO201}">un Subpath RC: CLO201</button><button type="button" data-c="un subpath RA" data-t="{AAM003/1}">un Subpath RA: AAM003/1</button><button type="button" data-c="uno stato (ATTIVO, NON ATTIVO, IN CESSAZIONE, DA VERIFICARE SU NNI)" data-t="{IN CESSAZIONE}">uno Stato: CLLI IN CESSAZIONE</button><button type="button" data-c="una regione" data-t="non attivi {Lombardia}">uno Stato: NON Attivi in Lombardia</button><button type="button" data-c="una regione" data-t="data center {Piemonte}">Data Center in Piemonte</button><button type="button" data-c="due CLLI" data-t="{MILAITCG MILAITCH}">Collegamenti tra due CLLI</button><button type="button" data-c="due subpath" data-t="{CLO201 CLO202} C-FOS in comune">C-FOS in comune tra due Subpath</button></div>'
-      + '<div class="cc-et">Info live (la striscia in fondo)</div>'
-      + '<div class="cc-chips"><button type="button" data-q="info live">riattiva le info live</button><button type="button" data-q="nascondi info live">nascondi le info live</button><button type="button" data-q="mostra meteo">mostra il meteo</button><button type="button" data-q="abilita notizie">abilita le notizie</button></div>'
-      + '<div class="cc-et">Conversazione</div>'   /* V11.26|018 */
-      + '<div class="cc-chips"><button type="button" data-q="Wizard della Progettazione">\uD83E\uDDED Wizard della Progettazione</button><button type="button" data-c="la distanza in km (e la velocit\u00e0: 1G, 10G o 100G)" data-t="modulo ottico 100G per {2} km">\uD83D\uDCE1 Moduli ottici per distanza</button><button type="button" data-q="Imposta una pratica">\uD83D\uDDC2\uFE0F Imposta una pratica</button><button type="button" data-c="una centrale (nome o CLLI)" data-t="Nodi A1 vicini a {Milano Malpaga}">Nodi A1 vicini a una centrale</button><button type="button" data-c="una centrale (nome o CLLI)" data-t="Nodo A1 senza RTN da {NOVAITAJ}">Nodo A1 senza RTN</button><button type="button" data-c="una regione, zona o area" data-t="centrali RA T1 in {zona PV}">Centrali RA T1 di una zona</button></div>'
-      + '<div class="cc-et">Altri modi di chiedere</div>'
-      + '<div class="cc-chips"><button type="button" data-c="il nome di un tab" data-t="{Progettazione SdF}">un tab: Progettazione SdF</button><button type="button" data-c="un argomento" data-t="{regola coda cliente}">un argomento</button><button type="button" data-c="una sigla" data-t="{OSNCP}">una Sigla: OSNCP</button><button type="button" data-c="un tipo di apparato" data-t="{PXM3}">un tipo di apparato: PXM3</button><button type="button" data-q="KMZ">come si fa il KMZ</button><button type="button" data-q="Trova Nodi A1">una funzione: Trova Nodi A1</button><button type="button" data-q="Podio dei Div">il Podio dei Div</button><button type="button" data-q="novit\u00e0">novit\u00e0 dei DB</button></div>');
+    /* V11.26|189: benvenuto corto con i tre bottoni della Guida rapida e i chip più usati; gli altri chip e i limiti sono
+       nelle schede «Cosa so fare» e «Cosa non so fare» (stessi bottoni, stessi attributi). Prima (V11.26|020): limiti in una voce
+       che si apre e 27 chip in quattro gruppi. */
+    msg('cc-b cc-benv', '<h6>Ciao, sono l\u2019assistente del CRO.</h6>Cerco nei <b>dati del tool</b> (DB RC, DB RA, data center), nella <b>legenda</b> delle Soluzioni Protette e nei <b>testi di tutti i tab</b>. Sotto ogni risposta trovi i link per cercare su internet e \u00ab\uD83E\uDD16 Chiedi a Claude\u00bb. Scrivi un CLLI, un subpath, una centrale, una citt\u00e0 o una domanda breve.'
+      + bottoniGuida()
+      + '<div class="cc-et">Pi\u00f9 usati</div>'
+      + '<div class="cc-chips">' + B.clli + B.nome + B.rc + B.nonatt + B.a1 + B.wiz + '</div>'
+      + '<div class="cc-k" style="margin-top:4px">Gli esempi con \u270F\uFE0F vanno nella casella: cambia la parte evidenziata con la tua centrale, CLLI o regione e premi Invio. Tutti gli altri esempi sono in \u00abCosa so fare\u00bb; scrivi <b>/</b> per i comandi veloci.</div>');
   }
+
 
   /* ── risposte sui dati ─────────────────────────────────────────────── */
   function statoHtml(s) { s = String(s || '').toUpperCase(); return s ? '<span class="' + (s === 'ATTIVO' ? 'cc-ok' : (s.indexOf('NON') >= 0 || s.indexOf('CESSAZ') >= 0) ? 'cc-ko' : 'cc-dv') + '">' + esc(s) + '</span>' : '\u2014'; }
@@ -7292,7 +7324,7 @@ window.croChat = (function () {
       + '<div class="cc-k">Prova anche: \u00abmodulo 100G per 2 km\u00bb, \u00abLR4\u00bb, \u00abER4 Lite\u00bb.</div>';
   }
 
-  function rispondi(testo) {
+  function rispondiBase(testo) {   /* V11.26|188: era rispondi(); la catena non cambia, la chiama lo strato qui sotto */
     var q = norm(testo).trim(), h = '';
     /* V11.26|183: «dalla posizione lat/lon, centrale Colt X oppure Y? Nodo A1 A oppure B?»: confronto con dati e regole del tool */
     if ((q.match(/\b[A-Z]{4}IT[A-Z0-9]{2}\b/g) || []).length >= 2 && /OPPURE|QUALE|CONSIGL|MEGLIO|SCELG|CONVIENE|\bO\b|CONFRONT|TRA |FRA /.test(q)) { var hs = rispostaScelta(testo, q); if (hs) return hs; }
@@ -7472,6 +7504,519 @@ window.croChat = (function () {
     if (!h) h = '<h6>Non ho trovato niente nel tool.</h6>Prova con un CLLI (per esempio MILAITCG), un subpath (CLO201, AAM003/1), una C-FOS, il nome di una centrale, una sigla (OSNCP) o un argomento.';
     return h + web(testo);
   }
+  /* ════ V11.26|188 · ASSISTENTE PIÙ ROBUSTO: refusi («Forse cercavi»), parole di cortesia e sinonimi, città, «non ho capito»
+     che spiega cosa ha riconosciuto, seguiti dell'Unificato («e senza RTN?»), /regola, Riprova tutte nelle domande non capite.
+     La catena di rispondiBase() (ex rispondi) non cambia: questo strato lavora prima (solo i seguiti dell'Unificato, che
+     diventano un comando che la catena conosce già) e dopo (solo quando la catena non trova niente, o trova solo testi). ════ */
+  var TRACCIA = null, ULTIMA = null, SECCO = false;
+  function tracciato(nome, fn) { return function () { var r = fn.apply(this, arguments); if (TRACCIA) TRACCIA.push([nome, !!r]); return r; }; }
+  rispostaScelta = tracciato('scelta fra due centrali (A oppure B)', rispostaScelta);
+  moduliDomanda = tracciato('moduli ottici', moduliDomanda);
+  praticaInizio = tracciato('imposta una pratica', praticaInizio);
+  pratica = tracciato('pratica guidata, passo successivo', pratica);
+  croCattura = tracciato('Crò: controllo della Progettazione', croCattura);
+  rispostaCampo = tracciato('aiuto su un campo', rispostaCampo);
+  rispostaAnomalie = tracciato('anomalie dei DB', rispostaAnomalie);
+  rispostaCalcola = tracciato('calcola A > B nell’Unificato', rispostaCalcola);
+  rispostaConfronta = tracciato('confronta due risultati', rispostaConfronta);
+  rispostaDivPiu = tracciato('Div più diversificata', rispostaDivPiu);
+  rispostaRisultato = tracciato('perché il percorso N', rispostaRisultato);
+  rispostaSenzaRTN = tracciato('Nodo A1 senza RTN', rispostaSenzaRTN);
+  rispostaA1 = tracciato('Nodi A1 vicini', rispostaA1);
+  rispostaZona = tracciato('centrali o Nodi A1 di una zona, regione o area', rispostaZona);
+  seguito = tracciato('seguito della domanda di prima (centrale)', seguito);
+  rispostaDC = tracciato('data center', rispostaDC);
+  rispostaFiltro = tracciato('filtro per stato e luogo', rispostaFiltro);
+  rispostaTraCentrali = tracciato('collegamenti diretti fra due CLLI', rispostaTraCentrali);
+  rispostaComuni = tracciato('C-FOS in comune fra due subpath', rispostaComuni);
+  rispostaCfos = tracciato('C-FOS', rispostaCfos);
+  rispostaCLLI = tracciato('scheda di un CLLI', rispostaCLLI);
+  rispostaID = tracciato('subpath o collegamento', rispostaID);
+  rispostaSigla = tracciato('sigla del glossario', rispostaSigla);
+  rispostaNome = tracciato('nome di centrale', rispostaNome);
+  rispostaTesto = tracciato('testi del tool (📖 Nel tool)', rispostaTesto);
+
+  var NON_TROVATO = '<h6>Non ho trovato niente nel tool.</h6>';
+  var CORTESIA = { DIMMI: 1, QUALCOSA: 1, PER: 1, FAVORE: 1, PERFAVORE: 1, PF: 1, GRAZIE: 1, CIAO: 1, BUONGIORNO: 1, BUONASERA: 1, SALVE: 1, MI: 1, PUOI: 1, POTRESTI: 1, VORREI: 1, VOGLIO: 1, SAPERE: 1, CERCA: 1, CERCAMI: 1, TROVA: 1, TROVAMI: 1, MOSTRA: 1, MOSTRAMI: 1, FAMMI: 1, VEDERE: 1, INFORMAZIONI: 1, NOTIZIE: 1, PARLAMI: 1, SU: 1, SUL: 1, SULLA: 1, SUI: 1, SULLE: 1, RIGUARDO: 1, DI: 1, DEL: 1, DELLA: 1, IL: 1, LA: 1, LO: 1, LE: 1, GLI: 1, UN: 1, UNA: 1, AL: 1, ALLA: 1, E: 1, CHE: 1, COSA: 1, SAI: 1, CI: 1, SONO: 1, TUTTO: 1, TUTTE: 1, TUTTI: 1 };
+  /* sinonimi del linguaggio di lavoro: diventano le parole che la catena conosce */
+  var SINONIMI = [
+    [/\bNOD([OI])\b(?!\s*A1)/g, function (m, x) { return x === 'O' ? 'CENTRALE' : 'CENTRALI'; }],
+    [/\bSEDE\b/g, 'CENTRALE'], [/\bCO\b/g, 'CENTRALE'],
+    [/\b(DISMESS|SPENT|INATTIV|NON FUNZIONANT)\w*\b/g, 'NON ATTIVI'],
+    [/\b(FUNZIONANT|ACCES)\w*\b/g, 'ATTIVI'],
+    [/\bFIBR[AE]\b|\bCAV[OI] OTTIC[OI]\b/g, 'C-FOS'],
+    [/\bDATACENTER\b|\bDC\b/g, 'DATA CENTER']
+  ];
+  function ripulisci(q) {
+    var t = String(q).replace(/[?!.,;:]+/g, ' ');
+    SINONIMI.forEach(function (s) { t = t.replace(s[0], s[1]); });
+    return t.split(/\s+/).filter(function (w) { return w && !CORTESIA[w]; }).join(' ').trim();
+  }
+  function senzaWeb(h) { var i = h.lastIndexOf('<div class="cc-web">'); return i >= 0 ? h.slice(0, i) : h; }
+  function conWeb(h, extra) { var i = h.lastIndexOf('<div class="cc-web">'); return i >= 0 ? h.slice(0, i) + extra + h.slice(i) : h + extra; }
+  function idx() { return window.croNodiA1 && croNodiA1.indice ? croNodiA1.indice() : {}; }
+
+  /* distanza fra due codici: una lettera diversa = 1, due lettere vicine invertite = 1, O/0 e I/1 scambiati = 0,5 */
+  var SIMILI = { 'O0': 1, '0O': 1, 'I1': 1, '1I': 1, 'L1': 1, '1L': 1 };
+  function distanza(a, b, max) {
+    if (Math.abs(a.length - b.length) > max) return 99;
+    var d = [], i, j;
+    for (i = 0; i <= a.length; i++) { d[i] = [i]; }
+    for (j = 0; j <= b.length; j++) d[0][j] = j;
+    for (i = 1; i <= a.length; i++) {
+      var minR = 99;
+      for (j = 1; j <= b.length; j++) {
+        var c = a[i - 1] === b[j - 1] ? 0 : SIMILI[a[i - 1] + b[j - 1]] ? 0.5 : 1;
+        var v = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + c);
+        if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1] && a[i - 1] !== b[j - 1]) v = Math.min(v, d[i - 2][j - 2] + 1);
+        d[i][j] = v; if (v < minR) minR = v;
+      }
+      if (minR > max) return 99;
+    }
+    return d[a.length][b.length];
+  }
+  function differenza(a, b) {
+    if (a.length === b.length) {
+      var diff = []; for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) diff.push(i);
+      if (diff.length === 2 && diff[1] === diff[0] + 1 && a[diff[0]] === b[diff[1]] && a[diff[1]] === b[diff[0]]) return 'due lettere invertite (' + a.substr(diff[0], 2) + ' → ' + b.substr(diff[0], 2) + ')';
+      if (diff.length === 1) return SIMILI[a[diff[0]] + b[diff[0]]] ? a[diff[0]] + ' scritto al posto di ' + b[diff[0]] : 'una lettera diversa (' + a[diff[0]] + ' → ' + b[diff[0]] + ')';
+      return diff.length + ' lettere diverse';
+    }
+    return a.length < b.length ? 'manca qualche lettera' : 'qualche lettera in più';
+  }
+  var _univ = null;
+  function universo() {
+    if (_univ) return _univ;
+    var U = { clli: {}, nomi: {}, id: {} };
+    rc().concat(ra()).forEach(function (r) {
+      [['CLLI_A', 'GAT_A', 'Zona', 'Regione'], ['CLLI_Z', 'GAT_Z', 'Zona', 'Regione']].forEach(function (k) {
+        var c = String(r[k[0]] || '').toUpperCase(); if (!c) return;
+        if (!U.clli[c]) U.clli[c] = { nome: r[k[1]], zona: r[k[2]], reg: r[k[3]] };
+        var n = norm(r[k[1]] || '').trim(); if (n && !U.nomi[n]) U.nomi[n] = c;
+      });
+    });
+    rc().forEach(function (r) { var i = String(r.IdCollegamento || '').toUpperCase(); if (i) U.id[i] = 'RC'; });
+    ra().forEach(function (r) { var i = String(r.SubPath || '').toUpperCase(); if (i && !U.id[i]) U.id[i] = 'RA'; });
+    _univ = U; return U;
+  }
+  /* «Forse cercavi»: tutti i candidati vicini (CLLI, subpath, nomi di centrale), i più vicini prima */
+  function forseCercavi(q, soloNomi) {
+    var U = universo(), out = [], visti = {};
+    var aggiungi = function (tipo, scritto, cand, d) { var k = tipo + cand; if (visti[k]) return; visti[k] = 1; out.push({ tipo: tipo, scritto: scritto, cand: cand, d: d }); };
+    var parole = String(q).split(/[^A-Z0-9\/_\-]+/).filter(Boolean);
+    if (!soloNomi) parole.forEach(function (p) {
+      if (/^[A-Z0-9]{8}$/.test(p) && /[A-Z]{3}/.test(p) && !U.clli[p]) {
+        var c1 = Object.keys(U.clli).map(function (c) { return [c, distanza(p, c, 2)]; }).filter(function (x) { return x[1] <= 2; });
+        var vicini = c1.filter(function (x) { return x[1] <= 1; }); (vicini.length ? vicini : c1).forEach(function (x) { aggiungi('CLLI', p, x[0], x[1]); });
+      }
+      if (/^[A-Z]{3}[0-9OIL]{3}(\/[0-9OIL]+)?$/.test(p) && !U.id[p]) {
+        Object.keys(U.id).forEach(function (c) { var d = distanza(p, c, 1); if (d <= 1) aggiungi(U.id[c] === 'RC' ? 'Collegamento RC' : 'Subpath RA', p, c, d); });
+      }
+    });
+    var frase = parole.filter(function (w) { return !CORTESIA[w]; }).join(' ');
+    if (frase.length >= 4 && !/^[A-Z]{4}IT[A-Z0-9]{2}$/.test(frase) && !U.nomi[frase]) {
+      var max = frase.length <= 5 ? 1 : frase.length <= 10 ? 2 : 3;
+      Object.keys(U.nomi).forEach(function (n) { var d = distanza(frase, n, max); if (d <= max && d > 0) aggiungi('Centrale', frase, U.nomi[n], d); });
+    }
+    out.sort(function (a, b) { var ia = /invertite/.test(differenza(a.scritto, a.tipo === 'Centrale' ? norm(U.clli[a.cand].nome) : a.cand)) ? -0.25 : 0, ib = /invertite/.test(differenza(b.scritto, b.tipo === 'Centrale' ? norm(U.clli[b.cand].nome) : b.cand)) ? -0.25 : 0; return (a.d + ia) - (b.d + ib) || a.cand.localeCompare(b.cand); });
+    return out;
+  }
+  function tabellaForse(L, titolo) {
+    var U = universo();
+    return '<h6>🔤 ' + titolo + '</h6><div class="cc-k">' + L.length + (L.length === 1 ? ' candidato' : ' candidati') + ', i più vicini in alto. Clic sul codice per la scheda.</div><div class="cc-lunga"><table><tr><th>Scritto</th><th>Forse cercavi</th><th>Dove</th><th>Differenza</th><th></th></tr>' + L.map(function (x) {
+      var e = U.clli[x.cand], nomeC = x.tipo === 'Centrale' || x.tipo === 'CLLI';
+      var conf = x.tipo === 'Centrale' ? norm(e.nome) : x.cand;
+      return '<tr><td>' + esc(x.scritto) + '</td><td><button type="button" data-q="' + esc(x.cand) + '" style="border:0;background:none;color:#0066CC;cursor:pointer;padding:0;font-weight:700">' + esc(nomeC ? x.cand + ' · ' + e.nome : x.cand) + '</button><div class="cc-k">' + esc(x.tipo) + '</div></td><td>' + (nomeC ? esc((e.zona || '') + ' · ' + (e.reg || '')) : esc(x.tipo === 'Collegamento RC' ? 'DB RC' : 'DB RA')) + '</td><td>' + esc(differenza(x.scritto, conf)) + '</td><td>' + (nomeC ? bCampo(x.cand, 'p1', '📍 Partenza', 'Scrive la centrale in Partenza nel tab aperto') + bCampo(x.cand, 'a1', '🏁 Arrivo', 'Scrive la centrale in Arrivo nel tab aperto') : '') + '</td></tr>';
+    }).join('') + '</table></div>';
+  }
+  /* città: una parola che è l'inizio del nome di due o più centrali (TORINO → TORINO CENTRO, TORINO LANCIA…) */
+  var NON_CITTA = { COSTA: 1, COSTANO: 1, COSTO: 1, PREZZO: 1, SERVE: 1, SERVONO: 1, PASSA: 1, PASSANO: 1, PARTE: 1, ARRIVA: 1, VALE: 1, FARE: 1, DEVO: 1, POSSO: 1, QUANTO: 1, QUANTI: 1, QUANTE: 1, QUALI: 1, DOVE: 1, PERCHE: 1, COME: 1, QUANDO: 1, CENTRALE: 1, CENTRALI: 1, ZONA: 1, REGIONE: 1, AREA: 1, ATTIVI: 1, ATTIVO: 1 };
+  function centraliCitta(w) {
+    if (!w || w.length < 4 || /\d/.test(w) || NON_CITTA[w]) return [];
+    var U = universo(), re = new RegExp('^' + w.replace(/[^A-Z]/g, '') + '\\b');
+    return Object.keys(U.clli).filter(function (c) { return re.test(norm(U.clli[c].nome)); }).sort(function (a, b) { return String(U.clli[a].nome).localeCompare(String(U.clli[b].nome)); });
+  }
+  function tabellaCitta(w, L) {
+    var U = universo(), I = idx(), zone = {};
+    L.forEach(function (c) { zone[U.clli[c].zona] = 1; });
+    return '<h6>🏙️ ' + esc(w) + ': ' + L.length + ' centrali</h6><div class="cc-k">Centrali il cui nome comincia con ' + esc(w) + ' (zona ' + esc(Object.keys(zone).join(', ')) + '). Clic sul CLLI per la scheda.</div><div class="cc-lunga"><table><tr><th>CLLI</th><th>Centrale</th><th>Zona</th><th>Regione</th><th>Reti</th><th></th></tr>' + L.map(function (c) {
+      var e = U.clli[c], ei = I[c];
+      return '<tr><td><button type="button" data-q="' + esc(c) + '" style="border:0;background:none;color:#0066CC;cursor:pointer;padding:0;font-weight:700">' + esc(c) + '</button></td><td>' + esc(e.nome) + '</td><td>' + esc(e.zona) + '</td><td>' + esc(e.reg) + '</td><td>' + esc(ei ? reti(ei) : '') + '</td><td>' + bCampo(c, 'p1', '📍', 'Partenza') + bCampo(c, 'a1', '🏁', 'Arrivo') + '</td></tr>';
+    }).join('') + '</table></div>';
+  }
+  function base(t) {
+    var A = window.croCmp && croCmp.ariadne, ncVero = A && A.nc, h, nc = 0;
+    if (ncVero) A.nc = function () { nc++; };   /* la catena registra le non capite: si decide dopo */
+    try { h = rispondiBase(t); } finally { if (ncVero) A.nc = ncVero; }
+    return h;
+  }
+  function recupera(testo, q) {
+    var pulita = ripulisci(q), parole = pulita.split(' ').filter(Boolean);
+    /* città: resta una parola sola che è l'inizio del nome di più centrali */
+    if (parole.length === 1) { var Lc = centraliCitta(parole[0]); if (Lc.length >= 2) return { h: '<div class="cc-k">Ho letto: «' + esc(pulita) + '» (le altre parole non cambiano la ricerca).</div>' + tabellaCitta(parole[0], Lc), regola: 'città (V11.26|188)' }; }
+    if (pulita && pulita !== q) {
+      var h2 = base(pulita);
+      if (h2.indexOf(NON_TROVATO) !== 0) return { h: '<div class="cc-k">Ho letto: «' + esc(pulita) + '» (senza parole di cortesia, con i sinonimi del tool).</div>' + senzaWeb(h2), regola: 'parole di cortesia e sinonimi (V11.26|188), poi la catena' };
+    }
+    var F = forseCercavi(q, false);
+    if (F.length) return { h: tabellaForse(F, 'Non trovo «' + esc(F[0].scritto) + '». Forse cercavi:'), regola: 'Forse cercavi (V11.26|188)' };
+    return null;
+  }
+  /* «non ho capito»: cosa ho riconosciuto, cosa no, e domande che funzionano su quello che ho riconosciuto */
+  function nonCapito(testo, q) {
+    var pulita = ripulisci(q), ric = [], chips = [], usate = {}, U = universo();
+    var segna = function (s) { String(s).split(/\s+/).forEach(function (w) { if (w) usate[norm(w)] = 1; }); };
+    var z = /\bZONA ([A-Z]{2,5})\b/.exec(q), zone = {}; rc().concat(ra()).forEach(function (r) { zone[norm(r.Zona)] = 1; });
+    if (z && zone[z[1]]) { ric.push('zona ' + z[1]); segna('ZONA ' + z[1]); chips.push('centrali in zona ' + z[1], 'non attivi zona ' + z[1], 'Nodi A1 zona ' + z[1]); }
+    var Lg = luogo(q);
+    if (Lg && !(z && /^zona /.test(Lg.nome))) {
+      if (Lg.clli) { ric.push('la centrale ' + Lg.nome); segna(U.clli[Lg.clli] ? U.clli[Lg.clli].nome : ''); chips.push(Lg.clli, 'Nodi A1 vicini a ' + Lg.clli, 'Nodo A1 senza RTN da ' + Lg.clli); }
+      else if (!/^zona |^area /.test(Lg.nome)) { var r1 = String(Lg.nome).split('|')[0].trim(); ric.push('la regione ' + Lg.nome); segna(Lg.nome); norm(Lg.nome).split(/[^A-Z]+/).forEach(function (w) { usate[w] = 1; }); chips.push('centrali in ' + r1, 'non attivi ' + r1, 'data center ' + r1, 'Nodi A1 ' + r1); }
+    }
+    pulita.split(' ').forEach(function (w) { var Lc = centraliCitta(w); if (Lc.length >= 2 && !usate[w]) { ric.push(w + ' (' + Lc.length + ' centrali col nome che comincia così)'); usate[w] = 1; chips.push(w.charAt(0) + w.slice(1).toLowerCase()); } });
+    var S = filtroStato(q); if (S) { ric.push('lo stato ' + S.nome); segna(S.nome); }
+    var resto = pulita.split(' ').filter(function (w) { return w && !usate[w] && !STOP[w] && !(z && w === 'ZONA') && w.length > 1; });
+    var h = NON_TROVATO;
+    if (ric.length) h += '<div class="cc-card">Ho riconosciuto: ' + ric.map(function (x) { return '<span style="background:#dbeafe;padding:1px 6px;border-radius:6px">' + esc(x) + '</span>'; }).join(' ') + (resto.length ? '. Per ' + resto.map(function (x) { return '<span style="background:#fee2e2;padding:1px 6px;border-radius:6px">' + esc(x.toLowerCase()) + '</span>'; }).join(' ') + ' non ho né dati né regole.' : '.') + '</div><div class="cc-k" style="margin-top:6px">Su quello che ho riconosciuto posso rispondere a:</div><div class="cc-chips">' + chips.map(function (c) { return chip(c); }).join('') + '</div>';
+    else h += '<div class="cc-card">Non ho riconosciuto né una centrale né un CLLI, un subpath, una zona o una regione' + (resto.length ? ' in ' + resto.map(function (x) { return '«' + esc(x.toLowerCase()) + '»'; }).join(', ') : '') + '.</div><div class="cc-k" style="margin-top:6px">Domande di esempio:</div><div class="cc-chips">' + ['MILAITCG', 'CAM002', 'non attivi Lombardia', 'data center Lazio', 'centrali in zona PV'].map(function (c) { return chip(c); }).join('') + '</div>';
+    h += '<div class="cc-k" style="margin-top:6px">Prova con un CLLI (per esempio MILAITCG), un subpath (CLO201, AAM003/1), una C-FOS, il nome di una centrale, una sigla (OSNCP) o un argomento.' + (SECCO ? '' : ' La domanda è fra le non capite (📝).') + '</div>';
+    return h;
+  }
+  /* seguiti dell'Unificato: la domanda breve diventa un comando che la catena conosce già, con Partenza e Arrivo dei campi */
+  function seguitoUNI(q) {
+    if (q.split(/\s+/).length > 6 || /\b[A-Z]{4}IT[A-Z0-9]{2}\b/.test(q)) return null;
+    var v = function (id) { var x = document.getElementById(id); return x ? String(x.value || '') : ''; }, cl = function (t) { var m = /\(([A-Z0-9]{8,12})\)/.exec(t); return m ? m[1] : ''; };
+    var P = cl(v('uRouteStartInput')), Z = cl(v('uRouteEndInput')); if (!P || !Z) return null;
+    var t = q.replace(/[?!.]+$/, '').trim(), cmd = '', rif = P + ' → ' + Z;
+    if (/^(E |MA |ED |ANCHE )?(SENZA|CON) (LA )?RTN$/.test(t)) cmd = 'calcola ' + P + ' > ' + Z + (/SENZA/.test(t) ? ' senza RTN' : ' con RTN');
+    else if (/^(E |MA )?(AL CONTRARIO|AL ROVESCIO|INVERTI|INVERTILO|SCAMBIA|SCAMBIALI|NELL.ALTRO VERSO|DALL.ALTRA PARTE)$/.test(t)) { cmd = 'calcola ' + Z + ' > ' + P; rif = Z + ' → ' + P + ' (Partenza e Arrivo scambiati)'; }
+    else if (/^(E )?(QUANTI KM( IN TUTTO| TOTALI)?|KM( IN TUTTO| TOTALI)?|QUANTO E LUNGO|LUNGHEZZA|DISTANZA( TOTALE)?)$/.test(t)) cmd = 'percorso 1';
+    if (!cmd) return null;
+    TRACCIA = [['seguito dell’Unificato (V11.26|188): «' + t.toLowerCase() + '» → «' + cmd + '»', true]];
+    var h = rispondiBase(cmd), regole = TRACCIA; TRACCIA = null;
+    ULTIMA = { q: q, regole: regole, titolo: titolo(h) };
+    return '<div class="cc-k">Riferito a ' + esc(rif) + ', dai campi Partenza e Arrivo dell’Unificato. Ho eseguito «' + esc(cmd) + '».</div>' + h;
+  }
+  function chiHaRisposto(R) {   /* V11.26|189: la catena aggiunge sempre i testi in fondo: conta la prima regola vera */
+    var ok = (R || []).filter(function (x) { return x[1]; });
+    var p = ok.filter(function (x) { return !/testi del tool|aggiunto/.test(x[0]); })[0] || ok.filter(function (x) { return /testi del tool/.test(x[0]); })[0] || ok[0];
+    return { chi: p ? p[0] : '', inPiu: ok.filter(function (x) { return x !== p; }).map(function (x) { return x[0]; }) };
+  }
+  function titolo(h) { var m = /<h6>([\s\S]*?)<\/h6>/.exec(h); return m ? m[1].replace(/<[^>]+>/g, '') : String(h).replace(/<[^>]+>/g, ' ').trim().slice(0, 80); }
+  function rispostaRegola() {
+    if (!ULTIMA) return '<h6>🔧 Regola usata</h6><div class="cc-k">Fai prima una domanda: poi «/regola» ti dice quale parte dell’Assistente ha risposto.</div>';
+    var R = ULTIMA.regole || [], ok = R.filter(function (x) { return x[1]; });
+    return '<h6>🔧 Perché ho risposto così</h6><div class="cc-card" style="font-family:Consolas,monospace;font-size:12px;line-height:1.6">'
+      + 'Domanda: «' + esc(ULTIMA.q) + '»<br>'
+      + 'Regole provate, in ordine: ' + (R.length ? R.map(function (x) { return esc(x[0]) + ' ' + (x[1] ? '<b style="color:#15803d">✔</b>' : '<span style="color:#b91c1c">✗</span>'); }).join(' · ') : 'nessuna fra quelle con un nome') + '<br>'
+      + 'Ha risposto: <b>' + esc(chiHaRisposto(R).chi || 'una regola scritta dentro la catena') + '</b>' + (chiHaRisposto(R).inPiu.length ? '<br>In più: ' + esc(chiHaRisposto(R).inPiu.join(' \u00b7 ')) : '') + '<br>Titolo della risposta: ' + esc(ULTIMA.titolo || '') + '</div>'
+      + '<div class="cc-k">Alcune regole (verifica percorso, percorso tra X e Y, wizard, info live, novità dei DB) sono scritte dentro la catena e non hanno un nome: le riconosci dal titolo della risposta.</div>';
+  }
+  function rispondi(testo) {
+    var q = norm(testo).trim();
+    if (/^(REGOLA USATA|\/REGOLA|REGOLA)$/.test(q)) return rispostaRegola();
+    var hg = rispostaGuida(testo); if (hg) return hg.h;   /* V11.26|189 */
+    var hs = seguitoUNI(q); if (hs) return hs;
+    TRACCIA = [];
+    var A = window.croCmp && croCmp.ariadne, ncVero = A && A.nc, h;
+    if (ncVero) A.nc = function () {};
+    try { h = rispondiBase(testo); } finally { if (ncVero) A.nc = ncVero; }
+    var regole = TRACCIA; TRACCIA = null;
+    if (h.indexOf(NON_TROVATO) === 0) {
+      var x = recupera(testo, q);
+      if (x) { h = x.h + web(testo); regole.push([x.regola, true]); }
+      else { h = nonCapito(testo, q) + web(testo); regole.push(['non ho capito, con spiegazione (V11.26|188)', true]); if (ncVero && !SECCO) ncVero(testo, 'Assistente CRO'); }
+    } else if (/^<h6>📖 Nel tool<\/h6>/.test(h)) {
+      /* solo testi del tool: se la domanda somiglia al nome di una centrale si aggiunge «Forse cercavi», la risposta resta com'è */
+      var extra = '', pul = ripulisci(q);
+      if (pul && pul !== q) { var h2 = base(pul); if (h2.indexOf(NON_TROVATO) !== 0 && !/^<h6>\uD83D\uDCD6 Nel tool<\/h6>/.test(h2)) { extra += '<div class="cc-k" style="margin-top:10px;border-top:1px dashed #cbd5e1;padding-top:6px">Con le parole del tool (\u00ab' + esc(pul) + '\u00bb) trovo anche:</div>' + senzaWeb(h2); regole.push(['parole di cortesia e sinonimi, aggiunto in fondo (V11.26|188)', true]); } }
+      var F = forseCercavi(q, true); if (F.length) { extra += tabellaForse(F, 'Forse cercavi una centrale:'); regole.push(['Forse cercavi, aggiunto in fondo (V11.26|188)', true]); }
+      if (extra) h = conWeb(h, extra);
+    } else if (/^<h6>Domande non capite \((\d+)\)/.test(h) && +RegExp.$1 > 0) h = h + barraNc();
+    if (!SECCO) ULTIMA = { q: testo, regole: regole, titolo: titolo(h) };
+    return h;
+  }
+  /* registro delle non capite: Riprova tutte, Esporta per Claude, Togli quelle che ora rispondono */
+  var ESITI = [];
+  function ncLeggi() { try { return JSON.parse(localStorage.getItem('croAriadneNonCapite') || '[]'); } catch (e) { return []; } }
+  function ncNorm(t) { return String(t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim(); }
+  var AZIONI = /^(CALCOLA|\/PERCORSO)\b|PERCORS[OI] (TRA|FRA|DA)|STRAD[AE] |ROUTING|CAMMINO|WIZARD|COMPOSITORE|PRATICA|GUIDAMI|CONTROLL|VERIFIC|INFO LIVE|NOTIZIE|NEWS|NASCONDI|ATTIVA|DISATTIVA|PROGETT|IMPOSTA|CREA|PREPARA/;
+  function barraNc() {
+    return '<div class="cc-azioni" style="margin-top:6px"><button type="button" onclick="window.croAssNc.riprova(this)" title="Rifà tutte le domande dell’elenco con questa revisione e dice quali adesso hanno una risposta">🔁 Riprova tutte</button><button type="button" onclick="window.croAssNc.esporta()" title="TXT con domanda, esito con questa revisione e regola che ha risposto: da allegare quando chiedi a Claude di insegnarle">⬇ Esporta per Claude</button><button type="button" onclick="window.croAssNc.togli(this)" title="Toglie dall’elenco le domande che con Riprova tutte hanno avuto una risposta">🧹 Togli quelle che ora rispondono</button></div>';
+  }
+  function prova(t) {
+    if (AZIONI.test(norm(t))) return { esito: 'a mano', regola: 'la domanda fa partire azioni nel tool (ricerche, tab, wizard): usa ▶ Riprova' };
+    var u = ULTIMA, h; SECCO = true;
+    try { h = rispondi(t); } catch (e) { h = NON_TROVATO; } finally { SECCO = false; }
+    ULTIMA = u;
+    var vuota = h.indexOf(NON_TROVATO) === 0;
+    return { esito: vuota ? 'ancora no' : 'risponde', regola: vuota ? 'nessuna' : titolo(h) };
+  }
+  window.croAssNc = {
+    riprova: function (btn) {
+      var l = ncLeggi(); ESITI = l.map(function (x) { var p = prova(x.t); return { t: x.t, q: x.q, chi: x.chi, esito: p.esito, regola: p.regola }; });
+      var n = ESITI.filter(function (x) { return x.esito === 'risponde'; }).length;
+      if (btn) btn.textContent = '✔ Riprovate: ' + n + ' su ' + ESITI.length + ' ora rispondono';
+      msg('cc-b', '<h6>🔁 Riprova tutte (' + esc(revisione()) + ')</h6><div class="cc-k">' + n + ' domande su ' + ESITI.length + ' adesso hanno una risposta. Clic sulla domanda per rifarla e vedere la risposta.</div><div class="cc-lunga"><table><tr><th>Domanda</th><th>Esito</th><th>Chi ha risposto</th></tr>' + ESITI.map(function (x) {
+        return '<tr><td><button type="button" data-q="' + esc(x.t) + '" style="border:0;background:none;color:#0066CC;cursor:pointer;padding:0;text-align:left">' + esc(x.t) + '</button></td><td style="font-weight:700;color:' + (x.esito === 'risponde' ? '#15803d' : x.esito === 'a mano' ? '#b45309' : '#b91c1c') + '">' + esc(x.esito) + '</td><td>' + esc(x.regola) + '</td></tr>';
+      }).join('') + '</table></div>' + barraNc());
+    },
+    esporta: function () {
+      var l = ncLeggi(); if (!l.length) { if (typeof showToast === 'function') showToast('Nessuna domanda non capita da esportare', 'warning'); return; }
+      var es = {}; ESITI.forEach(function (x) { es[ncNorm(x.t)] = x; });
+      var righe = ['DOMANDE NON CAPITE DALL’ASSISTENTE CRO', 'Revisione: ' + revisione(), 'Esportato: ' + new Date().toLocaleString('it-IT'), 'Esito e regola: ' + (ESITI.length ? 'da «Riprova tutte» con questa revisione' : 'premi prima «Riprova tutte» per averli'), ''];
+      l.forEach(function (x, i) { var e = es[ncNorm(x.t)]; righe.push((i + 1) + '. ' + x.t, '   quando: ' + new Date(x.q).toLocaleString('it-IT') + ' · chi: ' + (x.chi || 'Crò'), '   esito: ' + (e ? e.esito + ' · ' + e.regola : 'non riprovata'), ''); });
+      scaricaBlob(new Blob([righe.join('\r\n')], { type: 'text/plain;charset=utf-8' }), 'CRO_domande_non_capite_' + revisione().replace(/[^0-9A-Za-z]+/g, '_') + '.txt');
+    },
+    togli: function (btn) {
+      if (!ESITI.length) { if (typeof showToast === 'function') showToast('Premi prima «Riprova tutte»', 'warning'); return; }
+      var ok = {}; ESITI.forEach(function (x) { if (x.esito === 'risponde') ok[ncNorm(x.t)] = 1; });
+      var l = ncLeggi(), resta = l.filter(function (x) { return !ok[ncNorm(x.t)]; }), n = l.length - resta.length;
+      try { localStorage.setItem('croAriadneNonCapite', JSON.stringify(resta)); } catch (e) {}
+      if (window.croNcAggiorna) window.croNcAggiorna();
+      if (btn) { btn.textContent = '✔ Tolte ' + n; btn.disabled = true; }
+    }
+  };
+  /* ════ V11.26|189 · GUIDA RAPIDA: tre schede (Cosa so fare, Comandi veloci, Cosa non so fare) al posto di Limiti e dei chip
+     del benvenuto; «aiuto X» propone domande su X; «?» approfondisce la domanda di prima; comandi / con o senza accenti,
+     apostrofi e maiuscole. Tutti i bottoni del benvenuto di prima sono nella scheda «Cosa so fare», con gli stessi attributi. ════ */
+  var B = {
+    clli: '<button type="button" data-c="un CLLI" data-t="{MILAITCG}">un CLLI: MILAITCG</button>',
+    nome: '<button type="button" data-c="il nome di una centrale" data-t="{Torino Lancia}">una Centrale: Torino Lancia</button>',
+    rc: '<button type="button" data-c="un subpath RC" data-t="{CLO201}">un Subpath RC: CLO201</button>',
+    ra: '<button type="button" data-c="un subpath RA" data-t="{AAM003/1}">un Subpath RA: AAM003/1</button>',
+    stato: '<button type="button" data-c="uno stato (ATTIVO, NON ATTIVO, IN CESSAZIONE, DA VERIFICARE SU NNI)" data-t="{IN CESSAZIONE}">uno Stato: CLLI IN CESSAZIONE</button>',
+    nonatt: '<button type="button" data-c="una regione" data-t="non attivi {Lombardia}">uno Stato: NON Attivi in Lombardia</button>',
+    dc: '<button type="button" data-c="una regione" data-t="data center {Piemonte}">Data Center in Piemonte</button>',
+    due: '<button type="button" data-c="due CLLI" data-t="{MILAITCG MILAITCH}">Collegamenti tra due CLLI</button>',
+    cfos2: '<button type="button" data-c="due subpath" data-t="{CLO201 CLO202} C-FOS in comune">C-FOS in comune tra due Subpath</button>',
+    il1: '<button type="button" data-q="info live">riattiva le info live</button>',
+    il2: '<button type="button" data-q="nascondi info live">nascondi le info live</button>',
+    il3: '<button type="button" data-q="mostra meteo">mostra il meteo</button>',
+    il4: '<button type="button" data-q="abilita notizie">abilita le notizie</button>',
+    wiz: '<button type="button" data-q="Wizard della Progettazione">🧭 Wizard della Progettazione</button>',
+    mod: '<button type="button" data-c="la distanza in km (e la velocità: 1G, 10G o 100G)" data-t="modulo ottico 100G per {2} km">📡 Moduli ottici per distanza</button>',
+    prat: '<button type="button" data-q="Imposta una pratica">🗂️ Imposta una pratica</button>',
+    a1: '<button type="button" data-c="una centrale (nome o CLLI)" data-t="Nodi A1 vicini a {Milano Malpaga}">Nodi A1 vicini a una centrale</button>',
+    rtn: '<button type="button" data-c="una centrale (nome o CLLI)" data-t="Nodo A1 senza RTN da {NOVAITAJ}">Nodo A1 senza RTN</button>',
+    t1: '<button type="button" data-c="una regione, zona o area" data-t="centrali RA T1 in {zona PV}">Centrali RA T1 di una zona</button>',
+    tab: '<button type="button" data-c="il nome di un tab" data-t="{Progettazione SdF}">un tab: Progettazione SdF</button>',
+    arg: '<button type="button" data-c="un argomento" data-t="{regola coda cliente}">un argomento</button>',
+    sigla: '<button type="button" data-c="una sigla" data-t="{OSNCP}">una Sigla: OSNCP</button>',
+    app: '<button type="button" data-c="un tipo di apparato" data-t="{PXM3}">un tipo di apparato: PXM3</button>',
+    kmz: '<button type="button" data-q="KMZ">come si fa il KMZ</button>',
+    fa1: '<button type="button" data-q="Trova Nodi A1">una funzione: Trova Nodi A1</button>',
+    podio: '<button type="button" data-q="Podio dei Div">il Podio dei Div</button>',
+    nov: '<button type="button" data-q="novità">novità dei DB</button>'
+  };
+  function q2(t, nuovo) { return '<button type="button" data-q="' + esc(t) + '"' + (nuovo ? ' class="gr-n" title="Nuovo nella V11.26|188-189"' : '') + '>' + esc(t) + '</button>'; }
+  /* righe della scheda «Cosa so fare»: [gruppo] oppure [vuoi sapere, esempi (html), ti rispondo con] */
+  var GUIDA_SO = [
+    ['🏢 Una centrale'],
+    ['Tutto su una centrale', B.clli + B.nome, 'la scheda in tre parti: la centrale, i collegamenti che partono o arrivano lì, quelli in transito con le C-FOS'],
+    ['Le centrali di una città', q2('torino', 1), 'tabella di tutte le centrali col nome che comincia così, con zona, regione e reti'],
+    ['Nodi A1', B.a1 + B.rtn, 'i Nodi A1 più vicini; il primo Nodo A1 raggiungibile senza RTN'],
+    ['Dopo una centrale', q2('e i Nodi A1 vicini?') + q2('i collegamenti?'), 'la stessa centrale di cui stai parlando, senza riscriverla'],
+    ['🔗 Un collegamento'],
+    ['Un subpath, un arco o un ramo', B.rc + B.ra, 'la scheda con C-FOS, OTS, stato e note NNI'],
+    ['Una C-FOS', q2('PESCITAK/PESCITAL/C-FOS/00001'), 'i collegamenti che usano quel cavo'],
+    ['Fra due centrali o due subpath', B.due + B.cfos2, 'i collegamenti diretti; le C-FOS in comune'],
+    ['📋 Elenchi per stato e luogo'],
+    ['Per stato e regione o zona', B.stato + B.nonatt + B.t1, 'elenco completo in una tabella che scorre, da esportare'],
+    ['Data center e DB', B.dc + B.nov + q2('anomalie DB'), 'i data center; cosa è cambiato con l’ultimo caricamento; il controllo qualità dei DB'],
+    ['🔀 Percorsi nell’Unificato'],
+    ['Calcolare', q2('calcola EUR > BELLE ARTI') + q2('percorso tra EUR e ARDEATINA'), 'compilo l’Unificato e premo Calcola per te; il calcolo è quello del tab'],
+    ['Senza diversificati', q2('esiste una strada senza diversificati tra EUR e ARDEATINA?'), 'la verifica, con Std, Div e C-FOS in comune'],
+    ['Dopo il calcolo', q2('e senza RTN?', 1) + q2('e al contrario?', 1) + q2('quanti km in tutto?', 1) + q2('/perche 1') + q2('/confronta 1 e 3') + q2('/div 1'), 'lo stesso percorso con un cambio; perché un risultato è in quella posizione; due risultati affiancati'],
+    ['🧭 Progettazione'],
+    ['Partire da una frase', q2('progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP') + B.prat + B.wiz, 'compilo la Progettazione, poi passo a Crò per la guida'],
+    ['Moduli ottici', B.mod, 'il modulo con la portata giusta per la distanza'],
+    ['📖 Testi del tool'],
+    ['Spiegazioni', B.sigla + B.app + B.tab + B.arg + B.kmz + B.fa1 + B.podio, 'il punto del tool che ne parla, con «Vai al punto»'],
+    ['📡 Info live (la striscia in fondo)'],
+    ['Accendere e spegnere', B.il1 + B.il2 + B.il3 + B.il4, 'la striscia, il meteo, le notizie'],
+    ['✍️ Se scrivi male'],
+    ['Errori e parole in più', q2('MILAITGC', 1) + q2('dimmi qualcosa su torino per favore', 1) + q2('nodi dismessi Lombardia', 1), '«Forse cercavi» con tutti i candidati vicini; ignoro le parole di cortesia; capisco nodo, sede, dismesso, fibra, DC'],
+    ['🤖 L’Assistente stesso'],
+    ['Su una parola', q2('aiuto NOVAITAJ', 1) + q2('?', 1), '«aiuto X» propone le domande su X; «?» da solo approfondisce la risposta di prima'],
+    ['Cosa non ho capito', q2('domande non capite') + q2('/regola', 1), 'l’elenco (anche dal bottone 📝) con Riprova tutte ed Esporta per Claude; quale regola ha dato l’ultima risposta'],
+    ['Tenere e passare le risposte', q2('/fascicolo'), 'le risposte fissate con 📌; nella barra ⬇ TXT e ⬇ Word esportano la conversazione; sotto ogni risposta «🤖 Chiedi a Claude»'],
+    ['Aiuto su un campo', '<span class="cc-k">il (?) accanto ai campi dei tab</span>', 'cosa accetta il campo, le regole, la Guida e le azioni']
+  ];
+  var GUIDA_CMD = [
+    ['/scheda', '/scheda NOVAITAJ', 'NOVAITAJ', 'scheda di una centrale o di un subpath'],
+    ['/a1', '/a1 NOVAITAJ', 'Nodi A1 vicini a NOVAITAJ', 'Nodi A1 vicini a una centrale'],
+    ['/rtn', '/rtn NOVAITAJ', 'Nodo A1 senza RTN da NOVAITAJ', 'primo Nodo A1 raggiungibile senza RTN'],
+    ['/zona', '/zona PV', 'centrali in zona PV', 'centrali di una zona, regione o area (anche /zona RA T1 PV)'],
+    ['/percorso', '/percorso EUR > BELLE ARTI', 'calcola EUR > BELLE ARTI', 'compila l’Unificato e calcola'],
+    ['/perche', '/perche 1', 'perché il percorso 1', 'perché un <b>percorso</b> è in quella posizione'],
+    ['/confronta', '/confronta 1 e 3', 'confronta 1 e 3', 'due risultati affiancati'],
+    ['/div', '/div 1', 'Div più diversificata del 1', 'il risultato meno sovrapposto'],
+    ['/anomalie', '/anomalie RC', 'anomalie DB RC', 'controllo qualità dei DB'],
+    ['/fascicolo', '/fascicolo', '', 'le risposte fissate con 📌'],
+    ['/regola', '/regola', 'regola', 'quale parte dell’<b>Assistente</b> ha dato l’ultima risposta'],
+    ['/guida', '/guida', 'aiuto', 'questa guida, scheda «Cosa so fare»'],
+    ['/comandi', '/comandi', 'comandi', 'questa guida, scheda «Comandi veloci»'],
+    ['/limiti', '/limiti', 'limiti', 'questa guida, scheda «Cosa non so fare»']
+  ];
+  function dateDB() {
+    var o = [], w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    while (w.nextNode() && o.length < 4) { var t = String(w.currentNode.nodeValue).trim(); if (/^R[AC]:\s*\d\d\/\d\d\/\d\d$/.test(t) && o.indexOf(t) < 0) o.push(t); }
+    return o.length ? 'oggi ' + o.join(', ') : 'le date sono nella home';
+  }
+  function guidaHtml(n, filtro, sopra) {
+    var schede = ['✅ Cosa so fare', '⚡ Comandi veloci (' + GUIDA_CMD.length + ')', '🚫 Cosa non so fare'];
+    var h = '<div class="gr" data-gr="' + n + '"><h6>📘 Guida rapida dell’Assistente</h6>' + (sopra || '')
+      + '<div class="gr-tabs">' + schede.map(function (x, i) { return '<button type="button" class="' + (i === n ? 'on' : '') + '" onclick="window.croAssGuida.tab(this,' + i + ')">' + x + '</button>'; }).join('') + '</div>';
+    /* scheda 0 */
+    h += '<div class="gr-p" data-p="0"' + (n === 0 ? '' : ' hidden') + '><input type="text" class="gr-f" placeholder="🔎 Filtra le righe: scrivi una parola (RTN, stato, Torino, C-FOS…)" value="' + esc(filtro || '') + '" oninput="window.croAssGuida.filtra(this)"><div class="cc-k gr-0" hidden>Nessuna riga parla di «<span></span>»: cancella il filtro o scrivi la domanda nella casella.</div>'
+      + '<table class="gr-t"><tr><th style="width:23%">Vuoi sapere</th><th style="width:42%">Scrivi (clic per provare)</th><th>Ti rispondo con</th></tr>';
+    var gruppo = '', righe = [], fp = norm(filtro || '').trim().split(/\s+/).filter(Boolean), vis = 0;
+    GUIDA_SO.forEach(function (r) {
+      if (r.length === 1) { gruppo = r[0]; righe.push({ g: r[0], v: 0 }); return; }
+      var ds = norm(gruppo + ' ' + r[0] + ' ' + r[1].replace(/<[^>]+>/g, ' ') + ' ' + r[2]), ok = fp.every(function (p) { return ds.indexOf(p) >= 0; });
+      if (ok) { vis++; righe.filter(function (x) { return x.g; }).slice(-1)[0].v++; }
+      righe.push({ h: '<tr class="gr-r" data-s="' + esc(ds) + '"' + (ok ? '' : ' hidden') + '><td>' + r[0] + '</td><td><div class="cc-chips" style="margin-top:0">' + r[1] + '</div></td><td>' + r[2] + '</td></tr>' });
+    });
+    if (fp.length && !vis) { righe.forEach(function (x) { if (x.h) x.h = x.h.replace(' hidden>', '>'); x.v = 1; }); }
+    h = h.replace('<div class="cc-k gr-0" hidden>', '<div class="cc-k gr-0"' + (fp.length && !vis ? '' : ' hidden') + '>').replace('<span></span>', '<span>' + esc(filtro || '') + '</span>');
+    righe.forEach(function (x) { h += x.g ? '<tr class="gr-g"' + (x.v ? '' : ' hidden') + '><td colspan="3">' + x.g + '</td></tr>' : x.h; });
+    h += '</table><div class="cc-k" style="margin-top:5px">Clic su un esempio: quelli con ✏️ vanno nella casella con la parte da cambiare già selezionata (scrivi la tua centrale, CLLI o regione e premi Invio), gli altri partono subito. In arancio le novità della 188 e della 189.</div></div>';
+    /* scheda 1 */
+    h += '<div class="gr-p" data-p="1"' + (n === 1 ? '' : ' hidden') + '><div class="cc-k" style="margin-bottom:6px">Scrivi <code>/</code> nella casella e compaiono i suggerimenti. Ogni comando è una scorciatoia: fa la stessa cosa della frase in «Equivale a». Vanno bene anche con accenti, apostrofi e maiuscole (<code>/Perché 1</code>, <code>/PERCHE’ 1</code>, <code>/ perche1</code>).</div>'
+      + '<table class="gr-t"><tr><th>Comando</th><th>Esempio (clic)</th><th>Equivale a</th><th>Cosa fa</th></tr>'
+      + GUIDA_CMD.map(function (c) { return '<tr><td><code>' + c[0] + '</code>' + (/regola|guida|comandi|limiti/.test(c[0]) ? '<span class="gr-v">' + (c[0] === '/regola' ? '188' : '189') + '</span>' : '') + '</td><td><div class="cc-chips" style="margin-top:0">' + q2(c[1]) + '</div></td><td style="color:#475569">' + esc(c[2]) + '</td><td>' + c[3] + '</td></tr>'; }).join('')
+      + '</table><div class="cc-card" style="margin-top:8px"><b>/perche oppure /regola?</b> /perche spiega i risultati della ricerca (perché il percorso 1 è primo). /regola spiega l’Assistente (quale regola ha capito la tua domanda).</div>'
+      + '<table class="gr-t" style="margin-top:8px"><tr><th>Altri tasti e parole</th><th>Cosa fanno</th></tr>'
+      + '<tr><td><code>?</code> da solo</td><td>dopo una risposta: approfondisce, con le domande su quello di cui stavi parlando; all’inizio: ti chiede cosa ti serve</td></tr>'
+      + '<tr><td><code>aiuto NOVAITAJ</code></td><td>questa scheda «Cosa so fare» con, in cima, le domande su NOVAITAJ (vale per un CLLI, un subpath, una centrale, una città, una zona o una regione); con una parola qualsiasi filtra le righe</td></tr>'
+      + '<tr><td><code>spiegami meglio</code>, <code>approfondisci</code></td><td>come il <code>?</code> da solo</td></tr>'
+      + '<tr><td>(?) accanto a un campo</td><td>aiuto su quel campo</td></tr>'
+      + '<tr><td><code>Ctrl+K</code></td><td>cerca ovunque: centrali, collegamenti, sezioni della Guida, tab</td></tr>'
+      + '<tr><td>↑ ↓ nella casella</td><td>le domande che hai già fatto, oppure i suggerimenti quando sono aperti</td></tr>'
+      + '<tr><td>📝 nella barra</td><td>domande non capite, con Riprova tutte ed Esporta per Claude</td></tr></table></div>';
+    /* scheda 2: gli stessi punti dei Limiti, scritti come «non so → usa invece» */
+    h += '<div class="gr-p" data-p="2"' + (n === 2 ? '' : ' hidden') + '><table class="gr-t gr-no"><tr><th style="width:40%">Non so</th><th>Cosa usare invece</th></tr>'
+      + '<tr><td>capire le frasi: non sono un’intelligenza artificiale. Riconosco le parole che il tool conosce (CLLI, subpath, archi e rami, C-FOS, nomi di centrale, sigle, argomenti dei testi) e le domande guidate della scheda «Cosa so fare»</td><td>scrivi una parola chiave o un comando; se non capisco ti dico cosa ho riconosciuto. Ricordo la centrale di cui stai parlando: dopo una centrale puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?». Per un ragionamento vero: «🤖 Chiedi a Claude»</td></tr>'
+      + '<tr><td>calcolare i percorsi da solo</td><td>con «calcola A &gt; B» compilo l’Unificato e premo Calcola: il calcolo è quello dei tab di ricerca RA, RC e Unificato</td></tr>'
+      + '<tr><td>calcolare i costi</td><td>il tab Analisi Costi</td></tr>'
+      + '<tr><td>conoscere il database dei costi, i percorsi già cercati, la cronologia e i file che importi</td><td>i tab di ricerca e Analisi Costi</td></tr>'
+      + '<tr><td>andare oltre i DB caricati nel tool (' + esc(dateDB()) + ')</td><td>stati, C-FOS e distanze vanno sempre verificati su NNI</td></tr>'
+      + '<tr><td>garantire quello che trovano i link internet</td><td>sono ricerche esterne: le informazioni trovate lì non sono verificate</td></tr>'
+      + '<tr><td>mandare dati fuori dal PC da solo</td><td>«🤖 Chiedi a Claude» (sotto ogni risposta) prepara una domanda con i dati del tool, la copia negli appunti e apre claude.ai: la incolli e decidi tu se inviarla. Il testo che incolli esce dalla rete aziendale, quindi usalo solo se la policy lo consente</td></tr>'
+      + '</table></div></div>';
+    return h;
+  }
+  /* aiuto X, «?»: cosa c'è nella domanda (centrale, subpath, città, zona, regione) e quali domande funzionano su quello */
+  function entita(testo) {
+    var q = norm(testo).trim(), U = universo(), m;
+    if ((m = /\b[A-Z]{4}IT[A-Z0-9]{2}\b/.exec(q)) && U.clli[m[0]]) { var e = U.clli[m[0]]; return { tipo: 'clli', clli: m[0], nome: e.nome, zona: e.zona, reg: e.reg }; }
+    var ps = q.split(/[^A-Z0-9\/_\-]+/).filter(Boolean);
+    for (var i = 0; i < ps.length; i++) if (U.id[ps[i]]) {
+      var p = ps[i], row = U.id[p] === 'RC' ? rc().filter(function (r) { return String(r.IdCollegamento).toUpperCase() === p; })[0] : ra().filter(function (r) { return String(r.SubPath).toUpperCase() === p; })[0];
+      return { tipo: 'id', id: p, rete: U.id[p], a: row && row.CLLI_A, z: row && row.CLLI_Z, zona: row && row.Zona, reg: row && row.Regione };
+    }
+    var z = /\bZONA ([A-Z]{2,5})\b/.exec(q); if (z) return { tipo: 'zona', zona: z[1] };
+    var pul = ripulisci(q.replace(/^AIUTO\b/, '')), w1 = pul.split(' ').filter(Boolean);
+    if (w1.length === 1) { var Lc = centraliCitta(w1[0]); if (Lc.length >= 2) return { tipo: 'citta', w: w1[0], n: Lc.length, primo: Lc[0] }; }
+    var L = luogo(q);
+    if (L && L.clli && U.clli[L.clli]) { var e2 = U.clli[L.clli]; return { tipo: 'clli', clli: L.clli, nome: e2.nome, zona: e2.zona, reg: e2.reg }; }
+    if (L && !/^zona |^area /.test(L.nome)) return { tipo: 'regione', reg: String(L.nome).split('|')[0].trim(), nome: L.nome };
+    return null;
+  }
+  function proposte(e) {
+    if (!e) return null;
+    var P = [], tit = '';
+    if (e.tipo === 'clli') { tit = e.clli + ' · ' + e.nome; P = [e.clli, 'Nodi A1 vicini a ' + e.clli, 'Nodo A1 senza RTN da ' + e.clli, 'centrali in zona ' + e.zona, 'non attivi zona ' + e.zona, 'data center ' + String(e.reg).split('|')[0].trim()]; }
+    else if (e.tipo === 'id') { tit = e.id + ' (' + e.rete + ')'; P = [e.id].concat(e.a ? [e.a] : [], e.z ? [e.z] : [], e.a ? ['Nodi A1 vicini a ' + e.a] : [], e.zona ? ['non attivi zona ' + e.zona] : []); }
+    else if (e.tipo === 'zona') { tit = 'zona ' + e.zona; P = ['centrali in zona ' + e.zona, 'non attivi zona ' + e.zona, 'Nodi A1 zona ' + e.zona, 'centrali RA T1 in zona ' + e.zona]; }
+    else if (e.tipo === 'regione') { tit = e.nome; P = ['centrali in ' + e.reg, 'non attivi ' + e.reg, 'data center ' + e.reg, 'Nodi A1 ' + e.reg]; }
+    else if (e.tipo === 'citta') { tit = e.w + ' (' + e.n + ' centrali)'; P = [e.w.charAt(0) + e.w.slice(1).toLowerCase(), e.primo, 'Nodi A1 vicini a ' + e.primo]; }
+    return { tit: tit, P: P };
+  }
+  function boxProposte(pr, intro) {
+    return '<div class="cc-card gr-su"><b>' + intro + ' ' + esc(pr.tit) + '</b> puoi chiedere:<div class="cc-chips" style="margin-top:4px">' + pr.P.map(function (x) { return q2(x); }).join('') + '</div></div>';
+  }
+  function bottoniGuida() {
+    return '<div class="cc-chips gr-tre">' + ['✅ Cosa so fare', '⚡ Comandi veloci', '🚫 Cosa non so fare'].map(function (x, i) { return '<button type="button" onclick="window.croAssGuida.apri(' + i + ')">' + x + '</button>'; }).join('') + '</div>';
+  }
+  function approfondisci() {
+    if (!ULTIMA) return '<h6>❓ Cosa ti serve?</h6><div class="cc-k">Un punto interrogativo da solo può voler dire tante cose. Apri la guida dove ti serve, oppure scrivi la domanda (un CLLI, un subpath, una centrale, una città, una regione).</div>' + bottoniGuida();
+    var e = entita(ULTIMA.q), chi = chiHaRisposto(ULTIMA.regole).chi;
+    var h = '<h6>🔎 Approfondisco: «' + esc(ULTIMA.q) + '»</h6>';
+    if (chi) h += '<div class="cc-k">Ti ha risposto la regola «' + esc(chi) + '» (dettagli con /regola).</div>';
+    var pr = proposte(e);
+    if (pr) h += boxProposte(pr, 'Su');
+    else if (/calcola|percorso|confronta|Div|Unificato/i.test(chi + ' ' + ULTIMA.titolo)) h += '<div class="cc-card gr-su"><b>Sul percorso</b> puoi chiedere:<div class="cc-chips" style="margin-top:4px">' + ['percorso 1', '/perche 1', '/confronta 1 e 2', '/div 1', 'e senza RTN?', 'e al contrario?'].map(function (x) { return q2(x); }).join('') + '</div></div>';
+    else h += '<div class="cc-k">Nella domanda di prima non ho trovato una centrale, un subpath, una città, una zona o una regione su cui proporti altro.</div>';
+    return h + '<div class="cc-k" style="margin-top:6px">Oppure apri la guida:</div>' + bottoniGuida();
+  }
+  /* comandi /: accenti, apostrofi, maiuscole, spazi e numeri attaccati non contano */
+  var ALIAS = { perche: 'perche', percheil: 'perche', percorsi: 'percorso', calcola: 'percorso', regole: 'regola', schede: 'scheda', info: 'scheda', nodia1: 'a1', nodoa1: 'a1', zone: 'zona', anomalia: 'anomalie', confronto: 'confronta', diversificata: 'div', fascicoli: 'fascicolo', aiuto: 'guida', help: 'guida', comando: 'comandi', limite: 'limiti' };
+  function normCmd(t) {
+    var m = /^\s*[\/\\]\s*([^\s\d]*)\s*(.*)$/.exec(String(t)); if (!m) return t;
+    var n = m[1].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+    var nomi = COMANDI.map(function (c) { return c[0].slice(1); });
+    var c = nomi.indexOf(n) >= 0 ? n : ALIAS[n] || '';
+    if (!c && n.length >= 3) { var pf = nomi.filter(function (x) { return x.indexOf(n) === 0; }); if (pf.length === 1) c = pf[0]; }
+    if (!c) return t;
+    return '/' + c + (m[2] ? ' ' + m[2].trim() : '');
+  }
+  (function () {
+    if (document.getElementById('croGuidaCss')) return;
+    var st = document.createElement('style'); st.id = 'croGuidaCss';
+    st.textContent = '.gr-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 8px}.gr-tabs button{padding:5px 12px;border-radius:14px;border:1px solid #cbd5e1;font-size:12.5px;font-weight:600;color:#334155;background:#fff;cursor:pointer}'
+      + '.gr-tabs button.on{background:#1f3864;color:#fff;border-color:#1f3864}.gr-f{width:100%;box-sizing:border-box;padding:6px 9px;border:1px solid #cbd5e1;border-radius:8px;font-size:12.5px;margin-bottom:6px}'
+      + '.gr-t{width:100%;border-collapse:collapse;font-size:12.5px}.gr-t th{background:#f1f5f9;text-align:left;padding:4px 6px;color:#334155;font-size:11.5px}.gr-t td{padding:4px 6px;border-bottom:1px solid #eef2f7;vertical-align:top}'
+      + '#croChat .gr-t td,#croChat .gr-t th{border:0;border-bottom:1px solid #eef2f7;padding:4px 6px;vertical-align:top}.gr-f{text-transform:none!important}.gr-f::placeholder{text-transform:none!important}.gr-t .gr-g td{background:#eef4ff;font-weight:700;color:#1f3864;padding-top:7px}.gr-t code,.gr code{background:#f1f5f9;border-radius:4px;padding:0 4px;font-weight:700;color:#1f3864}'
+      + '.gr button.gr-n{border-color:#f59e0b!important;background:#fffbeb!important}.gr-v{background:#f59e0b;color:#fff;font-size:9.5px;font-weight:700;border-radius:5px;padding:0 4px;margin-left:4px}.gr-no td:first-child{color:#991b1b;font-weight:600}'
+      + '.gr-su{border-left:3px solid #0066cc;margin:4px 0 6px}.gr-tre{margin:8px 0}.gr-tre button{font-weight:600}';
+    document.head.appendChild(st);
+  })();
+  var _traduci = traduci;
+  traduci = function (t) { var s = String(t).trim(); if (/^[\/\\]$/.test(s)) return 'comandi'; return _traduci(normCmd(t)); };
+  window.croAssGuida = {
+    apri: function (n, filtro) { msg('cc-b', guidaHtml(n || 0, filtro)); },
+    tab: function (b, n) {
+      var g = b.closest('.gr'); if (!g) return;
+      Array.prototype.forEach.call(g.querySelectorAll('.gr-tabs button'), function (x, i) { x.classList.toggle('on', i === n); });
+      Array.prototype.forEach.call(g.querySelectorAll('.gr-p'), function (p) { p.hidden = +p.getAttribute('data-p') !== n; });
+    },
+    filtra: function (inp) {
+      var g = inp.closest('.gr'), f = norm(inp.value).trim(), parole = f.split(/\s+/).filter(Boolean), vis = 0, gr = null, grVis = false;
+      var rows = g.querySelectorAll('.gr-p[data-p="0"] tr');
+      var chiudi = function () { if (gr) gr.hidden = !grVis; };
+      Array.prototype.forEach.call(rows, function (r) {
+        if (r.classList.contains('gr-g')) { chiudi(); gr = r; grVis = false; return; }
+        if (!r.classList.contains('gr-r')) return;
+        var s = r.getAttribute('data-s') || '', ok = parole.every(function (p) { return s.indexOf(p) >= 0; });
+        r.hidden = !ok; if (ok) { vis++; grVis = true; }
+      });
+      chiudi();
+      var z = g.querySelector('.gr-0'); if (z) { z.hidden = vis > 0 || !f; z.querySelector('span').textContent = inp.value; }
+    }
+  };
+  /* la nuova guida al posto di aiuto, limiti e «?», prima di tutto il resto */
+  function rispostaGuida(testo) {
+    var q = norm(testo).trim().replace(/\s+/g, ' ');
+    if (/^(AIUTO|HELP|GUIDA|GUIDA RAPIDA|COSA SAI FARE|COSA PUOI FARE|\/GUIDA)$/.test(q)) return { h: guidaHtml(0), g: 1 };
+    if (/^(LIMITI|COSA NON SAI FARE|\/LIMITI)$/.test(q)) return { h: guidaHtml(2), g: 1 };
+    if (/^(COMANDI|COMANDI VELOCI|\/COMANDI|\/)$/.test(q)) return { h: guidaHtml(1), g: 1 };
+    if (/^(\?+|SPIEGAMI MEGLIO|SPIEGA MEGLIO|APPROFONDISCI|DIMMI DI PIU|IN CHE SENSO\??|E QUINDI\??)$/.test(q)) return { h: approfondisci(), g: 1 };
+    if (/^\s*[\/\\]\s*[^\s\d]/.test(testo) && normCmd(testo) === testo) {
+      var nc = (/^\s*[\/\\]\s*([^\s\d]*)/.exec(testo) || ['', ''])[1], nn = nc.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '');
+      var sim = COMANDI.filter(function (c) { var x = c[0].slice(1); return x.indexOf(nn) === 0 || nn.indexOf(x) === 0 || distanza(nn.toUpperCase(), x.toUpperCase(), 2) <= 2; });
+      return { h: guidaHtml(1, '', '<div class="cc-card gr-su">Non conosco il comando <code>/' + esc(nc) + '</code>.' + (sim.length ? ' Forse cercavi:<div class="cc-chips" style="margin-top:4px">' + sim.map(function (c) { return q2(c[2]); }).join('') + '</div>' : ' Qui sotto ci sono tutti quelli che conosco.') + '</div>'), g: 1 };
+    }
+    var m = /^(?:AIUTO|HELP|GUIDA)\s+(?!CAMPO\b)(.+)$/.exec(q);
+    if (m) {
+      var e = entita(m[1]), pr = proposte(e);
+      if (pr) return { h: guidaHtml(0, '', boxProposte(pr, 'Su')), g: 1 };
+      var x = String(testo).trim().replace(/^\s*(aiuto|help|guida)\s+/i, '');
+      return { h: guidaHtml(0, x), g: 1, filtra: true };
+    }
+    return null;
+  }
   /* ════ V11.26|176 · contesto: cosa sta guardando l'Assistente (tab aperto, Partenza, Arrivo, RTN) ════ */
   function contesto() {
     var A = window.croNodiA1, tab = A && A.tabAttivo ? A.tabAttivo() : null, out = { tab: tab };
@@ -7534,7 +8079,11 @@ window.croChat = (function () {
     ['/div', 'Div pi\u00f9 diversificata del', '/div 1', 'il risultato meno sovrapposto'],
     ['/scheda', '', '/scheda NOVAITAJ', 'scheda di una centrale o di un subpath'],
     ['/anomalie', 'anomalie DB', '/anomalie RC', 'controllo qualit\u00e0 dei DB'],
-    ['/fascicolo', '', '/fascicolo', 'le risposte fissate']
+    ['/fascicolo', '', '/fascicolo', 'le risposte fissate'],
+    ['/regola', 'regola usata', '/regola', 'quale regola ha dato l\u2019ultima risposta (V11.26|188)'],
+    ['/guida', 'aiuto', '/guida', 'Guida rapida: cosa so fare (V11.26|189)'],
+    ['/comandi', 'comandi', '/comandi', 'Guida rapida: i comandi veloci (V11.26|189)'],
+    ['/limiti', 'limiti', '/limiti', 'Guida rapida: cosa non so fare (V11.26|189)']
   ];
   var STORIA = (function () { try { return JSON.parse(localStorage.getItem('croChatStoria') || '[]'); } catch (e) { return []; } })(), sPos = -1, AC = [], acSel = -1;
   function traduci(t) {
@@ -32006,7 +32555,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 187 | Nov 2026</div>
+<div class="version-tag">V11.26 | 189 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -32307,7 +32856,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 187</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 189</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -32324,9 +32873,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 187</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 189</span>
                     </div>
-                    <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati.</p>
+                    <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati. Se scrivi male un CLLI, un subpath o un nome propone <strong>«Forse cercavi»</strong> con tutti i candidati vicini; ignora le parole di cortesia, conosce alcuni sinonimi e le città; quando non capisce dice cosa ha riconosciuto; dopo un calcolo nell’Unificato capisce «e senza RTN?» e «e al contrario?»; «/regola» dice chi ha risposto. Il bottone <strong>«📘 Guida»</strong> (prima «Limiti») apre la Guida rapida in tre schede: cosa so fare con gli esempi da cliccare, i comandi veloci, cosa non so fare; «aiuto» seguito da una centrale propone le domande su quella centrale, il «?» da solo approfondisce la risposta di prima.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">CLLI</span>
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">Subpath RA e RC</span>
@@ -32345,7 +32894,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 187</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 189</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -32363,7 +32912,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 187</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 189</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -32397,7 +32946,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 187</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 189</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Prima i Nodi A1 della stessa regione, poi le alternative delle altre regioni, ognuno per distanza, con Area, Zona e Regione dal DB; «via RTN» se si raggiungono solo con la dorsale. Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due, con i bottoni Arrivo Std e Arrivo Div (su due Nodi diversi), la centrale cercata va in <strong>Partenza</strong> e il popup resta aperto fino a «Fatto». Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -32413,7 +32962,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 187</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 189</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -32877,7 +33426,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 187</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 189</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -33027,8 +33576,28 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">↙️ Novità V11.26 | 187 | Nov 2026</span>
+                  <span class="cl-ver">📘 Novità V11.26 | 189 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>📘 Guida al posto di Limiti</strong>: il bottone nella barra apre la Guida rapida in tre schede, «✅ Cosa so fare», «⚡ Comandi veloci» e «🚫 Cosa non so fare»</li><li><strong>✅ Cosa so fare</strong>: una tabella per argomento con cosa vuoi sapere, gli esempi da cliccare e cosa ottieni; un campo in cima filtra le righe; ci sono tutti gli esempi che prima stavano nel messaggio iniziale</li><li><strong>⚡ Comandi veloci</strong>: i 14 comandi con un esempio e la frase a cui equivalgono; la differenza fra /perche (i risultati della ricerca) e /regola (l’Assistente)</li><li><strong>🚫 Cosa non so fare</strong>: i limiti scritti come «non so, usa invece», con le date dei DB caricati</li><li><strong>Messaggio iniziale più corto</strong>: i tre bottoni della Guida e sei esempi «Più usati»</li><li><strong>aiuto e una centrale</strong>: «aiuto» seguito da un CLLI, un subpath, una centrale, una città, una zona o una regione propone le domande che funzionano su quella cosa; «limiti» apre «Cosa non so fare»</li><li><strong>❓ Il punto interrogativo da solo</strong> approfondisce la risposta di prima, con le domande su quello di cui stavi parlando; all’inizio chiede cosa ti serve</li><li><strong>Comandi / tolleranti</strong>: valgono con accenti, apostrofi, maiuscole, spazi e numeri attaccati (/Perché 1, /PERCHE’ 1, / perche1); un comando che non esiste propone quelli simili</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🔤 Novità V11.26 | 188 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🔤 Forse cercavi</strong> quando scrivi male un CLLI, un subpath o il nome di una centrale (lettere sbagliate o invertite, O al posto dello zero): una tabella con tutti i candidati vicini, prima le lettere invertite, con 📍 Partenza e 🏁 Arrivo</li><li><strong>🗣️ Parole di cortesia e sinonimi</strong>: una domanda lunga e gentile diventa la sola parola utile; nodo o sede valgono centrale, dismesso vale non attivo, fibra vale C-FOS, DC vale data center</li><li><strong>🏙️ Città</strong>: il nome di una città mostra tutte le centrali che cominciano così in una tabella che scorre, con zona, regione e reti</li><li><strong>🤔 Quando non capisce</strong> dice cosa ha riconosciuto (centrale, città, zona, regione, stato), per quali parole non ha dati, e propone domande che funzionano</li><li><strong>🔀 Seguiti dell’Unificato</strong>: dopo un calcolo capisce «e senza RTN?», «e al contrario?» e «quanti km in tutto?»; il calcolo è quello di sempre</li><li><strong>🔧 /regola</strong> dice quale parte dell’Assistente ha dato l’ultima risposta</li><li><strong>📝 Domande non capite</strong>: in più «🔁 Riprova tutte», «⬇ Esporta per Claude» e «🧹 Togli quelle che ora rispondono»</li><li>Le risposte che l’Assistente dava già non cambiano: su 84 domande di prova, 77 identiche alla 187, una con un’aggiunta in fondo, 6 che prima non avevano risposta</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">↙️ Novità V11.26 | 187 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -51171,6 +51740,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                 </summary>
                 <div style="margin-top:0.6rem;padding-left:1rem;display:flex;flex-direction:column;gap:0.5rem;font-size:0.88rem;">
                   <p><strong>Crò e Assistente CRO:</strong> i due assistenti hanno ruoli diversi e non si ripetono. <b>HelpMe! Crò</b>, il bottone arancio sulla riga del titolo, è l’<b>aiuto e la guida</b> della Progettazione: il bollino conta le cose da sistemare (✔ quando non manca niente); il pannello le elenca in ordine di catena (🟠 da completare, 🟡 da verificare, ℹ️ da sapere); «Guidami» parte sempre da protezione e vie, che cambiano tutto il resto, poi segue l’ordine di lavoro: prima le centrali che servono alla ricerca dei percorsi (Colt o centrale lato A; Colt, centrale o Nodo A1 lato Z), poi Std e, se scelto, Div, poi le verifiche, la coda (che serve per chiudere la pratica) e la SdF; la ricerca dei percorsi non viene proposta finché mancano le centrali agli estremi. Le voci si mostrano una alla volta accendendo la card, con un fumetto che spiega cosa manca e come compilarlo; «Portami lì» apre il popup e accende il campo o il bottone su cui agire; «Controlla prima dell’IRP» fa il riepilogo e si scarica in TXT; spiega le parole del glossario. Il pannello si apre sotto il bottone, si sposta trascinando la testata e al refresh torna al suo posto. L’<b>Assistente CRO</b> fa tutto il resto: le domande sui dati (stato di un collegamento o di un Subpath, scheda di una centrale, Nodi A1 e Data Center di una regione, elenchi per stato e luogo, C-FOS, collegamenti fra centrali), la progettazione da una frase («progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP», poi passa a Crò per la guida) il percorso fra due centrali («percorso tra EUR e ARDEATINA» apre il tab Unificato con la ricerca già lanciata; «esiste una strada senza diversificati tra EUR e ARDEATINA?» la verifica e risponde con Std, Div e C-FOS in comune) e il passaggio a Claude. Nella sua barra il bottone «📝 N» conta le domande non capite e le apre con un clic. Sotto le sue risposte compaiono i bottoni che mancano: «Esporta TXT» ed «Esporta Excel», «🗄️ Apri nel Database», «🗺️ Mostra sulla mappa» e, nella Progettazione, «🧵 Guidami nella Progettazione (Crò)». Se a Crò fai una domanda sui dati, la passa all’Assistente aperto con la risposta. Le domande che nessuno dei due capisce restano in un solo elenco su questo PC, con scritto chi non l’ha capita: «domande non capite» lo mostra e lo esporta, sia in Crò sia nell’Assistente. Sotto ogni risposta dell’Assistente ci sono «👍 Risposta ok», che toglie la domanda dall’elenco se c’era, e «👎 Risposta non pertinente», che la segna come «Assistente CRO · risposta non pertinente». Nell’elenco ogni domanda ha «▶ Riprova», per rifarla quando arriva una versione corretta. Funziona tutto nel file, senza internet.</p>
+                  <p><strong>Assistente CRO, domande scritte male o a metà (V11.26|188).</strong> Quando la ricerca di sempre non trova niente, l’Assistente prova ancora prima di arrendersi, e le risposte che dava già restano identiche. Un CLLI, un subpath o il nome di una centrale scritto con un errore (una lettera sbagliata, due lettere invertite, la O al posto dello zero) porta a «🔤 Forse cercavi», una tabella con tutti i candidati vicini: prima quelli con due lettere invertite, poi quelli con una lettera diversa, con 📍 Partenza e 🏁 Arrivo. Le parole di cortesia non contano (una domanda lunga e gentile diventa la sola parola utile) e alcuni sinonimi diventano le parole del tool: nodo o sede vale centrale, dismesso o spento vale non attivo, fibra vale C-FOS, DC vale data center. Una città è la parola con cui comincia il nome di più centrali: il nome di una città mostra tutte le centrali che cominciano così in una tabella che scorre, con zona, regione e reti. Se la risposta è solo un elenco di testi del tool (📖 Nel tool), sotto compaiono anche i dati trovati con i sinonimi e «Forse cercavi una centrale». Se non trova niente lo dice e spiega cosa ha riconosciuto (centrale, città, zona, regione, stato) e per quali parole non ha né dati né regole, con le domande che funzionano su quello che ha riconosciuto. Dopo un calcolo nell’Unificato capisce «e senza RTN?», «e con RTN?», «e al contrario?» e «quanti km in tutto?»: le trasforma nei comandi che conosce già («calcola … senza RTN», «calcola Arrivo &gt; Partenza», «percorso 1») con Partenza e Arrivo dei campi dell’Unificato, e lo scrive in cima alla risposta; il calcolo è quello di sempre. «/regola» dice quale parte dell’Assistente ha dato l’ultima risposta. Nell’elenco delle domande non capite ci sono anche «🔁 Riprova tutte» (rifà le domande con la revisione aperta e dice quali adesso hanno una risposta; quelle che fanno partire ricerche o aprono tab si riprovano a mano con ▶ Riprova), «⬇ Esporta per Claude» (TXT con domanda, esito e chi ha risposto) e «🧹 Togli quelle che ora rispondono».</p>
+                  <p><strong>Assistente CRO, Guida rapida (V11.26|189).</strong> Il bottone «Limiti» nella barra diventa «📘 Guida» e apre la Guida rapida in tre schede. «✅ Cosa so fare» è una tabella per argomento (una centrale, un collegamento, elenchi per stato e luogo, percorsi nell’Unificato, Progettazione, testi del tool, info live, se scrivi male, l’Assistente stesso): per ogni riga cosa vuoi sapere, gli esempi da cliccare e cosa ottieni; un campo in cima filtra le righe. Ci sono tutti gli esempi che prima stavano nel messaggio iniziale, con gli stessi bottoni. «⚡ Comandi veloci» elenca i comandi che cominciano con /, con un esempio, la frase a cui equivalgono e cosa fanno, spiega la differenza fra /perche (i risultati della ricerca) e /regola (l’Assistente) e gli altri tasti e parole. «🚫 Cosa non so fare» riporta i limiti come «non so, usa invece», con le date dei DB caricati lette dalla pagina. Il messaggio iniziale è più corto: i tre bottoni della Guida e sei esempi «Più usati». «aiuto» o /guida aprono «Cosa so fare»; «limiti» o /limiti aprono «Cosa non so fare»; «comandi», /comandi o una / da sola aprono «Comandi veloci». «aiuto» seguito da un CLLI, un subpath, una centrale, una città, una zona o una regione apre «Cosa so fare» con, in cima, le domande che funzionano su quella cosa; seguito da un’altra parola filtra le righe. Il «?» da solo dopo una risposta la approfondisce: dice quale regola ha risposto e propone le domande su quello di cui stavi parlando; all’inizio della conversazione chiede cosa ti serve. «spiegami meglio» e «approfondisci» fanno lo stesso. I comandi / si riconoscono anche con accenti, apostrofi, maiuscole, spazi o numeri attaccati, con la barra rovesciata e con un nome accorciato se non è ambiguo; un comando che non esiste apre «Comandi veloci» con quelli simili.</p>
                   <p><strong>Dove si trova:</strong> nel menu «Progettazione ▾» subito dopo Ricerca Percorso Unificato (voce «Progettazione SdF 🚧», insieme alla Progettazione Percorso), e nell’Overview con il bottone «Progettazione SdF» (accanto a «Progettazione Percorso»). È sperimentale: i risultati vanno verificati. Il cassetto «📘 Note e regole» ha tutte le regole in 18 voci.</p>
                   <p><strong>Barra in alto:</strong> cinque sezioni con i bottoni tutti alti uguali: Schema (Stessa regione, 7 blocchi; Interregionale, 11 blocchi con due reti RTR, i Nodi A1 e la RTN; Verso Nodo A1, 5 blocchi), Capacità (1G, 10G, 100G), Rete RTR (Solo Std o Std + Div), Protezione (No, SNCP a caramella, E2E) e Progettazione (Undo, Importa, Wizard, Svuota). I bottoni scelti tengono il loro colore anche al passaggio del mouse; il suggerimento compare sopra la sezione senza coprire i bottoni.</p>
                   <p><strong>Aggiungi un blocco e Fattibilità (SdF):</strong> nella riga sotto la barra si aggiungono i blocchi uno alla volta (nel primo lato libero) e, a destra, si scrivono le fattibilità nelle due minicard «1a Via · Std» e «2a Via · Div». Div vuota o uguale: una sola SdF per le due vie. Due numeri diversi: 1a Via sulla SdF Std, 2a Via sulla SdF Div. Sotto il titolo una riga dice quale dei due casi vale.</p>
@@ -53428,7 +53999,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 187 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 189 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -53447,6 +54018,28 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            📘 V11.26 | 189 | Nov 2026 | Assistente CRO: Guida rapida, aiuto X, ? e comandi / tolleranti
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li>croChat: guidaHtml(scheda, filtro, sopra) costruisce le tre schede; le righe di «Cosa so fare» (GUIDA_SO) usano gli stessi 27 bottoni del vecchio benvenuto (oggetto B, stessi data-c e data-t); window.croAssGuida.apri, tab, filtra; stile in &lt;style id="croGuidaCss"&gt;</li><li>rispondi(): rispostaGuida() viene prima di seguitoUNI() e di rispondiBase(): aiuto, help, guida, limiti, comandi, /, ?, spiegami meglio, approfondisci, aiuto X (entita() e proposte()), comandi sconosciuti; «aiuto campo» resta alla catena</li><li>traduci() è avvolta: normCmd() toglie accenti, apostrofi e simboli dal nome del comando, accetta \ e spazi, alias (perche, aiuto, help, regole…) e prefissi non ambigui; nuovi comandi /guida, /comandi, /limiti</li><li>chiHaRisposto(): per /regola e «?» conta la prima regola vera che non sia «testi del tool» o un’aggiunta</li><li>Barra: data-a="guida" (📘 Guida) al posto di data-a="limiti"; LIMITI e il suo gestore restano nel codice</li><li>Prova: t_ass.py 188 contro 189, 81 risposte identiche su 84; t189.py, 16 controlli dall’interfaccia</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🔤 V11.26 | 188 | Nov 2026 | Assistente CRO: domande scritte male, sinonimi, seguiti, /regola
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li>croChat: la vecchia rispondi() si chiama rispondiBase() ed è invariata; la nuova rispondi() chiama prima seguitoUNI() (solo domande brevi, nessun CLLI, Partenza e Arrivo dell’Unificato con CLLI), poi rispondiBase(); se la risposta comincia con «Non ho trovato niente nel tool» prova recupera() (città, ripulisci() con cortesia e sinonimi, forseCercavi()) e altrimenti nonCapito(); se è solo «📖 Nel tool» aggiunge in fondo, prima dei link internet, i dati trovati con i sinonimi e «Forse cercavi una centrale»</li><li>forseCercavi(): distanza di Damerau con O/0, I/1 e L/1 a metà costo; CLLI a distanza 1 (o 2 se a 1 non c’è niente), subpath RC e RA a distanza 1, nomi a distanza 1-3 secondo la lunghezza</li><li>Durante rispondiBase() croCmp.ariadne.nc è sospesa: la domanda entra fra le non capite solo se anche lo strato nuovo non trova niente</li><li>/regola: le funzioni di risposta della catena sono avvolte da tracciato() (stesso risultato, in più registrano l’ordine); comando in COMANDI come «regola usata»</li><li>window.croAssNc: riprova (in modalità SECCO, salta le domande con azioni), esporta, togli (chiave croAriadneNonCapite)</li><li>Prova di regressione: t_ass.py con 84 domande su 187 e 188, confronta.py: 0 risposte cambiate</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             ↙️ V11.26 | 187 | Nov 2026 | Puntatore maniglia
           </summary>
@@ -110037,7 +110630,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 187';
+  var REVISIONE = 'V11.26 | 189';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
