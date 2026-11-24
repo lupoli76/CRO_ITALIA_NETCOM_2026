@@ -4,13 +4,28 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 191  (rev. pubblicata: V11.26 | 191 | Nov 2026)              ║
+║   Versione: 11.26 | 192  (rev. pubblicata: V11.26 | 192 | Nov 2026)              ║
 ║   Data: 8 Ottobre 2026                                                           ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 192 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • ASSISTENTE CRO, KMZ DA UNA LISTA: «kmz CRM204-CRM205-CRM207-CRM203» o        ║
+║     IdCollegamento RA completi («AM_arco_101                                     ║
+║ AM_12                                                                            ║
+║ AAM003/1                                                                         ║
+║ 1»), in                                                                          ║
+║     qualsiasi ordine e con qualsiasi separatore; ordine di routing dai DB,       ║
+║     due estremi, Nodo A1 in Sede Z (altrimenti lato del primo scritto, ⇄)        ║
+║   • Scheda: Sede A e Z, regola, tabella (rete, collegamento, da, a, km,          ║
+║     stato, C-FOS, totale); Scarica KMZ, Excel KMZ (modello Tracciati KMZ per     ║
+║     archi DWDM con sedi nel verso del routing), Apri nel modulo KMZ              ║
+║   • Errori: collegamento inesistente (Forse cercavi), catena interrotta,         ║
+║     anello, subpath RA da solo; comando /kmz e riga nella Guida rapida           ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 191 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -19,7 +34,7 @@
 ║     di realizzazione»                                                            ║
 ║   • «Trasporto DWDM — Prima/Seconda Via della fattibilità …, completamente       ║
 ║     diversificata…» nelle note solo se nell'export c'è un percorso Div; senza:   ║
-║     riga a parte «💡 Nota facoltativa» nel foglio Note                           ║
+║     riga a parte «💡 Nota facoltativa» nel foglio Note                            ║
 ║   • TXT: «Fattibilità: X (Percorso Standard + Diversificato)» solo con almeno    ║
 ║     un percorso Div esportato; altrimenti «Fattibilità Percorso Standard: X»     ║
 ║                                                                                  ║
@@ -35,7 +50,7 @@
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 189 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
-║   • ASSISTENTE CRO, GUIDA RAPIDA: il bottone Limiti diventa «📘 Guida»; tre      ║
+║   • ASSISTENTE CRO, GUIDA RAPIDA: il bottone Limiti diventa «📘 Guida»; tre       ║
 ║     schede: Cosa so fare (tabella per argomento con esempi cliccabili e filtro), ║
 ║     Comandi veloci (14 comandi, equivale a, /perche e /regola), Cosa non so      ║
 ║     fare (i Limiti come «non so, usa invece», date dei DB dalla pagina)          ║
@@ -123,7 +138,7 @@
 ║   CHANGELOG V11.26 | 178 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
 ║   • ASSISTENTE: "calcola X > Y" senza controlli; controllo prima di Calcola      ║
-║     nell'Unificato (T3, nessun cammino senza RTN); bottone 🤖 sui risultati;     ║
+║     nell'Unificato (T3, nessun cammino senza RTN); bottone 🤖 sui risultati;      ║
 ║     "perche' il percorso N", "confronta 1 e 3", "Div piu' diversificata";        ║
 ║     Fissa e fascicolo della pratica esportabile in Word                          ║
 ║                                                                                  ║
@@ -209,7 +224,7 @@
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 165 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
-║   • UNIFICATO e RC: il dettaglio di ogni percorso (➕ Espandi) si costruisce     ║
+║   • UNIFICATO e RC: il dettaglio di ogni percorso (➕ Espandi) si costruisce      ║
 ║     solo quando lo apri, non piu' nascosto in anticipo per ogni riga             ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 164 | Nov 2026:                                             ║
@@ -236,7 +251,7 @@
 ║   • PROGETTAZIONE PERCORSO, NUOVO LAYOUT: il collegamento fatto e' una linea     ║
 ║     come quella della metro (clic su un ramo = tutte le info della tratta);      ║
 ║     le strade da qui sono righe compatte con verso, transiti, km, stato e        ║
-║     IdCollegamento, e il dettaglio si apre con ▸ (▸ / ▾ tutti in testa)         ║
+║     IdCollegamento, e il dettaglio si apre con ▸ (▸ / ▾ tutti in testa)          ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 160 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -316,19 +331,19 @@
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 148 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
-║   • PROGETTAZIONE PERCORSO: la mappa parte ferma (🔒 Mappa ferma di base);       ║
+║   • PROGETTAZIONE PERCORSO: la mappa parte ferma (🔒 Mappa ferma di base);        ║
 ║     📍 Segue il percorso si attiva con un clic e resta ricordato                  ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 147 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
 ║   • PROGETTAZIONE PERCORSO: sulla mappa scegli tu fra 📍 Segue il percorso        ║
-║     (si sposta a ogni tratta) e 🔒 Mappa ferma (non si muove mai da sola),       ║
-║     scelta ricordata; 🎯 Inquadra percorso la porta sul percorso a richiesta     ║
+║     (si sposta a ogni tratta) e 🔒 Mappa ferma (non si muove mai da sola),        ║
+║     scelta ricordata; 🎯 Inquadra percorso la porta sul percorso a richiesta      ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 146 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
 ║   • PROGETTAZIONE PERCORSO: i suggerimenti non spostano piu' la mappa,           ║
-║     ci pensano i bottoni 🎯 Inquadra e 🎯 Inquadra tutto; nella mini scheda     ║
+║     ci pensano i bottoni 🎯 Inquadra e 🎯 Inquadra tutto; nella mini scheda        ║
 ║     la testata blu e l'intestazione delle colonne restano ferme e intere         ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 145 | Nov 2026:                                             ║
@@ -1397,7 +1412,7 @@
 ║   CHANGELOG V10.26 | 144 | Ott 2026:                                             ║
 ║   ──────────────────────────                                                     ║
 ║   • FUNZIONALITA' PRINCIPALI: tolte le etichette RETAIL & WHOLESALE da cinque    ║
-║     schede e 🤖 AI da Analisi Fattibilita'; Raccordo in fibra, Export XLSX e     ║
+║     schede e 🤖 AI da Analisi Fattibilita'; Raccordo in fibra, Export XLSX e      ║
 ║     Toggle Dati Servizio con il testo giustificato come le altre schede          ║
 ║                                                                                  ║
 ║   CHANGELOG V10.26 | 143 | Ott 2026:                                             ║
@@ -1955,7 +1970,7 @@
 ║   CHANGELOG V10.26 | 70 | Ott 2026:                                              ║
 ║   ─────────────────────────                                                      ║
 ║   • ANALISI FATTIBILITA' IN LAVORAZIONE: etichetta In lavorazione nel titolo del ║
-║     tab, voce del menu Analisi Extra con 🚧 e riquadro a righe gialle in testa al║
+║     tab, voce del menu Analisi Extra con 🚧 e riquadro a righe gialle in testa al ║
 ║     tab, come in Analisi per Soluzioni Protette: regole, testi e funzioni sono   ║
 ║     in aggiornamento continuo e vanno segnalati gli errori                       ║
 ║                                                                                  ║
@@ -7740,6 +7755,7 @@ window.croChat = (function () {
     var q = norm(testo).trim();
     if (/^(REGOLA USATA|\/REGOLA|REGOLA)$/.test(q)) return rispostaRegola();
     var hg = rispostaGuida(testo); if (hg) return hg.h;   /* V11.26|189 */
+    var hk = rispostaKmz(testo); if (hk) { ULTIMA = { q: testo, regole: [['KMZ di una lista di subpath (V11.26|192)', true]], titolo: titolo(hk) }; return hk; }   /* V11.26|192 */
     var hs = seguitoUNI(q); if (hs) return hs;
     TRACCIA = [];
     var A = window.croCmp && croCmp.ariadne, ncVero = A && A.nc, h;
@@ -7855,6 +7871,7 @@ window.croChat = (function () {
     ['🧭 Progettazione'],
     ['Partire da una frase', q2('progettazione da EUR a FIRENZE CASTELLO 10G protetta SNCP') + B.prat + B.wiz, 'compilo la Progettazione, poi passo a Crò per la guida'],
     ['Moduli ottici', B.mod, 'il modulo con la portata giusta per la distanza'],
+    ['KMZ da una lista', q2('kmz CRM204-CRM205-CRM207-CRM203', 1), 'subpath RC e IdCollegamento RA (per esempio «AM_arco_101 | AM_12 | AAM003/1 | 1») in ordine di routing, un Nodo A1 in Sede Z; Scarica KMZ, Excel KMZ (modello Tracciati KMZ per archi DWDM), Apri nel modulo KMZ'],
     ['📖 Testi del tool'],
     ['Spiegazioni', B.sigla + B.app + B.tab + B.arg + B.kmz + B.fa1 + B.podio, 'il punto del tool che ne parla, con «Vai al punto»'],
     ['📡 Info live (la striscia in fondo)'],
@@ -7881,7 +7898,8 @@ window.croChat = (function () {
     ['/regola', '/regola', 'regola', 'quale parte dell’<b>Assistente</b> ha dato l’ultima risposta'],
     ['/guida', '/guida', 'aiuto', 'questa guida, scheda «Cosa so fare»'],
     ['/comandi', '/comandi', 'comandi', 'questa guida, scheda «Comandi veloci»'],
-    ['/limiti', '/limiti', 'limiti', 'questa guida, scheda «Cosa non so fare»']
+    ['/limiti', '/limiti', 'limiti', 'questa guida, scheda «Cosa non so fare»'],
+    ['/kmz', '/kmz CRM204-CRM205-CRM207-CRM203', 'kmz CRM204-CRM205-CRM207-CRM203', 'subpath RC e IdCollegamento RA in ordine di routing, Sede A e Z, KMZ e modello Tracciati']
   ];
   function dateDB() {
     var o = [], w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -7909,7 +7927,7 @@ window.croChat = (function () {
     /* scheda 1 */
     h += '<div class="gr-p" data-p="1"' + (n === 1 ? '' : ' hidden') + '><div class="cc-k" style="margin-bottom:6px">Scrivi <code>/</code> nella casella e compaiono i suggerimenti. Ogni comando è una scorciatoia: fa la stessa cosa della frase in «Equivale a». Vanno bene anche con accenti, apostrofi e maiuscole (<code>/Perché 1</code>, <code>/PERCHE’ 1</code>, <code>/ perche1</code>).</div>'
       + '<table class="gr-t"><tr><th>Comando</th><th>Esempio (clic)</th><th>Equivale a</th><th>Cosa fa</th></tr>'
-      + GUIDA_CMD.map(function (c) { return '<tr><td><code>' + c[0] + '</code>' + (/regola|guida|comandi|limiti/.test(c[0]) ? '<span class="gr-v">' + (c[0] === '/regola' ? '188' : '189') + '</span>' : '') + '</td><td><div class="cc-chips" style="margin-top:0">' + q2(c[1]) + '</div></td><td style="color:#475569">' + esc(c[2]) + '</td><td>' + c[3] + '</td></tr>'; }).join('')
+      + GUIDA_CMD.map(function (c) { return '<tr><td><code>' + c[0] + '</code>' + (/regola|guida|comandi|limiti|kmz/.test(c[0]) ? '<span class="gr-v">' + (c[0] === '/regola' ? '188' : c[0] === '/kmz' ? '192' : '189') + '</span>' : '') + '</td><td><div class="cc-chips" style="margin-top:0">' + q2(c[1]) + '</div></td><td style="color:#475569">' + esc(c[2]) + '</td><td>' + c[3] + '</td></tr>'; }).join('')
       + '</table><div class="cc-card" style="margin-top:8px"><b>/perche oppure /regola?</b> /perche spiega i risultati della ricerca (perché il percorso 1 è primo). /regola spiega l’Assistente (quale regola ha capito la tua domanda).</div>'
       + '<table class="gr-t" style="margin-top:8px"><tr><th>Altri tasti e parole</th><th>Cosa fanno</th></tr>'
       + '<tr><td><code>?</code> da solo</td><td>dopo una risposta: approfondisce, con le domande su quello di cui stavi parlando; all’inizio: ti chiede cosa ti serve</td></tr>'
@@ -7976,7 +7994,7 @@ window.croChat = (function () {
     return h + '<div class="cc-k" style="margin-top:6px">Oppure apri la guida:</div>' + bottoniGuida();
   }
   /* comandi /: accenti, apostrofi, maiuscole, spazi e numeri attaccati non contano */
-  var ALIAS = { perche: 'perche', percheil: 'perche', percorsi: 'percorso', calcola: 'percorso', regole: 'regola', schede: 'scheda', info: 'scheda', nodia1: 'a1', nodoa1: 'a1', zone: 'zona', anomalia: 'anomalie', confronto: 'confronta', diversificata: 'div', fascicoli: 'fascicolo', aiuto: 'guida', help: 'guida', comando: 'comandi', limite: 'limiti' };
+  var ALIAS = { tracciati: 'kmz', tracciato: 'kmz', perche: 'perche', percheil: 'perche', percorsi: 'percorso', calcola: 'percorso', regole: 'regola', schede: 'scheda', info: 'scheda', nodia1: 'a1', nodoa1: 'a1', zone: 'zona', anomalia: 'anomalie', confronto: 'confronta', diversificata: 'div', fascicoli: 'fascicolo', aiuto: 'guida', help: 'guida', comando: 'comandi', limite: 'limiti' };
   function normCmd(t) {
     var m = /^\s*[\/\\]\s*([^\s\d]*)\s*(.*)$/.exec(String(t)); if (!m) return t;
     var n = m[1].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
@@ -8042,6 +8060,187 @@ window.croChat = (function () {
     }
     return null;
   }
+  /* ════ V11.26|192 · KMZ DA UNA LISTA DI SUBPATH: «kmz CRM204-CRM205-CRM207-CRM203» (in qualsiasi ordine e con qualsiasi
+     separatore). Rimette i collegamenti RC in ordine di routing, trova i due estremi (un Nodo A1 va in Sede Z) e prepara il
+     .kmz, il modello «Tracciati KMZ per archi DWDM» e il modulo KMZ, con le funzioni che il tool ha già (kmzImportFromExport,
+     kmzGeneraKmz, croEsportaModelloKmz). Non tocca il calcolo dei percorsi. ════ */
+  var KS = [];
+  function eA1(clli) { try { var d = croNodiA1.dati(clli); return !!(d && d.eA1); } catch (e) { return false; } }
+  function sedeNome(clli) { var U = universo(); return U.clli[clli] ? U.clli[clli].nome : clli; }
+  /* RA: l'IdCollegamento completo («AM_arco_101 | AM_12 | AAM003/1 | 1»), univoco; RC: il subpath (IdCollegamento del DB RC) */
+  var _raIdx = null;
+  function chiaveRA(t) { return String(t).toUpperCase().replace(/\s*\|\s*/g, '|').replace(/\s+/g, ' ').trim(); }
+  function raPerId(k) {
+    if (!_raIdx) { _raIdx = {}; ra().forEach(function (r) { var c = chiaveRA(r.IdCollegamento); if (c && !_raIdx[c]) _raIdx[c] = r; }); }
+    return _raIdx[k] || null;
+  }
+  var RE_RAID = /[A-Z]+_ARCO_\d+\s*\|\s*[A-Z]+_\d+\s*\|\s*[A-Z0-9\/]+\s*\|\s*\d+/gi;
+  function kmzIds(testo) {
+    var raId = [], raNo = [], vistiRa = {};
+    var resto = String(testo).replace(RE_RAID, function (m) {
+      var k = chiaveRA(m); if (vistiRa[k]) return ' '; vistiRa[k] = 1;
+      if (raPerId(k)) raId.push(k); else raNo.push(m.trim()); return ' ';
+    });
+    var q = norm(resto), U = universo(), rc0 = [], ra0 = [], no = raNo.slice(), visti = {};
+    q.split(/[^A-Z0-9\/_]+/).forEach(function (t) {
+      if (!t || visti[t]) return; visti[t] = 1;
+      if (U.id[t] === 'RC') rc0.push(t); else if (U.id[t] === 'RA') ra0.push(t);
+      else if (/^[A-Z]{3}[0-9OIL]{3}(\/[0-9OIL]+)?$/.test(t)) no.push(t);
+    });
+    return { rc: rc0, ra: ra0, raId: raId, no: no };
+  }
+  function vuoleKmz(testo) {
+    var q = norm(testo), L = kmzIds(testo), n = L.rc.length + L.ra.length + L.raId.length + L.no.length;
+    if (L.raId.length + L.rc.length >= 2 && L.raId.length >= 1) return L;
+    if (/\bKMZ\b|TRACCIAT/.test(q) && n >= 1) return L;
+    if (L.rc.length + L.ra.length >= 2 && /[A-Z0-9]\s*[-+,;]\s*[A-Z]{3}[0-9]/.test(q)) return L;
+    return null;
+  }
+  /* i collegamenti RC formano una catena? se sì, in che ordine */
+  function catena(ids, raIds) {
+    var E = [], adj = {}, rcRows = rc();
+    ids.map(function (id) { return { id: id, rete: 'RC', rec: rcRows.filter(function (x) { return String(x.IdCollegamento).toUpperCase() === id; })[0] }; })
+      .concat((raIds || []).map(function (k) { var r = raPerId(k); return { id: r ? String(r.IdCollegamento).trim() : k, rete: 'RA', rec: r }; }))
+      .forEach(function (x) {
+      var r = x.rec; if (!r) return;
+      var e = { id: x.id, rete: x.rete, a: String(r.CLLI_A).toUpperCase(), z: String(r.CLLI_Z).toUpperCase(), rec: r };
+      E.push(e);
+      if (e.a === e.z) return;
+      (adj[e.a] = adj[e.a] || []).push(e); (adj[e.z] = adj[e.z] || []).push(e);
+    });
+    var zero = E.filter(function (e) { return e.a === e.z; });
+    if (zero.length) return { err: 'Il collegamento ' + zero.map(function (e) { return e.id; }).join(', ') + ' ha la stessa centrale in A e in Z (0 km nel DB): non può stare in una catena.' };
+    var tre = Object.keys(adj).filter(function (c) { return adj[c].length > 2; });
+    if (tre.length) return { err: 'La centrale ' + tre.map(function (c) { return sedeNome(c) + ' (' + c + ')'; }).join(', ') + ' è toccata da più di due collegamenti della lista (' + adj[tre[0]].map(function (e) { return e.id; }).join(', ') + '): non è una catena unica.' };
+    /* gruppi collegati */
+    var gruppo = {}, ng = 0;
+    Object.keys(adj).forEach(function (c) {
+      if (gruppo[c]) return; ng++; var st = [c];
+      while (st.length) { var x = st.pop(); if (gruppo[x]) continue; gruppo[x] = ng; adj[x].forEach(function (e) { st.push(e.a === x ? e.z : e.a); }); }
+    });
+    if (ng > 1) {
+      var G = []; for (var g = 1; g <= ng; g++) G.push(E.filter(function (e) { return gruppo[e.a] === g; }).map(function (e) { return e.id; }));
+      return { err: 'I collegamenti non formano una catena unica: si dividono in ' + ng + ' tratti separati (' + G.map(function (x) { return x.join(' + '); }).join(' | ') + '). Manca il collegamento fra un tratto e l’altro.' };
+    }
+    var estremi = Object.keys(adj).filter(function (c) { return adj[c].length === 1; });
+    if (estremi.length !== 2) return { err: 'I collegamenti chiudono un anello: non ci sono due estremi.' };
+    return { E: E, adj: adj, estremi: estremi };
+  }
+  function cammina(C, da) {
+    var seq = [], nodi = [da], x = da, usati = {};
+    while (true) {
+      var e = C.adj[x].filter(function (y) { return !usati[y.id]; })[0]; if (!e) break;
+      usati[e.id] = 1; var y = e.a === x ? e.z : e.a;
+      seq.push({ id: e.id, rete: e.rete, from: x, to: y, rec: e.rec }); nodi.push(y); x = y;
+    }
+    return { seq: seq, nodi: nodi };
+  }
+  function rispostaKmz(testo) {
+    var L = vuoleKmz(testo); if (!L) return null;
+    var h = '<h6>🗺️ KMZ di una lista di subpath</h6>';
+    var avvisi = [];
+    if (L.no.length) {
+      avvisi.push('Non trovo nei DB: ' + L.no.join(', ') + '.');
+      var F = forseCercavi(L.no.join(' '), false);
+      if (F.length) avvisi.push('__FORSE__');
+      return h + '<div class="cc-card" style="border-left:3px solid #dc2626">Non trovo nei DB: ' + esc(L.no.join(', ')) + '. Non genero il KMZ con una lista incompleta: correggi e riprova.</div>' + (F.length ? tabellaForse(F, 'Forse cercavi:') : '');
+    }
+    if (L.ra.length) {
+      var es = ra().filter(function (r) { return String(r.SubPath).toUpperCase() === L.ra[0]; }).slice(0, 4).map(function (r) { return String(r.IdCollegamento).trim(); });
+      return h + '<div class="cc-card">' + esc(L.ra.join(', ')) + (L.ra.length > 1 ? ' sono subpath RA' : ' è un subpath RA') + ': nel DB RA uno stesso subpath sta su più collegamenti e su più archi, quindi dal solo nome non so quale strada fare. Per la RA scrivi gli <b>IdCollegamento</b> completi, uno per riga o separati da punto e virgola. Alcuni di ' + esc(L.ra[0]) + ':</div><div class="cc-chips">' + es.map(function (x) { return q2('kmz ' + x); }).join('') + '</div>';
+    }
+    if (!L.rc.length && !L.raId.length) return null;
+    var C = catena(L.rc, L.raId);
+    if (C.err) return h + '<div class="cc-card" style="border-left:3px solid #dc2626">' + esc(C.err) + '</div><div class="cc-k">Non genero il KMZ: correggi la lista (scrivi i collegamenti mancanti) e riprova.</div>';
+    var e1 = C.estremi[0], e2 = C.estremi[1], a1 = eA1(e1), a2 = eA1(e2), A, regola;
+    if (a1 !== a2) { A = a1 ? e2 : e1; regola = sedeNome(a1 ? e1 : e2) + ' è Nodo A1: va in Sede Z.'; }
+    else {
+      /* nessuno dei due (o tutti e due) Nodo A1: Sede A dal lato del primo collegamento che hai scritto */
+      var primo = L.rc.length ? L.rc[0] : String(raPerId(L.raId[0]).IdCollegamento).trim();
+      var w = cammina(C, e1), pos = w.seq.map(function (s) { return s.id; }).indexOf(primo);
+      A = pos <= (w.seq.length - 1) / 2 ? e1 : e2;
+      regola = (a1 ? 'Tutti e due gli estremi sono Nodi A1' : 'Nessuno dei due estremi è Nodo A1') + ': Sede A è dal lato di ' + primo + ', il primo che hai scritto. Usa ⇄ se va al contrario.';
+    }
+    var k = KS.length; KS.push({ C: C, A: A, regola: regola, ordine: L.rc.concat(L.raId.map(function (x) { var r = raPerId(x); return r ? String(r.IdCollegamento).trim() : x; })) });
+    return cardKmz(k, avvisi);
+  }
+  function cardKmz(k, avvisi) {
+    var S = KS[k], w = cammina(S.C, S.A), tot = 0, U = universo();
+    S.w = w;
+    var nm = function (c) { return esc(sedeNome(c)) + ' <span class="cc-k">(' + esc(c) + ')</span>'; };
+    var righe = w.seq.map(function (s, i) {
+      var km = parseFloat(String(s.rec.Distanza_km).replace(',', '.')) || 0; tot += km;
+      return '<tr><td>' + (i + 1) + '</td><td>' + s.rete + '</td><td><button type="button" data-q="' + esc(s.rete === 'RA' ? s.rec.SubPath : s.id) + '" style="border:0;background:none;color:#0066CC;cursor:pointer;padding:0;font-weight:700;text-align:left">' + esc(s.id) + '</button></td><td>' + nm(s.from) + '</td><td>' + nm(s.to) + '</td><td style="text-align:right">' + km.toFixed(2).replace('.', ',') + '</td><td>' + esc(s.rec.Stato_IdCollegamento || '') + '</td><td style="font-size:11px">' + esc(s.rec.IdCavo || '') + '</td></tr>';
+    }).join('');
+    var Z = w.nodi[w.nodi.length - 1];
+    var nonAtt = w.seq.filter(function (s) { return !/^ATTIVO$/i.test(String(s.rec.Stato_IdCollegamento || '').trim()); });
+    var h = '<h6>🗺️ KMZ di ' + w.seq.length + (w.seq.length === 1 ? ' collegamento' : ' collegamenti') + '</h6>'
+      + '<div class="cc-card"><b>Sede A:</b> ' + nm(S.A) + (eA1(S.A) ? ' · Nodo A1' : '') + '<br><b>Sede Z:</b> ' + nm(Z) + (eA1(Z) ? ' · Nodo A1' : '') + '<div class="cc-k" style="margin-top:3px">' + esc(S.regola) + ' Ordine di routing ricostruito dai DB, non da come li hai scritti (' + esc(S.ordine.join(' → ')) + ').</div></div>'
+      + (avvisi && avvisi.length ? '<div class="cc-k">' + esc(avvisi.filter(function (x) { return x !== '__FORSE__'; }).join(' ')) + '</div>' : '')
+      + '<div class="cc-lunga"><table><tr><th>#</th><th>Rete</th><th>Subpath RC / IdCollegamento RA</th><th>Da</th><th>A</th><th>km</th><th>Stato</th><th>C-FOS</th></tr>' + righe
+      + '<tr><td colspan="5" style="text-align:right;font-weight:700">Totale</td><td style="text-align:right;font-weight:700">' + tot.toFixed(2).replace('.', ',') + '</td><td colspan="2"></td></tr></table></div>'
+      + (nonAtt.length ? '<div class="cc-k" style="color:#b45309">Non attivi: ' + esc(nonAtt.map(function (s) { return s.id + ' (' + s.rec.Stato_IdCollegamento + ')'; }).join(', ')) + '.</div>' : '')
+      + '<div class="cc-azioni" style="margin-top:6px">'
+      + '<button type="button" onclick="window.croAssKmz.kmz(' + k + ',this)" title="Scarica il file .kmz da aprire in Google Earth (serve la libreria JSZip, che arriva da internet). Sostituisce quello che c’è nel modulo KMZ.">🗺️ Scarica KMZ</button>'
+      + '<button type="button" onclick="window.croAssKmz.modello(' + k + ',this)" title="Scarica il modello «Tracciati KMZ per archi DWDM» compilato, lo stesso degli export TXT ed Excel con l’interruttore KMZ (serve la libreria Excel, che arriva da internet)">📊 Excel KMZ · Tracciati KMZ per archi DWDM</button>'
+      + '<button type="button" onclick="window.croAssKmz.apri(' + k + ')" title="Porta centrali e collegamenti nel modulo KMZ, da correggere a mano. Sostituisce quello che c’è nel modulo.">✏️ Apri nel modulo KMZ</button>'
+      + '<button type="button" onclick="window.croAssKmz.inverti(' + k + ')" title="Scambia Sede A e Sede Z">⇄ Inverti A e Z</button></div>';
+    return h;
+  }
+  function datiPercorso(k) {
+    var w = KS[k].w;
+    return { partenza: sedeNome(w.nodi[0]) + ' (' + w.nodi[0] + ')', arrivo: sedeNome(w.nodi[w.nodi.length - 1]) + ' (' + w.nodi[w.nodi.length - 1] + ')',
+      percorsi: [{ num: 1, tipo: 'Std', centrali: w.nodi.map(function (c) { return { nome: sedeNome(c), clli: c, grade: '' }; }),
+        collegamenti: w.seq.map(function (s) { return { tipo: s.rete, id: s.rete === 'RA' ? String(s.rec.IdCollegamento).trim() : s.id, cfos: String(s.rec.IdCavo || '') }; }), gateways: [] }] };
+  }
+  function moduloPieno() {
+    var c = document.getElementById('kmz_blocks_container'); if (!c) return false;
+    var t = c.innerText || ''; Array.prototype.forEach.call(c.querySelectorAll('input,textarea'), function (i) { t += ' ' + (i.value || ''); });
+    return /[A-Z]{4}IT[A-Z0-9]{2}|\b[A-Z]{3}\d{3}\b/.test(t);
+  }
+  /* riempie il modulo KMZ con il percorso k usando l'import di sempre (un percorso solo: nessuna finestra di scelta) */
+  function riempi(k, poi) {
+    if (typeof window.kmzImportFromExport !== 'function' || typeof window._croParseUnifiedExport !== 'function') { if (typeof showToast === 'function') showToast('Modulo KMZ non disponibile', 'error'); return; }
+    if (moduloPieno() && !confirm('Il modulo KMZ contiene già dei dati: li sostituisco con questi collegamenti?')) return;
+    try { if (window.kmzSetMode) window.kmzSetMode('multi'); } catch (e) {}
+    var vero = window._croParseUnifiedExport, dati = datiPercorso(k);
+    window._croParseUnifiedExport = function () { window._croParseUnifiedExport = vero; setTimeout(function () { if (poi) poi(); }, 60); return dati; };
+    try { window.kmzImportFromExport({ files: [new Blob(['CRO'], { type: 'text/plain' })], value: '' }); }
+    catch (e) { window._croParseUnifiedExport = vero; throw e; }
+    setTimeout(function () { if (window._croParseUnifiedExport !== vero) window._croParseUnifiedExport = vero; }, 3000);
+  }
+  function orienta(rec, da) {
+    var r = {}; Object.keys(rec).forEach(function (x) { r[x] = rec[x]; });
+    if (String(rec.CLLI_A).toUpperCase() !== da) [['CLLI_A', 'CLLI_Z'], ['GAT_A', 'GAT_Z'], ['TipoSedeA', 'TipoSedeZ'], ['Lat_GAT_A', 'Lat_GAT_Z'], ['Lon_GAT_A', 'Lon_GAT_Z']].forEach(function (p) { var t = r[p[0]]; r[p[0]] = r[p[1]]; r[p[1]] = t; });
+    delete r.IdCollegamento;   /* così il modello usa questo record (con A e Z nel verso del routing) e non quello del DB */
+    return r;
+  }
+  window.croAssKmz = {
+    kmz: function (k, btn) {
+      if (!window.JSZip) { msg('cc-b', '<h6>⚠️ KMZ non disponibile</h6><div class="cc-k">La libreria JSZip, che crea il file .kmz, arriva da internet e ora non è caricata (VPN o rete aziendale). Riprova con la rete, oppure usa ✏️ Apri nel modulo KMZ e genera il file da lì quando la rete torna.</div>'); return; }
+      riempi(k, function () {
+        try { window.kmzGeneraKmz(); if (btn) btn.textContent = '✔ KMZ scaricato'; }
+        catch (e) { if (typeof showToast === 'function') showToast('KMZ non generato: ' + e.message, 'error'); }
+      });
+    },
+    modello: function (k, btn) {
+      if (typeof ExcelJS === 'undefined') { msg('cc-b', '<h6>⚠️ Excel KMZ non disponibile</h6><div class="cc-k">La libreria Excel arriva da internet e ora non è caricata (VPN o rete aziendale). Riprova con la rete; intanto puoi usare ✏️ Apri nel modulo KMZ.</div>'); return; }
+      var w = KS[k].w, prima = window._croKmzScelta;
+      window._croKmzScelta = [{ percorso: { edges: w.seq.map(function (s) { return { raw: orienta(s.rec, s.from) }; }), nodes: w.nodi.slice() }, div: false, base: 0, alt: 0 }];
+      try { window.croEsportaModelloKmz('UNIFIED'); if (btn) btn.textContent = '✔ Modello scaricato'; }
+      finally { window._croKmzScelta = prima; }
+    },
+    apri: function (k) {
+      riempi(k, function () {
+        try { switchTab('analisi-fattibilita'); } catch (e) {}
+        setTimeout(function () { var c = document.getElementById('kmz_blocks_container'); if (c) c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
+      });
+    },
+    inverti: function (k) {
+      var S = KS[k], w = S.w, nuovo = { C: S.C, A: w.nodi[w.nodi.length - 1], regola: 'Hai invertito Sede A e Sede Z.', ordine: S.ordine };
+      var n = KS.length; KS.push(nuovo); msg('cc-b', cardKmz(n));
+    }
+  };
   /* ════ V11.26|176 · contesto: cosa sta guardando l'Assistente (tab aperto, Partenza, Arrivo, RTN) ════ */
   function contesto() {
     var A = window.croNodiA1, tab = A && A.tabAttivo ? A.tabAttivo() : null, out = { tab: tab };
@@ -8108,7 +8307,8 @@ window.croChat = (function () {
     ['/regola', 'regola usata', '/regola', 'quale regola ha dato l\u2019ultima risposta (V11.26|188)'],
     ['/guida', 'aiuto', '/guida', 'Guida rapida: cosa so fare (V11.26|189)'],
     ['/comandi', 'comandi', '/comandi', 'Guida rapida: i comandi veloci (V11.26|189)'],
-    ['/limiti', 'limiti', '/limiti', 'Guida rapida: cosa non so fare (V11.26|189)']
+    ['/limiti', 'limiti', '/limiti', 'Guida rapida: cosa non so fare (V11.26|189)'],
+    ['/kmz', 'kmz', '/kmz CRM204-CRM205', 'KMZ e modello Tracciati da subpath RC e IdCollegamento RA (V11.26|192)']
   ];
   var STORIA = (function () { try { return JSON.parse(localStorage.getItem('croChatStoria') || '[]'); } catch (e) { return []; } })(), sPos = -1, AC = [], acSel = -1;
   function traduci(t) {
@@ -32580,7 +32780,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 191 | Nov 2026</div>
+<div class="version-tag">V11.26 | 192 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -32881,7 +33081,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 191</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 192</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -32898,9 +33098,9 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 191</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 192</span>
                     </div>
-                    <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati. Se scrivi male un CLLI, un subpath o un nome propone <strong>«Forse cercavi»</strong> con tutti i candidati vicini; ignora le parole di cortesia, conosce alcuni sinonimi e le città; quando non capisce dice cosa ha riconosciuto; dopo un calcolo nell’Unificato capisce «e senza RTN?» e «e al contrario?»; «/regola» dice chi ha risposto. Il bottone <strong>«📘 Guida»</strong> (prima «Limiti») apre la Guida rapida in tre schede: cosa so fare con gli esempi da cliccare, i comandi veloci, cosa non so fare; «aiuto» seguito da una centrale propone le domande su quella centrale, il «?» da solo approfondisce la risposta di prima.</p>
+                    <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati. Se scrivi male un CLLI, un subpath o un nome propone <strong>«Forse cercavi»</strong> con tutti i candidati vicini; ignora le parole di cortesia, conosce alcuni sinonimi e le città; quando non capisce dice cosa ha riconosciuto; dopo un calcolo nell’Unificato capisce «e senza RTN?» e «e al contrario?»; «/regola» dice chi ha risposto. Con «kmz» e una lista di collegamenti (subpath RC o IdCollegamento RA, in qualsiasi ordine) li rimette in ordine di routing, mette un Nodo A1 in Sede Z e prepara il <strong>.kmz</strong>, il modello <strong>«Tracciati KMZ per archi DWDM»</strong> e il modulo KMZ. Il bottone <strong>«📘 Guida»</strong> (prima «Limiti») apre la Guida rapida in tre schede: cosa so fare con gli esempi da cliccare, i comandi veloci, cosa non so fare; «aiuto» seguito da una centrale propone le domande su quella centrale, il «?» da solo approfondisce la risposta di prima.</p>
                     <div class="feature-specs">
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">CLLI</span>
                         <span class="spec-tag" style="background: #eff6ff; color: #1d4ed8;">Subpath RA e RC</span>
@@ -32919,7 +33119,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 191</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 192</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -32937,7 +33137,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 191</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 192</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -32971,7 +33171,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 191</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 192</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Prima i Nodi A1 della stessa regione, poi le alternative delle altre regioni, ognuno per distanza, con Area, Zona e Regione dal DB; «via RTN» se si raggiungono solo con la dorsale. Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due, con i bottoni Arrivo Std e Arrivo Div (su due Nodi diversi), la centrale cercata va in <strong>Partenza</strong> e il popup resta aperto fino a «Fatto». Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -32987,7 +33187,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 191</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 192</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -33451,7 +33651,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 191</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 192</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -33601,8 +33801,18 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">📤 Novità V11.26 | 191 | Nov 2026</span>
+                  <span class="cl-ver">🗺️ Novità V11.26 | 192 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🗺️ KMZ da una lista di collegamenti</strong>: scrivi «kmz» e i collegamenti, in qualsiasi ordine e con qualsiasi separatore. Per la RC il subpath (per esempio CRM204-CRM205-CRM207-CRM203), per la RA l’IdCollegamento completo (per esempio «AM_arco_1021 | AM_3 | AAM003/1 | 4»)</li><li><strong>Ordine di routing ed estremi</strong>: l’Assistente rimette i collegamenti in ordine con le centrali dei DB e mette in Sede Z l’estremo che è Nodo A1; se non c’è, Sede A è dal lato del primo collegamento scritto e «⇄ Inverti A e Z» scambia le sedi</li><li><strong>Tre bottoni</strong>: «🗺️ Scarica KMZ», «📊 Excel KMZ» (il modello «Tracciati KMZ per archi DWDM» compilato, con le sedi A e Z nel verso del routing) e «✏️ Apri nel modulo KMZ»</li><li><strong>Niente file sbagliati</strong>: se un collegamento non esiste propone «Forse cercavi», se la lista non è una catena unica dice dove si interrompe, e in questi casi non genera niente</li><li>Il .kmz e l’Excel usano librerie che arrivano da internet: in VPN o senza rete l’Assistente lo dice e il modulo KMZ si riempie lo stesso</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📤 Novità V11.26 | 191 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -51788,6 +51998,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                   <p><strong>Assistente CRO, domande scritte male o a metà (V11.26|188).</strong> Quando la ricerca di sempre non trova niente, l’Assistente prova ancora prima di arrendersi, e le risposte che dava già restano identiche. Un CLLI, un subpath o il nome di una centrale scritto con un errore (una lettera sbagliata, due lettere invertite, la O al posto dello zero) porta a «🔤 Forse cercavi», una tabella con tutti i candidati vicini: prima quelli con due lettere invertite, poi quelli con una lettera diversa, con 📍 Partenza e 🏁 Arrivo. Le parole di cortesia non contano (una domanda lunga e gentile diventa la sola parola utile) e alcuni sinonimi diventano le parole del tool: nodo o sede vale centrale, dismesso o spento vale non attivo, fibra vale C-FOS, DC vale data center. Una città è la parola con cui comincia il nome di più centrali: il nome di una città mostra tutte le centrali che cominciano così in una tabella che scorre, con zona, regione e reti. Se la risposta è solo un elenco di testi del tool (📖 Nel tool), sotto compaiono anche i dati trovati con i sinonimi e «Forse cercavi una centrale». Se non trova niente lo dice e spiega cosa ha riconosciuto (centrale, città, zona, regione, stato) e per quali parole non ha né dati né regole, con le domande che funzionano su quello che ha riconosciuto. Dopo un calcolo nell’Unificato capisce «e senza RTN?», «e con RTN?», «e al contrario?» e «quanti km in tutto?»: le trasforma nei comandi che conosce già («calcola … senza RTN», «calcola Arrivo &gt; Partenza», «percorso 1») con Partenza e Arrivo dei campi dell’Unificato, e lo scrive in cima alla risposta; il calcolo è quello di sempre. «/regola» dice quale parte dell’Assistente ha dato l’ultima risposta. Nell’elenco delle domande non capite ci sono anche «🔁 Riprova tutte» (rifà le domande con la revisione aperta e dice quali adesso hanno una risposta; quelle che fanno partire ricerche o aprono tab si riprovano a mano con ▶ Riprova), «⬇ Esporta per Claude» (TXT con domanda, esito e chi ha risposto) e «🧹 Togli quelle che ora rispondono».</p>
                   <p><strong>Assistente CRO, Guida rapida (V11.26|189).</strong> Il bottone «Limiti» nella barra diventa «📘 Guida» e apre la Guida rapida in tre schede. «✅ Cosa so fare» è una tabella per argomento (una centrale, un collegamento, elenchi per stato e luogo, percorsi nell’Unificato, Progettazione, testi del tool, info live, se scrivi male, l’Assistente stesso): per ogni riga cosa vuoi sapere, gli esempi da cliccare e cosa ottieni; un campo in cima filtra le righe. Ci sono tutti gli esempi che prima stavano nel messaggio iniziale, con gli stessi bottoni. «⚡ Comandi veloci» elenca i comandi che cominciano con /, con un esempio, la frase a cui equivalgono e cosa fanno, spiega la differenza fra /perche (i risultati della ricerca) e /regola (l’Assistente) e gli altri tasti e parole. «🚫 Cosa non so fare» riporta i limiti come «non so, usa invece», con le date dei DB caricati lette dalla pagina. Il messaggio iniziale è più corto: i tre bottoni della Guida e sei esempi «Più usati». «aiuto» o /guida aprono «Cosa so fare»; «limiti» o /limiti aprono «Cosa non so fare»; «comandi», /comandi o una / da sola aprono «Comandi veloci». «aiuto» seguito da un CLLI, un subpath, una centrale, una città, una zona o una regione apre «Cosa so fare» con, in cima, le domande che funzionano su quella cosa; seguito da un’altra parola filtra le righe. Il «?» da solo dopo una risposta la approfondisce: dice quale regola ha risposto e propone le domande su quello di cui stavi parlando; all’inizio della conversazione chiede cosa ti serve. «spiegami meglio» e «approfondisci» fanno lo stesso. I comandi / si riconoscono anche con accenti, apostrofi, maiuscole, spazi o numeri attaccati, con la barra rovesciata e con un nome accorciato se non è ambiguo; un comando che non esiste apre «Comandi veloci» con quelli simili.</p>
                   <p><strong>Assistente CRO, lettura dall’inizio e titolo su due righe (V11.26|190).</strong> Ogni messaggio nuovo si legge dall’inizio: dopo una domanda, un chip o un bottone (📘 Guida, Cosa so fare, Comandi veloci, Cosa non so fare, Riprova tutte) la chat si ferma sulla prima riga del messaggio, non in fondo; cambiando scheda nella Guida si torna all’inizio della Guida. Nella barra il titolo sta su due righe, «🤖 Crò · Assistente CRO» e sotto «cerca nei dati e nei testi del tool», e non viene più tagliato dai bottoni; con la finestra stretta i bottoni che non ci stanno scendono su una seconda riga, allineati a destra.</p>
+                  <p><strong>Assistente CRO, KMZ da una lista di collegamenti (V11.26|192).</strong> Scrivi «kmz» e i collegamenti, in qualsiasi ordine e con qualsiasi separatore (trattino, spazio, virgola, punto e virgola, +): per la RC il subpath (IdCollegamento del DB RC), per la RA l’IdCollegamento completo del DB RA, nella forma «arco | ramo | subpath | progressivo». Senza la parola «kmz» basta una lista unita da trattini o con un IdCollegamento RA. L’Assistente rimette i collegamenti in ordine di routing usando le centrali dei DB, trova i due estremi e, se uno dei due è Nodo A1, lo mette in Sede Z; se lo sono tutti e due o nessuno, Sede A è dal lato del primo collegamento scritto e «⇄ Inverti A e Z» scambia le sedi. La scheda mostra Sede A, Sede Z, la regola usata e una tabella con rete, collegamento, centrali nel verso del routing, km, stato e C-FOS, con il totale. I bottoni: «🗺️ Scarica KMZ» (il file .kmz del modulo KMZ), «📊 Excel KMZ» (il modello «Tracciati KMZ per archi DWDM» compilato, lo stesso degli export con l’interruttore KMZ, con le sedi A e Z nel verso del routing) e «✏️ Apri nel modulo KMZ» (porta centrali e collegamenti nel modulo, sostituendo quello che c’è dopo una conferma). Il .kmz e l’Excel usano due librerie che arrivano da internet (JSZip ed ExcelJS): senza rete l’Assistente lo dice, e il modulo KMZ si riempie lo stesso. Se un collegamento non esiste nei DB propone «Forse cercavi» e non genera niente; se la lista non è una catena unica dice dove si interrompe; un subpath RA da solo non basta, perché nel DB RA sta su più collegamenti e più archi: la risposta mostra gli IdCollegamento da usare. Comando veloce: /kmz.</p>
                   <p><strong>Dove si trova:</strong> nel menu «Progettazione ▾» subito dopo Ricerca Percorso Unificato (voce «Progettazione SdF 🚧», insieme alla Progettazione Percorso), e nell’Overview con il bottone «Progettazione SdF» (accanto a «Progettazione Percorso»). È sperimentale: i risultati vanno verificati. Il cassetto «📘 Note e regole» ha tutte le regole in 18 voci.</p>
                   <p><strong>Barra in alto:</strong> cinque sezioni con i bottoni tutti alti uguali: Schema (Stessa regione, 7 blocchi; Interregionale, 11 blocchi con due reti RTR, i Nodi A1 e la RTN; Verso Nodo A1, 5 blocchi), Capacità (1G, 10G, 100G), Rete RTR (Solo Std o Std + Div), Protezione (No, SNCP a caramella, E2E) e Progettazione (Undo, Importa, Wizard, Svuota). I bottoni scelti tengono il loro colore anche al passaggio del mouse; il suggerimento compare sopra la sezione senza coprire i bottoni.</p>
                   <p><strong>Aggiungi un blocco e Fattibilità (SdF):</strong> nella riga sotto la barra si aggiungono i blocchi uno alla volta (nel primo lato libero) e, a destra, si scrivono le fattibilità nelle due minicard «1a Via · Std» e «2a Via · Div». Div vuota o uguale: una sola SdF per le due vie. Due numeri diversi: 1a Via sulla SdF Std, 2a Via sulla SdF Div. Sotto il titolo una riga dice quale dei due casi vale.</p>
@@ -54045,7 +54256,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 191 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 192 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -54064,6 +54275,17 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🗺️ V11.26 | 192 | Nov 2026 | Assistente CRO: KMZ da una lista di collegamenti
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li>croChat: rispostaKmz() dopo rispostaGuida() e prima di seguitoUNI(); si attiva con KMZ o TRACCIAT e almeno un collegamento, oppure con due collegamenti uniti da - + , ; oppure con un IdCollegamento RA; la catena di rispondiBase() non cambia</li><li>kmzIds(): IdCollegamento RA con RE_RAID e chiaveRA() (spazi attorno ai | normalizzati); subpath RC con U.id; catena(): grafo sulle centrali, controlli A=Z, centrale con più di due collegamenti, tratti separati, anello; cammina() dall’estremo in Sede A</li><li>Scarica KMZ e Apri nel modulo KMZ: riempi() porta il modulo KMZ in modalità Più SdF e chiama kmzImportFromExport() con un _croParseUnifiedExport temporaneo che restituisce il percorso (poi ripristinato); Scarica KMZ chiama kmzGeneraKmz()</li><li>Excel KMZ: window._croKmzScelta temporanea con i record orientati nel verso del routing (A e Z, GAT, TipoSede, Lat e Lon scambiati dove serve, senza IdCollegamento) e croEsportaModelloKmz(\'UNIFIED\'); poi _croKmzScelta torna com’era</li><li>Comando /kmz (alias /tracciati); riga «KMZ da una lista» nella Guida rapida</li><li>Prova: CRM204-CRM205-CRM207-CRM203 → POMEITAY … ROMAITGC (Nodo A1 in Z), KML con 5 centrali e 4 tratte (JSZip servita in locale nella prova); RA AM_arco_1021 progressivi 4, 5 e 6 in ordine sparso; modello Tracciati letto con ExcelJS finto</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             📤 V11.26 | 191 | Nov 2026 | Export: tratte «da realizzare», Prima Via solo con un Div
           </summary>
@@ -110730,7 +110952,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 191';
+  var REVISIONE = 'V11.26 | 192';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
