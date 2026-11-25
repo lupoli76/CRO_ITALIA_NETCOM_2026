@@ -4,13 +4,46 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 193  (rev. pubblicata: V11.26 | 193 | Nov 2026)              ║
+║   Versione: 11.26 | 196  (rev. pubblicata: V11.26 | 196 | Nov 2026)              ║
 ║   Data: 25 Novembre 2026                                                         ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 196 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE PERCORSO: la linea del percorso torna su una riga sola e       ║
+║     si scorre (al posto della linea che va a capo, troppo alta: ~75 px           ║
+║     contro 268 px della 195 per ABANO → AGORDO a 1720 px)                        ║
+║   • Rami larghi quanto la scritta + 20 px per lato, linea dietro i pallini:      ║
+║     scritte di rami e centrali staccate di almeno 24 px; nomi lunghi a capo      ║
+║   • Sopra: ◀ ▶, barra d'insieme con il riquadro della parte visibile (clic       ║
+║     per spostarsi), «centrali X–Y di N»; rotellina e trascinamento               ║
+║   • Tratta aggiunta: riga in fondo; dettaglio, Togli, resize: resta dov'era      ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 195 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PROGETTAZIONE PERCORSO, linea del percorso: le scritte dei rami (km,         ║
+║     subpath) restano ad almeno 20 px dalle scritte delle centrali (prima 8)      ║
+║   • Se a quella larghezza non ci stanno: prima centrali più strette, poi         ║
+║     una riga in più (ABANO → AGORDO a 1720 px: 4/3/3/3 invece di 5/4/4)          ║
+║                                                                                  ║
+║   CHANGELOG V11.26 | 194 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • (V11.26                                                                      ║
+║ 193: DB RA e RC del 25/11/26 caricati con CRONAT)                                ║
+║   • PROGETTAZIONE PERCORSO, linea del percorso: centrali in righe                ║
+║     bilanciate (13 su 3 righe: 5/4/4; mai l'arrivo da solo in fondo)             ║
+║   • Il collegamento a fine riga continua: scende a destra, passa fra le          ║
+║     righe e rientra da sinistra nella prima centrale della riga sotto, con       ║
+║     lo stesso colore e tratteggio (RA, RC, non attivo, passaggio di rete)        ║
+║   • Rami RA: sotto i km il subpath con i progressivi (ANE009 · 7–9); col         ║
+║     mouse arco, IdCollegamento con stato e km, T3 di transito                    ║
+║   • Scritte mai tagliate e staccate di 8 px dalle centrali: se non ci            ║
+║     stanno, centrali più strette e poi una riga in più                           ║
+║   • Si ricalcola al cambio di larghezza; clic sul ramo e torna qui invariati     ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 192 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -14869,6 +14902,34 @@ window.croVerifCerca = function (forza, dove) {
     return '<div class="pi-ms ' + cls + ' ' + (rete(k) || '').toLowerCase() + '"><i></i><b title="' + esc(nm) + ' (' + esc(c) + ')">' + esc(nm) + '</b>'
       + '<small>' + esc(c) + (rete(k) ? ' · ' + rete(k) : '') + (tipo ? ' ' + tipo : '') + pastHtml(c) + '</small>' + (extra || '') + '</div>';
   }
+  /* V11.26|194: rami RA leggibili sulla linea. Subpath con i progressivi (ANE009 · 7–9) e sotto l'arco; al passaggio del mouse
+     tutti gli IdCollegamento con stato e km, le T3 di transito, le C-FOS restano nel dettaglio del clic */
+  function raGruppi(e, da) {
+    var sp = [], arc = [], m = {};
+    fila(e, clli(da)).forEach(function (x) {
+      var r = x.r || {}, s0 = String(r.SubPath || '').trim(), a0 = String(r.Arco || '').trim(), p = parseInt(r['Prog (Ramo/Arco)'], 10);
+      if (s0) { if (!m[s0]) { m[s0] = []; sp.push(s0); } if (!isNaN(p) && m[s0].indexOf(p) < 0) m[s0].push(p); }
+      if (a0 && arc.indexOf(a0) < 0) arc.push(a0);
+    });
+    var prog = function (L) {
+      L = L.slice().sort(function (a, b) { return a - b; }); var out = [], i = 0;
+      while (i < L.length) { var j = i; while (j + 1 < L.length && L[j + 1] === L[j] + 1) j++; out.push(j > i ? L[i] + '–' + L[j] : String(L[i])); i = j + 1; }
+      return out.join(', ');
+    };
+    return { sub: sp.map(function (x) { return x + (m[x].length ? ' · ' + prog(m[x]) : ''); }), arc: arc };
+  }
+  function raEtich(e, da, a, st) {   /* l'arco è nel suggerimento */
+    var g = raGruppi(e, da);
+    return '<span class="pi-mrs pi-mrsub">' + esc(g.sub.join(' + ') || 'RA') + (st.ok ? '' : ' \u00b7 \u26a0') + '</span>';
+  }
+  function raTip(e, da, a) {
+    var g = raGruppi(e, da), rr = fila(e, clli(da)), via = viaDi(e, da, a);
+    var t = nome(da) + ' → ' + nome(a) + ' · ' + f2(e.weight) + ' km\nArco ' + g.arc.join(' + ') + ' · subpath ' + g.sub.join(' + ') + '\n';
+    rr.forEach(function (x) { var r = x.r || {}, km = parseFloat(String(r.Distanza_km).replace(',', '.'));
+      t += '• ' + String(r.IdCollegamento || '').trim() + '\n   ' + (r.Stato_IdCollegamento || 'stato non indicato') + (isNaN(km) ? '' : ' · ' + f2(km) + ' km') + '\n'; });
+    if (via.length) t += 'Transito T3: ' + via.map(function (v) { return nome(v[0]); }).join(', ') + '\n';
+    return t + 'Clic: C-FOS, OTS e ↶ torna qui';
+  }
   routingTab = function (att) {
     var n = S.archi.length, arr = arrivato(), h = '<div class="pi-metro">';
     if (S._seg != null && S._seg >= n) S._seg = null;
@@ -14877,9 +14938,10 @@ window.croVerifCerca = function (forza, dove) {
       if (eIn && eIn.source === 'XFER') tp = 'T1';
       if (i > 0) {
         var e = S.archi[i - 1], st = statoArco(e), j = i - 1, nv = viaDi(e, S.nodi[j], k).length;
-        h += '<button type="button" class="pi-mr ' + (e.source === 'XFER' ? 'xf' : e.source.toLowerCase()) + (st.ok || e.source === 'XFER' ? '' : ' ko') + (S._seg === j ? ' on' : '') + '" ' + att + '="seg:' + j + '" data-ph="a:' + j + '" data-tip="Clic: tutte le info della tratta ' + esc(nome(S.nodi[j])) + ' → ' + esc(nome(k)) + '">'
+        h += '<button type="button" class="pi-mr ' + (e.source === 'XFER' ? 'xf' : e.source.toLowerCase()) + (st.ok || e.source === 'XFER' ? '' : ' ko') + (S._seg === j ? ' on' : '') + '" ' + att + '="seg:' + j + '" data-ph="a:' + j + '" data-tip="' + (e.source === 'RA' ? esc(raTip(e, S.nodi[j], k)) : 'Clic: tutte le info della tratta ' + esc(nome(S.nodi[j])) + ' → ' + esc(nome(k))) + '">'
           + '<span class="pi-mrl"></span><span class="pi-mrt">' + (e.source === 'XFER' ? xfLbl(e) : f2(e.weight) + ' km') + '</span>'
-          + '<span class="pi-mrs">' + (e.source === 'XFER' ? 'passaggio' : e.source === 'RC' ? esc(e.id) : (nv ? nv + ' T3 · ' : '') + fila(e, '').length + ' ID') + (st.ok || e.source === 'XFER' ? '' : ' · ⚠') + '</span></button>';
+          + (e.source === 'RA' ? raEtich(e, S.nodi[j], k, st)   /* V11.26|194: sul ramo RA il subpath con i progressivi; arco e il resto al passaggio del mouse */
+          : '<span class="pi-mrs">' + (e.source === 'XFER' ? 'passaggio' : esc(e.id)) + (st.ok || e.source === 'XFER' ? '' : ' · ⚠') + '</span>') + '</button>';
       }
       h += stazHtml(k, i, tp, (i === 0 ? 'a' : '') + (i === S.nodi.length - 1 ? (arr ? ' z' : ' cur') : ''));
     });
@@ -14898,6 +14960,149 @@ window.croVerifCerca = function (forza, dove) {
     } else if (n) h += '<div class="pi-k pi-segk">Clic su un ramo della linea per vedere tutte le info della tratta (IdCollegamento, C-FOS, catena, OTS) e «↶ torna qui».</div>';
     return h;
   };
+  /* ═══ V11.26|194: la linea del percorso va a capo. Le centrali si dividono in righe bilanciate (l'arrivo non resta mai da solo)
+     e il collegamento a fine riga continua: scende a destra, passa fra le righe e rientra da sinistra nella prima centrale della
+     riga sotto, con lo stesso colore e tratteggio. Si ricalcola quando cambia la larghezza. Solo aspetto: routingTab non cambia. ═══ */
+  var _mxOcc = false;
+  var MX_GAP = 20;   /* V11.26|195: distanza minima in px fra le scritte di un ramo e quelle delle centrali (era 8) */
+  function mxSpiana(m) {
+    var sv = m.querySelector(':scope > .mx-svg'); if (sv) sv.remove();
+    Array.prototype.slice.call(m.querySelectorAll(':scope > .mx-row')).forEach(function (r) { while (r.firstChild) m.insertBefore(r.firstChild, r); r.remove(); });
+    Array.prototype.forEach.call(m.querySelectorAll('.mx-out'), function (x) { x.classList.remove('mx-out'); });
+    m.classList.remove('mx', 'mx-st');
+  }
+  function mxRighe(m) {
+    if (!m || !m.isConnected) return;
+    var W = m.clientWidth; if (!W) return;
+    _mxOcc = true;
+    try {
+      mxSpiana(m);
+      var kids = Array.prototype.slice.call(m.children), st = kids.filter(function (k) { return k.classList.contains('pi-ms'); });
+      if (st.length < 2) return;
+      var t0 = st[0].offsetTop, cap = st.filter(function (s) { return s.offsetTop === t0; }).length;
+      /* anche su una riga sola: i rami usano lo spazio libero e le scritte non si tagliano */
+      /* righe con le centrali distribuite in modo uniforme (13 su 4 righe: 4/3/3/3); se una scritta non ci sta
+         (km, subpath, arco, nome) si usa una riga in più invece di tagliarla */
+      var righe = [];
+      var disponi = function (nr, stretta) {
+        mxSpiana(m); m.classList.add('mx'); if (stretta) m.classList.add('mx-st');
+        var base = Math.floor(st.length / nr), extra = st.length % nr, cur = null, ns = 0; righe = [];
+        kids.forEach(function (k) {
+          if (k.classList.contains('pi-ms')) { if (!cur || ns === (righe.length <= extra ? base + 1 : base)) { cur = document.createElement('div'); cur.className = 'mx-row'; m.appendChild(cur); righe.push(cur); ns = 0; } ns++; }
+          if (cur) cur.appendChild(k); else m.appendChild(k);
+        });
+        righe.forEach(function (r, i) { var u = r.lastElementChild; if (i < righe.length - 1 && u && u.classList.contains('pi-mr')) u.classList.add('mx-out'); });
+      };
+      /* «tagliato»: una scritta di un ramo (km, subpath) arriva a meno di MX_GAP px da una scritta di una centrale, o un nome di centrale è tagliato */
+      var tagliato = function () {
+        var T = [];
+        Array.prototype.forEach.call(m.querySelectorAll('.pi-ms b, .pi-ms small'), function (x) { var r = x.getBoundingClientRect(); if (r.width) T.push(r); if (x.tagName === 'B' && x.scrollHeight > x.clientHeight + 2) T.push(null); });
+        if (T.indexOf(null) >= 0) return true;
+        return Array.prototype.some.call(m.querySelectorAll('.pi-mrt, .pi-mrs'), function (x) {
+          if (!x.textContent) return false;
+          var a = x.getBoundingClientRect();
+          return T.some(function (b) { return a.left < b.right + MX_GAP && a.right > b.left - MX_GAP && a.top < b.bottom && a.bottom > b.top; });
+        });
+      };
+      /* prima meno righe possibile, poi centrali larghe; le centrali strette (mx-st) solo se evitano una riga in più */
+      fuori: for (var nr = Math.ceil(st.length / cap); nr <= st.length; nr++) for (var stretta = 0; stretta < 2; stretta++) { disponi(nr, stretta); if (!tagliato()) break fuori; }
+      var mb = m.getBoundingClientRect(), NS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('class', 'mx-svg'); svg.setAttribute('width', mb.width); svg.setAttribute('height', mb.height); svg.setAttribute('aria-hidden', 'true');
+      righe.forEach(function (r, i) {
+        if (i === righe.length - 1) return;
+        var seg = r.lastElementChild; if (!seg || !seg.classList.contains('pi-mr')) return;
+        var ln = seg.querySelector('.pi-mrl').getBoundingClientRect(), dot = righe[i + 1].querySelector('.pi-ms i'); if (!dot) return;
+        var nx = dot.getBoundingClientRect(), rb = r.getBoundingClientRect();
+        var col = seg.classList.contains('xf') ? '#7c3aed' : seg.classList.contains('next') ? '#94a3b8' : seg.classList.contains('rc') ? '#dc2626' : '#0000ff';
+        var dash = seg.classList.contains('xf') ? '5 3' : seg.classList.contains('next') ? '5 4' : seg.classList.contains('ko') ? '9 4' : '';
+        var y1 = ln.top + ln.height / 2 - mb.top, y2 = nx.top + nx.height / 2 - mb.top, ym = rb.bottom - mb.top + 11, R = 8;
+        var x1 = ln.right - mb.left, xr = Math.max(x1 + R + 2, mb.width - 8), xl = 8, x2 = nx.left - mb.left;
+        var d = 'M' + x1 + ' ' + y1 + ' H' + (xr - R) + ' Q' + xr + ' ' + y1 + ' ' + xr + ' ' + (y1 + R) + ' V' + (ym - R) + ' Q' + xr + ' ' + ym + ' ' + (xr - R) + ' ' + ym
+          + ' H' + (xl + R) + ' Q' + xl + ' ' + ym + ' ' + xl + ' ' + (ym + R) + ' V' + (y2 - R) + ' Q' + xl + ' ' + y2 + ' ' + (xl + R) + ' ' + y2 + ' H' + (x2 - 1);
+        var p = document.createElementNS(NS, 'path');
+        p.setAttribute('d', d); p.setAttribute('fill', 'none'); p.setAttribute('stroke', col); p.setAttribute('stroke-width', '5'); p.setAttribute('stroke-linecap', 'round'); p.setAttribute('stroke-linejoin', 'round');
+        if (dash) p.setAttribute('stroke-dasharray', dash);
+        p.setAttribute('data-mx', seg.getAttribute('data-ph') || '');
+        svg.appendChild(p);
+      });
+      m.insertBefore(svg, m.firstChild);
+    } finally { setTimeout(function () { _mxOcc = false; }, 0); }
+  }
+  var mxTutte = function () { Array.prototype.forEach.call(document.querySelectorAll('.pi-metro'), mxRighe); };   /* 194–195, sostituita qui sotto dalla V11.26|196 */
+  /* ═══ V11.26|196: la linea del percorso su una riga che scorre (al posto della linea che va a capo della 194–195, troppo alta).
+     Rami larghi quanto la loro scritta + 20 px per lato, la linea passa dietro i pallini: scritte di rami e centrali sempre staccate.
+     Sopra: ◀ ▶, barra d'insieme con il riquadro della parte visibile (clic per spostarsi), «centrali X–Y di N».
+     Aggiungendo una tratta la riga va in fondo; altrimenti resta dov'era. Solo aspetto: routingTab non cambia. ═══ */
+  var _scPos = {};
+  function scRiga(m) {
+    if (!m || !m.isConnected || m.closest('.sc-w')) return;
+    var W0 = m.clientWidth; if (!W0) return;
+    _mxOcc = true;
+    try {
+      var chiave = m.closest('#piScheda') ? 's' : 'p', st = m.querySelectorAll(':scope > .pi-ms'), n = st.length, prima = _scPos[chiave] || { n: 0, x: 0 };
+      var w = document.createElement('div'); w.className = 'sc-w';
+      w.innerHTML = '<div class="sc-top"><button type="button" class="sc-b" data-d="-1" data-tip="Indietro">◀</button><div class="sc-ov" data-tip="Tutto il percorso: il riquadro è la parte che vedi. Clic per spostarti."></div><button type="button" class="sc-b" data-d="1" data-tip="Avanti">▶</button><span class="sc-lab"></span></div><div class="sc-vp"><div class="sc-f l"></div><div class="sc-f r"></div></div>';
+      m.parentNode.insertBefore(w, m); w.querySelector('.sc-vp').insertBefore(m, w.querySelector('.sc-f.l'));
+      m.classList.add('sc');
+      var ov = w.querySelector('.sc-ov'), lab = w.querySelector('.sc-lab'), fl = w.querySelector('.sc-f.l'), fr = w.querySelector('.sc-f.r');
+      var disegnaOv = function () {
+        ov.innerHTML = ''; var W = m.scrollWidth, k = ov.clientWidth / (W || 1), base = m.getBoundingClientRect().left - m.scrollLeft;
+        Array.prototype.forEach.call(m.children, function (x) {
+          var r = x.getBoundingClientRect(), L = (r.left - base) * k, Wd = r.width * k, el = document.createElement('div');
+          if (x.classList.contains('pi-mr')) { el.className = 'b ' + (x.classList.contains('xf') ? 'xf' : x.classList.contains('next') ? 'nx' : x.classList.contains('rc') ? 'rc' : 'ra') + (x.classList.contains('ko') ? ' ko' : ''); el.style.left = (L + Wd * .2) + 'px'; el.style.width = (Wd * .6) + 'px'; }
+          else if (x.classList.contains('pi-ms')) { el.className = 'd ' + (x.classList.contains('z') ? 'z' : x.classList.contains('meta') ? 'meta' : x.classList.contains('rc') ? 'rc' : 'ra'); el.style.left = (L + Wd / 2) + 'px'; }
+          else return;
+          ov.appendChild(el);
+        });
+        var win = document.createElement('div'); win.className = 'sc-win'; ov.appendChild(win); return k;
+      };
+      var k = disegnaOv();
+      var agg = function () {
+        var win = ov.querySelector('.sc-win'); if (win) { win.style.left = (m.scrollLeft * k) + 'px'; win.style.width = Math.min(ov.clientWidth, m.clientWidth * k) + 'px'; }
+        var a = m.getBoundingClientRect(), vis = [];
+        Array.prototype.forEach.call(st, function (s, i) { var r = s.getBoundingClientRect(); if (r.left + r.width / 2 >= a.left && r.left + r.width / 2 <= a.right) vis.push(i + 1); });
+        lab.textContent = vis.length ? (vis.length === n ? 'tutte le ' + n + ' centrali' : 'centrali ' + vis[0] + '–' + vis[vis.length - 1] + ' di ' + n) : '';
+        var sx = m.scrollLeft > 4, dx = m.scrollLeft + m.clientWidth < m.scrollWidth - 4;
+        fl.style.display = sx ? '' : 'none'; fr.style.display = dx ? '' : 'none';
+        w.querySelector('.sc-b[data-d="-1"]').disabled = !sx; w.querySelector('.sc-b[data-d="1"]').disabled = !dx;
+        w.classList.toggle('sc-tutto', !sx && !dx);
+        _scPos[chiave] = { n: n, x: m.scrollLeft };
+      };
+      m.addEventListener('scroll', agg);
+      w._rifai = function () { k = disegnaOv(); agg(); }; w._lw = m.clientWidth;
+      w.querySelectorAll('.sc-b').forEach(function (b) { b.addEventListener('click', function () { m.scrollBy({ left: +b.dataset.d * m.clientWidth * .8, behavior: 'smooth' }); }); });
+      ov.addEventListener('click', function (e) { m.scrollTo({ left: (e.clientX - ov.getBoundingClientRect().left) / k - m.clientWidth / 2, behavior: 'smooth' }); });
+      m.addEventListener('wheel', function (e) { if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && m.scrollWidth > m.clientWidth) { m.scrollLeft += e.deltaY; e.preventDefault(); } }, { passive: false });
+      /* posizione: tratta nuova o percorso nuovo → in fondo (dove sei); tratta tolta o ridisegno → dov'eri; dettaglio di un ramo aperto → resta visibile */
+      var on = m.querySelector('.pi-mr.on');
+      m.style.scrollBehavior = 'auto';
+      if (on && prima.n === n) m.scrollLeft = prima.x;
+      else if (n > prima.n) m.scrollLeft = m.scrollWidth;
+      else m.scrollLeft = Math.min(prima.x, m.scrollWidth);
+      m.style.scrollBehavior = '';
+      agg();
+    } finally { setTimeout(function () { _mxOcc = false; }, 0); }
+  }
+  mxTutte = function () { Array.prototype.forEach.call(document.querySelectorAll('.pi-metro'), function (m) { if (m.closest('.sc-w')) { var w = m.closest('.sc-w'); if (m.clientWidth && w._lw !== m.clientWidth) { w._lw = m.clientWidth; if (w._rifai) w._rifai(); } return; } scRiga(m); }); };
+
+  var _mxT = null;
+  function mxPresto() { if (_mxOcc) return; clearTimeout(_mxT); _mxT = setTimeout(mxTutte, 30); }
+  new MutationObserver(function (L) {
+    if (_mxOcc) return;
+    for (var i = 0; i < L.length; i++) {
+      var t = L[i].target;
+      if ((t.querySelector && t.querySelector('.pi-metro')) || (t.closest && t.closest('.pi-metro'))) { mxPresto(); return; }
+    }
+  }).observe(document.documentElement, { childList: true, subtree: true });
+  var _mxW = 0;
+  if (window.ResizeObserver) new ResizeObserver(function () { var m = document.querySelector('.pi-metro'), w = m ? m.clientWidth : 0; if (w && w !== _mxW) { _mxW = w; mxPresto(); } }).observe(document.documentElement);
+  window.addEventListener('resize', mxPresto);
+  /* col mouse sul ramo anche il tratto che va a capo si ingrossa */
+  document.addEventListener('mouseover', function (e) {
+    var s = e.target.closest && e.target.closest('.pi-mr.mx-out'); var on = document.querySelectorAll('.mx-svg path.mx-hov');
+    Array.prototype.forEach.call(on, function (p) { p.classList.remove('mx-hov'); });
+    if (s) { var p = document.querySelector('.mx-svg path[data-mx="' + (s.getAttribute('data-ph') || '#') + '"]'); if (p) p.classList.add('mx-hov'); }
+  });
   /* strade da qui: una riga per strada, ▸ apre il dettaglio */
   function apM() { return S._ap || (S._ap = {}); }
   function apKey(pre, e, v) { return pre + (e.id || '') + '>' + v; }
@@ -32780,7 +32985,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 193 | Nov 2026</div>
+<div class="version-tag">V11.26 | 196 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -33081,7 +33286,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 192</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 196</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -33098,7 +33303,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 192</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 196</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati. Se scrivi male un CLLI, un subpath o un nome propone <strong>«Forse cercavi»</strong> con tutti i candidati vicini; ignora le parole di cortesia, conosce alcuni sinonimi e le città; quando non capisce dice cosa ha riconosciuto; dopo un calcolo nell’Unificato capisce «e senza RTN?» e «e al contrario?»; «/regola» dice chi ha risposto. Con «kmz» e una lista di collegamenti (subpath RC o IdCollegamento RA, in qualsiasi ordine) li rimette in ordine di routing, mette un Nodo A1 in Sede Z e prepara il <strong>.kmz</strong>, il modello <strong>«Tracciati KMZ per archi DWDM»</strong> e il modulo KMZ. Il bottone <strong>«📘 Guida»</strong> (prima «Limiti») apre la Guida rapida in tre schede: cosa so fare con gli esempi da cliccare, i comandi veloci, cosa non so fare; «aiuto» seguito da una centrale propone le domande su quella centrale, il «?» da solo approfondisce la risposta di prima.</p>
                     <div class="feature-specs">
@@ -33119,7 +33324,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 192</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 196</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -33137,7 +33342,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 192</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 196</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -33171,7 +33376,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 192</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 196</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Prima i Nodi A1 della stessa regione, poi le alternative delle altre regioni, ognuno per distanza, con Area, Zona e Regione dal DB; «via RTN» se si raggiungono solo con la dorsale. Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due, con i bottoni Arrivo Std e Arrivo Div (su due Nodi diversi), la centrale cercata va in <strong>Partenza</strong> e il popup resta aperto fino a «Fatto». Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -33187,7 +33392,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 192</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 196</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -33651,7 +33856,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 192</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 196</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -33801,8 +34006,38 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">🗺️ Novità V11.26 | 192 | Nov 2026</span>
+                  <span class="cl-ver">↔️ Novità V11.26 | 196 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>↔️ La linea del percorso su una riga che scorre</strong>: nella Progettazione Percorso il percorso sta su una sola riga, alta circa 75 pixel, e si scorre; prende il posto della linea che va a capo, che diventava troppo alta</li><li><strong>Tutto staccato</strong>: ogni ramo è largo quanto la sua scritta più 20 pixel per lato, così km, subpath e nomi delle centrali restano ad almeno 24 pixel l’uno dall’altro; i nomi lunghi vanno a capo</li><li><strong>Barra d’insieme e ◀ ▶</strong>: sopra la riga c’è tutto il percorso in piccolo con un riquadro sulla parte che vedi (clic per andarci) e «centrali 5–9 di 20»; si scorre anche con la rotellina</li><li>Quando aggiungi una tratta la riga va in fondo, dove sei arrivato; aprendo un ramo o togliendo una tratta resta dov’era</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🚇 Novità V11.26 | 195 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🚇 Scritte più distanziate</strong>: nella linea del percorso della Progettazione Percorso km e subpath dei rami restano ad almeno 20 pixel dai nomi delle centrali (prima 8), così niente sembra attaccato</li><li>Se non c’è spazio la linea stringe un po’ le centrali e poi usa una riga in più: per ABANO → AGORDO a 1720 pixel le righe diventano 4/3/3/3 invece di 5/4/4</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🚇 Novità V11.26 | 194 | Nov 2026</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>🚇 La linea del percorso va a capo</strong>: nella Progettazione Percorso, quando le centrali non stanno in una riga, il collegamento a fine riga continua nella riga sotto (scende a destra, passa fra le righe, rientra da sinistra) con lo stesso colore e tratteggio</li><li><strong>Righe bilanciate</strong>: le centrali si dividono in parti uguali fra le righe, così l’arrivo non resta mai da solo in fondo (13 centrali su 3 righe: 5/4/4 invece di 6/6/1)</li><li><strong>Rami RA leggibili</strong>: sotto i km c’è il subpath con i progressivi (ANE009 · 7–9) al posto di «2 T3 · 3 ID»; col mouse sul ramo compaiono arco, tutti gli IdCollegamento con stato e km e le centrali T3 di transito. I rami RC restano come prima</li><li><strong>Niente scritte tagliate o attaccate</strong>: i nomi lunghi vanno a capo invece di finire con «…», e se km o subpath non stanno staccati dalle centrali la linea usa una riga in più</li><li>Il clic sul ramo e «↶ torna qui» restano come prima; cambiando la larghezza della finestra le righe si ricalcolano</li><li>La revisione 193 aveva caricato i DB RA e RC del 25/11/26</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">🗺️ Novità V11.26 | 192 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -42504,6 +42739,8 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
         <ul>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🎯 Cos'è</strong>: costruisci un collegamento una tratta alla volta sulla rete dell'Unificato (RA + RC, passaggio di rete nelle sedi T1). È sperimentale: i risultati sono indicativi e vanno verificati su NNI e sui sistemi ufficiali. I km sono sempre quelli del DB.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">📍 Dove si trova</strong>: menu «Progettazione ▾», voce «Progettazione Percorso 🚧», accanto alla Progettazione SdF, e nell’Overview il bottone «Progettazione Percorso» accanto a «Progettazione SdF».</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">↔️ La linea su una riga che scorre (V11.26|196)</strong>: nella sezione «Il collegamento · routing dei subpath» il percorso sta su una sola riga, alta come una riga (circa 75 px), e si scorre. Ogni ramo è largo quanto la sua scritta più 20 px per lato e la linea passa dietro i pallini, così km, subpath e nomi delle centrali restano sempre staccati (almeno 24 px); i nomi lunghi vanno a capo. Sopra la riga: ◀ e ▶ scorrono di quasi una schermata, la barra d’insieme mostra tutto il percorso in piccolo con un riquadro sulla parte che vedi (clic su un punto per andarci), a destra «centrali 5–9 di 20». Funzionano anche la rotellina del mouse e la barra di scorrimento. Quando aggiungi una tratta la riga va in fondo, dove sei arrivato; aprendo il dettaglio di un ramo, togliendo una tratta o cambiando la larghezza resta dov’era. Rami RA con il subpath e il suggerimento al passaggio del mouse come nella 194. Ha preso il posto della linea che va a capo qui sotto, che a parità di contenuto diventava troppo alta.</p></li>
+          <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🚇 La linea va a capo (V11.26|194–195, sostituita dalla 196)</strong>: nella sezione «Il collegamento · routing dei subpath», quando le centrali non stanno in una riga, la linea si divide in righe bilanciate (l’arrivo non resta mai da solo in fondo) e il collegamento a fine riga non si ferma: scende sul lato destro, passa fra le righe e rientra da sinistra nella prima centrale della riga sotto, con lo stesso colore e lo stesso tratteggio (pieno, tratteggiato se non attivo, viola per il passaggio di rete). Sotto ogni ramo ci sono i km e il collegamento: per la RC il subpath (CNE053), per la RA il subpath con i progressivi (ANE009 · 7–9); col mouse sul ramo RA compaiono arco, tutti gli IdCollegamento con stato e km e le centrali T3 di transito. Le scritte non vengono mai tagliate e restano staccate di almeno 20 px dalle scritte delle centrali (V11.26|195; prima 8 px): se non c’è spazio la linea usa una riga in più (prima stringe un po’ le centrali, mandando a capo i nomi lunghi). Il clic sul ramo e «↶ torna qui» funzionano come prima; cambiando la larghezza della finestra le righe si ricalcolano.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🏁 Partenza e destinazione</strong>: dopo «▶ Inizia il percorso» l’intestazione (centrali e bottoni) scorre via con la pagina: il blocco che resta fermo in cima ai dati è la linea del collegamento, con a destra del titolo il riepilogo in quattro valori su una riga sola (Fatto: … · Collegamenti: … · Da verificare: … · Mancano almeno: … o Arrivato). Il riquadro azzurro del riepilogo in alto si vede solo prima di iniziare. Prima: l’intestazione è come nei tab di ricerca: a sinistra il riquadro verde con «Centrale di Partenza» e «Centrale di Arrivo» (icone dei palazzi), a destra il riepilogo azzurro del percorso (fatto, collegamenti, da verificare, mancano, dove sei e l’arrivo), sotto i bottoni «▶ Inizia il percorso», «↩️ Undo (Ultime 20)», «🏢 DC» (rosa quando i Data Center sono esclusi), «↺ Ricomincia», «🧼 Reset Tab» e lo Spazio; scorrendo la pagina l’intestazione resta ferma in alto. la tendina è quella dell'Unificato: sotto ogni centrale Area, Zona e Regione, Nodo A1 in blu e Data Center in rosa; a destra le reti con tutti i tipi sede RA che la centrale ha nel DB (es. RA T1/T3) e RC. La stessa riga resta dentro la casella. «DC» ammette o esclude i Data Center come il filtro [DC] dell'Unificato. «↺ Ricomincia» riparte tenendo partenza e destinazione, «🧼 Reset Tab» pulisce tutto: campi, percorso, suggerimenti e mappa (l’Undo resta).</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">🛣️ Strade da qui</strong>: una riga per strada con esito, rete, centrale di arrivo (verso) con le eventuali T3 di transito, tratta, mancano, totale, stato e IdCollegamento; ▸ apre il dettaglio (IdCollegamento, C-FOS, catena, OTS) e ▾ lo richiude, ▸ / ▾ nell’intestazione apre o chiude tutti. Il passaggio di rete parte aperto, con le sue strade sotto. Sono tutti i collegamenti RA e RC che partono dalla centrale in cui sei, qualunque sia il loro stato (lo vedi su ogni IdCollegamento; i Filtri Stati dell’Unificato qui non contano), ordinati per totale stimato: fatto + tratta + il più corto possibile da lì alla destinazione (la colonna «Mancano»), senza ripassare dalla centrale in cui sei né da quelle dove il percorso si è già fermato (le T3 attraversate dentro un arco RA non si bloccano). Etichette: consigliata, 2ª, 3ª, si allontana, senza uscita, scelta prima. Ogni strada è un blocco solo (intestazione e IdCollegamento): col mouse si colora tutto e compare «＋ clic per aggiungere», un clic in un punto qualsiasi la aggiunge.</p></li>
           <li><p style="margin-top: 0.25rem;"><strong style="color: #004C99;">💡 Suggerimenti</strong>: i percorsi completi da qui, migliori per km senza considerare lo stato dei collegamenti, in tre gruppi: solo RC (con priorità), solo RA, RA + RC; un quarto gruppo «Solo collegamenti attivi» dà i migliori 3 usando solo collegamenti con stato attivo (lo stato va comunque confermato su NNI). «🗺️ Sulla mappa» ne disegna uno, «🗺️ Tutti sulla mappa» li mostra tutti insieme al percorso che stai costruendo, ognuno col suo colore e il suo numero; col mouse sul suggerimento il suo percorso lampeggia. «Usa questa» lo aggiunge tutto. Accendere o spegnere un suggerimento, espanderlo o comprimerlo non sposta la mappa: resta dove l’hai lasciata. Sulla mappa, sotto «A tutto schermo» (a tutto schermo in alto a sinistra), di base la mappa è su «🔒 Mappa ferma»: non si sposta mai da sola, né aggiungendo o togliendo tratte né passando col mouse sui collegamenti; un clic la mette su «📍 Segue il percorso», e allora a ogni tratta aggiunta o tolta inquadra il collegamento. I suggerimenti non la spostano in nessuno dei due casi: per andarci c’è «🎯 Inquadra». La scelta resta salvata. «🎯 Inquadra percorso» la porta sul percorso quando vuoi. Questi due bottoni stanno sotto «▾ Opzioni mappa», chiuso di base (l’icona ti dice se la mappa è ferma 🔒 o segue 📍): un clic li mostra, «▴ Opzioni mappa» li nasconde, e il tool ricorda la scelta. «A tutto schermo» resta sempre visibile. Per portarla su un suggerimento usa «🎯 Inquadra» sulla sua riga; «🎯 Inquadra tutto» inquadra il tuo percorso con tutti i suggerimenti accesi. Quando arrivi i suggerimenti restano, ricalcolati dalla partenza all’arrivo: quelli già sulla mappa ci restano e ognuno dice quanti km ha in più o in meno del tuo percorso (verde se è più corto, blu se è uguale, arancio se è più lungo); «Usa questa» sparisce perché il percorso è già completo. Ogni suggerimento è compresso su una riga (km, collegamenti, da verificare, totale e la catena degli ID): ▸ apre le tratte, «Espandi tutti» / «Comprimi tutti» li apre o chiude insieme; «▴ Nascondi» chiude il riquadro, che resta visibile con il suo titolo. Ci sono anche nella mini scheda a tutto schermo, in «💡 Suggerimenti da qui a …» (chiuso di default). Un passaggio di rete (RA > RC o RC > RA) in fondo al percorso, già nella centrale di arrivo, non conta: non compare e non fa uscire due volte lo stesso percorso, e al suo posto c’è il successivo.</p></li>
@@ -54256,7 +54493,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 193 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 196 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -54275,6 +54512,39 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            ↔️ V11.26 | 196 | Nov 2026 | Progettazione Percorso: la linea del percorso su una riga che scorre
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li>Progettazione Percorso: scRiga() al posto di mxRighe() (mxTutte riassegnata): avvolge .pi-metro in div.sc-w con barra (.sc-top: ◀, .sc-ov, ▶, .sc-lab) e sfumature ai bordi; classe sc sulla .pi-metro (flex senza a capo, overflow-x auto, rami con padding 20 px e linea larga 100% + 40 + 132 px centrata dietro le centrali)</li><li>Posizione in _scPos per la pagina e per la scheda a tutto schermo: più centrali di prima → in fondo, altrimenti la posizione di prima; ResizeObserver ridisegna la barra d’insieme; rotellina verticale convertita in scorrimento orizzontale solo se la riga è più larga della vista</li><li>Il codice della 194–195 (mxRighe, righe bilanciate) resta nel file ma non è più chiamato</li><li>Prova: PADOITAS → AGORITAA passo passo (3 tratte consigliate, poi Completa): 20 centrali, distanza minima 24 px, ◀ ▶, clic sulla barra, clic su un ramo, Togli, finestra 1720 → 1300 px</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🚇 V11.26 | 195 | Nov 2026 | Progettazione Percorso: scritte della linea più distanziate
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li>Progettazione Percorso: MX_GAP = 20 (era 8 fisso) nel controllo tagliato() di mxRighe(): una scritta di un ramo deve stare ad almeno MX_GAP px dalle scritte delle centrali sulla stessa altezza</li><li>Prova: ABANO → AGORDO a 1250, 1400, 1720 e 1900 px, distanza minima misurata ≥ 20 px, nessuna scritta tagliata</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            🚇 V11.26 | 194 | Nov 2026 | Progettazione Percorso: la linea del percorso va a capo
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li>Progettazione Percorso: mxRighe() lavora dopo routingTab(): misura quante centrali stanno nella prima riga, poi prova da quel numero di righe in su, prima con le centrali larghe (132 px) e poi strette (112 px, classe mx-st), finché nessuna scritta di un ramo arriva a meno di 8 px da una scritta di centrale e nessun nome supera due righe; le centrali sono distribuite in modo uniforme dentro div.mx-row</li><li>Il ramo a fine riga ha la classe mx-out; un path SVG (svg.mx-svg sotto le righe) lo collega alla prima centrale della riga sotto, con colore e dasharray presi dalle classi ra, rc, ko, xf, next; col mouse sul ramo il tratto si ingrossa (mx-hov)</li><li>Rami RA: raGruppi() raccoglie subpath e progressivi da fila(); raEtich() scrive il subpath, raTip() il suggerimento (arco, IdCollegamento con stato e km, T3 di transito); il suggerimento #cro-tooltip va già a capo (pre-wrap)</li><li>MutationObserver su document.documentElement (il modulo parte prima di body) e ResizeObserver, ricalcolo con 30 ms di attesa</li><li>Prova: ABANO → AGORDO (13 centrali) a 1250, 1400, 1720 e 1900 px, nessuna scritta tagliata o attaccata; clic sul ramo, passaggio del mouse, Togli l’ultima tratta</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             🗺️ V11.26 | 192 | Nov 2026 | Assistente CRO: KMZ da una lista di collegamenti
           </summary>
@@ -108034,6 +108304,39 @@ body.dark-mode .pi-cat4 { background: #042f2e; color: #99f6e4; }   /* V11.26|152
 #piScheda :is(.pi-st3, .pi-xt2) > colgroup > col:nth-child(1) { width: 78px !important; } #piScheda :is(.pi-st3, .pi-xt2) > colgroup > col:nth-child(2) { width: 64px !important; } #piScheda :is(.pi-st3, .pi-xt2) > colgroup > col:nth-child(4) { width: 52px !important; } #piScheda :is(.pi-st3, .pi-xt2) > colgroup > col:nth-child(5) { width: 64px !important; } #piScheda :is(.pi-st3, .pi-xt2) > colgroup > col:nth-child(6) { width: 76px !important; } #piScheda :is(.pi-st3, .pi-xt2) > colgroup > col:nth-child(7) { width: 118px !important; } #piScheda .pi-xt2 > colgroup > col:nth-child(1) { width: 71px !important; }
 #piScheda :is(.pi-st3, .pi-xt2) td:last-child .pi-st { white-space: normal; display: inline-block; max-width: 100%; line-height: 1.3; }
 #piScheda .pi-sgh { row-gap: 6px; } #piScheda .pi-sgh .pi-sga { width: 100%; justify-content: flex-start; margin-left: 26px; }
+.sc-w { position: relative; margin-top: 2px; }   /* V11.26|196: la linea del percorso su una riga che scorre */
+.sc-top { display: flex; align-items: center; gap: 8px; margin: 0 2px 4px; }
+.sc-top .sc-b { border: 1px solid #cbd5e1; background: #fff; border-radius: 6px; width: 28px; height: 24px; cursor: pointer; font-size: .78rem; color: #334155; padding: 0; }
+.sc-top .sc-b:disabled { opacity: .35; cursor: default; }
+.sc-ov { position: relative; flex: 1; height: 18px; cursor: pointer; overflow: hidden; }
+.sc-ov .b { position: absolute; top: 7px; height: 4px; border-radius: 2px; background: #0000ff; } .sc-ov .b.rc { background: #dc2626; } .sc-ov .b.xf { background: #7c3aed; } .sc-ov .b.nx { background: #94a3b8; } .sc-ov .b.ko { opacity: .45; }
+.sc-ov .d { position: absolute; top: 5px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: #fff; border: 2px solid #0000ff; box-sizing: border-box; } .sc-ov .d.rc { border-color: #dc2626; } .sc-ov .d.z { background: #16a34a; border-color: #16a34a; } .sc-ov .d.meta { border-color: #94a3b8; border-style: dashed; }
+.sc-win { position: absolute; top: 0; height: 18px; border: 2px solid #1f3864; border-radius: 5px; background: rgba(31,56,100,.08); box-sizing: border-box; }
+.sc-lab { font-size: .66rem; color: #64748b; white-space: nowrap; flex: 0 0 118px; }
+.sc-w.sc-tutto .sc-ov, .sc-w.sc-tutto .sc-b { visibility: hidden; }
+.sc-vp { position: relative; }
+.sc-f { position: absolute; top: 0; bottom: 10px; width: 44px; pointer-events: none; z-index: 3; } .sc-f.l { left: 0; background: linear-gradient(90deg, #fff, rgba(255,255,255,0)); } .sc-f.r { right: 0; background: linear-gradient(270deg, #fff, rgba(255,255,255,0)); }
+.pi-metro.sc { display: flex; flex-wrap: nowrap; align-items: flex-start; overflow-x: auto; overflow-y: hidden; padding: 10px 6px 10px; scrollbar-width: thin; }
+.pi-metro.sc > * { flex-shrink: 0; }
+.pi-metro.sc .pi-mr { margin: 0; width: auto; min-width: 90px; padding: 0 20px; box-sizing: content-box; }
+.pi-metro.sc .pi-mr .pi-mrl { width: calc(100% + 40px + 132px); align-self: center; position: relative; z-index: 0; }
+.pi-metro.sc .pi-mr .pi-mrt, .pi-metro.sc .pi-mr .pi-mrs { max-width: none; white-space: nowrap; }
+.pi-metro.sc .pi-ms { z-index: 2; } .pi-metro.sc .pi-ms b { white-space: normal; max-width: 124px; overflow: visible; text-overflow: clip; }
+#piScheda .pi-metro.sc .pi-mr .pi-mrl { width: calc(100% + 40px + 112px); }
+/* V11.26|194: la linea del percorso va a capo (righe bilanciate, collegamento che continua nella riga sotto) */
+.pi-metro.mx { display: block; position: relative; }
+.pi-metro.mx > .mx-row { display: flex; align-items: flex-start; position: relative; z-index: 1; padding: 0 18px 0 18px; margin-bottom: 22px; }
+/* le info si leggono: i rami usano lo spazio libero della riga (scritte su una riga), i nomi vanno a capo invece di «…» */
+.pi-metro.mx .pi-mr { flex: 1 1 118px; max-width: 210px; }
+.pi-metro.mx .pi-mr .pi-mrt, .pi-metro.mx .pi-mr .pi-mrs { max-width: none; white-space: nowrap; }
+.pi-metro.mx.mx-st .pi-ms { width: 112px; } .pi-metro.mx.mx-st .pi-mr { margin: 0 -26px; } .pi-metro.mx .pi-mr.mx-out { margin-right: 0; }
+.pi-metro.mx .pi-ms b { white-space: normal; overflow: visible; text-overflow: clip; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; max-width: 128px; } .pi-metro.mx.mx-st .pi-ms b { max-width: 108px; }
+.pi-metro.mx > .mx-row:last-child { margin-bottom: 0; }
+.pi-metro.mx .pi-mr.mx-out { flex: 1 1 auto; max-width: 260px; margin-right: 0; }
+.pi-metro.mx .pi-mr.mx-out .pi-mrl { border-radius: 3px 0 0 3px; }
+.pi-metro .mx-svg { position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none; overflow: visible; }
+.pi-metro .mx-svg path.mx-hov { stroke-width: 8; }
+.pi-mr .pi-mrsub { white-space: nowrap; } .pi-mr .pi-mrarc { font-size: .52rem; color: #94a3b8; white-space: nowrap; }
 /* V11.26|161: linea della metro e strade compatte */
 .pi-metro { display: flex; flex-wrap: wrap; align-items: flex-start; row-gap: 14px; padding: 10px 6px 6px; }
 .pi-ms { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; width: 132px; text-align: center; }
@@ -110954,7 +111257,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 193';
+  var REVISIONE = 'V11.26 | 196';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
