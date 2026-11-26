@@ -4,13 +4,22 @@
 ╔══════════════════════════════════════════════════════════════════════════════════╗
 ║                                                                                  ║
 ║   CRO ITALIA - Central Routing Optimizer                                         ║
-║   Versione: 11.26 | 202  (rev. pubblicata: V11.26 | 202 | Nov 2026)              ║
+║   Versione: 11.26 | 203  (rev. pubblicata: V11.26 | 203 | Nov 2026)              ║
 ║   Data: 25 Novembre 2026                                                         ║
 ║                                                                                  ║
 ║   Tool enterprise per ottimizzazione percorsi rete TIM                           ║
 ║   Sviluppato con Design System unificato                                         ║
 ║                                                                                  ║
 ╠══════════════════════════════════════════════════════════════════════════════════╣
+║                                                                                  ║
+║   CHANGELOG V11.26 | 203 | Nov 2026:                                             ║
+║   ──────────────────────────                                                     ║
+║   • PAGINA: la barra di scorrimento verticale parte sotto la testata fissa       ║
+║     (logo e menu) e finisce sopra INFO LIVE; si trascina, clic sulla             ║
+║     guida per andare su o giù di una schermata; rotellina come prima             ║
+║   • PROGETTAZIONE PERCORSO: Spazio (72/28, Metà, Mappa) più piccolo e in         ║
+║     alto a sinistra sulla mappa, accanto a + e −: non copre più gli              ║
+║     sfondi della mappa                                                           ║
 ║                                                                                  ║
 ║   CHANGELOG V11.26 | 202 | Nov 2026:                                             ║
 ║   ──────────────────────────                                                     ║
@@ -33341,7 +33350,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   <span class="dark-mode-icon" id="darkModeIcon">🌙</span>
 </button>
 
-<div class="version-tag">V11.26 | 202 | Nov 2026</div>
+<div class="version-tag">V11.26 | 203 | Nov 2026</div>
       </div>
     </div>
   </header>
@@ -33642,7 +33651,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Cosa è cambiato nei database</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 202</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 203</span>
                     </div>
                     <p class="feature-desc">Nella home, sotto l’intestazione, un riquadro con le differenze tra l’ultimo aggiornamento dei DB RC e RA e quello precedente: subpath diventati attivi o non attivi, nuovi, tolti, con distanza o altri campi cambiati (C-FOS, centrali, tipo sede, coordinate e gli altri campi che cambiano i risultati). Si aggiorna a ogni aggiornamento dei DB; un clic su un subpath apre la sua scheda nell’Assistente CRO. Accanto al titolo l’età del DB, con un avviso oltre i 30 giorni.</p>
                     <div class="feature-specs">
@@ -33659,7 +33668,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #0066cc;">Assistente CRO</h3>
-                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 202</span>
+                        <span class="feature-badge" style="background: #eff6ff; color: #1d4ed8;">Nuovo V11.26 | 203</span>
                     </div>
                     <p class="feature-desc">Dal <strong>robottino bianco perlato</strong> nella barra dei tab, sotto la revisione (ogni tanto gioca; al passaggio del mouse saluta), una chat locale che cerca nei dati e nei testi del tool. Finestra spostabile e riducibile, che ricorda dove la lasci. Scrivi un <strong>CLLI</strong> e mostra in tre parti la centrale, i collegamenti che partono o arrivano lì e quelli per cui è una centrale di transito (con i cavi C-FOS); un <strong>subpath</strong>, un arco o un ramo e mostra la scheda completa con C-FOS, OTS, stato e note NNI; una <strong>C-FOS</strong> e dice quali subpath la usano; una <strong>centrale</strong> o una <strong>sigla</strong> della legenda. Per tutto il resto cerca nei testi di tutti i tab, con «Vai al punto». Capisce anche domande guidate: <em>non attivi Lombardia</em>, <em>data center Piemonte</em>, due CLLI (collegamenti diretti), due subpath (C-FOS in comune), <em>novità</em> dei DB, <em>Nodi A1 vicini a</em> una centrale. Ricorda la centrale di cui parli (dopo puoi chiedere «e i Nodi A1 vicini?» o «i collegamenti?») e con <strong>«Imposta una pratica»</strong> ti guida passo passo (tipo, centrali, Nodo A1, capacità) fino al piano con tab, controlli, coda e foglio IRP, e apre il tab Unificato con le centrali già scritte. Sotto ogni risposta <strong>«🤖 Chiedi a Claude»</strong> prepara una domanda con i dati del tool e apre claude.ai: la incolli e decidi tu se inviarla. La conversazione si esporta in <strong>TXT</strong>, impaginato come gli export dei tab di ricerca, e in <strong>Word</strong>. Non è un’intelligenza artificiale, non calcola percorsi né costi, non manda dati fuori dal PC: i limiti sono scritti nella chat, e i link di ricerca su internet sono segnati come non verificati. Se scrivi male un CLLI, un subpath o un nome propone <strong>«Forse cercavi»</strong> con tutti i candidati vicini; ignora le parole di cortesia, conosce alcuni sinonimi e le città; quando non capisce dice cosa ha riconosciuto; dopo un calcolo nell’Unificato capisce «e senza RTN?» e «e al contrario?»; «/regola» dice chi ha risposto. Con «kmz» e una lista di collegamenti (subpath RC o IdCollegamento RA, in qualsiasi ordine) li rimette in ordine di routing, mette un Nodo A1 in Sede Z e prepara il <strong>.kmz</strong>, il modello <strong>«Tracciati KMZ per archi DWDM»</strong> e il modulo KMZ. Il bottone <strong>«📘 Guida»</strong> (prima «Limiti») apre la Guida rapida in tre schede: cosa so fare con gli esempi da cliccare, i comandi veloci, cosa non so fare; «aiuto» seguito da una centrale propone le domande su quella centrale, il «?» da solo approfondisce la risposta di prima.</p>
                     <div class="feature-specs">
@@ -33680,7 +33689,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #b91c1c;">Info live</h3>
-                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 202</span>
+                        <span class="feature-badge" style="background: #fef2f2; color: #b91c1c;">Nuovo V11.26 | 203</span>
                     </div>
                     <p class="feature-desc">Striscia scorrevole in fondo alla finestra con <strong>meteo</strong> di 15 città, <strong>cambi</strong> e cripto e le <strong>notizie</strong> di quasi novanta fonti (ANSA, Rai, TGcom24, Fanpage, quotidiani, testate TLC, IA e sport, Bing News, Hacker News, Wikipedia…), con il logo del sito e la categoria; prima le più attinenti (fibra, DWDM, TLC, IA), le inglesi tradotte. Le notizie non spariscono mentre le leggi, lo scorrimento non si blocca mentre lavori e il tool dà sempre la precedenza alle ricerche. Pannello <strong>ⓘ Fonti</strong> a colonne, per gruppi, con stato, voci, date e aggiornamento mirato.</p>
                     <div class="feature-specs">
@@ -33698,7 +33707,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #7c3aed;">Moduli ottici</h3>
-                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 202</span>
+                        <span class="feature-badge" style="background: #f5f3ff; color: #6d28d9;">Nuovo V11.26 | 203</span>
                     </div>
                     <p class="feature-desc">Tabella di riferimento dei moduli <strong>SFP, SFP+ e QSFP28</strong> a 1G, 10G e 100G con portata, lunghezze d’onda, norma (IEEE o specifiche dei produttori) ed esempi di codice Cisco. L’<strong>Assistente CRO</strong> risponde a domande come «modulo 100G per 2 km», «LR4» o «ER4 Lite» e propone il modulo con la portata giusta; la tabella completa è nella Guida.</p>
                     <div class="feature-specs">
@@ -33732,7 +33741,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #16a34a;">Trova Nodi A1</h3>
-                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 202</span>
+                        <span class="feature-badge" style="background: #f0fdf4; color: #15803d;">Nuovo V11.26 | 203</span>
                     </div>
                     <p class="feature-desc">Nella <strong>Posizione Cliente</strong> dei tab RA, RC e Unificato scrivi il CLLI o il nome di una centrale in «CLLI o Nome Centrale» e premi <strong>🏢 Trova Nodi A1</strong>: il popup mostra i Nodi A1 più vicini con distanza in linea d’aria, km di rete del tab e tipo (A1 Standard o A1_DIV senza PE). Prima i Nodi A1 della stessa regione, poi le alternative delle altre regioni, ognuno per distanza, con Area, Zona e Regione dal DB; «via RTN» se si raggiungono solo con la dorsale. Un clic li mette in <strong>Arrivo</strong>, in <strong>Arrivo 2</strong> o in tutti e due, con i bottoni Arrivo Std e Arrivo Div (su due Nodi diversi), la centrale cercata va in <strong>Partenza</strong> e il popup resta aperto fino a «Fatto». Nel tab RA si possono usare solo i Nodi A1 che nella rete RA sono di Tipo 1.</p>
                     <div class="feature-specs">
@@ -33748,7 +33757,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
                     </div>
                     <div class="feature-header">
                         <h3 class="feature-title" style="color: #10b981;">Analisi per Soluzioni Protette</h3>
-                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 202</span>
+                        <span class="feature-badge" style="background: #ecfdf5; color: #047857;">Nuovo V11.26 | 203</span>
                     </div>
                     <p class="feature-desc">Tab <strong>Analisi per Soluzioni Protette</strong> (menu Analisi Extra, 🚧 in lavorazione). Il <strong>calcolatore</strong> dice se un collegamento protetto va <strong>per sezioni (SNCP, «a caramella»)</strong> o <strong>E2E</strong> secondo la em@il di Leonardo (senza RTN: 1G per sezioni, 10G E2E; con RTN: 2 nodi per sezioni, 4 nodi E2E), con costi a listino e avvisi della presentazione Lambdawave. Lo <strong>schema tecnico</strong> segue la scelta; <strong>Come funziona</strong> disegna tutte le soluzioni e spiega il routing tappa per tappa in andata e ritorno, la protezione, le schede e i guasti; poi configurazioni di riferimento, confronto e una <strong>legenda</strong> di 66 voci verificate. Sezioni comprimibili, finestra dei disegni trascinabile, export JPG e Word.</p>
                     <div class="feature-specs">
@@ -34212,7 +34221,7 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
   </div>
   <div class="feature-header">
     <h3 class="feature-title" style="color: #0066CC;">📊 Migliori percorsi e podio dei Div</h3>
-    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 202</span>
+    <span class="feature-badge" style="background:#eff6ff;color:#0066CC;">Nuovo V11.26 | 203</span>
   </div>
   <p class="feature-desc">Nei tab RC e Unificato, dopo ogni ricerca, i <strong>tre percorsi Std migliori</strong> prendono un nastro oro, argento e bronzo sopra la riga e una card nel pannello <strong>📊 Analisi Percorsi</strong> (distanza, collegamenti, subpath, centrali, cambi rete, attivi e non attivi; gli zeri si leggono «0»). Il punteggio pesa i passaggi RA↔RC (dove servono i transponder), i collegamenti non attivi, il numero di collegamenti e la distanza; più tratti RA di fila non contano come passaggio. Quando apri i <strong>Div</strong> di uno Std, anche i tre Div migliori prendono il nastro e in cima c’è la riga «🏅 Podio Div»: per i Div conta prima la diversità (meno C-FOS, poi meno CLLI in comune con lo Std), poi i km, poi lo stato. L’ordine dell’elenco resta per distanza.</p>
   <div class="feature-specs">
@@ -34362,8 +34371,18 @@ body.dark-mode #tab-docs pre[style*="background: #1f2937"] {
             <div class="cl-list">
               <details class="cl-item" open style="--cl-accent: #b91c1c;">
                 <summary class="cl-sum">
-                  <span class="cl-ver">📊 Novità V11.26 | 202 | Nov 2026</span>
+                  <span class="cl-ver">↕️ Novità V11.26 | 203 | Nov 2026</span>
                   <span class="cl-badge">Nuovo</span>
+                </summary>
+                <div class="cl-body">
+                  <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
+    <li><strong>↕️ Barra di scorrimento sotto la testata</strong>: in tutti i tab la barra di scorrimento a destra parte sotto la parte fissa in alto (logo e menu) e finisce sopra INFO LIVE. Si trascina come prima, un clic sulla guida sale o scende di una schermata, la rotellina funziona come sempre. Nei tab che stanno in una schermata non compare</li><li><strong>Spazio sulla mappa</strong>: nella Progettazione Percorso i bottoni ★ 72/28, ◫ Metà e ◨ Mappa sono più piccoli e stanno in alto a sinistra sulla mappa, accanto a + e −, così non coprono più il bottone degli sfondi</li>
+                  </ul>
+                </div>
+              </details>
+              <details class="cl-item" style="--cl-accent: #b91c1c;">
+                <summary class="cl-sum">
+                  <span class="cl-ver">📊 Novità V11.26 | 202 | Nov 2026</span>
                 </summary>
                 <div class="cl-body">
                   <ul style="margin:0.5rem 0 0.5rem 1rem; padding:0; font-size:0.82rem; color:var(--gray-700); line-height:1.7;">
@@ -54900,7 +54919,7 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
 <section id="docs-v112" style="margin-top:2rem; scroll-margin-top: 90px;">
   <div class="db-card">
     <div class="db-header">
-      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 202 | Nov 2026 → V16.31)</h3>
+      <h3 class="db-title">🧾 Changelog – ultime revisioni (V11.26 | 203 | Nov 2026 → V16.31)</h3>
       <p class="db-subtitle">
         Sintesi delle modifiche più recenti (focus su Analisi Costi Nord Ovest, Export Unificato, Analisi Fattibilità)
       </p>
@@ -54919,6 +54938,17 @@ polyline.bindPopup('Percorso ROMA-FIRENZE');</code></pre>
       <div style="display:flex;flex-direction:column;gap:0.75rem;">
 
         <details open style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
+          <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
+            ↕️ V11.26 | 203 | Nov 2026 | Barra di scorrimento sotto la testata; Spazio fuori dai bottoni della mappa
+          </summary>
+          <div style="padding:0.75rem 1rem;font-size:0.82rem;color:#374151;">
+            <ul style="margin:0.25rem 0 0.25rem 1rem;padding:0;line-height:1.7;">
+              <li>Barra: html con scrollbar-width none e ::-webkit-scrollbar 0; #croVBar fixed a destra fra il fondo di .top-bar/.nav-bar e INFO LIVE (30 px con body.cro-infolive-on); il cursore si calcola da scrollY, scrollHeight e innerHeight; aggiornata su scroll, resize, ResizeObserver del body, classe del body e ogni 1,5 s. Lo scorrimento resta quello del documento: window.scrollTo, scrollY e scrollIntoView funzionano come prima</li><li>.p8-q: left = --pi-l + 58 px (dopo il divisore e il controllo zoom di Leaflet), top 10 px</li><li>Prove: Overview a 1920×950 (barra da 143 px a 920 px, trascinamento e rotellina), Progettazione Percorso senza barra, Spazio a 72/28 e Metà</li>
+            </ul>
+          </div>
+        </details>
+
+        <details style="border:1px solid #b91c1c;border-radius:12px;overflow:hidden;background:#fef2f2;">
           <summary style="cursor:pointer;padding:0.75rem 1rem;font-weight:700;font-size:0.88rem;color:#991b1b;display:flex;align-items:center;gap:0.5rem;background:#fee2e2;">
             📊 V11.26 | 202 | Nov 2026 | Progettazione Percorso: riquadro dei numeri in quattro, DC senza icona
           </summary>
@@ -65389,6 +65419,39 @@ let dbState = null;
       setTimeout(monta, 600);
     });
   })();
+  /* V11.26|203: barra di scorrimento disegnata dal tool, da sotto la testata fissa a sopra INFO LIVE. La pagina scorre come
+     prima (rotellina, tastiera, window.scrollTo): cambia solo dove si vede la barra. */
+  (function () {
+    var bar, th, giu = null;
+    function alto() { var b = 0; ['.top-bar', '.nav-bar'].forEach(function (q) { var e = document.querySelector(q); if (e) { var r = e.getBoundingClientRect(); if (r.height) b = Math.max(b, r.bottom); } }); return Math.max(0, Math.round(b)); }
+    function basso() { var il = document.body.classList.contains('cro-infolive-on') ? 30 : 0; return il; }
+    function agg() {
+      if (!bar) return;
+      var d = document.documentElement, H = d.scrollHeight, V = window.innerHeight, t = alto(), b = basso(), tr = V - t - b;
+      if (H <= V + 1 || tr < 60) { bar.classList.remove('on'); return; }
+      bar.classList.add('on'); bar.style.top = t + 'px'; bar.style.bottom = b + 'px';
+      var h = Math.max(28, Math.round(tr * V / H)), max = H - V, y = Math.round((tr - h) * Math.min(1, window.scrollY / max));
+      th.style.height = h + 'px'; th.style.top = y + 'px';
+    }
+    function monta() {
+      if (document.getElementById('croVBar')) return;
+      bar = document.createElement('div'); bar.id = 'croVBar'; bar.setAttribute('aria-hidden', 'true');
+      th = document.createElement('i'); bar.appendChild(th); document.body.appendChild(bar);
+      th.addEventListener('mousedown', function (e) { if (e.button !== 0) return; giu = { y: e.clientY, s: window.scrollY }; th.classList.add('giu'); e.preventDefault(); e.stopPropagation(); });
+      document.addEventListener('mousemove', function (e) {
+        if (!giu) return; var d = document.documentElement, V = window.innerHeight, tr = bar.clientHeight, h = th.offsetHeight;
+        var k = (d.scrollHeight - V) / Math.max(1, tr - h); window.scrollTo(0, giu.s + (e.clientY - giu.y) * k);
+      });
+      document.addEventListener('mouseup', function () { if (giu) { giu = null; th.classList.remove('giu'); } });
+      bar.addEventListener('mousedown', function (e) { if (e.target !== bar) return; var r = th.getBoundingClientRect(); window.scrollBy(0, (e.clientY < r.top ? -1 : 1) * (window.innerHeight * 0.85)); e.preventDefault(); });
+      window.addEventListener('scroll', agg, { passive: true }); window.addEventListener('resize', agg);
+      try { new ResizeObserver(agg).observe(document.body); } catch (e) {}
+      try { new MutationObserver(agg).observe(document.body, { attributes: true, attributeFilter: ['class'] }); } catch (e) {}
+      setInterval(agg, 1500); agg();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', monta); else monta();
+  })();
+  
   
   window.resetDBFilters = function() {
     const searchInput = document.getElementById('dbSearchInput');
@@ -108839,6 +108902,14 @@ body.dark-mode .pi-cat4 { background: #042f2e; color: #99f6e4; }   /* V11.26|152
 .pi-metro.sc .pi-mr .pi-mrt, .pi-metro.sc .pi-mr .pi-mrs { max-width: none; white-space: nowrap; }
 .pi-metro.sc .pi-ms { z-index: 2; } .pi-metro.sc .pi-ms b { white-space: normal; max-width: 124px; overflow: visible; text-overflow: clip; }
 #piScheda .pi-metro.sc .pi-mr .pi-mrl { width: calc(100% + 40px + 112px); }
+/* V11.26|203: la barra di scorrimento della pagina parte sotto la testata fissa (logo + menu) e finisce sopra INFO LIVE */
+html { scrollbar-width: none; } html::-webkit-scrollbar { width: 0 !important; }
+#croVBar { position: fixed; right: 0; width: 12px; z-index: 9990; display: none; }
+#croVBar.on { display: block; }
+#croVBar i { position: absolute; left: 2px; right: 2px; border-radius: 6px; background: rgba(100,116,139,.45); cursor: grab; min-height: 28px; transition: background .15s, left .15s, right .15s; }
+#croVBar:hover i, #croVBar i.giu { background: rgba(51,65,85,.65); left: 1px; right: 1px; }
+#croVBar i.giu { cursor: grabbing; }
+body.dark-mode #croVBar i { background: rgba(148,163,184,.45); }
 /* V11.26|198: Progettazione Percorso in una schermata */
 #tab-instradamento .p8-head { position: static !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 6px 0 8px !important; }
 #tab-instradamento .p8-riga { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
@@ -108885,9 +108956,9 @@ body.dark-mode .pi-cat4 { background: #042f2e; color: #99f6e4; }   /* V11.26|152
 #tab-instradamento .p8-top .pi-metro .pi-ms b { font-size: 11.5px; }
 /* divisione dati / mappa senza scorrimento di pagina */
 #tab-instradamento .pi-split.p8 { position: relative !important; top: auto !important; margin-top: 0 !important; height: var(--p8h, 460px) !important; }
-#tab-instradamento .p8-q { position: absolute; top: 8px; right: 8px; z-index: 500; display: inline-flex; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(15,23,42,.15); }
-#tab-instradamento .p8-q > span { font-size: 10px; font-weight: 700; letter-spacing: .05em; color: #475569; padding: 6px 8px; text-transform: uppercase; }
-#tab-instradamento .p8-q button { border: 0; border-left: 1px solid #e2e8f0; background: #fff; font-size: 11.5px; font-weight: 600; color: #334155; padding: 5px 9px; cursor: pointer; }
+#tab-instradamento .p8-q { position: absolute; top: 10px; left: calc(var(--pi-l, 72%) + 58px); right: auto; z-index: 500; display: inline-flex; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(15,23,42,.15); }
+#tab-instradamento .p8-q > span { font-size: 9.5px; font-weight: 700; letter-spacing: .05em; color: #475569; padding: 5px 6px; text-transform: uppercase; }
+#tab-instradamento .p8-q button { border: 0; border-left: 1px solid #e2e8f0; background: #fff; font-size: 11px; font-weight: 600; color: #334155; padding: 4px 7px; cursor: pointer; }
 #tab-instradamento .p8-q button.on { background: #0066cc; color: #fff; }
 #tab-instradamento .pi-split.p8 .pi-dati { padding: 6px 12px 8px; }
 /* tabella delle tratte */
@@ -111894,7 +111965,7 @@ div[style*="background:#f3f4f6"] label {
     ['oltre 100 km', 100, 1e9]
   ];
 
-  var REVISIONE = 'V11.26 | 202';
+  var REVISIONE = 'V11.26 | 203';
 
   function t(v) { return String(v == null ? '' : v).trim(); }
 
